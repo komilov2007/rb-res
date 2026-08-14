@@ -6,13 +6,15 @@ import Footer from "./components/footer";
 import Header from "./components/header";
 import Banner from "./components/banner";
 import Categories from "./components/categories";
+import MobileFooter from "./components/mobile-footer";
+import HomeModals from "./components/home-modals";
 import Products from "./components/products";
 
 const Home = () => {
   const { isLoading } = useGeneral();
 
   return (
-    <div className="min-h-screen bg-gray10">
+    <div className="min-h-screen bg-gray10 pb-[74px] lg:pb-0">
       <Header />
       {isLoading ? (
         <div className="flex min-h-[calc(100vh-146px)] items-center justify-center bg-white">
@@ -20,18 +22,20 @@ const Home = () => {
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-bl-[30px] rounded-br-[30px] bg-white py-5">
+          <section className="rounded-bl-[30px] rounded-br-[30px] bg-white py-0 lg:py-5">
             <Banner />
             <Categories />
-          </div>
-          <div className="h-2" />
-          <div className="rounded-[30px] bg-white">
+          </section>
+          <div className="h-3 bg-gray10" />
+          <section className="rounded-[30px] bg-white">
             <Products />
-          </div>
-          <div className="h-2" />
+          </section>
         </>
       )}
+      <div className="h-3 bg-gray10" />
       <Footer />
+      <MobileFooter />
+      <HomeModals />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import type { CardProductProps } from "@/types/product";
 import { formatPrice } from "@/utils/format-price";
 import { Plus } from "lucide-react";
 import { useCardProduct } from "./useCardProduct";
+import Button from "@/components/ui/button";
 
 const CardProduct = ({ product, variant = "default" }: CardProductProps) => {
   const {
@@ -18,8 +19,8 @@ const CardProduct = ({ product, variant = "default" }: CardProductProps) => {
   } = useCardProduct({ product, variant });
 
   return (
-    <article className="min-h-[280px] overflow-hidden rounded-3xl bg-white shadow-[0_3px_14px_var(--black40)]">
-      <div className="relative h-[187px] overflow-hidden rounded-3xl bg-gray10">
+    <article className="min-h-[248px] overflow-hidden rounded-3xl bg-white shadow-[0_3px_14px_var(--black40)] lg:min-h-[280px]">
+      <div className="relative h-[150px] overflow-hidden rounded-3xl bg-gray10 lg:h-[187px]">
         <img
           src={product.photo}
           alt={product.name}
@@ -39,52 +40,60 @@ const CardProduct = ({ product, variant = "default" }: CardProductProps) => {
         )}
         <div className="absolute bottom-3 right-3">
           {!cartItem ? (
-            <button
+            <Button
               onClick={handleAddCart}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-primary transition-transform duration-200 hover:scale-105 active:scale-95"
+              variant="plain"
+              size="none"
+              className="h-8 w-8 rounded-full bg-white p-0 text-primary transition-transform duration-200 hover:scale-105 active:scale-95"
             >
               <Plus size={22} />
-            </button>
+            </Button>
           ) : (
             <div
               className="flex h-8 items-center overflow-hidden rounded-full bg-white text-primary transition-[width] duration-700 ease-in-out"
               style={{ width: counter.value ? 108 : 36 }}
             >
-              <button
+              <Button
                 onClick={handleDecrement}
-                className={`flex h-8 shrink-0 items-center justify-center overflow-hidden text-lg font-bold transition-all duration-500 active:scale-90 ${
+                variant="plain"
+                size="none"
+                className={`h-8 shrink-0 overflow-hidden rounded-none p-0 text-lg font-bold text-primary transition-all duration-500 active:scale-90 ${
                   counter.value
                     ? "w-9 translate-x-0 opacity-100"
                     : "pointer-events-none w-0 -translate-x-5 opacity-0"
                 }`}
               >
                 -
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleOpenCounter}
-                className="flex h-8 w-9 shrink-0 items-center justify-center text-sm font-bold transition-transform duration-200 active:scale-95"
+                variant="plain"
+                size="none"
+                className="h-8 w-9 shrink-0 rounded-none p-0 text-sm font-bold text-primary transition-transform duration-200 active:scale-95"
               >
                 {quantity}
-              </button>
+              </Button>
 
-              <button
+              <Button
                 onClick={handleIncrement}
-                className={`flex h-8 shrink-0 items-center justify-center overflow-hidden text-lg font-bold transition-all duration-500 active:scale-90 ${
+                variant="plain"
+                size="none"
+                className={`h-8 shrink-0 overflow-hidden rounded-none p-0 text-lg font-bold text-primary transition-all duration-500 active:scale-90 ${
                   counter.value
                     ? "w-9 translate-x-0 opacity-100"
                     : "pointer-events-none w-0 translate-x-5 opacity-0"
                 }`}
               >
                 +
-              </button>
+              </Button>
             </div>
           )}
         </div>
       </div>
-      <div className="px-4 pb-6 pt-3">
+      <div className="px-3 pb-5 pt-3 lg:px-4 lg:pb-6">
         <p
-          className={`text-base font-bold leading-none ${isDiscount ? "text-blue30" : "text-black"}`}
+          className={`text-sm font-bold leading-none lg:text-base ${isDiscount ? "text-blue30" : "text-black"}`}
         >
           {formatPrice(price)} {"so'm"}
         </p>

@@ -1,12 +1,14 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 export const useShopid = () => {
+  const params = useParams();
   const searchParams = useSearchParams();
-  const shopid = searchParams.get("shop_id");
+  const shopid = searchParams.get("shop_id") ?? params.shopid;
+
   return {
-    shopid,
+    shopid: typeof shopid === "string" ? shopid : undefined,
     hasShopId: Boolean(shopid),
   };
 };

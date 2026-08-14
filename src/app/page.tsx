@@ -1,10 +1,11 @@
-import { memo } from "react";
+import { memo, Suspense } from "react";
 import Home from "./[page]/home";
+
 const Page = () => {
   return (
-    <div>
+    <Suspense>
       <Home />
-    </div>
+    </Suspense>
   );
 };
 

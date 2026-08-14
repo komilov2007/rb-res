@@ -6,13 +6,15 @@ import { useShopid } from "@/hooks/useShopId";
 import { formatPrice } from "@/utils/format-price";
 import { useQuery } from "@tanstack/react-query";
 import { PackageSearch, SearchX, Tag } from "lucide-react";
+import Button from "@/components/ui/button";
 
 interface SearchModalProps {
   open: boolean;
   value: string;
+  fullscreen?: boolean;
 }
 
-const SearchModal = ({ open, value }: SearchModalProps) => {
+const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   const { shopid, hasShopId } = useShopid();
   const search = useDebounce(value);
   const hasSearch = search.trim().length > 0;
@@ -27,7 +29,13 @@ const SearchModal = ({ open, value }: SearchModalProps) => {
   if (!open) return null;
 
   return (
-    <div className="h-[320px] w-full overscroll-contain overflow-hidden rounded-xl border border-gray180 bg-white">
+    <div
+      className={`w-full overscroll-contain overflow-hidden bg-white ${
+        fullscreen
+          ? "h-full flex-1 rounded-none border-0"
+          : "h-[320px] rounded-xl border border-gray180"
+      }`}
+    >
       {!hasSearch ? (
         <div className="flex h-full flex-col items-center justify-center px-6 text-center">
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary10 text-primary">
@@ -52,7 +60,11 @@ const SearchModal = ({ open, value }: SearchModalProps) => {
 
             return (
               <li key={product.id}>
-                <button className="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-gray10">
+                <Button
+                  variant="ghost"
+                  size="md"
+                  className="h-auto w-full justify-start gap-3 rounded-lg p-2 text-left"
+                >
                   <span className="flex h-15 w-15 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray10">
                     <img
                       src={product.photo}
@@ -76,7 +88,7 @@ const SearchModal = ({ open, value }: SearchModalProps) => {
                   <span className="flex shrink-0 items-center gap-1 text-sm font-bold text-primary">
                     {formatPrice(price)} {"so'm"}
                   </span>
-                </button>
+                </Button>
               </li>
             );
           })}

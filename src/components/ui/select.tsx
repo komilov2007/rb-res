@@ -40,7 +40,7 @@ const SelectTrigger = ({
     >
       {children}
       <Icon asChild>
-        <ChevronDown size={15} className="text-gray220" />
+        <ChevronDown size={15} className="text-current" />
       </Icon>
     </Trigger>
   );
