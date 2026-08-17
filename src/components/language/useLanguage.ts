@@ -1,10 +1,10 @@
 "use client";
 
+import { languages, type LanguageValue } from "@/constants/language";
 import { useGeneral } from "@/hooks/useGeneral";
 import { setCookie } from "@/utils/cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { languages, type LanguageValue } from "./language.constants";
 
 export const useLanguage = () => {
   const router = useRouter();

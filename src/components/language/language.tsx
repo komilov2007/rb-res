@@ -7,8 +7,8 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
+import { languages } from "@/constants/language";
 import { useLanguage } from "./useLanguage";
-import { languages } from "./language.constants";
 
 type LanguageProps = {
   variant?: "default" | "hero";

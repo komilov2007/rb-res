@@ -4,6 +4,7 @@ import { getProducts } from "@/apis/products";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useShopid } from "@/hooks/useShopId";
 import { formatPrice } from "@/utils/format-price";
+import { hasSearchValue } from "@/utils/search";
 import { useQuery } from "@tanstack/react-query";
 import { PackageSearch, SearchX, Tag } from "lucide-react";
 import Button from "@/components/ui/button";
@@ -17,7 +18,7 @@ interface SearchModalProps {
 const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   const { shopid, hasShopId } = useShopid();
   const search = useDebounce(value);
-  const hasSearch = search.trim().length > 0;
+  const hasSearch = hasSearchValue(search);
 
   const { data, isLoading } = useQuery({
     enabled: open && hasShopId && hasSearch,

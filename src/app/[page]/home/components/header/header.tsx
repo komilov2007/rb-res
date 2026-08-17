@@ -6,7 +6,7 @@ import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import Language from "@/components/language";
 import { useBoolean } from "@/hooks/useBoolean";
-import { createQueryString } from "@/utils/search";
+import { getSearchUrl } from "@/utils/search";
 import {
   Popover,
   PopoverContent,
@@ -38,20 +38,15 @@ const Header = () => {
     return total + price * item.quantity;
   }, 0);
 
-  const getSearchUrl = (search: string) => {
-    const query = createQueryString([["search", search]], searchParams);
-    return query ? `${pathname}?${query}` : pathname;
-  };
-
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
-    router.push(getSearchUrl(newValue));
+    router.push(getSearchUrl({ pathname, search: newValue, searchParams }));
   };
 
   const handleClearSearch = () => {
     setValue("");
-    router.push(getSearchUrl(""));
+    router.push(getSearchUrl({ pathname, search: "", searchParams }));
   };
 
   return (
@@ -73,7 +68,7 @@ const Header = () => {
                   IconStart={SearchIcon}
                   clearable
                   onClear={handleClearSearch}
-                  placeholder="Taom yoki kategoriya qidiring..."
+                  placeholder="Mahsulotni qidirish"
                   className="w-full font-medium"
                 />
               </PopoverTrigger>

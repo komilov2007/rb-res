@@ -3,13 +3,13 @@
 import { getBanners } from "@/apis/banner";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useShopid } from "@/hooks/useShopId";
-import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import {
   getServicesText,
   getServicesTitle,
   getTodayWorkTime,
-} from "./banner.utils";
+} from "@/utils/banner";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 export const useBanner = () => {
   const { shopid, hasShopId } = useShopid();
@@ -26,7 +26,6 @@ export const useBanner = () => {
 
   return {
     t,
-    shop,
     banners,
     isLoading,
     shopName: shop?.name ?? "Restaurant",

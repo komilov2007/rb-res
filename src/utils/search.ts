@@ -1,19 +1,39 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
 
+type QueryValue = [string, string | null | undefined];
+
 export const createQueryString = (
-  value: [string, string][],
+  values: QueryValue[],
   searchParams: ReadonlyURLSearchParams,
 ) => {
   const params = new URLSearchParams(searchParams.toString());
 
-  value.forEach((value) => {
-    if (value[1]) {
-      params.set(value[0], value[1]);
+  values.forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value);
       return;
     }
 
-    params.delete(value[0]);
+    params.delete(key);
   });
 
   return params.toString();
+};
+
+export const getSearchUrl = ({
+  pathname,
+  search,
+  searchParams,
+}: {
+  pathname: string;
+  search: string;
+  searchParams: ReadonlyURLSearchParams;
+}) => {
+  const query = createQueryString([["search", search]], searchParams);
+
+  return query ? `${pathname}?${query}` : pathname;
+};
+
+export const hasSearchValue = (search: string) => {
+  return search.trim().length > 0;
 };

@@ -23,7 +23,7 @@ const BannerSwiper = ({ banners, variant }: BannerSwiperProps) => {
       }
       pagination={isDesktop && banners.length > 1}
       modules={isDesktop ? [Autoplay, Pagination] : [Autoplay]}
-      className="h-full w-full"
+      className={isDesktop ? "h-full w-full" : "!h-[538px] w-full"}
     >
       {banners.map((banner) => (
         <SwiperSlide key={banner.id}>
