@@ -17,7 +17,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray10 pb-[74px] lg:pb-0">
       <Header />
       {isLoading ? (
-        <div className="flex min-h-[calc(100vh-146px)] items-center justify-center bg-white">
+        <div className="flex min-h-screen w-full items-center justify-center bg-white lg:min-h-[calc(100vh-146px)]">
           <Loader />
         </div>
       ) : (
