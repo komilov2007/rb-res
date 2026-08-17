@@ -8,7 +8,7 @@ export const hasDiscount = (product: ProductProps) => {
 export const groupProductsByCategory = (products: ProductProps[]) => {
   const groups = new Map<
     string,
-    { id: string; name: string; products: ProductProps[] }
+    { id: string; name: string; products: ProductProps[]; total: number }
   >();
 
   products.forEach((product) => {
@@ -16,9 +16,9 @@ export const groupProductsByCategory = (products: ProductProps[]) => {
 
     const id = String(product.category.id);
     const group = groups.get(id);
-
     if (group) {
       group.products.push(product);
+      group.total = group.products.length;
       return;
     }
 
@@ -26,6 +26,7 @@ export const groupProductsByCategory = (products: ProductProps[]) => {
       id,
       name: product.category.name,
       products: [product],
+      total: 1,
     });
   });
 

@@ -19,6 +19,7 @@ const Banner = () => {
     servicesText,
     servicesTitle,
     todayWorkTime,
+    logo,
   } = useBanner();
 
   if (isLoading) return <BannerSkeleton />;
@@ -38,9 +39,8 @@ const Banner = () => {
           <BannerSwiper banners={banners} variant="mobile" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black/45" />
 
-          <div className="absolute left-0 top-0 z-10 grid w-full grid-cols-[90px_1fr_90px] items-center px-4 pt-10 text-white">
-            <Logo />
-
+          <div className="absolute left-0 top-0 z-10  flex w-full  items-center justify-between px-4 pt-10 text-white">
+            {logo ?? <Logo />}
             <div className="text-center">
               <h2 className="font-serif text-xl font-bold italic leading-5">
                 {shopName}

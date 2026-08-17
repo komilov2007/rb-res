@@ -18,6 +18,7 @@
   --yellow-bright: oklch(95.471% 0.21554 114.604);
   --yellow10: oklch(0.7996 0.1376 73.9 / 10.2%);
   --blue30: oklch(0.5891 0.2029 257.86);
+  --gray20: oklch(95.514% 0.00011 271.152);
 }
 
 @theme {
@@ -35,6 +36,7 @@
   --color-yellow-bright: var(--yellow-bright);
   --color-yellow10: var(--yellow10);
   --color-blue30: var(--blue30);
+  --color-gray20: var(--gray20);
 }
 
 html,

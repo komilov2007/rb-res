@@ -28,9 +28,10 @@ export const useBanner = () => {
     t,
     banners,
     isLoading,
-    shopName: shop?.name ?? "Restaurant",
+    shopName: shop?.name,
     todayWorkTime: getTodayWorkTime(shop?.working_time, t),
     servicesTitle: getServicesTitle(shop, t),
     servicesText: getServicesText(shop, t),
+    logo: shop?.logo,
   };
 };

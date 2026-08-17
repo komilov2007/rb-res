@@ -4,6 +4,9 @@ import CardProduct from "@/components/card-product";
 import { BadgePercent } from "lucide-react";
 import { ProductsSkeleton } from "@/components/ui/skleton";
 import { useProduct } from "./useProduct";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { A11y, FreeMode } from "swiper/modules";
 
 const Products = () => {
   const {
@@ -32,40 +35,70 @@ const Products = () => {
               </h2>
             </div>
 
-            <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5 lg:gap-4">
+            <Swiper
+              modules={[A11y, FreeMode]}
+              spaceBetween={12}
+              freeMode={{ enabled: true }}
+              centeredSlides={false}
+              breakpoints={{
+                320: { slidesPerView: 2 },
+                640: { slidesPerView: 3 },
+                1024: { slidesPerView: 5 },
+              }}
+              className="pb-2 overflow-hidden"
+            >
               {discountProducts.map((product) => (
-                <li key={product.id}>
-                  <CardProduct product={product} variant="discount" />
-                </li>
+                <SwiperSlide key={product.id}>
+                  <div className="w-full">
+                    <CardProduct product={product} variant="discount" />
+                  </div>
+                </SwiperSlide>
               ))}
-            </ul>
+            </Swiper>
           </div>
         )}
 
         {productGroups.map((group) => (
           <div key={group.id}>
-            <h2 className="mb-5 text-xl font-bold text-black lg:text-2xl">
-              {group.name}
-            </h2>
+            <div className="mb-2 flex items-center justify-between">
+              <h2 className=" lg:mb-0 text-xl font-bold text-black lg:text-2xl">
+                {group.name}
+              </h2>
 
-            <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5 lg:gap-4">
+              <div className="ml-4 flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-gray20 text-blue30  px-2 py-0.5 text-[12px] font-semibold text-black">
+                  Barchasini ko'rish ({group.total})
+                </span>
+              </div>
+            </div>
+
+            <Swiper
+              modules={[A11y, FreeMode]}
+              spaceBetween={12}
+              freeMode={{ enabled: true }}
+              centeredSlides={false}
+              breakpoints={{
+                320: { slidesPerView: 2 },
+                640: { slidesPerView: 3 },
+                1024: { slidesPerView: 5 },
+              }}
+              className="pb-2 overflow-hidden"
+            >
               {group.products.map((product) => (
-                <li key={product.id}>
-                  <CardProduct product={product} />
-                </li>
+                <SwiperSlide key={product.id}>
+                  <div className="w-full">
+                    <CardProduct product={product} />
+                  </div>
+                </SwiperSlide>
               ))}
-            </ul>
+            </Swiper>
           </div>
         ))}
 
         <div ref={bottomRef} className="h-px" />
         {isFetchingNextPage && (
-          <div className="flex items-center justify-center py-3">
-            <div className="flex items-center gap-2 rounded-full bg-gray10 px-4 py-2">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-              <span className="h-2 w-2 animate-pulse rounded-full bg-primary [animation-delay:120ms]" />
-              <span className="h-2 w-2 animate-pulse rounded-full bg-primary [animation-delay:240ms]" />
-            </div>
+          <div className="opacity-80">
+            <ProductsSkeleton />
           </div>
         )}
       </div>

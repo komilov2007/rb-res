@@ -19,7 +19,7 @@ const CardProduct = ({ product, variant = "default" }: CardProductProps) => {
   } = useCardProduct({ product, variant });
 
   return (
-    <article className="min-h-[248px] overflow-hidden rounded-3xl bg-white shadow-[0_3px_14px_var(--black40)] lg:min-h-[280px]">
+    <article className="w-full min-h-[248px] overflow-hidden rounded-3xl bg-white lg:min-h-[280px]">
       <div className="relative h-[150px] overflow-hidden rounded-3xl bg-gray10 lg:h-[187px]">
         <img
           src={product.photo}

@@ -18,20 +18,31 @@ export const useProduct = () => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery({
-      enabled: hasShopId,
-      queryKey: ["products", shopid],
-      queryFn: ({ pageParam = 0 }) =>
-        getProducts(shopid as string, {
-          limit: PRODUCTS_LIMIT,
-          offset: pageParam,
-        }),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage.data.next ? pages.length * PRODUCTS_LIMIT : undefined;
-      },
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isFetching,
+  } = useInfiniteQuery({
+    enabled: hasShopId,
+    queryKey: ["products", shopid],
+    queryFn: ({ pageParam = 0 }) =>
+      getProducts(shopid as string, {
+        limit: PRODUCTS_LIMIT,
+        offset: pageParam,
+      }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) => {
+      const loadedItems = pages.flatMap((page) => page.data.results).length;
+      const totalItems = lastPage.data.count ?? 0;
+
+      return loadedItems < totalItems
+        ? pages.length * PRODUCTS_LIMIT
+        : undefined;
+    },
+  });
   const { data: categories } = useQuery({
     enabled: hasShopId,
     queryKey: ["categories", shopid],
@@ -42,11 +53,18 @@ export const useProduct = () => {
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;
 
-      if (!entry.isIntersecting || !hasNextPage || isFetchingNextPage) return;
+      if (
+        !entry?.isIntersecting ||
+        !hasNextPage ||
+        isFetching ||
+        isFetchingNextPage
+      ) {
+        return;
+      }
 
       fetchNextPage();
     },
-    [fetchNextPage, hasNextPage, isFetchingNextPage],
+    [fetchNextPage, hasNextPage, isFetching, isFetchingNextPage],
   );
 
   useEffect(() => {
@@ -55,7 +73,7 @@ export const useProduct = () => {
 
     observerRef.current = new IntersectionObserver(handleObserver, {
       rootMargin: "900px 0px",
-      threshold: 0,
+      threshold: 0.01,
     });
 
     if (bottomRef.current) {
