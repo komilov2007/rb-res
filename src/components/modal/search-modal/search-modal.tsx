@@ -102,7 +102,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
             Mahsulot topilmadi
           </h4>
           <p className="mt-1 text-xs font-medium text-gray220">
-            Boshqa nom bilan {"ko'ring"}
+            Boshqa nom bilan ko'ring
           </p>
         </div>
       )}

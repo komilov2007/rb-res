@@ -19,7 +19,7 @@ const Products = () => {
   if (products.length === 0) return null;
 
   return (
-    <section className="flex w-full  items-center justify-center px-4 py-6 lg:py-8">
+    <section className="mb-5 flex w-full items-center justify-center px-4 py-6 lg:mb-0 lg:py-8">
       <div className="flex w-full max-w-7xl flex-col gap-7 lg:gap-8">
         {discountProducts.length > 0 && (
           <div>
