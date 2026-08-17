@@ -36,7 +36,7 @@ const Footer = () => {
               className="text-sm font-semibold text-gray220 transition-colors hover:text-black"
               href="#"
             >
-              {"Do'kon filiallari"}
+              Do'kon filiallari
             </a>
             <a
               className="text-sm font-semibold text-gray220 transition-colors hover:text-black"
@@ -56,7 +56,7 @@ const Footer = () => {
 
         <div className="flex h-[92px] items-center justify-center border-x border-[#EAECF0] px-10">
           <p className="text-center text-sm font-semibold text-gray220">
-            <span className="font-extrabold text-primary">Robosell.uz</span>{" "}
+            <span className="font-extrabold text-primary">Robosell.uz</span>
             tomonidan taqdim etilgan
           </p>
         </div>
