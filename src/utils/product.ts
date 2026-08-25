@@ -1,8 +1,20 @@
 import type { ProductProps } from "@/types/product";
-import type { CategoriesProps } from "@/types/categories";
+import type {
+  CategoriesProps,
+  CategoriesResponseProps,
+} from "@/types/categories";
 
 export const hasDiscount = (product: ProductProps) => {
   return Boolean(product.discount_price || product.sale_amount);
+};
+
+export const normalizeCategories = (
+  categories?: CategoriesResponseProps,
+): CategoriesProps[] => {
+  if (!categories) return [];
+  if (Array.isArray(categories)) return categories;
+
+  return categories.results ?? [];
 };
 
 export const groupProductsByCategory = (products: ProductProps[]) => {

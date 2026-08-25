@@ -6,3 +6,9 @@ export type CategoriesProps = {
   products_count: number;
   scroll_type: string;
 };
+
+export type CategoriesResponseProps =
+  | CategoriesProps[]
+  | {
+      results: CategoriesProps[];
+    };

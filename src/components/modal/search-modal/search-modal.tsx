@@ -1,13 +1,13 @@
 "use client";
-
+import Button from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import { getProducts } from "@/apis/products";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useShopid } from "@/hooks/useShopId";
-import { formatPrice } from "@/utils/format-price";
 import { hasSearchValue } from "@/utils/search";
 import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@/hooks/useDebounce";
+import { formatPrice } from "@/utils/format-price";
 import { PackageSearch, SearchX, Tag } from "lucide-react";
-import Button from "@/components/ui/button";
 
 interface SearchModalProps {
   open: boolean;
@@ -16,6 +16,7 @@ interface SearchModalProps {
 }
 
 const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
+  const t = useTranslations();
   const { shopid, hasShopId } = useShopid();
   const search = useDebounce(value);
   const hasSearch = hasSearchValue(search);
@@ -42,17 +43,13 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary10 text-primary">
             <PackageSearch size={24} />
           </div>
-          <h4 className="text-sm font-semibold text-black">
-            Mahsulot qidiring
-          </h4>
-          <p className="mt-1 text-xs font-medium text-gray220">
-            Nomini yozing, natijalar shu yerda chiqadi
-          </p>
+          <h4 className="title10 text-black">{t("search_products_title")}</h4>
+          <p className="text20 mt-1">{t("search_products_hint")}</p>
         </div>
       ) : isLoading ? (
         <div className="flex h-full flex-col items-center justify-center gap-3">
           <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-gray180 border-t-primary" />
-          <p className="text-sm font-medium text-gray220">Qidirilmoqda...</p>
+          <p className="text10">{t("searching")}</p>
         </div>
       ) : products.length > 0 ? (
         <ul className="h-full overscroll-contain overflow-y-auto p-2">
@@ -87,7 +84,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
                   </span>
 
                   <span className="flex shrink-0 items-center gap-1 text-sm font-bold text-primary">
-                    {formatPrice(price)} {"so'm"}
+                    {formatPrice(price)} {t("sum")}
                   </span>
                 </Button>
               </li>
@@ -99,12 +96,8 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-yellow10 text-yellow">
             <SearchX size={24} />
           </div>
-          <h4 className="text-sm font-semibold text-black">
-            Mahsulot topilmadi
-          </h4>
-          <p className="mt-1 text-xs font-medium text-gray220">
-            Boshqa nom bilan ko'ring
-          </p>
+          <h4 className="title10 text-black">{t("product_not_found")}</h4>
+          <p className="text20 mt-1">{t("try_another_name")}</p>
         </div>
       )}
     </div>

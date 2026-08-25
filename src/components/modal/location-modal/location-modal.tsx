@@ -1,0 +1,150 @@
+"use client";
+import { useTranslations } from "next-intl";
+import Button from "@/components/ui/button";
+import XButton from "@/components/ui/x-button";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useLocationModal } from "./use-location-modal";
+import ModalScreen from "@/components/modal/screen-modal";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { LocationDetails, LocationMap, LocationSearch } from "./components";
+
+const LocationModal = () => {
+  const t = useTranslations();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const { state, actions, refs, status } = useLocationModal();
+
+  const search = (inputClassName: string) => (
+    <LocationSearch
+      value={state.addressName}
+      isSearching={state.isSearching}
+      results={state.searchResults}
+      inputClassName={inputClassName}
+      onChange={actions.handleChangeSearch}
+      onSearch={() => actions.handleSearchCenter()}
+      onSelect={actions.handleSelectAddress}
+    />
+  );
+
+  const map = (className: string, locationButtonClassName?: string) => (
+    <LocationMap
+      yandexKey={state.yandexKey}
+      mapKey={state.mapRenderKey}
+      mapState={state.mapState}
+      className={className}
+      locationButtonClassName={locationButtonClassName}
+      onLoad={actions.handleLoad}
+      onBoundsChange={actions.handleBoundsChange}
+      onCurrentLocation={actions.handleUserCurrentLocation}
+      setMapInstance={(instance) => {
+        refs.mapInstanceRef.current = instance;
+      }}
+    />
+  );
+
+  const continueButton = (className: string) => (
+    <Button
+      type="button"
+      variant="primary-solid"
+      size="primaryWide"
+      disabled={state.isResolving || !state.addressName.trim()}
+      className={className}
+      onClick={actions.handleOpenDetails}
+    >
+      {state.isResolving ? "Manzil aniqlanmoqda..." : t("continue")}
+    </Button>
+  );
+
+  const detailsContent = (
+    <LocationDetails
+      isDesktop={isDesktop}
+      addressName={state.addressName}
+      addressTitle={state.addressTitle}
+      comment={state.comment}
+      entrance={state.entrance}
+      floor={state.floor}
+      room={state.room}
+      isPending={status.isCreateAddressPending}
+      isResolving={state.isResolving}
+      onClose={actions.handleClose}
+      onEdit={actions.handleBackToMap}
+      onSubmit={actions.handleSubmit}
+      setAddressTitle={actions.setAddressTitle}
+      setComment={actions.setComment}
+      setEntrance={actions.setEntrance}
+      setFloor={actions.setFloor}
+      setRoom={actions.setRoom}
+    />
+  );
+
+  const desktopContent = (
+    <div className="flex h-full w-full flex-col bg-white p-4">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-xl font-extrabold text-black">
+          Yetkazib berish manzili
+        </h2>
+        <XButton
+          size="lg"
+          onClick={actions.handleClose}
+          className="bg-gray10"
+        />
+      </div>
+      <div className="mt-4">{search("h-10 rounded-xl bg-gray10")}</div>
+      <div className="mt-4 h-[480px] overflow-hidden rounded-2xl">
+        {map("h-[480px] w-full")}
+      </div>
+      <div className="mt-4">{continueButton("w-full")}</div>
+    </div>
+  );
+
+  const mobileContent = (
+    <div className="relative h-full min-h-0 w-full overflow-hidden bg-gray10">
+      <div className="absolute left-4 right-4 top-4 z-[100000001] flex items-start gap-3">
+        <XButton
+          size="lg"
+          onClick={actions.handleClose}
+          className="mt-1 bg-white"
+        />
+        {search("h-12 rounded-2xl bg-white")}
+      </div>
+      {map("h-dvh min-h-dvh w-full", "bottom-24")}
+      {continueButton("absolute bottom-4 left-4 right-4 z-[100000001] w-auto")}
+    </div>
+  );
+
+  if (isDesktop) {
+    return (
+      <>
+        <Dialog
+          open={state.locationModal && !state.detailsModal}
+          onOpenChange={actions.setLocationModal(false)}
+        >
+          <DialogContent
+            showCloseButton={false}
+            className="h-[700px] min-w-200 max-w-none overflow-hidden rounded-2xl border-0 bg-white p-0"
+          >
+            {desktopContent}
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={state.locationModal && state.detailsModal}
+          onOpenChange={actions.setLocationModal(false)}
+        >
+          <DialogContent
+            showCloseButton={false}
+            className="h-[450px] min-w-[610px] max-w-none overflow-hidden rounded-2xl border-0 bg-white p-0"
+          >
+            {detailsContent}
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  }
+  if (!state.locationModal) return null;
+  return (
+    <ModalScreen onClose={actions.handleClose} className="gap-0 !p-0">
+      {state.detailsModal ? detailsContent : mobileContent}
+    </ModalScreen>
+  );
+};
+
+export default LocationModal;

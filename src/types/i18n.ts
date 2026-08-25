@@ -1,4 +1,4 @@
-export type LocaleProps = "uz" | "ru" | "en";
+export type LocaleProps = "uz" | "ru" | "en" | "tr";
 
-export const locales: LocaleProps[] = ["uz", "ru", "en"];
+export const locales: LocaleProps[] = ["uz", "ru", "en", "tr"];
 export const defaultLocale: LocaleProps = "uz";

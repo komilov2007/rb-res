@@ -20,7 +20,7 @@ export const useLanguage = () => {
   const availableLanguages =
     (general?.data.languages?.filter(
       (language): language is LanguageValue => language in languages,
-    ) as LanguageValue[] | undefined) ?? ["uz", "ru", "en"];
+    ) as LanguageValue[] | undefined) ?? ["uz", "ru", "en", "tr"];
   const safeValue = availableLanguages.includes(value)
     ? value
     : availableLanguages[0];

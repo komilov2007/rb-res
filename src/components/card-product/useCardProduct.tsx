@@ -14,22 +14,17 @@ export const useCardProduct = ({
   const showOldPrice = isDiscount && product.discount_price;
   const counter = useBoolean();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const carts = useCartStore((state) => state.carts);
   const addCart = useCartStore((state) => state.addCart);
   const incrementCart = useCartStore((state) => state.incrementCart);
   const decrementCart = useCartStore((state) => state.decrementCart);
-
   const cartItem = carts.find((item) => item.product.id === product.id);
   const quantity = cartItem?.quantity ?? 0;
-
   const openCounter = () => {
     counter.setTrue();
-
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-
     timeoutRef.current = setTimeout(() => {
       counter.setFalse();
     }, 2000);
@@ -38,7 +33,6 @@ export const useCardProduct = ({
   const handleAddCart = () => {
     addCart(product);
     counter.setFalse();
-
     setTimeout(() => {
       openCounter();
     }, 30);
