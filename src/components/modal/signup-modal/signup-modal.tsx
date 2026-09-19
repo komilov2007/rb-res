@@ -10,30 +10,59 @@ import Input from "@/components/ui/input";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/stores/auth";
+import { useCartStore } from "@/stores/cart";
 import { signUp } from "@/apis/auth";
+import { setUser } from "@/lib/user";
 import { useShopid } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { getLocalPhone } from "@/utils/format-number";
 
+// First-time user name step, opened right after login (or by checkout when
+// the name is still missing) on top of the current screen. Saving the name
+// updates auth, which is what lets a pending checkout continue.
 const SignupModal = () => {
   const t = useTranslations();
   const { shopid } = useShopid();
   const queryClient = useQueryClient();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [firstname, setFirstname] = useState("");
+  const auth = useAuthStore((state) => state.auth);
+  const setAuth = useAuthStore((state) => state.setAuth);
   const signupModal = useAuthStore((state) => state.signupModal);
   const setSignupModal = useAuthStore((state) => state.setSignupModal);
+  const setPendingCheckout = useCartStore((state) => state.setPendingCheckout);
 
-  const handleClose = () => {
+  const closeModal = () => {
     setFirstname("");
     setSignupModal(false)();
   };
 
+  // Dismissed without a name: the user stays where they are and any pending
+  // checkout is dropped instead of continuing to the order page.
+  const handleDismiss = () => {
+    setPendingCheckout(false);
+    closeModal();
+  };
+
   const signup = useMutation({
-    mutationFn: () => signUp({ firstname }, shopid as string),
-    onSuccess: () => {
-      handleClose();
+    mutationFn: () =>
+      signUp(
+        { firstname: firstname.trim(), phone: getLocalPhone(auth?.phone) },
+        shopid as string,
+      ),
+    onSuccess: (response) => {
+      if (auth) {
+        const nextAuth = { ...auth, firstname: response.data.firstname };
+
+        setAuth(nextAuth);
+
+        if (shopid) setUser(shopid, nextAuth);
+      }
+
+      closeModal();
       void queryClient.invalidateQueries({ queryKey: ["general", shopid] });
+      void queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 
@@ -49,21 +78,22 @@ const SignupModal = () => {
     <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-extrabold text-black">{t("signup")}</h2>
-          <p className="mt-2 text-sm font-medium leading-5 text-gray220">
+          <h2 className="text-2xl font-bold text-black">{t("signup")}</h2>
+          <p className="mt-2 text-sm font-normal leading-5 text-gray220">
             {t("signup_hint")}
           </p>
         </div>
 
-        <XButton size="sm" onClick={handleClose} />
+        <XButton size="sm" onClick={handleDismiss} />
       </div>
 
       <label className="flex flex-col gap-2">
-        <span className="text-sm font-bold text-black">{t("first_name")}</span>
+        <span className="text-sm font-medium text-black">{t("first_name")}</span>
         <Input
+          autoFocus
           value={firstname}
           onChange={(event) => setFirstname(event.target.value)}
-          className="font-semibold text-black"
+          className="font-normal text-black"
           wrapperClassName="max-h-12"
         />
       </label>
@@ -81,10 +111,13 @@ const SignupModal = () => {
 
   if (isDesktop) {
     return (
-      <Dialog open={signupModal} onOpenChange={setSignupModal(false)}>
+      <Dialog
+        open={signupModal}
+        onOpenChange={(open) => !open && handleDismiss()}
+      >
         <DialogContent
           showCloseButton={false}
-          className="max-w-[420px] rounded-3xl border border-gray180 bg-white p-6"
+          className="z-[100] max-w-[420px] rounded-3xl border border-gray180 bg-white p-6"
         >
           {content}
         </DialogContent>
@@ -95,7 +128,7 @@ const SignupModal = () => {
   if (!signupModal) return null;
 
   return (
-    <ModalScreen onClose={handleClose} placement="bottom">
+    <ModalScreen onClose={handleDismiss} placement="bottom">
       {content}
     </ModalScreen>
   );

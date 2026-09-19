@@ -1,7 +1,7 @@
 import { Navigation } from "lucide-react";
 import { Map, YMaps, type YMapsApi } from "react-yandex-maps";
 
-import LocationPinIcon from "@/icons/location-pin-icon";
+import LocationPinIcon from "@/assets/icons/location-pin-icon";
 import { YANDEX_LANG } from "@/constants/yandex";
 import type { BoundsChangeEvent, MapInstance } from "@/types/yandex";
 

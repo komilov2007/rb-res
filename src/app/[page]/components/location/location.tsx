@@ -1,45 +1,44 @@
-import { ChevronDown, MapPin } from "lucide-react";
-import Button from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { useLocationStore } from "@/store/location";
-import { useAuthStore } from "@/store/auth";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-const Location = () => {
-  const t = useTranslations();
+import { getAddresses } from "@/apis/address";
+import { BranchSelectionChip } from "@/app/[page]/components/branch-selection";
+import { useAuthStore } from "@/stores/auth";
+import { useLocationStore } from "@/stores/location";
+
+type LocationProps = {
+  className?: string;
+  labelClassName?: string;
+};
+
+// Header indicator of the current delivery/pickup choice (chip). Also keeps
+// its original job of defaulting the location store to the user's current
+// saved address.
+const Location = ({ className, labelClassName }: LocationProps) => {
   const address = useLocationStore((state) => state.address);
-  const setLocationModal = useLocationStore((state) => state.setLocationModal);
+  const setAddress = useLocationStore((state) => state.setAddress);
+  const auth = useAuthStore((state) => state.auth);
   const hasAccess = useAuthStore((state) => state.hasAccess);
-  const setLoginModal = useAuthStore((state) => state.setLoginModal);
+  const { data: addresses } = useQuery({
+    enabled: hasAccess && Boolean(auth?.customer),
+    queryKey: ["user-addresses", auth?.customer],
+    queryFn: getAddresses,
+  });
+  const currentAddress =
+    addresses?.data.find((item) => item.is_current) ?? addresses?.data[0];
 
-  const handleOpenLocation = () => {
-    if (hasAccess) {
-      setLocationModal(true)();
-      return;
-    }
+  useEffect(() => {
+    if (address || !currentAddress) return;
 
-    setLoginModal(true)();
-  };
+    setAddress(currentAddress.address, {
+      id: currentAddress.id,
+      latitude: currentAddress.latitude,
+      longitude: currentAddress.longitude,
+    });
+  }, [address, currentAddress, setAddress]);
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleOpenLocation}
-      className="gap-3 text-left hover:bg-transparent"
-    >
-      <span className="grid h-10 w-10 place-items-center rounded-full bg-gray10 text-black">
-        <MapPin size={19} />
-      </span>
-      <span className="flex max-w-[160px] flex-col text-left">
-        <span className="text-[11px] font-medium leading-none text-gray220">
-          Yetkazish manzili
-        </span>
-        <span className="title10 mt-1 truncate text-black">
-          {address || t("select_address")}
-        </span>
-      </span>
-      <ChevronDown size={16} className="shrink-0 text-gray220" />
-    </Button>
+    <BranchSelectionChip className={className} labelClassName={labelClassName} />
   );
 };
 

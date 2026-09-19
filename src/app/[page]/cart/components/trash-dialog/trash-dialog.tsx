@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Button from "@/components/ui/button";
 import {
@@ -9,21 +9,83 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useCartStore } from "@/store/cart";
+import { useCartStore } from "@/stores/cart";
 import { useTranslations } from "next-intl";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { clearCartList, getCartList, removeCartItem } from "@/apis/cart";
+import { useAuthStore } from "@/stores/auth";
+import { normalizeCartItems } from "@/utils/cart";
 
 const RemoveCartDialog = () => {
   const t = useTranslations();
   const removeProductId = useCartStore((state) => state.removeProductId);
+  const clearCartConfirmOpen = useCartStore(
+    (state) => state.clearCartConfirmOpen,
+  );
+  const carts = useCartStore((state) => state.carts);
   const closeRemoveModal = useCartStore((state) => state.closeRemoveModal);
+  const closeClearCartModal = useCartStore((state) => state.closeClearCartModal);
   const confirmRemoveCart = useCartStore((state) => state.confirmRemoveCart);
+  const setCarts = useCartStore((state) => state.setCarts);
+  const customerId = useAuthStore((state) => state.auth?.customer);
+  const queryClient = useQueryClient();
+  const removeMutation = useMutation({
+    mutationFn: removeCartItem,
+  });
+  const clearMutation = useMutation({
+    mutationFn: clearCartList,
+  });
+  const isClearMode = clearCartConfirmOpen;
+  const isOpen = removeProductId !== null || clearCartConfirmOpen;
+
+  const handleRemove = async () => {
+    if (isClearMode) {
+      if (customerId) {
+        await clearMutation.mutateAsync(customerId);
+        setCarts([]);
+
+        const response = await getCartList(customerId);
+        const nextCarts = normalizeCartItems(response.data);
+
+        queryClient.setQueryData(["cart-list", customerId], response);
+        setCarts(nextCarts);
+      } else {
+        setCarts([]);
+      }
+
+      closeClearCartModal();
+      return;
+    }
+
+    const cartItem = carts.find((item) => item.product.id === removeProductId);
+
+    if (cartItem?.id) {
+      await removeMutation.mutateAsync(cartItem.id);
+      if (customerId) {
+        const response = await getCartList(customerId);
+        queryClient.setQueryData(["cart-list", customerId], response);
+        setCarts(
+          normalizeCartItems(response.data, useCartStore.getState().carts),
+        );
+        closeRemoveModal();
+        return;
+      }
+    }
+
+    confirmRemoveCart();
+  };
+
+  const handleClose = () => {
+    closeRemoveModal();
+    closeClearCartModal();
+  };
 
   return (
     <Dialog
-      open={removeProductId !== null}
+      open={isOpen}
       onOpenChange={(open) => {
         if (!open) {
-          closeRemoveModal();
+          handleClose();
         }
       }}
     >
@@ -42,7 +104,7 @@ const RemoveCartDialog = () => {
             type="button"
             variant="outline"
             size="dialogAction"
-            onClick={closeRemoveModal}
+            onClick={handleClose}
           >
             {t("cancel")}
           </Button>
@@ -51,7 +113,8 @@ const RemoveCartDialog = () => {
             type="button"
             variant="destructive"
             size="dialogAction"
-            onClick={confirmRemoveCart}
+            onClick={handleRemove}
+            disabled={removeMutation.isPending || clearMutation.isPending}
           >
             {t("delete")}
           </Button>
@@ -62,3 +125,4 @@ const RemoveCartDialog = () => {
 };
 
 export default RemoveCartDialog;
+

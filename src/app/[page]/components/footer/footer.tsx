@@ -31,25 +31,25 @@ const Footer = () => {
 
           <nav className="grid grid-cols-2 gap-x-8 gap-y-3">
             <a
-              className="text-sm font-semibold text-gray220 transition-colors hover:text-black"
+              className="text-sm font-normal text-gray220 transition-colors hover:text-black"
               href="#"
             >
               {t("about_us")}
             </a>
             <a
-              className="text-sm font-semibold text-gray220 transition-colors hover:text-black"
+              className="text-sm font-normal text-gray220 transition-colors hover:text-black"
               href="#"
             >
               {t("store_branches")}
             </a>
             <a
-              className="text-sm font-semibold text-gray220 transition-colors hover:text-black"
+              className="text-sm font-normal text-gray220 transition-colors hover:text-black"
               href="#"
             >
               {t("privacy_policy")}
             </a>
             <a
-              className="flex items-center gap-1 text-sm font-semibold text-gray220 transition-colors hover:text-black"
+              className="flex items-center gap-1 text-sm font-normal text-gray220 transition-colors hover:text-black"
               href="#"
             >
               {t("terms")}
@@ -59,8 +59,8 @@ const Footer = () => {
         </div>
 
         <div className="flex h-[92px] items-center justify-center border-x border-[#EAECF0] px-10">
-          <p className="text-center text-sm font-semibold text-gray220">
-            <span className="font-extrabold text-primary">Robosell.uz</span>
+          <p className="text-center text-sm font-normal text-gray220">
+            <span className="font-medium text-black">Robosell.uz</span>
             {` ${t("powered_by")}`}
           </p>
         </div>
@@ -69,9 +69,9 @@ const Footer = () => {
           {general?.business_phone && (
             <a
               href={`tel:${general.business_phone}`}
-              className="flex items-center gap-2 text-base font-extrabold text-black transition-opacity hover:opacity-70"
+              className="flex items-center gap-2 text-base font-medium text-black transition-opacity hover:opacity-70"
             >
-              <Phone size={17} className="text-primary" />
+              <Phone size={17} className="text-gray220" />
               {general.business_phone}
             </a>
           )}

@@ -1,4 +1,12 @@
-import { Pencil } from "lucide-react";
+import {
+  Building2,
+  DoorOpen,
+  Home,
+  MapPinned,
+  MessageSquare,
+  Pencil,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
@@ -44,75 +52,90 @@ const LocationDetails = ({
   setFloor,
   setRoom,
 }: LocationDetailsProps) => {
+  const t = useTranslations();
   const inputClassName = isDesktop
-    ? "h-10 rounded-xl !gap-0 !border-0 !border-b  "
-    : "h-10 rounded-xl !gap-0 !border-0 !border-b ";
+    ? "h-11 rounded-xl !border-0 !border-b !border-gray180 !bg-transparent px-0 focus-within:!border-black focus-within:!bg-transparent hover:!border-transparent"
+    : "h-12 rounded-xl !border-0 !border-b !border-gray180 !bg-transparent px-0 focus-within:!border-black focus-within:!bg-transparent hover:!border-transparent";
 
   return (
-    <div className="flex h-full w-full flex-col bg-white p-5">
+    <div className="flex h-full w-full flex-col bg-white px-5 pb-5 pt-4">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-xl font-extrabold text-black">
-          Manzil ma&apos;lumotlari
+        <h2 className="text-[21px] font-bold leading-7 text-black">
+          {t("location.address_details")}
         </h2>
         <XButton size="lg" onClick={onClose} className="bg-gray10" />
       </div>
-      <div className="mt-5 flex items-center justify-between gap-3 border-b border-gray180 pb-3">
-        <div className="min-w-0">
-          <span className="block text-xs font-medium text-gray220">
-            Yetkazish manzili
+
+      <div className="mt-5 flex items-start justify-between gap-3 border-b border-gray180 pb-4">
+        <div className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5 text-xs font-medium text-gray220">
+            <MapPinned size={14} className="text-gray220" />
+            {t("delivery_address")}
           </span>
-          <span className="mt-1 block line-clamp-1 text-sm font-semibold text-black">
-            {addressName || "Manzilni tanlang"}
-          </span>
+          <p className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-black">
+            {addressName || t("select_address")}
+          </p>
         </div>
         <Button
           type="button"
           variant="counter"
           size="icon-lg"
+          className="shrink-0 text-gray220"
           onClick={onEdit}
           disabled={isPending}
         >
           <Pencil size={16} />
         </Button>
       </div>
-      <div className="mt-4 space-y-2">
-        <div className="grid grid-cols-3 gap-4">
-          <Input
-            value={entrance}
-            onChange={(event) => setEntrance(getDigits(event.target.value))}
-            inputMode="numeric"
-            placeholder="Kirish yo'lagi"
-            wrapperClassName={inputClassName}
-          />
-          <Input
-            value={floor}
-            onChange={(event) => setFloor(getDigits(event.target.value))}
-            inputMode="numeric"
-            placeholder="Qavat"
-            wrapperClassName={inputClassName}
-          />
-          <Input
-            value={room}
-            onChange={(event) => setRoom(getDigits(event.target.value))}
-            inputMode="numeric"
-            placeholder="Xona"
-            wrapperClassName={inputClassName}
-          />
-        </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-4">
         <Input
+          IconStart={DoorOpen}
+          value={entrance}
+          onChange={(event) => setEntrance(getDigits(event.target.value))}
+          inputMode="numeric"
+          placeholder={t("entrance")}
+          wrapperClassName={inputClassName}
+          className="text-xs placeholder:text-xs"
+        />
+        <Input
+          IconStart={Building2}
+          value={floor}
+          onChange={(event) => setFloor(getDigits(event.target.value))}
+          inputMode="numeric"
+          placeholder={t("floor")}
+          wrapperClassName={inputClassName}
+          className="text-xs placeholder:text-xs"
+        />
+        <Input
+          IconStart={Home}
+          value={room}
+          onChange={(event) => setRoom(getDigits(event.target.value))}
+          inputMode="numeric"
+          placeholder={t("room")}
+          wrapperClassName={inputClassName}
+          className="text-xs placeholder:text-xs"
+        />
+      </div>
+
+      <div className="mt-4 grid gap-4">
+        <Input
+          IconStart={MessageSquare}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          placeholder="Kuryer uchun izoh"
+          placeholder={t("location.courier_comment")}
           wrapperClassName={inputClassName}
         />
         <Input
+          IconStart={Home}
           value={addressTitle}
           onChange={(event) => setAddressTitle(event.target.value)}
-          placeholder="Manzil nomi"
+          placeholder={t("location.address_name")}
           wrapperClassName={inputClassName}
         />
       </div>
-      <div className="mt-auto pt-6">
+
+      <div className="mt-auto pt-5">
         <Button
           type="button"
           variant="primary-solid"
@@ -120,7 +143,7 @@ const LocationDetails = ({
           disabled={isResolving || isPending || !addressName.trim()}
           onClick={onSubmit}
         >
-          Tasdiqlash
+          {t("common.confirm")}
         </Button>
       </div>
     </div>
@@ -128,3 +151,6 @@ const LocationDetails = ({
 };
 
 export default LocationDetails;
+
+
+

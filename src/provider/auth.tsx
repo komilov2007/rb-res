@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 
 import { getUser } from "@/lib/user";
 import { useShopid } from "@/hooks/useShopId";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/stores/auth";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { shopid } = useShopid();
@@ -18,3 +18,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return children;
 };
+

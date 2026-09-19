@@ -34,7 +34,11 @@ const Input = ({
       {startContent}
       <input
         value={value}
-        className={`w-full bg-transparent text-sm text-gray220 outline-none placeholder:text-gray220 ${className}`}
+        // text-base (16px), not text-sm: iOS Safari auto-zooms the whole
+        // page on focus for any text input under 16px — this is the shared
+        // Input every text field in the app renders through, so fixing it
+        // here covers phone/promo/address/search/etc. in one place.
+        className={`w-full bg-transparent text-base text-gray220 outline-none placeholder:text-gray220 ${className}`}
         {...props}
       />
       {clearable && hasValue && (

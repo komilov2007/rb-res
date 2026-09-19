@@ -1,67 +1,262 @@
-import type { CardProductProps } from "@/types/product";
-import { formatPrice } from "@/utils/format-price";
-import { useCardProduct } from "./useCardProduct";
+import { Flame } from "lucide-react";
 import { useTranslations } from "next-intl";
-import CartAction from "./cart-action";
+import { toast } from "sonner";
 
-const CardProduct = ({ product, variant = "default" }: CardProductProps) => {
+import type { BranchProps } from "@/types/branch";
+import type { CardProductProps } from "@/types/product";
+import { useShopid } from "@/hooks/useShopId";
+import { useBranchSelectionStore } from "@/stores/branch-selection";
+import { useCardBranchPopoverStore } from "@/stores/card-branch-popover";
+import { useProductDetailStore } from "@/stores/product-detail";
+import { formatPrice } from "@/utils/format-price";
+import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
+import { showProductUnavailable } from "@/utils/branch-availability";
+
+import CartAction from "./cart-action";
+import UnavailableBranchList from "./unavailable-branch-list";
+import UnavailablePopover from "./unavailable-popover";
+import { useCardProduct } from "./useCardProduct";
+import {
+  CARD_HEIGHT_CLASS,
+  SALE_VARIANT_CLASS_NAMES,
+  shouldUseDiscountCard,
+} from "./utils";
+
+const CardProduct = ({
+  product,
+  variant = "default",
+  saleBadgeVariant = "red",
+  isUnavailable = false,
+  whiteSurface = false,
+}: CardProductProps) => {
   const t = useTranslations();
   const {
     price,
     quantity,
-    cartItem,
     isDiscount,
     showOldPrice,
     handleAddCart,
     handleIncrement,
     handleDecrement,
-  } = useCardProduct({ product, variant });
+    handleChangeQuantity,
+    isStockLoading,
+  } = useCardProduct({ product, variant, saleBadgeVariant });
+  const openProductDetail = useProductDetailStore(
+    (state) => state.openProductDetail,
+  );
+  const { shopid } = useShopid();
+  const setPickup = useBranchSelectionStore((state) => state.setPickup);
+  // Only one product's popover open at a time, by id — opening this card's
+  // implicitly closes whichever other card's was open (its own comparison
+  // below just stops matching), no explicit "close the others" call needed.
+  const openPopoverProductId = useCardBranchPopoverStore(
+    (state) => state.openProductId,
+  );
+  const openCardBranchPopover = useCardBranchPopoverStore(
+    (state) => state.openCardBranchPopover,
+  );
+  const closeCardBranchPopover = useCardBranchPopoverStore(
+    (state) => state.closeCardBranchPopover,
+  );
+  const isBranchPopoverOpen = openPopoverProductId === product.id;
+  const isDiscountCard = shouldUseDiscountCard(variant, isDiscount);
+  const saleVariantClassName = SALE_VARIANT_CLASS_NAMES[saleBadgeVariant];
+  const saleLabel =
+    product.sale_type === "PERCENT"
+      ? `-${product.sale_amount}%`
+      : `-${formatPrice(product.sale_amount ?? 0)} ${t("sum")}`;
+  // A product with no branches at all can't be fixed by switching branch —
+  // that's a dead end, so it stays a plain toast. Otherwise open the inline
+  // popover, overlaid right on this card, offering the actual fix.
+  const handleUnavailableTap = () => {
+    if (!product.branches?.length) {
+      showProductUnavailable();
+      return;
+    }
+
+    openCardBranchPopover(product.id);
+  };
+  const handleSelectBranch = (branch: BranchProps) => {
+    if (!shopid) return;
+
+    setPickup(shopid, branch.id);
+    closeCardBranchPopover();
+    // The header chip and every other unavailable card read this same
+    // store, so they already update the instant setPickup runs — this
+    // toast is purely a confirmation, not what drives that update.
+    toast.success(t("product.branch_switched", { name: branch.name }), {
+      duration: 2500,
+    });
+  };
 
   return (
-    <article className="flex min-h-[254px] w-full flex-col overflow-hidden rounded-[22px] border-x border-b border-gray180 bg-white lg:min-h-[322px] lg:rounded-3xl">
-      <div className="relative h-[168px] overflow-hidden rounded-b-[22px] bg-gray10 lg:h-[220px] lg:rounded-b-3xl">
-        <img
-          src={product.photo}
-          alt={product.name}
-          className="h-full w-full object-cover"
-        />
+    <article
+      data-unavailable={isUnavailable || undefined}
+      onClick={() => {
+        if (isUnavailable) {
+          handleUnavailableTap();
+          return;
+        }
 
-        <div className="absolute bottom-3 right-3 lg:bottom-4 lg:right-4">
-          <CartAction
-            quantity={quantity}
-            hasCart={Boolean(cartItem)}
-            onAdd={handleAddCart}
-            onIncrement={handleIncrement}
-            onDecrement={handleDecrement}
-          />
-        </div>
-      </div>
+        // A different, available card being tapped shouldn't leave some
+        // other card's popover open behind the drawer this opens.
+        closeCardBranchPopover();
+        openProductDetail(product, saleBadgeVariant, "default");
+      }}
+      // The browser's own default tap-highlight (a harsh gray/black flash
+      // on mobile) is what made pressing this look bad — the group-active
+      // overlay div below replaces it with a deliberately light one, so
+      // that default needs turning off here or the two would show at once.
+      style={{ WebkitTapHighlightColor: "transparent" }}
+      className={`group relative flex ${CARD_HEIGHT_CLASS} w-full flex-col rounded-[18px] transition-transform duration-200 ease-out active:scale-[0.98] lg:rounded-[20px] lg:border lg:border-gray180 lg:duration-300 lg:hover:-translate-y-0.5 ${
+        isDiscountCard
+          ? "overflow-visible bg-white ring-1 ring-black/5 lg:ring-0"
+          : `${
+              whiteSurface ? "bg-white" : "bg-gray10 lg:bg-white"
+            } ring-1 ring-black/5 lg:shadow-none lg:ring-0`
+      }`}
+    >
+      {/* Soft, uniform press feedback (a light tint over the whole card,
+          image included) instead of the browser's own harsh default —
+          pointer-events-none so it never intercepts the tap it's reacting
+          to. z-[15]: above the image/content (z-10) so it actually tints
+          them, but below the unavailable popover (z-20) below — without
+          that, pressing a branch row inside the open popover would also
+          tint the popover itself, since :active on this <article> is also
+          true while a descendant inside it is being pressed. */}
+      <div className="pointer-events-none absolute inset-0 z-15 rounded-[18px] bg-black/5 opacity-0 transition-opacity duration-150 group-active:opacity-100 lg:rounded-[20px]" />
 
-      <div className="flex flex-1  flex-col bg-white px-3.5 pb-4 pt-3 lg:px-5 lg:pb-5 lg:pt-4">
-        <div className="flex flex-1 flex-col">
-          <p
-            className={`text-base font-extrabold leading-none text-black lg:text-md mt-[-5px] ${
-              isDiscount ? "text-primary" : ""
-            }`}
-          >
-            {formatPrice(price)} {t("sum")}
-          </p>
-          {showOldPrice && (
-            <p className="mt-1 text-xs font-semibold text-gray220 line-through">
-              {formatPrice(product.price)} {t("sum")}
-            </p>
+      {/* Dims/desaturates the photo + price/name block only — the popover
+          above sits outside this wrapper specifically so it isn't also
+          grayscaled: a CSS filter applies to an element's whole rendered
+          subtree, so putting it on the <article> itself (as before) was
+          desaturating "Olmazorda bor" along with everything else, when the
+          point of that row is to read as the opposite of dimmed. */}
+      <div
+        className={`flex min-h-0 flex-1 flex-col ${
+          isUnavailable ? "opacity-80 grayscale" : ""
+        }`}
+      >
+        <div
+          className={`relative z-10 shrink-0 bg-gray10 ${
+            isDiscountCard
+              ? "h-[170px] overflow-hidden rounded-[18px] lg:h-[240px] lg:rounded-[20px]"
+              : "h-[170px] overflow-hidden rounded-[18px] lg:h-[240px] lg:rounded-[20px]"
+          }`}
+        >
+          <div className="h-full w-full overflow-hidden rounded-[inherit]">
+            <img
+              src={product.photo || IMAGE_PLACEHOLDER_SRC}
+              alt={product.name}
+              onError={handleImageFallback}
+              className="h-full w-full object-cover"
+            />
+          </div>
+
+          {isUnavailable && (
+            <span className="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold leading-none text-white">
+              {t("product.not_in_this_branch")}
+            </span>
           )}
-          <h6 className="mt-1.5 text-xs font-medium leading-4 text-gray220 lg:text-sm lg:leading-5">
-            {product.name}
-          </h6>
 
-          {product.amount > 0 && (
-            <span className="mt-2 w-fit rounded-md bg-orange-50 px-2.5 py-1 text-[11px] font-extrabold text-orange-500 lg:text-xs">
-              {product.amount} g
+          {isDiscountCard && product.sale_amount && (
+            <span
+              className={`absolute right-1 top-2 z-20 flex h-7 items-center gap-1 rounded-full py-0.5 pl-0.5 pr-2.5 text-[9px] font-extrabold leading-none text-white shadow-[0_6px_14px_rgba(17,24,39,0.16)] ring-1 ring-white/70 ${saleVariantClassName.badge}`}
+            >
+              <span
+                className={`flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-xs font-extrabold leading-none text-white ${saleVariantClassName.badge}`}
+              >
+                <Flame size={18} />
+              </span>
+              {t("discount")}
             </span>
           )}
         </div>
+
+        <div
+          className={`relative flex min-h-0 flex-1 flex-col rounded-b-[18px] px-4 lg:rounded-b-[20px] lg:px-4 ${
+            isDiscountCard
+              ? "-mt-5 bg-white pb-4 pt-7 lg:-mt-8 lg:min-h-[174px] lg:pb-4 lg:pt-10"
+              : `-mt-5 pb-4 pt-8 lg:-mt-8 lg:min-h-[174px] lg:pb-4 lg:pt-10 ${
+                  whiteSurface ? "bg-white" : "bg-gray10 lg:bg-white"
+                }`
+          }`}
+        >
+          <div className="flex flex-col gap-1.5 lg:gap-1.5">
+            <div className="min-w-0">
+              {showOldPrice && (
+                <div className="flex w-full min-w-0 items-center gap-2">
+                  <p className="text-[11px] font-normal leading-none text-red-500 line-through lg:text-xs">
+                    {formatPrice(product.price)} {t("sum")}
+                  </p>
+                  {isDiscountCard && product.sale_amount && (
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold leading-none text-white ${saleVariantClassName.badge}`}
+                    >
+                      {saleLabel}
+                    </span>
+                  )}
+                </div>
+              )}
+              <p className="mt-1 text-[13px] font-bold leading-[15px] text-black lg:text-[15px] lg:leading-4">
+                {formatPrice(price)} {t("sum")}
+              </p>
+            </div>
+
+            <div className="min-h-[40px] lg:min-h-[44px]">
+              <h6 className="line-clamp-2 break-normal text-xs font-normal leading-4 text-gray220 lg:leading-[15px]">
+                {product.name}
+              </h6>
+
+              {product.amount > 0 && (
+                <span className="mt-1.5 block text-xs font-medium text-gray220">
+                  {product.amount} {t("product.gram_unit")}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div
+            className={`mt-auto flex justify-end rounded-2xl ${
+              isDiscountCard
+                ? "-translate-y-[11px] lg:-translate-y-0.5"
+                : "translate-y-0 lg:-translate-y-0.5"
+            }`}
+          >
+            <div
+              onClick={(event) => event.stopPropagation()}
+              // Blocks the add/+/- buttons before they run when the product
+              // isn't sold at the selected branch.
+              onClickCapture={(event) => {
+                if (!isUnavailable) return;
+
+                event.stopPropagation();
+                handleUnavailableTap();
+              }}
+              className="mt-2 flex w-full justify-end lg:mt-0 lg:translate-y-0 [&>div]:lg:max-w-none"
+            >
+              <CartAction
+                quantity={quantity}
+                hasCart={quantity > 0}
+                onAdd={handleAddCart}
+                onIncrement={handleIncrement}
+                onDecrement={handleDecrement}
+                onChangeQuantity={handleChangeQuantity}
+                isLoading={isStockLoading}
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
+      {isUnavailable && (
+        <UnavailablePopover
+          open={isBranchPopoverOpen}
+          onClose={closeCardBranchPopover}
+        >
+          <UnavailableBranchList product={product} onSelect={handleSelectBranch} />
+        </UnavailablePopover>
+      )}
     </article>
   );
 };

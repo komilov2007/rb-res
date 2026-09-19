@@ -1,6 +1,6 @@
 import type { Coordinates } from "@/types/yandex";
 
-export const DEFAULT_CENTER: Coordinates = [69.2401, 41.2995];
+export const DEFAULT_CENTER: Coordinates = [69.2797, 41.3111];
 
 export const YANDEX_KEYS = [
   "8b56a857-f05f-4dc6-a91b-bc58f302ff21",
@@ -23,3 +23,12 @@ export const YANDEX_KEYS = [
 ];
 
 export const YANDEX_LANG = "uz_UZ";
+
+// Language of address *text* picked on the map (reverse geocode + address
+// search in the location modal). Kept separate from YANDEX_LANG, which
+// only drives the map tiles' own labels: the picked address is what gets
+// saved to the backend and shown back everywhere. Russian — the backend
+// returns saved addresses in Russian regardless of what was sent, so the
+// picker matches it end to end.
+export const YANDEX_ADDRESS_LANG = "ru_RU";
+

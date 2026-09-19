@@ -11,7 +11,7 @@ import { languages } from "@/constants/language";
 import { useLanguage } from "./useLanguage";
 
 type LanguageProps = {
-  variant?: "default" | "hero";
+  variant?: "default" | "hero" | "topbar";
 };
 
 const Language = ({ variant = "default" }: LanguageProps) => {
@@ -25,6 +25,7 @@ const Language = ({ variant = "default" }: LanguageProps) => {
   } = useLanguage();
   const ActiveIcon = languages[safeValue].Icon;
   const isHero = variant === "hero";
+  const isTopbar = variant === "topbar";
 
   return (
     <Select
@@ -37,12 +38,18 @@ const Language = ({ variant = "default" }: LanguageProps) => {
         className={
           isHero
             ? "h-8 rounded-full bg-white/18 px-3 text-xs font-bold text-white backdrop-blur-md"
+            : isTopbar
+              ? "h-9 rounded-full bg-transparent px-0 text-sm font-medium text-black hover:bg-transparent"
             : "h-12 rounded-2xl bg-white px-3 text-black hover:bg-gray10"
         }
       >
         <ActiveIcon />
         <SelectValue>
-          {isHero ? safeValue.toUpperCase() : languages[safeValue].short}
+          {isHero
+            ? safeValue.toUpperCase()
+            : isTopbar
+              ? languages[safeValue].label
+              : languages[safeValue].short}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

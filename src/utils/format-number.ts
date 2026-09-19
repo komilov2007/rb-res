@@ -12,3 +12,8 @@ export const getDigits = (value: string, maxLength?: number) => {
 
   return typeof maxLength === "number" ? digits.slice(0, maxLength) : digits;
 };
+
+// "+998901234567" / "998901234567" -> "901234567" — the local-number shape
+// the firstname-update endpoint expects.
+export const getLocalPhone = (phone?: string | null) =>
+  phone?.replace(/^\+?998/, "") ?? "";

@@ -2,11 +2,17 @@
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/button";
 import XButton from "@/components/ui/x-button";
+import { Trash2 } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useLocationModal } from "./use-location-modal";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { LocationDetails, LocationMap, LocationSearch } from "./components";
+import {
+  LocationAddresses,
+  LocationDetails,
+  LocationMap,
+  LocationSearch,
+} from "./components";
 
 const LocationModal = () => {
   const t = useTranslations();
@@ -50,7 +56,7 @@ const LocationModal = () => {
       className={className}
       onClick={actions.handleOpenDetails}
     >
-      {state.isResolving ? "Manzil aniqlanmoqda..." : t("continue")}
+      {state.isResolving ? t("location.resolving") : t("continue")}
     </Button>
   );
 
@@ -76,11 +82,22 @@ const LocationModal = () => {
     />
   );
 
+  const addressesContent = (
+    <LocationAddresses
+      addresses={state.addresses}
+      activeAddressId={state.activeAddressId}
+      onClose={actions.handleClose}
+      onAdd={actions.handleAddAddress}
+      onEdit={actions.handleEditAddress}
+      onSelect={actions.handleSelectSavedAddress}
+    />
+  );
+
   const desktopContent = (
     <div className="flex h-full w-full flex-col bg-white p-4">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-xl font-extrabold text-black">
-          Yetkazib berish manzili
+        <h2 className="text-xl font-bold text-black">
+          {t("location.delivery_address_title")}
         </h2>
         <XButton
           size="lg"
@@ -104,7 +121,24 @@ const LocationModal = () => {
           onClick={actions.handleClose}
           className="mt-1 bg-white"
         />
-        {search("h-12 rounded-2xl bg-white")}
+        <div className="min-w-0 flex-1">
+          {search("h-12 rounded-2xl bg-white")}
+          {state.editingAddressId && (
+            <div className="mt-2 flex justify-end">
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon-lg"
+                onClick={actions.handleDeleteAddress}
+                disabled={status.isCreateAddressPending}
+                className="bg-red-500 text-white"
+                aria-label={t("location.delete_address")}
+              >
+                <Trash2 size={17} />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
       {map("h-dvh min-h-dvh w-full", "bottom-24")}
       {continueButton("absolute bottom-4 left-4 right-4 z-[100000001] w-auto")}
@@ -122,7 +156,7 @@ const LocationModal = () => {
             showCloseButton={false}
             className="h-[700px] min-w-200 max-w-none overflow-hidden rounded-2xl border-0 bg-white p-0"
           >
-            {desktopContent}
+            {state.mapModal ? desktopContent : addressesContent}
           </DialogContent>
         </Dialog>
         <Dialog
@@ -141,10 +175,24 @@ const LocationModal = () => {
   }
   if (!state.locationModal) return null;
   return (
-    <ModalScreen onClose={actions.handleClose} className="gap-0 !p-0">
-      {state.detailsModal ? detailsContent : mobileContent}
+    <ModalScreen
+      onClose={actions.handleClose}
+      placement={state.mapModal ? "screen" : "bottom"}
+      className={state.mapModal ? "gap-0 !p-0" : "gap-0 !max-h-none !overflow-hidden !p-0"}
+    >
+      {state.detailsModal
+        ? detailsContent
+        : state.mapModal
+          ? mobileContent
+          : addressesContent}
     </ModalScreen>
   );
 };
 
 export default LocationModal;
+
+
+
+
+
+

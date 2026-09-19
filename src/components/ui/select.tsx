@@ -35,7 +35,7 @@ const SelectTrigger = ({
 }: ComponentProps<typeof Trigger>) => {
   return (
     <Trigger
-      className={`flex h-10 items-center gap-2 rounded-lg bg-gray10 px-3 text-sm font-semibold text-gray220 outline-none ${className}`}
+      className={`flex h-10 items-center gap-2 rounded-lg bg-gray10 px-3 text-sm font-medium text-gray220 outline-none ${className}`}
       {...props}
     >
       {children}

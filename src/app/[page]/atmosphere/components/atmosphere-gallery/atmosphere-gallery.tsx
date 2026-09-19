@@ -1,106 +1,103 @@
 "use client";
 
 import { useRef, useState } from "react";
-import type { Swiper as SwiperType } from "swiper";
-import { Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import { useTranslations } from "next-intl";
 
-type AtmosphereGalleryProps = {
-  images: string[];
-};
+import GalleryArrow from "./components/gallery-arrow";
+import GalleryModal from "./components/gallery-modal";
+import GalleryStyles from "./components/gallery-styles";
+import { galleryImages, posterSrc, videoSrc } from "./constants";
 
-const AtmosphereGallery = ({ images }: AtmosphereGalleryProps) => {
-  const swiperRef = useRef<SwiperType | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+const AtmosphereGallery = () => {
+  const t = useTranslations();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+  const loopImages = [...galleryImages, ...galleryImages, ...galleryImages];
 
-  const handleSelectImage = (index: number) => {
-    setActiveIndex(index);
-    swiperRef.current?.slideToLoop(index);
+  const handleScroll = (direction: "left" | "right") => {
+    scrollRef.current?.scrollBy({
+      left: direction === "left" ? -320 : 320,
+      behavior: "smooth",
+    });
   };
 
   return (
-    <div className="mt-5">
-      {images.length === 0 ? (
-        <GalleryImage className="h-[230px] rounded-2xl lg:h-[360px]" />
-      ) : (
-        <>
-          <Swiper
-            loop={images.length > 1}
-            autoplay={
-              images.length > 1
-                ? {
-                    delay: 3000,
-                    disableOnInteraction: false,
-                  }
-                : false
-            }
-            modules={[Autoplay]}
-            onSwiper={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            className="w-full"
+    <div className="mt-4">
+      <div className="grid items-center gap-7 lg:grid-cols-[1.35fr_0.85fr] lg:gap-9">
+        <div className="overflow-hidden rounded-l-xl rounded-r-[44px] bg-black lg:rounded-r-[96px]">
+          <video
+            controls
+            muted
+            playsInline
+            poster={posterSrc}
+            className="h-[230px] w-full object-cover lg:h-[370px]"
           >
-            {images.map((image) => (
-              <SwiperSlide key={image}>
-                <GalleryImage
-                  src={image}
-                  className="h-[230px] rounded-2xl lg:h-[360px]"
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </div>
+
+        <div className="lg:pl-2">
+          <p className="text-xs font-bold uppercase tracking-[0.45em] text-black">
+            {t("booking.gallery_eyebrow")}
+          </p>
+          <div className="mt-4 flex items-center gap-2">
+            <span className="h-px w-14 bg-black" />
+            <span className="h-1.5 w-1.5 rounded-full bg-black" />
+            <span className="h-1.5 w-1.5 rounded-full bg-black/60" />
+            <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
+          </div>
+          <h2 className="mt-7 max-w-[430px] font-serif text-[42px] font-medium leading-[0.95] text-black lg:text-[64px]">
+            {t("booking.gallery_title")}
+          </h2>
+          <p className="mt-6 max-w-[520px] text-sm font-medium leading-7 text-gray220 lg:text-base">
+            {t("booking.gallery_description")}
+          </p>
+        </div>
+      </div>
+
+      <div className="group relative mt-8 overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="scroll-hidden overflow-x-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <div className="atmosphere-marquee flex w-max gap-3 lg:gap-4">
+            {loopImages.map((image, index) => (
+              <button
+                key={`${image.src}-${index}`}
+                type="button"
+                onClick={() => setActiveImage(image.src)}
+                className={`${image.width} h-[118px] shrink-0 overflow-hidden rounded-xl bg-gray10 lg:h-[178px]`}
+              >
+                <img
+                  src={image.src}
+                  alt={t("booking.gallery_image_alt")}
+                  className="h-full w-full object-cover"
                 />
-              </SwiperSlide>
+              </button>
             ))}
-          </Swiper>
+          </div>
+        </div>
 
-          {images.length > 1 && (
-            <div className="scroll-hidden mt-4 flex items-center justify-center gap-2 overflow-x-auto px-1">
-              {images.map((image, index) => {
-                const isActive = activeIndex === index;
+        <GalleryArrow
+          direction="left"
+          onClick={() => handleScroll("left")}
+          className="left-3"
+        />
+        <GalleryArrow
+          direction="right"
+          onClick={() => handleScroll("right")}
+          className="right-3"
+        />
+      </div>
 
-                return (
-                  <button
-                    key={image}
-                    type="button"
-                    onClick={() => handleSelectImage(index)}
-                    className={`h-9 w-12 shrink-0 overflow-hidden rounded-lg border-2 transition-opacity lg:h-11 lg:w-16 ${
-                      isActive
-                        ? "border-primary opacity-100 ring-2 ring-primary10"
-                        : "border-transparent opacity-60"
-                    }`}
-                  >
-                    <img
-                      src={image}
-                      alt="Atmosfera"
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </>
-      )}
+      <GalleryModal
+        activeImage={activeImage}
+        onClose={() => setActiveImage(null)}
+        onSelect={setActiveImage}
+      />
+      <GalleryStyles />
     </div>
-  );
-};
-
-const GalleryImage = ({
-  src,
-  className = "",
-}: {
-  src?: string;
-  className?: string;
-}) => {
-  if (!src) {
-    return <div className={`w-full bg-gray10 ${className}`} />;
-  }
-
-  return (
-    <img
-      src={src}
-      alt="Restaurant atmosphere"
-      className={`w-full object-cover ${className}`}
-    />
   );
 };
 

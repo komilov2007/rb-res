@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
 
+import BranchSelectionModal from "@/app/[page]/components/branch-selection/branch-selection-modal";
 import FloatingCart from "@/app/[page]/components/floating-cart";
 import Footer from "@/app/[page]/components/footer";
 import Header from "@/app/[page]/components/header";
 import MobileAction from "@/app/[page]/components/mobile/mobile-action";
 import MobileFooter from "@/app/[page]/components/mobile/mobile-footer";
+import ProductBranchPicker from "@/components/modal/product-branch-picker";
+import ProductDetailMobile from "@/components/modal/product-detail";
 
 type PageLayoutProps = {
   children: ReactNode;
@@ -21,6 +24,14 @@ const PageLayout = ({ children, showFloatingCart }: PageLayoutProps) => {
       {showFloatingCart && <FloatingCart />}
       <MobileAction />
       <MobileFooter />
+      <ProductDetailMobile />
+      {/* Mounted once here — the header chip is rendered by both the
+          desktop and mobile headers, so it can't own the modal. */}
+      <BranchSelectionModal />
+      {/* Mounted once here too, for the same reason — triggered from any
+          unavailable product card or the detail modal, both of which can
+          appear on several different pages. */}
+      <ProductBranchPicker />
     </div>
   );
 };

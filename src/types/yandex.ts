@@ -1,3 +1,5 @@
+﻿import type { YMapsApi } from "react-yandex-maps";
+
 export type Coordinates = [number, number];
 
 export type BoundsChangeEvent = {
@@ -58,4 +60,18 @@ export type MapInstance = {
     zoom?: number,
     options?: { duration?: number; timingFunction?: string },
   ) => void;
+};
+export type BranchMapInstance = {
+  geoObjects: {
+    add: (object: unknown) => void;
+    removeAll: () => void;
+  };
+};
+
+export type BranchYMapsApi = YMapsApi & {
+  Placemark: new (
+    geometry: [number, number],
+    properties: Record<string, string>,
+    options: Record<string, unknown>,
+  ) => unknown;
 };

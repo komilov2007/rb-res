@@ -11,5 +11,6 @@ export const useGeneral = () => {
     enabled: hasShopId,
     queryKey: ["general", shopid],
     queryFn: () => getGeneral(shopid as string),
+    retry: false,
   });
 };

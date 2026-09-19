@@ -10,28 +10,28 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-lg bg-primary text-sm font-semibold text-white hover:bg-primary/90",
-        destructive: "rounded-lg bg-red/10 text-sm font-semibold text-red",
-        secondary: "rounded-xl bg-gray10 text-sm font-semibold text-black",
-        link: "text-sm font-semibold text-primary underline-offset-4 hover:underline",
+          "rounded-lg bg-primary text-sm font-bold text-white hover:bg-primary/90",
+        destructive: "rounded-lg bg-red/10 text-sm font-bold text-red",
+        secondary: "rounded-xl bg-gray10 text-sm font-bold text-black",
+        link: "text-sm font-medium text-black underline-offset-4 hover:underline",
         ghost:
-          "rounded-xl bg-transparent text-sm font-semibold text-black hover:bg-gray10",
-        soft: "rounded-xl bg-gray10 text-sm font-semibold text-black hover:bg-gray180",
+          "rounded-xl bg-transparent text-sm font-medium text-black hover:bg-gray10",
+        soft: "rounded-xl bg-gray10 text-sm font-bold text-black hover:bg-gray180",
         outline:
-          "rounded-xl border border-gray180 bg-white text-sm font-semibold text-black hover:bg-gray10",
+          "rounded-xl border border-gray180 bg-white text-sm font-bold text-black hover:bg-gray10",
         icon: "rounded-full border border-gray180 bg-white text-black hover:bg-gray10",
-        nav: "rounded-xl text-sm font-semibold text-gray220 counter-action:bg-gray10 hover:text-black",
+        nav: "rounded-xl text-sm font-medium text-gray220 counter-action:bg-gray10 hover:text-black",
         "icon-solid": "rounded-full bg-gray10 p-0 text-black hover:bg-gray180",
         "cart-solid":
           "rounded-xl bg-transparent px-3 text-black hover:bg-gray10",
         "product-add":
-          "rounded-2xl border border-primary/10 bg-white text-sm font-extrabold text-primary  active:scale-[0.98]",
+          "rounded-2xl border border-primary/10 bg-white text-sm font-bold text-primary  active:scale-[0.98]",
         counter:
           "overflow-hidden rounded-2xl border border-primary/10 bg-white p-1 text-primary",
         "counter-action":
           "shrink-0 overflow-hidden rounded-none p-0 text-lg font-bold text-primary active:scale-90",
         "counter-value":
-          "shrink-0 rounded-none p-0 text-sm font-extrabold text-black active:scale-95",
+          "shrink-0 rounded-none p-0 text-sm font-medium text-black active:scale-95",
         "sheet-close": "rounded-full bg-gray10 p-0 text-black hover:bg-gray180",
         "primary-solid":
           "rounded-xl bg-primary text-sm font-bold text-white hover:bg-primary/90",

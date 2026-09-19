@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import XButton from "@/components/ui/x-button";
 
 type ModalScreenProps = {
@@ -20,6 +21,7 @@ const ModalScreen = ({
   className = "",
   placement = "screen",
 }: ModalScreenProps) => {
+  const t = useTranslations();
   const isBottom = placement === "bottom";
 
   return (
@@ -41,7 +43,7 @@ const ModalScreen = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-black">
               {icon}
-              <h2 className="text-xl font-extrabold">{title}</h2>
+              <h2 className="text-xl font-bold">{title}</h2>
             </div>
             <CloseButton onClose={onClose} />
           </div>
@@ -49,7 +51,7 @@ const ModalScreen = ({
         {children}
       </div>
       <button
-        aria-label="Modalni yopish"
+        aria-label={t("shared.close_modal")}
         className="absolute inset-0 -z-10"
         onClick={onClose}
       />

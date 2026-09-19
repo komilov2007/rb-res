@@ -1,4 +1,5 @@
 import { Loader2, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import Input from "@/components/ui/input";
 import type { SearchAddress } from "@/types/yandex";
@@ -22,6 +23,7 @@ const LocationSearch = ({
   onSearch,
   onSelect,
 }: LocationSearchProps) => {
+  const t = useTranslations();
   return (
     <div className="relative min-w-0 flex-1">
       <Input
@@ -33,15 +35,15 @@ const LocationSearch = ({
           }
         }}
         IconStart={Search}
-        placeholder="Manzilni qidirish"
+        placeholder={t("location.search_address")}
         wrapperClassName={inputClassName}
       />
       {(isSearching || results.length > 0) && (
         <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-[100000002] max-h-[360px] overflow-y-auto rounded-2xl bg-white">
           {isSearching && (
-            <div className="flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray220">
-              <Loader2 size={18} className="animate-spin text-primary" />
-              Qidirilmoqda...
+            <div className="flex items-center gap-2 px-4 py-3 text-sm font-normal text-gray220">
+              <Loader2 size={18} className="animate-spin text-gray220" />
+              {t("searching")}
             </div>
           )}
           {results.map((item) => (
@@ -51,7 +53,7 @@ const LocationSearch = ({
               onClick={() => onSelect(item)}
               className="flex w-full flex-col px-4 py-3 text-left"
             >
-              <span className="text-sm font-bold text-black">
+              <span className="text-sm font-medium text-black">
                 {item.name || item.address}
               </span>
               <span className="mt-1 line-clamp-1 text-xs font-medium text-gray220">

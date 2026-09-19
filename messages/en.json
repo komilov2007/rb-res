@@ -7,10 +7,13 @@
   "searching": "Searching...",
   "product_not_found": "Product not found",
   "try_another_name": "Try another name",
+  "search_categories": "Categories",
+  "search_products_section": "Products",
   "menu": "Menu",
   "category": "Category",
   "profile": "Profile",
   "cart": "Cart",
+  "order": "My orders",
   "login": "Login",
   "work_time": "Working hours",
   "service_type": "Service type",
@@ -33,17 +36,18 @@
   "discount_products": "Discounted products",
   "view_all": "View all",
   "about_us": "About us",
-  "store_branches": "Store branches",
+  "store_branches": "Restaurant branches",
   "privacy_policy": "Privacy policy",
   "terms": "Terms of use",
   "powered_by": "provided by",
   "cart_product_count": "{count} products",
   "continue_shopping": "Continue shopping",
+  "clear_cart": "Clear all",
   "checkout": "Checkout",
   "remove_order": "Remove order?",
   "cancel": "Cancel",
   "delete": "Delete",
-  "add_to_cart": "Add to cart",
+  "add_to_cart": "Cart",
   "enter": "Enter",
   "signup": "Sign up",
   "login_hint": "Enter your phone number to keep your orders and cart.",
@@ -58,5 +62,474 @@
   "discount": "Discount",
   "profile_hint": "Your profile information",
   "customer": "Customer",
-  "logout": "Logout"
+  "logout": "Logout",
+  "delivery_type": "Delivery type",
+  "bts_pickup": "Pickup point",
+  "payment_type": "Payment type",
+  "branch": "Branch",
+  "select_branch": "Select branch",
+  "comment": "Comment",
+  "room": "Room",
+  "floor": "Floor",
+  "entrance": "Entrance",
+  "spend_cashback": "Spend cashback",
+  "unavailable_products_title": "Some products are unavailable",
+  "unavailable_products_hint": "A few items in your order are no longer available. Go back to your cart to remove them, or choose another branch.",
+  "back_to_cart": "Back to cart",
+  "choose_another_branch": "Choose another branch",
+  "payment_canceled": "Payment was canceled",
+  "weekdays": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday"
+  },
+  "common": {
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "retry": "Try again",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "delete": "Delete",
+    "edit": "Edit",
+    "select": "Select",
+    "understood": "Got it",
+    "today": "today",
+    "closed": "Closed",
+    "error": "Something went wrong. Please try again.",
+    "show_more": "Show more",
+    "show_less": "Show less",
+    "phone": "Phone",
+    "address": "Address",
+    "branch": "Branch"
+  },
+  "payment_types": {
+    "CASH": "Cash",
+    "CARD": "Bank card",
+    "PAYME": "Payme",
+    "CLICK": "Click",
+    "UZUM": "Uzum",
+    "PAYME_API": "Payme api",
+    "CLICK_API": "Click app",
+    "GLOBAL_PAY": "Global pay",
+    "UZUM_NASIYA": "Uzum nasiya",
+    "ALIF_NASIYA": "Alif nasiya",
+    "BANK": "Bank transfer",
+    "ROBO_CLICK": "Click app",
+    "ROBO_PAYME": "Payme app",
+    "ROBO_UZUM": "Uzum"
+  },
+  "home": {
+    "banner_alt": "Banner",
+    "prev_banner": "Previous banner",
+    "next_banner": "Next banner",
+    "close_categories": "Hide categories",
+    "prev_categories": "Previous categories",
+    "next_categories": "Next categories",
+    "prev_products": "Previous products",
+    "next_products": "Next products",
+    "header": {
+      "branches": "Branches",
+      "directions": "Directions"
+    },
+    "mobile_action": {
+      "chat": "Chat"
+    },
+    "branch_selection": {
+      "title": "Choose an address or branch",
+      "choose_address": "Choose an address",
+      "not_selected": "Not selected",
+      "tab_delivery": "🛵 Delivery",
+      "tab_pickup": "📦 Pickup",
+      "new_address_placeholder": "Enter a new address...",
+      "map_pill": "Map 📍",
+      "saved_addresses": "My saved addresses ({count})",
+      "login_for_saved": "Log in to see your saved addresses.",
+      "addresses_loading": "Loading addresses...",
+      "available_branches": "Available branches",
+      "pick_on_map": "Choose on map",
+      "branches_not_found": "No branches found.",
+      "show_more_addresses": "Show {count} more addresses",
+      "show_more_branches": "Show {count} more branches"
+    }
+  },
+  "cart_drawer": {
+    "unavailable_at_branch": "Not available at the selected branch",
+    "delivery_price": "Delivery fee"
+  },
+  "catalog": {
+    "home": "Home",
+    "all_categories": "All categories",
+    "not_found": "No categories found",
+    "empty_category": "There are no products in this category",
+    "empty_at_branch": "This branch has no products in this category",
+    "no_filter_match": "No products match these filters",
+    "sort_label": "Sort by:",
+    "sort": {
+      "newest": "Newest",
+      "price_asc": "Price: low to high",
+      "price_desc": "Price: high to low"
+    },
+    "filters": {
+      "from": "from",
+      "to": "to"
+    }
+  },
+  "booking": {
+    "title": "Reservation",
+    "submit": "Book a table",
+    "back_home": "Go back",
+    "gallery_eyebrow": "Atmosphere and details",
+    "gallery_title": "Every moment is different",
+    "gallery_description": "Soft lighting, natural materials and a modern interior make the space even warmer. Here the atmosphere is not just a backdrop, but part of the whole experience.",
+    "gallery_image_alt": "Restaurant atmosphere",
+    "form_title": "Fill in your details to book a table",
+    "form_subtitle": "Spend your time with us over your favorite food in a wonderful atmosphere.",
+    "sheet_title": "Book a table",
+    "sheet_subtitle": "Spend your time over your favorite food in a wonderful atmosphere.",
+    "user_fallback": "User",
+    "login_required": "Please log in",
+    "your_name": "Your name",
+    "date": "Date",
+    "select_date": "Select a date",
+    "time": "Time",
+    "select_time": "Select a time",
+    "guests": "Number of guests",
+    "extra_phone": "Additional phone",
+    "optional": "optional",
+    "optional_phone_placeholder": "Optional phone number",
+    "add_extra_phone": "Add another phone",
+    "leave_comment": "Leave a comment",
+    "comment_placeholder": "Write your comment...",
+    "comment_short_placeholder": "Comment..."
+  },
+  "order_page": {
+    "title": "Checkout",
+    "delivery_type": {
+      "title": "Delivery method",
+      "empty": "No order types available.",
+      "options": {
+        "pickup": {
+          "label": "Pickup from branch",
+          "desc": "You pick up the order from the branch yourself"
+        },
+        "delivery": {
+          "label": "Restaurant delivery",
+          "desc": "A courier delivers the order to your address"
+        },
+        "bts_pickup": {
+          "label": "Pickup point",
+          "desc": "You collect the order at a pickup point"
+        },
+        "yandex_delivery": {
+          "label": "Yandex delivery",
+          "desc": "A Yandex courier delivers the order to your address"
+        },
+        "noor_delivery": {
+          "label": "Noor delivery",
+          "desc": "A Noor courier delivers the order to your address"
+        }
+      }
+    },
+    "branches": {
+      "title": "Restaurant address",
+      "branch": "Restaurant branch",
+      "view": "View branch",
+      "select_on_home": "Select a branch on the home page.",
+      "not_found": "No branches found."
+    },
+    "address": {
+      "not_selected": "No address selected",
+      "not_deliverable": "We can't deliver to this address. Please choose another address.",
+      "entrance": "Entrance"
+    },
+    "comment": {
+      "title": "Note for the courier",
+      "placeholder": "Write a note for the courier..."
+    },
+    "shipping": {
+      "title": "Order time",
+      "hint": "Choose the date and time together",
+      "date": "Date",
+      "time": "Time"
+    },
+    "bonus": {
+      "title": "Your bonus points",
+      "rate": "1 point = {amount} {currency}",
+      "balance": "{ball} points",
+      "use": "Use bonus points for this order"
+    },
+    "payment": {
+      "title": "Payment method",
+      "load_error": "Couldn't load payment methods.",
+      "caption": "Pay with {label}",
+      "amount": "Amount to pay"
+    },
+    "promo": {
+      "question": "Have a promo code?",
+      "current": "Promo code: {code}",
+      "placeholder": "Promo code",
+      "apply": "Apply",
+      "applied": "Promo code applied — {code}",
+      "error": "Couldn't apply the promo code."
+    },
+    "summary": {
+      "title": "Your order",
+      "delivery_price": "Delivery fee",
+      "unavailable": "Unavailable items",
+      "bonus": "Bonus points",
+      "total": "Total",
+      "product_discount": "Product discount",
+      "promo_discount": "Promo code discount"
+    },
+    "waiting": {
+      "title": "Awaiting payment",
+      "hint_with_type": "Complete the payment with {payment}, then tap the button below.",
+      "hint": "Complete the payment, then tap the button below.",
+      "method": "Payment method:",
+      "check": "Check payment",
+      "go_to_payment": "Go to payment"
+    },
+    "invoice": {
+      "title": "Order"
+    },
+    "errors": {
+      "branch_required": "Please select a branch",
+      "date_required": "Select a date",
+      "time_required": "Select a time",
+      "create_failed": "Couldn't place the order. Please try again.",
+      "provider_disabled": "{name} is not enabled by this restaurant.",
+      "payment_link_failed": "Couldn't create the payment link.",
+      "payment_failed": "The payment failed or was canceled.",
+      "cart_empty": "Your cart is empty.",
+      "delivery_type_required": "Select a service type",
+      "payment_type_required": "Select a payment method"
+    }
+  },
+  "orders": {
+    "tabs": {
+      "active": "Active",
+      "all": "All"
+    },
+    "empty_title": "No orders found",
+    "empty_hint": "You don't have any orders yet.",
+    "login_required": "Log in to view your orders",
+    "title_number": "Order #{id}",
+    "support": "Support",
+    "not_found": "Order not found.",
+    "status": {
+      "NEW": "New",
+      "PROGRESS": "Preparing",
+      "READY": "Ready",
+      "ON_THE_WAY": "On the way",
+      "DELIVERED": "Delivered",
+      "COMPLETED": "Completed",
+      "CANCEL": "Cancelled",
+      "CANCELED_BY_CUSTOMER": "Cancelled by customer"
+    },
+    "card": {
+      "shop_address": "Restaurant address",
+      "created_at": "Created date and time",
+      "full_name": "Full name",
+      "phone_number": "Phone number",
+      "total_price": "Total price",
+      "cancel_description": "Order ID-{id} will be cancelled."
+    },
+    "cancel": {
+      "button": "Cancel order",
+      "cancelling": "Cancelling...",
+      "confirm_title": "Cancel this order?",
+      "confirm_description": "This action cannot be undone.",
+      "confirm_yes": "Yes, cancel",
+      "call_shop": "Call the restaurant",
+      "failed": "Could not cancel the order."
+    },
+    "pay_amount": "Pay ({amount})",
+    "timeline": {
+      "accepted": "Accepted",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "handed_over": "Handed over",
+      "cancelled": "Cancelled",
+      "by_customer": "by customer"
+    },
+    "detail": {
+      "delivery_address": "Delivery address",
+      "pickup_address": "Pickup address",
+      "branch_with_name": "Branch: {name}",
+      "items_title": "Order items",
+      "product_fallback": "Product",
+      "unit_fallback": "pcs",
+      "payment_info": "Payment details",
+      "products_price": "Items price",
+      "payment_method": "Payment method",
+      "payment_status": "Payment status",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "total_payment": "Total"
+    },
+    "service_types": {
+      "PICKUP": "Pickup",
+      "DELIVERY": "Delivery",
+      "YANDEX_DELIVERY": "Yandex delivery",
+      "NOOR_DELIVERY": "Noor delivery"
+    },
+    "route": {
+      "title": "Delivery route",
+      "from": "From",
+      "to": "To",
+      "address_missing": "Address not specified",
+      "chip_branch": "Order from this branch",
+      "open_in_maps": "Open route in maps"
+    },
+    "branch_info": {
+      "title": "Restaurant branch",
+      "schedule": "Working hours",
+      "go_to_address": "Get directions"
+    }
+  },
+  "profile_page": {
+    "user_fallback": "User",
+    "login_prompt": "Tap to sign in to your profile",
+    "contact_label": "Contact us",
+    "socials_title": "Social networks:",
+    "powered_by": "Powered by <link>Robosell.uz</link>",
+    "menu": {
+      "edit_profile": "Edit profile",
+      "addresses": "My addresses",
+      "notifications": "Notifications",
+      "language": "Language",
+      "contact_us": "Contact us"
+    },
+    "logout_dialog": {
+      "title": "Log out?",
+      "description": "Are you sure you want to log out of your profile?"
+    },
+    "language_sheet": {
+      "title": "Select language"
+    },
+    "about": {
+      "working_hours_empty": "Working hours not specified",
+      "branches": "Branches",
+      "branches_empty": "No branches found",
+      "contacts": "Contact information",
+      "contacts_empty": "No contact information available"
+    },
+    "addresses": {
+      "login_required": "Sign in to view your addresses",
+      "add_new": "Add new address",
+      "empty_title": "No saved addresses",
+      "empty_hint": "Add an address for delivery",
+      "add": "Add address",
+      "edit_aria": "Edit address",
+      "delete_aria": "Delete address",
+      "delete_title": "Delete this address?"
+    },
+    "edit": {
+      "login_required": "Sign in to edit your profile",
+      "name_saved": "Name saved",
+      "name_required": "Enter your name"
+    },
+    "notifications": {
+      "login_required": "Sign in to view notifications",
+      "load_error": "Couldn't load notifications",
+      "empty": "No notifications"
+    }
+  },
+  "chat": {
+    "connection_error": "No connection. Please try again in a moment.",
+    "header": {
+      "title": "Support",
+      "online": "Online",
+      "call_aria": "Call"
+    },
+    "input": {
+      "placeholder": "Type your message...",
+      "attach_file_aria": "Attach file",
+      "remove_file_aria": "Remove file",
+      "send_aria": "Send"
+    },
+    "message": {
+      "order_title": "Order #{id}",
+      "products_count": "Number of items:",
+      "products_count_value": "{count} pcs",
+      "go_to_order": "Go to order →"
+    },
+    "list": {
+      "empty": "No messages yet",
+      "scroll_down": "Scroll to bottom"
+    }
+  },
+  "shared": {
+    "close_modal": "Close dialog",
+    "and": "and",
+    "date": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "shop_closed": {
+      "title": "The restaurant is closed right now",
+      "default_message": "The restaurant's working hours are over!",
+      "opening_soon": "We'll open soon!",
+      "no_schedule": "Working hours are not set",
+      "opens_today": "Today: {open} - {close}",
+      "opens_tomorrow": "Tomorrow: {open} - {close}",
+      "opens_on_day": "{day}: {open} - {close}",
+      "view_all_hours": "View working hours for all days"
+    },
+    "not_found": {
+      "title": "Restaurant not found",
+      "description": "The shop id is invalid or the restaurant is temporarily unavailable. Check the link and try again."
+    },
+    "image_viewer": "Image"
+  },
+  "location": {
+    "branch_picker": {
+      "choose_from_list": "Choose from list ({count})",
+      "close_list": "Close list",
+      "schedule": "Working hours",
+      "show_more_days": "Show {count} more days",
+      "pick_here": "Pick up here"
+    },
+    "resolving": "Detecting address...",
+    "delivery_address_title": "Delivery address",
+    "delete_address": "Delete address",
+    "my_addresses": "My addresses",
+    "addresses_loading": "Loading addresses...",
+    "select_address_aria": "Select address",
+    "edit_address": "Edit address",
+    "create_new": "Add new",
+    "address_details": "Address details",
+    "courier_comment": "Note for the courier",
+    "address_name": "Address name",
+    "search_address": "Search address",
+    "branch_label": "{name} branch"
+  },
+  "product": {
+    "branch_switched": "Branch changed — {name}",
+    "not_in_this_branch": "Not available at this branch",
+    "not_in_branch": "Not available at {name}",
+    "available_in_branch": "Available at {name}",
+    "not_in_any_branch": "Not available at any branch",
+    "gram_unit": "g",
+    "choose_other_branch": "Choose another branch",
+    "unavailable": "This item isn't available at the selected branch",
+    "sale_label": "{label} off",
+    "description": "Dish description",
+    "resize_detail": "Resize product details",
+    "in_stock": "Available"
+  },
+  "errors": {
+    "generic": "Something went wrong, please try again.",
+    "network": "No internet connection. Check your connection and try again.",
+    "timeout": "The request timed out. Please try again."
+  }
 }

@@ -5,31 +5,24 @@ import { getProducts } from "@/apis/products";
 import { useShopid } from "@/hooks/useShopId";
 import {
   groupProductsByCategory,
-  hasDiscount,
   normalizeCategories,
   sortProductGroupsByCategories,
 } from "@/utils/product";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useRef } from "react";
+import {
+  infiniteQueryOptions,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const PRODUCTS_LIMIT = 10;
 
-export const useProduct = () => {
-  const { shopid, hasShopId } = useShopid();
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isFetching,
-  } = useInfiniteQuery({
-    enabled: hasShopId,
+// Shared by home and the category page, so both read one cached product list.
+export const productsQueryOptions = (shopid?: string) =>
+  infiniteQueryOptions({
+    enabled: Boolean(shopid),
     queryKey: ["products", shopid],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam }) =>
       getProducts(shopid as string, {
         limit: PRODUCTS_LIMIT,
         offset: pageParam,
@@ -44,51 +37,110 @@ export const useProduct = () => {
         : undefined;
     },
   });
+
+export const useProduct = () => {
+  const { shopid, hasShopId } = useShopid();
+  // A callback ref (not a plain useRef) so the observer effect below is
+  // notified exactly when the sentinel div actually mounts, instead of
+  // depending on fetch state to "discover" it on a later re-render.
+  const [bottomNode, setBottomNode] = useState<HTMLDivElement | null>(null);
+  const bottomRef = useCallback((node: HTMLDivElement | null) => {
+    setBottomNode(node);
+  }, []);
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isFetching,
+  } = useInfiniteQuery(productsQueryOptions(shopid));
   const { data: categories } = useQuery({
     enabled: hasShopId,
     queryKey: ["categories", shopid],
     queryFn: () => getCategories(shopid as string),
   });
 
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries;
-
-      if (
-        !entry?.isIntersecting ||
-        !hasNextPage ||
-        isFetching ||
-        isFetchingNextPage
-      ) {
-        return;
-      }
-
-      fetchNextPage();
-    },
-    [fetchNextPage, hasNextPage, isFetching, isFetchingNextPage],
-  );
-
+  // Read via a ref inside the observer callback rather than as effect
+  // dependencies below — otherwise the IntersectionObserver got torn down
+  // and rebuilt on every fetch-state change (isFetching/isFetchingNextPage
+  // flip on each page load), and since observe() fires its callback
+  // immediately for an already-intersecting element, every rebuild
+  // re-triggered fetchNextPage right away whenever the sentinel was still
+  // inside the 900px preload margin — a tight fetch loop instead of one
+  // call per scroll.
+  const stateRef = useRef({
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  });
   useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect();
-    if (!hasNextPage) return;
+    stateRef.current = {
+      fetchNextPage,
+      hasNextPage,
+      isFetching,
+      isFetchingNextPage,
+    };
+  });
 
-    observerRef.current = new IntersectionObserver(handleObserver, {
-      rootMargin: "900px 0px",
-      threshold: 0.01,
-    });
+  // New products get grouped into their category's own horizontal swiper
+  // (see products.tsx/category-products.tsx), not appended to the bottom of
+  // the page — so loading a page often doesn't move the sentinel at all,
+  // and it can stay continuously intersecting across several page loads.
+  // IntersectionObserver only calls back on enter/exit transitions, so
+  // without tracking this separately, everything past that first fetch
+  // would never fire another callback and infinite scroll would silently
+  // stall well short of the real total — the "not everything loads" bug.
+  const isIntersectingRef = useRef(false);
 
-    if (bottomRef.current) {
-      observerRef.current.observe(bottomRef.current);
+  const maybeFetchNext = useCallback(() => {
+    const current = stateRef.current;
+
+    if (
+      !isIntersectingRef.current ||
+      !current.hasNextPage ||
+      current.isFetching ||
+      current.isFetchingNextPage
+    ) {
+      return;
     }
 
-    return () => observerRef.current?.disconnect();
-  }, [handleObserver, hasNextPage]);
+    current.fetchNextPage();
+  }, []);
+
+  // Depends only on the sentinel node itself, so the observer is created
+  // once per mount and just keeps watching it — it no longer gets rebuilt
+  // as pages load.
+  useEffect(() => {
+    if (!bottomNode) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersectingRef.current = entry?.isIntersecting ?? false;
+        maybeFetchNext();
+      },
+      { rootMargin: "900px 0px", threshold: 0.01 },
+    );
+
+    observer.observe(bottomNode);
+
+    return () => observer.disconnect();
+  }, [bottomNode, maybeFetchNext]);
+
+  // Re-checks after every page actually settles (`data` gets a new page),
+  // since — per the comment above — the sentinel may never re-fire a
+  // transition event on its own. This is what keeps scroll going all the
+  // way to the real end instead of stopping after the first page that
+  // doesn't move the sentinel.
+  useEffect(() => {
+    maybeFetchNext();
+  }, [data, maybeFetchNext]);
 
   const products = data?.pages.flatMap((page) => page.data.results) ?? [];
-  const discountProducts = products.filter(hasDiscount);
-  const regularProducts = products.filter((product) => !hasDiscount(product));
   const productGroups = sortProductGroupsByCategories(
-    groupProductsByCategory(regularProducts),
+    groupProductsByCategory(products),
     normalizeCategories(categories?.data),
   );
 
@@ -97,7 +149,6 @@ export const useProduct = () => {
     bottomRef,
     isLoading,
     productGroups,
-    discountProducts,
     isFetchingNextPage,
   };
 };

@@ -7,10 +7,13 @@
   "searching": "Aranıyor...",
   "product_not_found": "Ürün bulunamadı",
   "try_another_name": "Başka bir ad deneyin",
+  "search_categories": "Kategoriler",
+  "search_products_section": "Ürünler",
   "menu": "Menü",
   "category": "Kategori",
   "profile": "Profil",
   "cart": "Sepet",
+  "order": "Siparişlerim",
   "login": "Giriş",
   "work_time": "Çalışma saatleri",
   "service_type": "Hizmet türü",
@@ -33,17 +36,18 @@
   "discount_products": "İndirimli ürünler",
   "view_all": "Tümünü gör",
   "about_us": "Hakkımızda",
-  "store_branches": "Mağaza şubeleri",
+  "store_branches": "Restoran şubeleri",
   "privacy_policy": "Gizlilik politikası",
   "terms": "Kullanım koşulları",
   "powered_by": "tarafından sağlanmaktadır",
   "cart_product_count": "{count} ürün",
   "continue_shopping": "Alışverişe devam et",
+  "clear_cart": "Tümünü sil",
   "checkout": "Sipariş ver",
   "remove_order": "Siparişi sil?",
   "cancel": "İptal",
   "delete": "Sil",
-  "add_to_cart": "Sepete ekle",
+  "add_to_cart": "Sepet",
   "enter": "Giris",
   "signup": "Kayit ol",
   "login_hint": "Siparislerinizi ve sepetinizi saklamak icin telefon numaranizi girin.",
@@ -58,5 +62,474 @@
   "discount": "Indirim",
   "profile_hint": "Profil bilgileriniz",
   "customer": "Musteri",
-  "logout": "Cikis"
+  "logout": "Cikis",
+  "delivery_type": "Teslimat sekli",
+  "bts_pickup": "Teslimat noktasi",
+  "payment_type": "Odeme sekli",
+  "branch": "Sube",
+  "select_branch": "Sube secin",
+  "comment": "Not",
+  "room": "Oda",
+  "floor": "Kat",
+  "entrance": "Giris",
+  "spend_cashback": "Cashback kullan",
+  "unavailable_products_title": "Bazi urunler mevcut degil",
+  "unavailable_products_hint": "Siparisinizdeki bazi urunler artik mevcut degil. Onlari kaldirmak icin sepete donun veya baska bir sube secin.",
+  "back_to_cart": "Sepete don",
+  "choose_another_branch": "Baska sube sec",
+  "payment_canceled": "Odeme iptal edildi",
+  "weekdays": {
+    "1": "Pazartesi",
+    "2": "Salı",
+    "3": "Çarşamba",
+    "4": "Perşembe",
+    "5": "Cuma",
+    "6": "Cumartesi",
+    "7": "Pazar"
+  },
+  "common": {
+    "close": "Kapat",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "back": "Geri",
+    "yes": "Evet",
+    "no": "Hayır",
+    "loading": "Yükleniyor...",
+    "retry": "Tekrar dene",
+    "confirm": "Onayla",
+    "continue": "Devam et",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "select": "Seç",
+    "understood": "Anladım",
+    "today": "bugün",
+    "closed": "Kapalı",
+    "error": "Bir hata oluştu. Lütfen tekrar deneyin.",
+    "show_more": "Daha fazla göster",
+    "show_less": "Daha az göster",
+    "phone": "Telefon",
+    "address": "Adres",
+    "branch": "Şube"
+  },
+  "payment_types": {
+    "CASH": "Nakit",
+    "CARD": "Banka kartı",
+    "PAYME": "Payme",
+    "CLICK": "Click",
+    "UZUM": "Uzum",
+    "PAYME_API": "Payme api",
+    "CLICK_API": "Click uygulaması",
+    "GLOBAL_PAY": "Global pay",
+    "UZUM_NASIYA": "Uzum nasiya",
+    "ALIF_NASIYA": "Alif nasiya",
+    "BANK": "Banka havalesi",
+    "ROBO_CLICK": "Click uygulaması",
+    "ROBO_PAYME": "Payme uygulaması",
+    "ROBO_UZUM": "Uzum"
+  },
+  "home": {
+    "banner_alt": "Banner",
+    "prev_banner": "Önceki banner",
+    "next_banner": "Sonraki banner",
+    "close_categories": "Kategorileri gizle",
+    "prev_categories": "Önceki kategoriler",
+    "next_categories": "Sonraki kategoriler",
+    "prev_products": "Önceki ürünler",
+    "next_products": "Sonraki ürünler",
+    "header": {
+      "branches": "Şubeler",
+      "directions": "Yol tarifi"
+    },
+    "mobile_action": {
+      "chat": "Sohbet"
+    },
+    "branch_selection": {
+      "title": "Adres veya şube seçin",
+      "choose_address": "Adres seçin",
+      "not_selected": "Seçilmedi",
+      "tab_delivery": "🛵 Teslimat",
+      "tab_pickup": "📦 Gel al",
+      "new_address_placeholder": "Yeni adres girin...",
+      "map_pill": "Harita 📍",
+      "saved_addresses": "Kayıtlı adreslerim ({count})",
+      "login_for_saved": "Kayıtlı adresleriniz için giriş yapın.",
+      "addresses_loading": "Adresler yükleniyor...",
+      "available_branches": "Mevcut şubeler",
+      "pick_on_map": "Haritadan seç",
+      "branches_not_found": "Şube bulunamadı.",
+      "show_more_addresses": "{count} adres daha göster",
+      "show_more_branches": "{count} şube daha göster"
+    }
+  },
+  "cart_drawer": {
+    "unavailable_at_branch": "Seçilen şubede mevcut değil",
+    "delivery_price": "Teslimat ücreti"
+  },
+  "catalog": {
+    "home": "Ana sayfa",
+    "all_categories": "Tüm kategoriler",
+    "not_found": "Kategori bulunamadı",
+    "empty_category": "Bu kategoride ürün yok",
+    "empty_at_branch": "Bu şubede bu kategoride ürün yok",
+    "no_filter_match": "Bu filtrelere uygun ürün bulunamadı",
+    "sort_label": "Sırala:",
+    "sort": {
+      "newest": "En yeniler",
+      "price_asc": "Fiyat: düşükten yükseğe",
+      "price_desc": "Fiyat: yüksekten düşüğe"
+    },
+    "filters": {
+      "from": "min",
+      "to": "maks"
+    }
+  },
+  "booking": {
+    "title": "Rezervasyon",
+    "submit": "Rezervasyon yap",
+    "back_home": "Geri dön",
+    "gallery_eyebrow": "Atmosfer ve detaylar",
+    "gallery_title": "Her an farklı",
+    "gallery_description": "Yumuşak ışık, doğal malzemeler ve modern iç mekân ortamı daha da sıcak kılar. Burada atmosfer sadece bir arka plan değil, deneyimin bir parçasıdır.",
+    "gallery_image_alt": "Restoran atmosferi",
+    "form_title": "Masa rezervasyonu için bilgilerinizi doldurun",
+    "form_subtitle": "En sevdiğiniz yemekler ve harika bir atmosferde vaktinizi bizimle geçirin.",
+    "sheet_title": "Masa rezervasyonu",
+    "sheet_subtitle": "En sevdiğiniz yemekler ve harika bir atmosferde vakit geçirin.",
+    "user_fallback": "Kullanıcı",
+    "login_required": "Giriş yapın",
+    "your_name": "Adınız",
+    "date": "Tarih",
+    "select_date": "Tarih seçin",
+    "time": "Saat",
+    "select_time": "Saat seçin",
+    "guests": "Kişi sayısı",
+    "extra_phone": "Ek telefon",
+    "optional": "isteğe bağlı",
+    "optional_phone_placeholder": "İsteğe bağlı telefon numarası",
+    "add_extra_phone": "Ek telefon ekle",
+    "leave_comment": "Yorum bırakın",
+    "comment_placeholder": "Yorumunuzu yazın...",
+    "comment_short_placeholder": "Yorum..."
+  },
+  "order_page": {
+    "title": "Siparişi tamamla",
+    "delivery_type": {
+      "title": "Teslimat yöntemi",
+      "empty": "Kullanılabilir sipariş türü yok.",
+      "options": {
+        "pickup": {
+          "label": "Şubeden gel al",
+          "desc": "Siparişi şubeden kendiniz alırsınız"
+        },
+        "delivery": {
+          "label": "Restoran teslimatı",
+          "desc": "Kurye siparişi adresinize getirir"
+        },
+        "bts_pickup": {
+          "label": "Teslim alma noktası",
+          "desc": "Siparişi teslim alma noktasından alırsınız"
+        },
+        "yandex_delivery": {
+          "label": "Yandex teslimatı",
+          "desc": "Yandex kuryesi siparişi adresinize getirir"
+        },
+        "noor_delivery": {
+          "label": "Noor teslimatı",
+          "desc": "Noor kuryesi siparişi adresinize getirir"
+        }
+      }
+    },
+    "branches": {
+      "title": "Restoran adresi",
+      "branch": "Restoran şubesi",
+      "view": "Şubeyi görüntüle",
+      "select_on_home": "Ana sayfadan bir şube seçin.",
+      "not_found": "Şube bulunamadı."
+    },
+    "address": {
+      "not_selected": "Adres seçilmedi",
+      "not_deliverable": "Bu adrese teslimat yapamıyoruz. Lütfen başka bir adres seçin.",
+      "entrance": "Giriş"
+    },
+    "comment": {
+      "title": "Kurye için not",
+      "placeholder": "Kurye için bir not yazın..."
+    },
+    "shipping": {
+      "title": "Sipariş zamanı",
+      "hint": "Tarih ve saati birlikte seçin",
+      "date": "Tarih",
+      "time": "Saat"
+    },
+    "bonus": {
+      "title": "Bonus puanlarınız",
+      "rate": "1 puan = {amount} {currency}",
+      "balance": "{ball} puan",
+      "use": "Bonus puanları siparişte kullan"
+    },
+    "payment": {
+      "title": "Ödeme yöntemi",
+      "load_error": "Ödeme yöntemleri yüklenemedi.",
+      "caption": "{label} ile öde",
+      "amount": "Ödenecek tutar"
+    },
+    "promo": {
+      "question": "Promosyon kodunuz var mı?",
+      "current": "Promosyon kodu: {code}",
+      "placeholder": "Promosyon kodu",
+      "apply": "Uygula",
+      "applied": "Promosyon kodu uygulandı — {code}",
+      "error": "Promosyon kodu uygulanamadı."
+    },
+    "summary": {
+      "title": "Siparişiniz",
+      "delivery_price": "Teslimat ücreti",
+      "unavailable": "Mevcut olmayan ürünler",
+      "bonus": "Bonus puanlar",
+      "total": "Toplam tutar",
+      "product_discount": "Ürün indirimi",
+      "promo_discount": "Promosyon kodu indirimi"
+    },
+    "waiting": {
+      "title": "Ödeme bekleniyor",
+      "hint_with_type": "Ödemeyi {payment} ile tamamlayın, ardından aşağıdaki düğmeye dokunun.",
+      "hint": "Ödemeyi tamamlayın, ardından aşağıdaki düğmeye dokunun.",
+      "method": "Ödeme yöntemi:",
+      "check": "Ödemeyi kontrol et",
+      "go_to_payment": "Ödemeye geç"
+    },
+    "invoice": {
+      "title": "Sipariş"
+    },
+    "errors": {
+      "branch_required": "Şube seçmeniz gerekiyor",
+      "date_required": "Tarih seçin",
+      "time_required": "Saat seçin",
+      "create_failed": "Sipariş verilemedi. Lütfen tekrar deneyin.",
+      "provider_disabled": "{name} bu restoran tarafından etkinleştirilmemiş.",
+      "payment_link_failed": "Ödeme bağlantısı oluşturulamadı.",
+      "payment_failed": "Ödeme başarısız oldu veya iptal edildi.",
+      "cart_empty": "Sepetiniz boş.",
+      "delivery_type_required": "Hizmet türünü seçin",
+      "payment_type_required": "Ödeme yöntemini seçin"
+    }
+  },
+  "orders": {
+    "tabs": {
+      "active": "Aktif",
+      "all": "Tümü"
+    },
+    "empty_title": "Sipariş bulunamadı",
+    "empty_hint": "Henüz siparişiniz yok.",
+    "login_required": "Siparişleri görmek için giriş yapın",
+    "title_number": "Sipariş #{id}",
+    "support": "Destek",
+    "not_found": "Sipariş bulunamadı.",
+    "status": {
+      "NEW": "Yeni",
+      "PROGRESS": "Hazırlanıyor",
+      "READY": "Hazır",
+      "ON_THE_WAY": "Yolda",
+      "DELIVERED": "Teslim edildi",
+      "COMPLETED": "Tamamlandı",
+      "CANCEL": "İptal edildi",
+      "CANCELED_BY_CUSTOMER": "Müşteri tarafından iptal edildi"
+    },
+    "card": {
+      "shop_address": "Restoran adresi",
+      "created_at": "Oluşturulma tarihi ve saati",
+      "full_name": "Ad ve soyad",
+      "phone_number": "Telefon numarası",
+      "total_price": "Toplam tutar",
+      "cancel_description": "ID-{id} numaralı sipariş iptal edilecek."
+    },
+    "cancel": {
+      "button": "Siparişi iptal et",
+      "cancelling": "İptal ediliyor...",
+      "confirm_title": "Siparişi iptal etmek istiyor musunuz?",
+      "confirm_description": "Bu işlem geri alınamaz.",
+      "confirm_yes": "Evet, iptal et",
+      "call_shop": "Restoranı ara",
+      "failed": "Sipariş iptal edilemedi."
+    },
+    "pay_amount": "Ödeme yap ({amount})",
+    "timeline": {
+      "accepted": "Alındı",
+      "preparing": "Hazırlanıyor",
+      "ready": "Hazır",
+      "handed_over": "Teslim edildi",
+      "cancelled": "İptal edildi",
+      "by_customer": "müşteri tarafından"
+    },
+    "detail": {
+      "delivery_address": "Teslimat adresi",
+      "pickup_address": "Gel-al adresi",
+      "branch_with_name": "Şube: {name}",
+      "items_title": "Sipariş içeriği",
+      "product_fallback": "Ürün",
+      "unit_fallback": "adet",
+      "payment_info": "Ödeme bilgileri",
+      "products_price": "Ürün tutarı",
+      "payment_method": "Ödeme yöntemi",
+      "payment_status": "Ödeme durumu",
+      "paid": "Ödendi",
+      "unpaid": "Ödenmedi",
+      "total_payment": "Toplam ödeme"
+    },
+    "service_types": {
+      "PICKUP": "Gel-al",
+      "DELIVERY": "Teslimat",
+      "YANDEX_DELIVERY": "Yandex teslimat",
+      "NOOR_DELIVERY": "Noor teslimat"
+    },
+    "route": {
+      "title": "Teslimat rotası",
+      "from": "Nereden",
+      "to": "Nereye",
+      "address_missing": "Adres belirtilmemiş",
+      "chip_branch": "Sipariş bu şubeden",
+      "open_in_maps": "Rotayı haritada aç"
+    },
+    "branch_info": {
+      "title": "Restoran şubesi",
+      "schedule": "Çalışma saatleri",
+      "go_to_address": "Yol tarifi al"
+    }
+  },
+  "profile_page": {
+    "user_fallback": "Kullanıcı",
+    "login_prompt": "Profile giriş yapmak için dokunun",
+    "contact_label": "İletişim için",
+    "socials_title": "Sosyal ağlar:",
+    "powered_by": "<link>Robosell.uz</link> tarafından sağlanmaktadır",
+    "menu": {
+      "edit_profile": "Profili düzenle",
+      "addresses": "Adreslerim",
+      "notifications": "Bildirimler",
+      "language": "Dil",
+      "contact_us": "Bize ulaşın"
+    },
+    "logout_dialog": {
+      "title": "Çıkış yapılsın mı?",
+      "description": "Profilinizden çıkmak istediğinize emin misiniz?"
+    },
+    "language_sheet": {
+      "title": "Dil seçin"
+    },
+    "about": {
+      "working_hours_empty": "Çalışma saatleri belirtilmemiş",
+      "branches": "Şubeler",
+      "branches_empty": "Şube bulunamadı",
+      "contacts": "İletişim bilgileri",
+      "contacts_empty": "İletişim bilgisi mevcut değil"
+    },
+    "addresses": {
+      "login_required": "Adresleri görmek için giriş yapın",
+      "add_new": "Yeni adres ekle",
+      "empty_title": "Kayıtlı adres yok",
+      "empty_hint": "Teslimat için bir adres ekleyin",
+      "add": "Adres ekle",
+      "edit_aria": "Adresi düzenle",
+      "delete_aria": "Adresi sil",
+      "delete_title": "Adres silinsin mi?"
+    },
+    "edit": {
+      "login_required": "Profili düzenlemek için giriş yapın",
+      "name_saved": "İsim kaydedildi",
+      "name_required": "Adınızı girin"
+    },
+    "notifications": {
+      "login_required": "Bildirimleri görmek için giriş yapın",
+      "load_error": "Bildirimler yüklenemedi",
+      "empty": "Bildirim yok"
+    }
+  },
+  "chat": {
+    "connection_error": "Bağlantı yok. Lütfen biraz sonra tekrar deneyin.",
+    "header": {
+      "title": "Destek",
+      "online": "Çevrimiçi",
+      "call_aria": "Ara"
+    },
+    "input": {
+      "placeholder": "Mesajınızı yazın...",
+      "attach_file_aria": "Dosya ekle",
+      "remove_file_aria": "Dosyayı kaldır",
+      "send_aria": "Gönder"
+    },
+    "message": {
+      "order_title": "Sipariş #{id}",
+      "products_count": "Ürün sayısı:",
+      "products_count_value": "{count} adet",
+      "go_to_order": "Siparişe git →"
+    },
+    "list": {
+      "empty": "Henüz mesaj yok",
+      "scroll_down": "Aşağı in"
+    }
+  },
+  "shared": {
+    "close_modal": "Pencereyi kapat",
+    "and": "ve",
+    "date": {
+      "today": "Bugün",
+      "yesterday": "Dün"
+    },
+    "shop_closed": {
+      "title": "Restoran şu anda kapalı",
+      "default_message": "Restoranın çalışma saatleri sona erdi!",
+      "opening_soon": "Yakında açıyoruz!",
+      "no_schedule": "Çalışma saatleri belirtilmemiş",
+      "opens_today": "Bugün: {open} - {close}",
+      "opens_tomorrow": "Yarın: {open} - {close}",
+      "opens_on_day": "{day}: {open} - {close}",
+      "view_all_hours": "Tüm günlerin çalışma saatlerini gör"
+    },
+    "not_found": {
+      "title": "Restoran bulunamadı",
+      "description": "Shop id geçersiz veya restoran geçici olarak kullanılamıyor. Bağlantıyı kontrol edip tekrar deneyin."
+    },
+    "image_viewer": "Görsel"
+  },
+  "location": {
+    "branch_picker": {
+      "choose_from_list": "Listeden seç ({count})",
+      "close_list": "Listeyi kapat",
+      "schedule": "Çalışma saatleri",
+      "show_more_days": "{count} gün daha göster",
+      "pick_here": "Buradan alacağım"
+    },
+    "resolving": "Adres belirleniyor...",
+    "delivery_address_title": "Teslimat adresi",
+    "delete_address": "Adresi sil",
+    "my_addresses": "Adreslerim",
+    "addresses_loading": "Adresler yükleniyor...",
+    "select_address_aria": "Adresi seç",
+    "edit_address": "Adresi düzenle",
+    "create_new": "Yeni ekle",
+    "address_details": "Adres bilgileri",
+    "courier_comment": "Kurye için not",
+    "address_name": "Adres adı",
+    "search_address": "Adres ara",
+    "branch_label": "{name} şubesi"
+  },
+  "product": {
+    "branch_switched": "Şube değiştirildi — {name}",
+    "not_in_this_branch": "Bu şubede yok",
+    "not_in_branch": "{name} şubesinde yok",
+    "available_in_branch": "{name} şubesinde var",
+    "not_in_any_branch": "Hiçbir şubede mevcut değil",
+    "gram_unit": "g",
+    "choose_other_branch": "Başka şube seç",
+    "unavailable": "Bu ürün seçilen şubede mevcut değil",
+    "sale_label": "{label} indirim",
+    "description": "Yemek açıklaması",
+    "resize_detail": "Ürün penceresini yeniden boyutlandır",
+    "in_stock": "Mevcut"
+  },
+  "errors": {
+    "generic": "Bir hata oluştu, lütfen tekrar deneyin.",
+    "network": "İnternet bağlantısı yok. Bağlantınızı kontrol edip tekrar deneyin.",
+    "timeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin."
+  }
 }

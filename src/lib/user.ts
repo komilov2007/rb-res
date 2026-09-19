@@ -2,26 +2,61 @@ import type { AuthProps } from "@/types/auth";
 
 const getAuthKey = (shopId: string) => `auth_${shopId}`;
 
-export const setUser = (shopId: string, data: AuthProps) => {
-  localStorage.setItem(getAuthKey(shopId), JSON.stringify({ auth: data }));
+type TokenProps = {
+  exp: number;
 };
 
-export const getUser = (shopId: string) => {
-  const value = localStorage.getItem(getAuthKey(shopId));
+export type UserProps = AuthProps & {
+  auth: AuthProps;
+  isExpiredAccess: boolean;
+  isExpiredRefresh: boolean;
+};
 
-  if (!value) return null;
-
+const decodeToken = (token: string) => {
   try {
-    return JSON.parse(value) as { auth: AuthProps };
+    const payload = token.split(".")[1];
+    const normalizedPayload = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const decodedPayload = window.atob(normalizedPayload);
+
+    return JSON.parse(decodedPayload) as TokenProps;
   } catch {
     return null;
   }
 };
 
-export const getAccessToken = (shopId?: string | null) => {
+const isExpiredToken = (token: string) => {
+  const decodedToken = decodeToken(token);
+
+  if (!decodedToken?.exp) return true;
+
+  return decodedToken.exp * 1000 <= Date.now();
+};
+
+export const setUser = (shopId: string, data: AuthProps) => {
+  localStorage.setItem(getAuthKey(shopId), JSON.stringify({ auth: data }));
+};
+
+export const getUser = (shopId?: string | null): UserProps | undefined => {
   if (!shopId) return;
 
-  return getUser(shopId)?.auth.access;
+  const value = localStorage.getItem(getAuthKey(shopId));
+
+  if (!value) return;
+
+  try {
+    const user = JSON.parse(value) as { auth: AuthProps };
+
+    if (!user.auth?.access || !user.auth?.refresh) return;
+
+    return {
+      ...user.auth,
+      auth: user.auth,
+      isExpiredAccess: isExpiredToken(user.auth.access),
+      isExpiredRefresh: isExpiredToken(user.auth.refresh),
+    };
+  } catch {
+    return;
+  }
 };
 
 export const clearUser = (shopId?: string | null) => {
@@ -29,3 +64,5 @@ export const clearUser = (shopId?: string | null) => {
 
   localStorage.removeItem(getAuthKey(shopId));
 };
+
+

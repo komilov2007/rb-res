@@ -7,10 +7,13 @@
   "searching": "Идет поиск...",
   "product_not_found": "Товар не найден",
   "try_another_name": "Попробуйте другое название",
+  "search_categories": "Категории",
+  "search_products_section": "Товары",
   "menu": "Меню",
   "category": "Категория",
   "profile": "Профиль",
   "cart": "Корзина",
+  "order": "Мои заказы",
   "login": "Войти",
   "work_time": "Время работы",
   "service_type": "Тип услуги",
@@ -33,12 +36,13 @@
   "discount_products": "Товары со скидкой",
   "view_all": "Смотреть все",
   "about_us": "О нас",
-  "store_branches": "Филиалы магазина",
+  "store_branches": "Филиалы заведения",
   "privacy_policy": "Политика конфиденциальности",
   "terms": "Условия использования",
   "powered_by": "предоставлено",
   "cart_product_count": "{count} товаров",
   "continue_shopping": "Продолжить покупки",
+  "clear_cart": "Удалить всё",
   "checkout": "Оформить заказ",
   "remove_order": "Удалить заказ?",
   "cancel": "Отмена",
@@ -58,5 +62,474 @@
   "discount": "Скидка",
   "profile_hint": "Информация вашего профиля",
   "customer": "Клиент",
-  "logout": "Выйти"
+  "logout": "Выйти",
+  "delivery_type": "Способ получения",
+  "bts_pickup": "Пункт самовывоза",
+  "payment_type": "Способ оплаты",
+  "branch": "Филиал",
+  "select_branch": "Выберите филиал",
+  "comment": "Комментарий",
+  "room": "Комната",
+  "floor": "Этаж",
+  "entrance": "Подъезд",
+  "spend_cashback": "Списать кешбэк",
+  "unavailable_products_title": "Некоторые товары недоступны",
+  "unavailable_products_hint": "Часть товаров в заказе больше недоступна. Вернитесь в корзину, чтобы удалить их, или выберите другой филиал.",
+  "back_to_cart": "Вернуться в корзину",
+  "choose_another_branch": "Выбрать другой филиал",
+  "payment_canceled": "Оплата отменена",
+  "weekdays": {
+    "1": "Понедельник",
+    "2": "Вторник",
+    "3": "Среда",
+    "4": "Четверг",
+    "5": "Пятница",
+    "6": "Суббота",
+    "7": "Воскресенье"
+  },
+  "common": {
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "back": "Назад",
+    "yes": "Да",
+    "no": "Нет",
+    "loading": "Загрузка...",
+    "retry": "Повторить",
+    "confirm": "Подтвердить",
+    "continue": "Продолжить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "select": "Выбрать",
+    "understood": "Понятно",
+    "today": "сегодня",
+    "closed": "Закрыто",
+    "error": "Произошла ошибка. Попробуйте ещё раз.",
+    "show_more": "Показать больше",
+    "show_less": "Показать меньше",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "branch": "Филиал"
+  },
+  "payment_types": {
+    "CASH": "Наличные",
+    "CARD": "Банковская карта",
+    "PAYME": "Payme",
+    "CLICK": "Click",
+    "UZUM": "Uzum",
+    "PAYME_API": "Payme api",
+    "CLICK_API": "Приложение Click",
+    "GLOBAL_PAY": "Global pay",
+    "UZUM_NASIYA": "Uzum nasiya",
+    "ALIF_NASIYA": "Alif nasiya",
+    "BANK": "Банковский перевод",
+    "ROBO_CLICK": "Приложение Click",
+    "ROBO_PAYME": "Приложение Payme",
+    "ROBO_UZUM": "Uzum"
+  },
+  "home": {
+    "banner_alt": "Баннер",
+    "prev_banner": "Предыдущий баннер",
+    "next_banner": "Следующий баннер",
+    "close_categories": "Скрыть категории",
+    "prev_categories": "Предыдущие категории",
+    "next_categories": "Следующие категории",
+    "prev_products": "Предыдущие товары",
+    "next_products": "Следующие товары",
+    "header": {
+      "branches": "Филиалы",
+      "directions": "Маршрут"
+    },
+    "mobile_action": {
+      "chat": "Чат"
+    },
+    "branch_selection": {
+      "title": "Выбор адреса или филиала",
+      "choose_address": "Выберите адрес",
+      "not_selected": "Не выбрано",
+      "tab_delivery": "🛵 Доставка",
+      "tab_pickup": "📦 Самовывоз",
+      "new_address_placeholder": "Введите новый адрес...",
+      "map_pill": "Карта 📍",
+      "saved_addresses": "Мои сохранённые адреса ({count})",
+      "login_for_saved": "Войдите, чтобы увидеть сохранённые адреса.",
+      "addresses_loading": "Загрузка адресов...",
+      "available_branches": "Список доступных филиалов",
+      "pick_on_map": "Выбрать на карте",
+      "branches_not_found": "Филиалы не найдены.",
+      "show_more_addresses": "Показать ещё адреса: {count}",
+      "show_more_branches": "Показать ещё филиалы: {count}"
+    }
+  },
+  "cart_drawer": {
+    "unavailable_at_branch": "Нет в выбранном филиале",
+    "delivery_price": "Стоимость доставки"
+  },
+  "catalog": {
+    "home": "Главная",
+    "all_categories": "Все категории",
+    "not_found": "Категории не найдены",
+    "empty_category": "В этой категории нет товаров",
+    "empty_at_branch": "В этом филиале нет товаров данной категории",
+    "no_filter_match": "По этим фильтрам товары не найдены",
+    "sort_label": "Сортировка:",
+    "sort": {
+      "newest": "Новинки",
+      "price_asc": "Цена: по возрастанию",
+      "price_desc": "Цена: по убыванию"
+    },
+    "filters": {
+      "from": "от",
+      "to": "до"
+    }
+  },
+  "booking": {
+    "title": "Бронирование",
+    "submit": "Забронировать",
+    "back_home": "Вернуться назад",
+    "gallery_eyebrow": "Атмосфера и детали",
+    "gallery_title": "Каждый момент особенный",
+    "gallery_description": "Мягкий свет, натуральные материалы и современный интерьер делают пространство ещё уютнее. Здесь атмосфера — не просто фон, а часть всего впечатления.",
+    "gallery_image_alt": "Атмосфера ресторана",
+    "form_title": "Заполните данные для бронирования столика",
+    "form_subtitle": "Проведите время с нами за любимыми блюдами в прекрасной атмосфере.",
+    "sheet_title": "Бронирование столика",
+    "sheet_subtitle": "Проведите время за любимыми блюдами в прекрасной атмосфере.",
+    "user_fallback": "Пользователь",
+    "login_required": "Войдите в аккаунт",
+    "your_name": "Ваше имя",
+    "date": "Дата",
+    "select_date": "Выберите дату",
+    "time": "Время",
+    "select_time": "Выберите время",
+    "guests": "Количество мест",
+    "extra_phone": "Дополнительный телефон",
+    "optional": "необязательно",
+    "optional_phone_placeholder": "Дополнительный номер телефона",
+    "add_extra_phone": "Добавить дополнительный телефон",
+    "leave_comment": "Оставить комментарий",
+    "comment_placeholder": "Напишите комментарий...",
+    "comment_short_placeholder": "Комментарий..."
+  },
+  "order_page": {
+    "title": "Оформление заказа",
+    "delivery_type": {
+      "title": "Способ получения",
+      "empty": "Нет доступных способов получения заказа.",
+      "options": {
+        "pickup": {
+          "label": "Самовывоз из филиала",
+          "desc": "Вы заберёте заказ из филиала сами"
+        },
+        "delivery": {
+          "label": "Доставка заведения",
+          "desc": "Курьер доставит заказ по вашему адресу"
+        },
+        "bts_pickup": {
+          "label": "Пункт выдачи",
+          "desc": "Вы заберёте заказ в пункте выдачи"
+        },
+        "yandex_delivery": {
+          "label": "Доставка Yandex",
+          "desc": "Курьер Yandex доставит заказ по вашему адресу"
+        },
+        "noor_delivery": {
+          "label": "Доставка Noor",
+          "desc": "Курьер Noor доставит заказ по вашему адресу"
+        }
+      }
+    },
+    "branches": {
+      "title": "Адрес заведения",
+      "branch": "Филиал заведения",
+      "view": "Посмотреть филиал",
+      "select_on_home": "Выберите филиал на главной странице.",
+      "not_found": "Филиалы не найдены."
+    },
+    "address": {
+      "not_selected": "Адрес не выбран",
+      "not_deliverable": "Мы не доставляем по этому адресу. Выберите другой адрес.",
+      "entrance": "Подъезд"
+    },
+    "comment": {
+      "title": "Комментарий для курьера",
+      "placeholder": "Напишите комментарий для курьера..."
+    },
+    "shipping": {
+      "title": "Время заказа",
+      "hint": "Выберите дату и время вместе",
+      "date": "Дата",
+      "time": "Время"
+    },
+    "bonus": {
+      "title": "Ваши бонусные баллы",
+      "rate": "1 балл = {amount} {currency}",
+      "balance": "Баллов: {ball}",
+      "use": "Использовать бонусные баллы для заказа"
+    },
+    "payment": {
+      "title": "Способ оплаты",
+      "load_error": "Не удалось загрузить способы оплаты.",
+      "caption": "Оплатить через {label}",
+      "amount": "Сумма к оплате"
+    },
+    "promo": {
+      "question": "У вас есть промокод?",
+      "current": "Промокод: {code}",
+      "placeholder": "Промокод",
+      "apply": "Применить",
+      "applied": "Промокод применён — {code}",
+      "error": "Не удалось применить промокод."
+    },
+    "summary": {
+      "title": "Ваш заказ",
+      "delivery_price": "Стоимость доставки",
+      "unavailable": "Недоступные товары",
+      "bonus": "Бонусные баллы",
+      "total": "Итого",
+      "product_discount": "Скидка на товары",
+      "promo_discount": "Скидка по промокоду"
+    },
+    "waiting": {
+      "title": "Ожидание оплаты",
+      "hint_with_type": "Завершите оплату через {payment}, затем нажмите кнопку ниже.",
+      "hint": "Завершите оплату, затем нажмите кнопку ниже.",
+      "method": "Способ оплаты:",
+      "check": "Проверить оплату",
+      "go_to_payment": "Перейти к оплате"
+    },
+    "invoice": {
+      "title": "Заказ"
+    },
+    "errors": {
+      "branch_required": "Необходимо выбрать филиал",
+      "date_required": "Выберите дату",
+      "time_required": "Выберите время",
+      "create_failed": "Не удалось оформить заказ. Попробуйте ещё раз.",
+      "provider_disabled": "{name} не подключён в этом заведении.",
+      "payment_link_failed": "Не удалось создать ссылку на оплату.",
+      "payment_failed": "Оплата не прошла или была отменена.",
+      "cart_empty": "Корзина пуста.",
+      "delivery_type_required": "Выберите тип обслуживания",
+      "payment_type_required": "Выберите способ оплаты"
+    }
+  },
+  "orders": {
+    "tabs": {
+      "active": "Активные",
+      "all": "Все"
+    },
+    "empty_title": "Заказы не найдены",
+    "empty_hint": "У вас пока нет заказов.",
+    "login_required": "Войдите в аккаунт, чтобы посмотреть заказы",
+    "title_number": "Заказ #{id}",
+    "support": "Поддержка",
+    "not_found": "Заказ не найден.",
+    "status": {
+      "NEW": "Новый",
+      "PROGRESS": "Готовится",
+      "READY": "Готов",
+      "ON_THE_WAY": "В пути",
+      "DELIVERED": "Доставлен",
+      "COMPLETED": "Завершён",
+      "CANCEL": "Отменён",
+      "CANCELED_BY_CUSTOMER": "Отменён клиентом"
+    },
+    "card": {
+      "shop_address": "Адрес заведения",
+      "created_at": "Дата и время создания",
+      "full_name": "Имя и фамилия",
+      "phone_number": "Номер телефона",
+      "total_price": "Общая сумма",
+      "cancel_description": "Заказ ID-{id} будет отменён."
+    },
+    "cancel": {
+      "button": "Отменить заказ",
+      "cancelling": "Отмена...",
+      "confirm_title": "Отменить заказ?",
+      "confirm_description": "Это действие нельзя отменить.",
+      "confirm_yes": "Да, отменить",
+      "call_shop": "Позвонить в заведение",
+      "failed": "Не удалось отменить заказ."
+    },
+    "pay_amount": "Оплатить ({amount})",
+    "timeline": {
+      "accepted": "Принят",
+      "preparing": "Готовится",
+      "ready": "Готов",
+      "handed_over": "Выдан",
+      "cancelled": "Отменён",
+      "by_customer": "клиентом"
+    },
+    "detail": {
+      "delivery_address": "Адрес доставки",
+      "pickup_address": "Адрес самовывоза",
+      "branch_with_name": "Филиал: {name}",
+      "items_title": "Состав заказа",
+      "product_fallback": "Товар",
+      "unit_fallback": "шт",
+      "payment_info": "Информация об оплате",
+      "products_price": "Стоимость товаров",
+      "payment_method": "Способ оплаты",
+      "payment_status": "Статус оплаты",
+      "paid": "Оплачено",
+      "unpaid": "Не оплачено",
+      "total_payment": "Итого к оплате"
+    },
+    "service_types": {
+      "PICKUP": "Самовывоз",
+      "DELIVERY": "Доставка",
+      "YANDEX_DELIVERY": "Доставка Yandex",
+      "NOOR_DELIVERY": "Доставка Noor"
+    },
+    "route": {
+      "title": "Маршрут доставки",
+      "from": "Откуда",
+      "to": "Куда",
+      "address_missing": "Адрес не указан",
+      "chip_branch": "Заказ из этого филиала",
+      "open_in_maps": "Открыть маршрут на карте"
+    },
+    "branch_info": {
+      "title": "Филиал заведения",
+      "schedule": "График работы",
+      "go_to_address": "Проложить маршрут"
+    }
+  },
+  "profile_page": {
+    "user_fallback": "Пользователь",
+    "login_prompt": "Нажмите, чтобы войти в профиль",
+    "contact_label": "Для связи",
+    "socials_title": "Социальные сети:",
+    "powered_by": "Предоставлено <link>Robosell.uz</link>",
+    "menu": {
+      "edit_profile": "Редактировать профиль",
+      "addresses": "Мои адреса",
+      "notifications": "Уведомления",
+      "language": "Язык",
+      "contact_us": "Связаться с нами"
+    },
+    "logout_dialog": {
+      "title": "Выйти?",
+      "description": "Вы действительно хотите выйти из профиля?"
+    },
+    "language_sheet": {
+      "title": "Выберите язык"
+    },
+    "about": {
+      "working_hours_empty": "Время работы не указано",
+      "branches": "Филиалы",
+      "branches_empty": "Филиалы не найдены",
+      "contacts": "Контактная информация",
+      "contacts_empty": "Контактная информация отсутствует"
+    },
+    "addresses": {
+      "login_required": "Войдите в систему, чтобы просмотреть адреса",
+      "add_new": "Добавить новый адрес",
+      "empty_title": "Нет сохранённых адресов",
+      "empty_hint": "Добавьте адрес для доставки",
+      "add": "Добавить адрес",
+      "edit_aria": "Редактировать адрес",
+      "delete_aria": "Удалить адрес",
+      "delete_title": "Удалить адрес?"
+    },
+    "edit": {
+      "login_required": "Войдите в систему, чтобы редактировать профиль",
+      "name_saved": "Имя сохранено",
+      "name_required": "Введите ваше имя"
+    },
+    "notifications": {
+      "login_required": "Войдите в систему, чтобы просмотреть уведомления",
+      "load_error": "Не удалось загрузить уведомления",
+      "empty": "Уведомлений нет"
+    }
+  },
+  "chat": {
+    "connection_error": "Нет соединения. Попробуйте ещё раз чуть позже.",
+    "header": {
+      "title": "Поддержка",
+      "online": "В сети",
+      "call_aria": "Позвонить"
+    },
+    "input": {
+      "placeholder": "Напишите сообщение...",
+      "attach_file_aria": "Прикрепить файл",
+      "remove_file_aria": "Удалить файл",
+      "send_aria": "Отправить"
+    },
+    "message": {
+      "order_title": "Заказ #{id}",
+      "products_count": "Количество товаров:",
+      "products_count_value": "{count} шт.",
+      "go_to_order": "Перейти к заказу →"
+    },
+    "list": {
+      "empty": "Сообщений пока нет",
+      "scroll_down": "Вниз"
+    }
+  },
+  "shared": {
+    "close_modal": "Закрыть окно",
+    "and": "и",
+    "date": {
+      "today": "Сегодня",
+      "yesterday": "Вчера"
+    },
+    "shop_closed": {
+      "title": "Заведение сейчас закрыто",
+      "default_message": "Рабочее время заведения закончилось!",
+      "opening_soon": "Скоро откроемся!",
+      "no_schedule": "График работы не указан",
+      "opens_today": "Сегодня работаем: {open} - {close}",
+      "opens_tomorrow": "Завтра работаем: {open} - {close}",
+      "opens_on_day": "{day}: {open} - {close}",
+      "view_all_hours": "Посмотреть график работы на все дни"
+    },
+    "not_found": {
+      "title": "Заведение не найдено",
+      "description": "Неверный shop id или заведение временно недоступно. Проверьте ссылку и попробуйте снова."
+    },
+    "image_viewer": "Изображение"
+  },
+  "location": {
+    "branch_picker": {
+      "choose_from_list": "Выбрать из списка ({count})",
+      "close_list": "Закрыть список",
+      "schedule": "График работы",
+      "show_more_days": "Показать ещё {count} дн.",
+      "pick_here": "Заберу отсюда"
+    },
+    "resolving": "Определяем адрес...",
+    "delivery_address_title": "Адрес доставки",
+    "delete_address": "Удалить адрес",
+    "my_addresses": "Мои адреса",
+    "addresses_loading": "Загружаем адреса...",
+    "select_address_aria": "Выбрать адрес",
+    "edit_address": "Редактировать адрес",
+    "create_new": "Добавить новый",
+    "address_details": "Детали адреса",
+    "courier_comment": "Комментарий для курьера",
+    "address_name": "Название адреса",
+    "search_address": "Поиск адреса",
+    "branch_label": "Филиал {name}"
+  },
+  "product": {
+    "branch_switched": "Филиал изменён — {name}",
+    "not_in_this_branch": "Нет в этом филиале",
+    "not_in_branch": "Нет в филиале {name}",
+    "available_in_branch": "Есть в филиале {name}",
+    "not_in_any_branch": "Нет ни в одном филиале",
+    "gram_unit": "г",
+    "choose_other_branch": "Выбрать другой филиал",
+    "unavailable": "Этого блюда нет в выбранном филиале",
+    "sale_label": "Скидка {label}",
+    "description": "Описание блюда",
+    "resize_detail": "Изменить размер окна товара",
+    "in_stock": "В наличии"
+  },
+  "errors": {
+    "generic": "Произошла ошибка, попробуйте ещё раз.",
+    "network": "Нет подключения к интернету. Проверьте соединение и попробуйте снова.",
+    "timeout": "Время ожидания запроса истекло. Попробуйте снова."
+  }
 }

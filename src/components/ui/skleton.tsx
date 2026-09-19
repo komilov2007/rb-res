@@ -1,6 +1,4 @@
-export const LogoSkeleton = () => {
-  return <div className="h-10 w-[120px] animate-pulse rounded-lg bg-gray10" />;
-};
+import { CARD_HEIGHT_CLASS } from "@/components/card-product/utils";
 
 export const BannerSkeleton = () => {
   return (
@@ -32,6 +30,35 @@ export const CategoriesSkeleton = () => {
   );
 };
 
+// Same shape as a categories-page tile: square image block with the name
+// line placeholder at its bottom. White on the page's gray background (a
+// gray tile would disappear into it).
+export const CategoryTileSkeleton = () => {
+  return (
+    <div className="relative flex aspect-square w-full animate-pulse items-end overflow-hidden rounded-xl bg-white p-2">
+      <div className="mx-auto h-3 w-2/3 rounded-full bg-gray10" />
+    </div>
+  );
+};
+
+// Same box as CardProduct: its fixed card height, the 170/240px image block,
+// price + name lines, and the full-width "Savatga" button at the bottom.
+export const ProductCardSkeleton = () => {
+  return (
+    <article
+      className={`flex ${CARD_HEIGHT_CLASS} w-full animate-pulse flex-col overflow-hidden rounded-[18px] bg-white ring-1 ring-black/5 lg:rounded-[20px]`}
+    >
+      <div className="h-[170px] shrink-0 rounded-[18px] bg-gray10 lg:h-[240px] lg:rounded-[20px]" />
+      <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
+        <div className="h-4 w-20 rounded-full bg-gray10" />
+        <div className="mt-2 h-3 w-full rounded-full bg-gray10" />
+        <div className="mt-1.5 h-3 w-2/3 rounded-full bg-gray10" />
+        <div className="mt-auto h-9 w-full rounded-xl bg-gray10" />
+      </div>
+    </article>
+  );
+};
+
 export const ProductsSkeleton = () => {
   return (
     <div className="flex w-full items-center justify-center rounded-[18px] bg-white px-4 py-3">
@@ -41,26 +68,33 @@ export const ProductsSkeleton = () => {
           <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5 lg:gap-4">
             {Array.from({ length: 10 }).map((_, index) => (
               <li key={index}>
-                <article className="min-h-[248px] overflow-hidden rounded-3xl bg-white shadow-[0_3px_14px_var(--black40)] lg:min-h-[280px]">
-                  <div className="relative flex h-[150px] items-center justify-center overflow-hidden rounded-3xl bg-gray10 lg:h-[187px]">
-                    <div className="flex h-[112px] w-[112px] animate-pulse items-center justify-center rounded-full bg-white lg:h-[132px] lg:w-[132px]">
-                      <div className="h-[78px] w-[78px] rounded-full bg-yellow10 lg:h-[92px] lg:w-[92px]" />
-                    </div>
-                    <div className="absolute left-8 top-8 h-5 w-14 animate-pulse rounded-full bg-yellow10" />
-                    <div className="absolute bottom-9 right-14 h-4 w-20 animate-pulse rounded-full bg-white" />
-                    <div className="absolute bottom-3 right-3 h-8 w-8 rounded-full bg-white" />
-                  </div>
-
-                  <div className="px-4 pb-6 pt-3">
-                    <div className="h-4 w-24 animate-pulse rounded-full bg-gray10" />
-                    <div className="mt-3 h-3 w-full animate-pulse rounded-full bg-gray10" />
-                    <div className="mt-2 h-3 w-2/3 animate-pulse rounded-full bg-gray10" />
-                    <div className="mt-4 h-3 w-12 animate-pulse rounded-full bg-gray10" />
-                  </div>
-                </article>
+                <ProductCardSkeleton />
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ProductDetailSkeleton = () => {
+  return (
+    <div className="animate-pulse">
+      <div className="h-[250px] rounded-[24px] bg-gray10" />
+      <div className="px-5 pt-4">
+        <div className="h-6 w-24 rounded-lg bg-gray10" />
+        <div className="mt-3 flex items-start justify-between gap-4">
+          <div className="h-12 min-w-0 flex-1 rounded-lg bg-gray10" />
+          <div className="h-8 w-16 shrink-0 rounded-full bg-gray10" />
+        </div>
+        <div className="mt-3 space-y-2">
+          <div className="h-3 w-full rounded-full bg-gray10" />
+          <div className="h-3 w-4/5 rounded-full bg-gray10" />
+        </div>
+        <div className="mt-5 flex items-center justify-between gap-4 rounded-[22px] bg-gray10 px-4 py-4">
+          <div className="h-7 w-28 rounded-lg bg-white" />
+          <div className="h-10 w-[132px] rounded-xl bg-white" />
         </div>
       </div>
     </div>

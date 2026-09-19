@@ -1,7 +1,9 @@
-import { IconFacebook } from "@/icons/facebook-icon";
-import { IconInstagram } from "@/icons/instagram-icon";
-import { IconTelegram } from "@/icons/telegram-icon";
-import { IconWhatsapp } from "@/icons/whatsupp-icon";
+import { IconFacebook } from "@/assets/icons/facebook-icon";
+import { IconInstagram } from "@/assets/icons/instagram-icon";
+import { IconTelegram } from "@/assets/icons/telegram-icon";
+import { IconTiktok } from "@/assets/icons/tiktok-icon";
+import { IconWhatsapp } from "@/assets/icons/whatsupp-icon";
+import { IconYoutube } from "@/assets/icons/youtube-icon";
 import { Globe2 } from "lucide-react";
 import type { ComponentType } from "react";
 
@@ -18,6 +20,8 @@ export const getSocialIcon = (type: string): SocialIcon => {
   if (name.includes("telegram")) return IconTelegram;
   if (name.includes("whatsapp")) return IconWhatsapp;
   if (name.includes("facebook")) return IconFacebook;
+  if (name.includes("youtube")) return IconYoutube;
+  if (name.includes("tiktok")) return IconTiktok;
 
   return Globe2;
 };
@@ -54,6 +58,22 @@ export const getSocialStyle = (type: string) => {
       color: "#25D366",
       borderColor: "rgba(37, 211, 102, 0.22)",
       backgroundColor: "rgba(37, 211, 102, 0.06)",
+    };
+  }
+
+  if (name.includes("youtube")) {
+    return {
+      color: "#FF0000",
+      borderColor: "rgba(255, 0, 0, 0.22)",
+      backgroundColor: "rgba(255, 0, 0, 0.06)",
+    };
+  }
+
+  if (name.includes("tiktok")) {
+    return {
+      color: "#000000",
+      borderColor: "rgba(0, 0, 0, 0.16)",
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
     };
   }
 

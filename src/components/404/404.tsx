@@ -1,10 +1,18 @@
+import { Store } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 export default function NotFound() {
+  const t = useTranslations();
+
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">Not Found</h1>
-        <p className="text-sm text-gray-500 mt-2">
-          The requested page could not be found.
+    <main className="flex min-h-dvh items-center justify-center px-6 py-10">
+      <div className="flex max-w-[340px] flex-col items-center text-center">
+        <Store className="text-gray220" size={72} strokeWidth={2.2} />
+        <h1 className="mt-2 text-2xl font-extrabold text-gray100">
+          {t("shared.not_found.title")}
+        </h1>
+        <p className="mt-3 text-sm leading-6 text-gray-500">
+          {t("shared.not_found.description")}
         </p>
       </div>
     </main>

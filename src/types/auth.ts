@@ -14,4 +14,9 @@ export type LoginPayloadProps = {
 
 export type SignupPayloadProps = {
   firstname: string;
+  phone: string;
+};
+
+export type UpdateFirstnameResponse = {
+  firstname: string;
 };

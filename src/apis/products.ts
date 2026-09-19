@@ -1,5 +1,5 @@
 import { request } from "@/configs/requests";
-import type { ProductsResponseProps } from "@/types/product";
+import type { ProductDetailProps, ProductsResponseProps } from "@/types/product";
 interface GetProductsParams {
   search?: string;
   limit?: number;
@@ -17,4 +17,9 @@ export const getProducts = async (shopId: string, params?: GetProductsParams) =>
       },
     },
   );
+};
+
+
+export const getProductDetail = async (productId: number) => {
+  return await request<ProductDetailProps>(`webapp/product/${productId}/detail`);
 };

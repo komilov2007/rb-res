@@ -2,14 +2,14 @@ export const isServer = () => {
   return typeof window === "undefined";
 };
 
+const LANGUAGES = ["uz", "ru", "en", "tr"];
+
+// API Accept-Language — same source as the UI locale: the NEXT_LOCALE cookie
+// set by the language switcher (the app has no /uz-style path segment).
 export const getLanguage = () => {
   if (isServer()) return "uz";
 
-  const firstSegment = window.location.pathname.split("/")[1];
+  const cookieLocale = document.cookie.match(/(?:^|;\s*)NEXT_LOCALE=([^;]+)/)?.[1];
 
-  if (["uz", "ru", "en", "tr"].includes(firstSegment)) {
-    return firstSegment;
-  }
-
-  return "uz";
+  return cookieLocale && LANGUAGES.includes(cookieLocale) ? cookieLocale : "uz";
 };

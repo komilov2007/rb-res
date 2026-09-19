@@ -1,5 +1,17 @@
 export const ROUTER = {
   HOME: "/",
   CART: "cart",
-  PRODUCT: "product",
+  PRODUCT: "/product",
+  CATEGORY: "/category",
+  CATEGORIES: "/categories",
+  ORDER: "/order",
+  ORDER_PLACING: "/order-placing",
+  MY_ORDERS: "/my-orders",
+  PROFILE: "/profile",
+  PROFILE_EDIT: "/profile/edit",
+  PROFILE_ORDERS: "/profile/orders",
+  PROFILE_ADDRESSES: "/profile/addresses",
+  PROFILE_NOTIFICATIONS: "/profile/notifications",
+  PROFILE_ABOUT: "/profile/about",
+  CHAT: "/chat",
 };

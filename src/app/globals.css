@@ -83,12 +83,19 @@ body {
 }
 
 body {
-  font-family: Inter, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
   color: var(--black);
+}
+
+body:has(
+    [data-slot="dialog-overlay"],
+    [data-slot="sheet-overlay"]
+  )
+  [data-mobile-action-widget] {
+  display: none;
 }
 
 ::-webkit-scrollbar {
@@ -123,6 +130,86 @@ a {
 }
 
 @layer components {
+  .surface-card-shadow {
+    box-shadow:
+      0 18px 42px -30px oklch(0.25 0.0058 271.18 / 34%),
+      0 8px 18px -16px oklch(0.25 0.0058 271.18 / 24%),
+      0 1px 0 oklch(100% 0 0 / 90%) inset;
+  }
+
+  .surface-card-shadow-hover {
+    box-shadow:
+      0 26px 58px -32px oklch(0.25 0.0058 271.18 / 42%),
+      0 14px 30px -22px oklch(0.25 0.0058 271.18 / 30%),
+      0 1px 0 oklch(100% 0 0 / 90%) inset;
+  }
+
+  .surface-banner-shadow {
+    box-shadow:
+      0 24px 54px -34px oklch(0.25 0.0058 271.18 / 34%),
+      0 10px 24px -22px oklch(0.25 0.0058 271.18 / 22%),
+      0 1px 0 oklch(100% 0 0 / 92%) inset;
+  }
+
+  .surface-banner-shadow-hover {
+    box-shadow:
+      0 30px 68px -38px oklch(0.25 0.0058 271.18 / 40%),
+      0 14px 32px -24px oklch(0.25 0.0058 271.18 / 26%),
+      0 1px 0 oklch(100% 0 0 / 92%) inset;
+  }
+
+  .mobile-banner-shadow {
+    box-shadow:
+      0 8px 18px -16px oklch(0.25 0.0058 271.18 / 16%),
+      0 3px 10px -10px oklch(0.25 0.0058 271.18 / 12%),
+      0 1px 0 oklch(100% 0 0 / 92%) inset;
+  }
+
+  .mobile-banner-shadow-hover {
+    box-shadow:
+      0 12px 24px -18px oklch(0.25 0.0058 271.18 / 20%),
+      0 6px 12px -12px oklch(0.25 0.0058 271.18 / 15%),
+      0 1px 0 oklch(100% 0 0 / 92%) inset;
+  }
+
+  .surface-chip-shadow {
+    box-shadow:
+      0 10px 24px -18px oklch(0.25 0.0058 271.18 / 24%),
+      0 1px 0 oklch(100% 0 0 / 88%) inset;
+  }
+
+  .surface-chip-shadow-hover {
+    box-shadow:
+      0 14px 30px -20px oklch(0.25 0.0058 271.18 / 32%),
+      0 1px 0 oklch(100% 0 0 / 88%) inset;
+  }
+
+  .required-option-error {
+    animation: required-option-error 680ms ease-out;
+  }
+
+  @keyframes required-option-error {
+    0% {
+      transform: translateX(0);
+    }
+
+    22% {
+      transform: translateX(-2px);
+    }
+
+    44% {
+      transform: translateX(2px);
+    }
+
+    66% {
+      transform: translateX(-1px);
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
+
   .title {
     font-size: 16px;
     font-weight: 600;
@@ -268,11 +355,26 @@ a {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    font-family: var(--font-onest);
   }
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    @apply font-sans;
-  }
+}
+
+/* Close button placed fully inside the toast at its right edge instead of
+ * overlapping the top-left corner. The horizontal slide-in/out hack that
+ * used to live here (rewriting sonner's --y variable) fought its own
+ * data-mounted/data-front/data-expanded state machine — it had no
+ * [data-front]/[data-expanded] conditions, so it also collapsed sonner's
+ * background-toast stacking transform, and broke outright once a toast is
+ * updated in place by id (mid-mount state gets stuck) — which the global
+ * API-error toast below now does on every repeated failure. Sonner's own
+ * vertical slide (untouched) doesn't have either problem.
+ */
+[data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-close-button] {
+  top: 8px;
+  right: 8px;
+  left: unset;
+  transform: none;
 }

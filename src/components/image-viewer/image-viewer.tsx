@@ -1,0 +1,152 @@
+"use client";
+
+import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
+type ImageViewerProps = {
+  images: string[];
+  // Index of the image to show; null = closed.
+  openIndex: number | null;
+  onClose: () => void;
+};
+
+const SWIPE_THRESHOLD = 50;
+
+// Fullscreen image viewer (black backdrop, "n/total" counter, close button,
+// swipe/arrows between images). Built on the Radix Dialog so it stacks
+// correctly above other Radix Sheets/Dialogs (e.g. the product detail
+// drawer) without closing them.
+const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
+  const t = useTranslations();
+  const [index, setIndex] = useState(0);
+  const [prevOpenIndex, setPrevOpenIndex] = useState(openIndex);
+  const touchStartX = useRef<number | null>(null);
+
+  // Sync the shown image with each new open (adjust-state-during-render).
+  if (openIndex !== prevOpenIndex) {
+    setPrevOpenIndex(openIndex);
+    if (openIndex !== null) setIndex(openIndex);
+  }
+
+  const total = images.length;
+  const hasMany = total > 1;
+  const goTo = (next: number) => setIndex((next + total) % total);
+
+  return (
+    <Dialog
+      open={openIndex !== null && total > 0}
+      onOpenChange={(open) => !open && onClose()}
+    >
+      <DialogContent
+        showCloseButton={false}
+        aria-describedby={undefined}
+        onKeyDown={(event) => {
+          if (!hasMany) return;
+          if (event.key === "ArrowLeft") goTo(index - 1);
+          if (event.key === "ArrowRight") goTo(index + 1);
+        }}
+        className="left-0 top-0 flex h-dvh w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-0 bg-black p-0 ring-0 sm:max-w-none"
+      >
+        <DialogTitle className="sr-only">{t("shared.image_viewer")}</DialogTitle>
+
+        <div className="flex shrink-0 items-center justify-between px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 text-white">
+          <span className="text-sm font-medium">
+            {index + 1}/{total}
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("common.close")}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white"
+          >
+            <X size={22} />
+          </button>
+        </div>
+
+        <div
+          className="relative flex min-h-0 flex-1 items-center justify-center"
+          onTouchStart={(event) => {
+            touchStartX.current = event.touches[0]?.clientX ?? null;
+          }}
+          onTouchEnd={(event) => {
+            const startX = touchStartX.current;
+            const endX = event.changedTouches[0]?.clientX;
+
+            touchStartX.current = null;
+            if (!hasMany || startX === null || endX === undefined) return;
+
+            const delta = endX - startX;
+
+            if (delta > SWIPE_THRESHOLD) goTo(index - 1);
+            if (delta < -SWIPE_THRESHOLD) goTo(index + 1);
+          }}
+        >
+          {images[index] && (
+            <img
+              src={images[index]}
+              alt=""
+              className="max-h-full max-w-full select-none object-contain"
+              draggable={false}
+            />
+          )}
+
+          {hasMany && (
+            <>
+              <button
+                type="button"
+                onClick={() => goTo(index - 1)}
+                aria-label={t("common.back")}
+                className="absolute left-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
+              >
+                <ChevronLeft size={22} />
+              </button>
+              <button
+                type="button"
+                onClick={() => goTo(index + 1)}
+                aria-label={t("common.continue")}
+                className="absolute right-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
+              >
+                <ChevronRight size={22} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {hasMany && (
+          <div className="scroll-hidden flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]">
+            {images.map((image, imageIndex) => (
+              <button
+                key={`${image}-${imageIndex}`}
+                type="button"
+                onClick={() => setIndex(imageIndex)}
+                ref={(node) => {
+                  if (node && imageIndex === index) {
+                    node.scrollIntoView({ block: "nearest", inline: "center" });
+                  }
+                }}
+                // Exactly 6 per row: (width − 5 gaps of 0.5rem) / 6.
+                className={`aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 overflow-hidden rounded-xl border-2 transition-opacity ${
+                  imageIndex === index
+                    ? "border-white opacity-100"
+                    : "border-transparent opacity-50"
+                }`}
+              >
+                <img
+                  src={image}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  draggable={false}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default ImageViewer;

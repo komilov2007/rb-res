@@ -1,133 +1,137 @@
 "use client";
 
-import Language from "@/components/language";
+import { type ChangeEvent, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BannerSkeleton } from "@/components/ui/skleton";
-import { getBannerInfoItems } from "@/constants/banner";
-import { MapPin } from "lucide-react";
 import "swiper/css";
 import "swiper/css/pagination";
-import Logo from "@/components/logo";
 import { useBanner } from "@/app/[page]/components/banner/useBanner";
-import BannerSwiper from "@/app/[page]/components/banner/components";
-import { useLocationStore } from "@/store/location";
-import MobileSearch from "@/app/[page]/components/mobile/mobile-search";
-import MobileFixedHeader from "@/app/[page]/components/mobile/mobile-fixed-header";
-import { useAuthStore } from "@/store/auth";
+import BannerSwiper, {
+  MobileBannerHeader,
+  MobileSearchScreen,
+} from "@/app/[page]/components/banner/components";
+import { useBoolean } from "@/hooks/useBoolean";
+import { useUiStore } from "@/stores/ui";
+import { getSearchUrl, hasSearchValue } from "@/utils/search";
+
+// Reopens the mobile search screen on reload when the URL still carries a
+// search. Mobile only — on desktop the header popover owns ?search= and this
+// (lg:hidden) screen must stay closed.
+const isMobileViewport = () =>
+  typeof window !== "undefined" &&
+  !window.matchMedia("(min-width: 1024px)").matches;
 
 const Banner = () => {
-  const address = useLocationStore((state) => state.address);
-  const setLocationModal = useLocationStore((state) => state.setLocationModal);
-  const hasAccess = useAuthStore((state) => state.hasAccess);
-  const setLoginModal = useAuthStore((state) => state.setLoginModal);
-  const {
-    t,
-    banners,
-    isLoading,
-    shopName,
-    logo,
-    servicesText,
-    servicesTitle,
-    todayWorkTime,
-  } = useBanner();
-
-  if (isLoading) return <BannerSkeleton />;
-  if (banners.length === 0) return null;
-
-  const infoItems = getBannerInfoItems({
-    t,
-    todayWorkTime,
-    servicesTitle,
-    servicesText,
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get("search") ?? "";
+  const setMobileHeaderDrawerOpen = useUiStore(
+    (state) => state.setMobileHeaderDrawerOpen,
+  );
+  const searchModal = useBoolean({
+    defaultValue: hasSearchValue(urlSearch) && isMobileViewport(),
   });
+  // Local state drives the input so typing stays instant; the URL is kept in
+  // sync alongside it (replace, not push — one history entry per keystroke
+  // would make the back button walk through every letter).
+  const [searchValue, setSearchValue] = useState(urlSearch);
+  const { t, banners, isLoading, handleBannerClick } = useBanner();
 
-  const handleOpenLocation = () => {
-    if (hasAccess) {
-      setLocationModal(true)();
-      return;
-    }
+  useEffect(() => {
+    // The search screen no longer sits above MobileAction's z-[70] widget
+    // (see MobileSearchScreen), so that widget is hidden while it's open.
+    setMobileHeaderDrawerOpen(searchModal.value);
 
-    setLoginModal(true)();
+    return () => setMobileHeaderDrawerOpen(false);
+  }, [searchModal.value, setMobileHeaderDrawerOpen]);
+
+  const replaceSearchUrl = (search: string) => {
+    router.replace(getSearchUrl({ pathname, search, searchParams }), {
+      scroll: false,
+    });
   };
 
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+    replaceSearchUrl(event.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchValue("");
+    replaceSearchUrl("");
+  };
+
+  const handleCloseSearch = () => {
+    searchModal.setFalse();
+    handleClearSearch();
+  };
+  const hasBanners = banners.length > 0;
   return (
     <>
-      <MobileFixedHeader shopName={shopName} />
+      <section className="bg-white px-4 pb-4 lg:hidden">
+        <MobileBannerHeader
+          searchLabel={t("search_products")}
+          onOpenSearch={searchModal.setTrue}
+        />
+        <div className="h-16" />
 
-      <section className="lg:hidden">
-        <div className="relative h-[538px] overflow-hidden bg-black">
-          <BannerSwiper banners={banners} variant="mobile" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black/45" />
-
-          <div className="absolute left-0 top-0 z-10  flex w-full  items-center justify-between px-4 pt-10 text-white">
-            {logo ? (
-              <div className="flex h-10 w-[120px] items-center px-2">
-                <Logo />
-              </div>
-            ) : (
-              <div />
-            )}
-            <div className="flex justify-start">
-              <Language variant="hero" />
-            </div>
-          </div>
-        </div>
-
-        <div className="-mt-8 px-3">
-          <div className="relative z-20 rounded-[18px] bg-white px-4 pb-3 pt-3 shadow-[0_4px_16px_var(--black40)]">
-            <h1 className="text-[24px] font-extrabold leading-7 text-black">
-              {shopName}
-            </h1>
-
-            <div className="mt-3 grid grid-cols-2 divide-x divide-gray180">
-              {infoItems.map(({ icon: Icon, label, value }) => (
-                <div key={value} className="min-w-0 px-2">
-                  <div className="flex items-center gap-1.5">
-                    <Icon size={14} className="shrink-0 text-gray220" />
-                    <p className="truncate text-[11px] font-semibold leading-3 text-gray220">
-                      {label}
-                    </p>
-                  </div>
-                  <h4 className="mt-1 truncate text-[10px] font-bold leading-3 text-black">
-                    {value}
-                  </h4>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleOpenLocation}
-            className="mt-3 w-full rounded-[18px] bg-white px-4 py-3 text-left shadow-[0_4px_16px_var(--black40)]"
+        {(isLoading || hasBanners) && (
+          <div
+            className={`mt-3 h-[200px] transition-[box-shadow,transform] duration-300 ease-out ${
+              banners.length > 2
+                ? "-mx-4 -mb-3 overflow-hidden"
+                : "overflow-hidden rounded-[16px]"
+            }`}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex min-w-0 flex-1 items-center gap-3 text-left">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary10 text-primary">
-                  <MapPin size={18} />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[11px] font-semibold leading-3 text-gray220">
-                    {t("delivery_address")}
-                  </span>
-                  <span className="mt-1 block truncate text-sm font-extrabold leading-4 text-black">
-                    {address || t("select_address")}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </button>
-
-          <MobileSearch />
-        </div>
-      </section>
-
-      <section className="hidden w-full items-center justify-center px-4 pb-4 lg:flex">
-        <div className="w-full max-w-7xl">
-          <div className="h-[150px] overflow-hidden rounded-xl sm:h-[190px] lg:h-[300px]">
-            <BannerSwiper banners={banners} variant="desktop" />
+            {isLoading ? (
+              <BannerSkeleton />
+            ) : (
+              <BannerSwiper
+                banners={banners}
+                variant="mobile"
+                onBannerClick={handleBannerClick}
+              />
+            )}
           </div>
-        </div>
+        )}
       </section>
+
+      <MobileSearchScreen
+        open={searchModal.value}
+        value={searchValue}
+        placeholder={t("search_food_or_category")}
+        onClose={handleCloseSearch}
+        onClear={handleClearSearch}
+        onChange={handleSearch}
+      />
+      {(isLoading || hasBanners) && (
+        <section
+          className={`hidden w-full items-center justify-center pb-4 lg:flex ${
+            banners.length > 2 ? "overflow-hidden px-0" : "px-4"
+          }`}
+        >
+          <div className={banners.length > 2 ? "w-full" : "w-full max-w-7xl"}>
+            <div
+              className={`h-[410px] transition-[box-shadow,transform] duration-300 ease-out ${
+                banners.length > 2
+                  ? "overflow-visible"
+                  : "overflow-hidden rounded-xl"
+              }`}
+            >
+              {isLoading ? (
+                <BannerSkeleton />
+              ) : (
+                <BannerSwiper
+                  banners={banners}
+                  variant="desktop"
+                  onBannerClick={handleBannerClick}
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 };

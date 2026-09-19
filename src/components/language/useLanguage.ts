@@ -1,39 +1,45 @@
 "use client";
 
-import { languages, type LanguageValue } from "@/constants/language";
-import { useGeneral } from "@/hooks/useGeneral";
-import { setCookie } from "@/utils/cookie";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { languages, type LanguageValue } from "@/constants/language";
+import { useGeneral } from "@/hooks/useGeneral";
+import { defaultLocale } from "@/types/i18n";
+import { setCookie } from "@/utils/cookie";
+
+const isLanguage = (value: string): value is LanguageValue => value in languages;
+
 export const useLanguage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  // The active locale comes from the server (NEXT_LOCALE cookie), so the
+  // first client render matches the server render — reading localStorage
+  // here caused a hydration mismatch.
+  const locale = useLocale();
   const { data: general } = useGeneral();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<LanguageValue>(() => {
-    if (typeof window === "undefined") return "uz";
-
-    const language = localStorage.getItem("language") as LanguageValue | null;
-
-    return language && languages[language] ? language : "uz";
-  });
-  const availableLanguages =
-    (general?.data.languages?.filter(
-      (language): language is LanguageValue => language in languages,
-    ) as LanguageValue[] | undefined) ?? ["uz", "ru", "en", "tr"];
-  const safeValue = availableLanguages.includes(value)
-    ? value
-    : availableLanguages[0];
+  const value: LanguageValue = isLanguage(locale) ? locale : defaultLocale;
+  const shopLanguages = general?.data.languages?.filter(isLanguage);
+  // The shop's languages, plus the active one and the app default, so the
+  // current language is always shown and the user can always switch back.
+  const availableLanguages: LanguageValue[] = shopLanguages?.length
+    ? Array.from(new Set<LanguageValue>([value, defaultLocale, ...shopLanguages]))
+    : ["uz", "ru", "en", "tr"];
 
   const handleChangeLanguage = (language: string) => {
-    const newLanguage = language as LanguageValue;
+    if (!isLanguage(language) || !availableLanguages.includes(language)) {
+      return;
+    }
 
-    if (!availableLanguages.includes(newLanguage)) return;
-
-    setValue(newLanguage);
-    localStorage.setItem("language", newLanguage);
-    setCookie("NEXT_LOCALE", newLanguage);
+    localStorage.setItem("language", language);
+    setCookie("NEXT_LOCALE", language);
+    // Server-rendered messages pick up the new cookie; API data is refetched
+    // with the new Accept-Language.
     router.refresh();
+    void queryClient.invalidateQueries();
   };
 
   useEffect(() => {
@@ -52,7 +58,7 @@ export const useLanguage = () => {
     open,
     value,
     setOpen,
-    safeValue,
+    safeValue: value,
     availableLanguages,
     handleChangeLanguage,
   };

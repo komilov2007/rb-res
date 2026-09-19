@@ -1,4 +1,10 @@
-import { Home, ShoppingCart, User } from "lucide-react";
+import {
+  ClipboardList,
+  Home,
+  LayoutGrid,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 export const navItems = [
   {
     key: "menu",
@@ -7,9 +13,21 @@ export const navItems = [
     active: true,
   },
   {
+    key: "category",
+    label: "category",
+    icon: LayoutGrid,
+    active: false,
+  },
+  {
     key: "cart",
     label: "cart",
     icon: ShoppingCart,
+    active: false,
+  },
+  {
+    key: "order",
+    label: "order",
+    icon: ClipboardList,
     active: false,
   },
   {

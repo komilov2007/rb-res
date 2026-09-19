@@ -1,8 +1,32 @@
+import type { BannerProps } from "@/types/banner";
 import type { GeneralProps } from "@/types/general";
 import { formatPrice } from "@/utils/format-price";
 import type { useTranslations } from "next-intl";
 
 type Translate = ReturnType<typeof useTranslations>;
+
+export type BannerTarget =
+  | { type: "category"; id: number }
+  | { type: "product"; id: number }
+  | { type: "url"; url: string };
+
+// Where a banner tap leads, checked in order: category → product → url.
+// null means a static, non-clickable banner.
+export const getBannerTarget = (banner: BannerProps): BannerTarget | null => {
+  if (typeof banner.category === "number") {
+    return { type: "category", id: banner.category };
+  }
+
+  if (typeof banner.product === "number") {
+    return { type: "product", id: banner.product };
+  }
+
+  const url = banner.url?.trim();
+
+  if (banner.have_url && url) return { type: "url", url };
+
+  return null;
+};
 
 export const getTodayWorkTime = (
   workingTime: GeneralProps["working_time"] | undefined,
@@ -14,7 +38,7 @@ export const getTodayWorkTime = (
   const today = workingTime[String(day)];
   const firstHour = today?.hours[0];
 
-  if (!today || today.is_closed || !firstHour) return "Yopiq";
+  if (!today || today.is_closed || !firstHour) return t("common.closed");
 
   return `${formatTime(firstHour.open)}-${formatTime(firstHour.close)}`;
 };
@@ -25,7 +49,7 @@ export const getServicesTitle = (
 ) => {
   const services = getActiveServiceNames(shop, t);
 
-  if (services.length > 1) return services.join(" va ");
+  if (services.length > 1) return services.join(` ${t("shared.and")} `);
   if (services.length === 1) return services[0];
 
   return t("service");

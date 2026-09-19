@@ -7,10 +7,13 @@
   "searching": "Qidirilmoqda...",
   "product_not_found": "Mahsulot topilmadi",
   "try_another_name": "Boshqa nom bilan ko'ring",
+  "search_categories": "Kategoriyalar",
+  "search_products_section": "Mahsulotlar",
   "menu": "Menyu",
   "category": "Kategoriya",
   "profile": "Profil",
   "cart": "Savatcha",
+  "order": "Buyurtmalarim",
   "login": "Kirish",
   "work_time": "Ish vaqti",
   "service_type": "Xizmat turi",
@@ -33,17 +36,18 @@
   "discount_products": "Chegirmadagi mahsulotlar",
   "view_all": "Barchasini ko'rish",
   "about_us": "Biz haqimizda",
-  "store_branches": "Do'kon filiallari",
+  "store_branches": "Restoran filiallari",
   "privacy_policy": "Maxfiylik siyosati",
   "terms": "Foydalanish shartlari",
   "powered_by": "tomonidan taqdim etilgan",
   "cart_product_count": "{count} ta mahsulot",
   "continue_shopping": "Xaridni davom ettirish",
+  "clear_cart": "Hammasini o'chirish",
   "checkout": "Buyurtma berish",
   "remove_order": "Buyurtmani o'chirasizmi?",
   "cancel": "Bekor qilish",
   "delete": "O'chirish",
-  "add_to_cart": "Savatga qo'shish",
+  "add_to_cart": "Savatga",
   "enter": "Kirish",
   "signup": "Ro'yxatdan o'tish",
   "login_hint": "Buyurtmalaringiz va savatchangizni saqlash uchun telefon raqamingizni kiriting.",
@@ -58,5 +62,474 @@
   "discount": "Chegirma",
   "profile_hint": "Profil ma'lumotlaringiz",
   "customer": "Mijoz",
-  "logout": "Chiqish"
+  "logout": "Chiqish",
+  "delivery_type": "Olish usuli",
+  "bts_pickup": "Olib ketish nuqtasi",
+  "payment_type": "To'lov turi",
+  "branch": "Filial",
+  "select_branch": "Filialni tanlang",
+  "comment": "Izoh",
+  "room": "Xona",
+  "floor": "Qavat",
+  "entrance": "Kirish",
+  "spend_cashback": "Keshbekni sarflash",
+  "unavailable_products_title": "Ba'zi mahsulotlar mavjud emas",
+  "unavailable_products_hint": "Buyurtmangizdagi ba'zi mahsulotlar endi mavjud emas. Ularni o'chirish uchun savatchaga qayting yoki boshqa filialni tanlang.",
+  "back_to_cart": "Savatchaga qaytish",
+  "choose_another_branch": "Boshqa filial tanlash",
+  "payment_canceled": "To'lov bekor qilindi",
+  "weekdays": {
+    "1": "Dushanba",
+    "2": "Seshanba",
+    "3": "Chorshanba",
+    "4": "Payshanba",
+    "5": "Juma",
+    "6": "Shanba",
+    "7": "Yakshanba"
+  },
+  "common": {
+    "close": "Yopish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "back": "Orqaga",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "loading": "Yuklanmoqda...",
+    "retry": "Qayta urinish",
+    "confirm": "Tasdiqlash",
+    "continue": "Davom etish",
+    "delete": "O'chirish",
+    "edit": "Tahrirlash",
+    "select": "Tanlash",
+    "understood": "Tushundim",
+    "today": "bugun",
+    "closed": "Yopiq",
+    "error": "Xatolik yuz berdi. Qayta urinib ko'ring.",
+    "show_more": "Ko'proq ko'rsatish",
+    "show_less": "Kamroq ko'rsatish",
+    "phone": "Telefon",
+    "address": "Manzil",
+    "branch": "Filial"
+  },
+  "payment_types": {
+    "CASH": "Naqd pul",
+    "CARD": "Bank kartasi",
+    "PAYME": "Payme",
+    "CLICK": "Click",
+    "UZUM": "Uzum",
+    "PAYME_API": "Payme api",
+    "CLICK_API": "Click ilovasi",
+    "GLOBAL_PAY": "Global pay",
+    "UZUM_NASIYA": "Uzum nasiya",
+    "ALIF_NASIYA": "Alif nasiya",
+    "BANK": "Bank o'tkazmasi",
+    "ROBO_CLICK": "Click ilovasi",
+    "ROBO_PAYME": "Payme ilovasi",
+    "ROBO_UZUM": "Uzum"
+  },
+  "home": {
+    "banner_alt": "Banner",
+    "prev_banner": "Oldingi banner",
+    "next_banner": "Keyingi banner",
+    "close_categories": "Kategoriyalarni yopish",
+    "prev_categories": "Oldingi kategoriyalar",
+    "next_categories": "Keyingi kategoriyalar",
+    "prev_products": "Oldingi mahsulotlar",
+    "next_products": "Keyingi mahsulotlar",
+    "header": {
+      "branches": "Filiallar",
+      "directions": "Yo'nalishlar"
+    },
+    "mobile_action": {
+      "chat": "Chat"
+    },
+    "branch_selection": {
+      "title": "Manzil yoki filialni tanlash",
+      "choose_address": "Manzil tanlang",
+      "not_selected": "Tanlanmagan",
+      "tab_delivery": "🛵 Yetkazib berish",
+      "tab_pickup": "📦 Olib ketish",
+      "new_address_placeholder": "Yangi manzil kiriting...",
+      "map_pill": "Xarita 📍",
+      "saved_addresses": "Saqlangan manzillarim ({count})",
+      "login_for_saved": "Saqlangan manzillar uchun tizimga kiring.",
+      "addresses_loading": "Manzillar yuklanmoqda...",
+      "available_branches": "Mavjud filiallar ro'yxati",
+      "pick_on_map": "Xaritadan tanlash",
+      "branches_not_found": "Filiallar topilmadi.",
+      "show_more_addresses": "Yana {count} ta manzilni ko'rsatish",
+      "show_more_branches": "Yana {count} ta filialni ko'rsatish"
+    }
+  },
+  "cart_drawer": {
+    "unavailable_at_branch": "Tanlangan filialda mavjud emas",
+    "delivery_price": "Yetkazib berish narxi"
+  },
+  "catalog": {
+    "home": "Bosh sahifa",
+    "all_categories": "Barcha kategoriyalar",
+    "not_found": "Kategoriyalar topilmadi",
+    "empty_category": "Bu kategoriyada mahsulot yo'q",
+    "empty_at_branch": "Bu filialda ushbu kategoriyada mahsulot yo'q",
+    "no_filter_match": "Ushbu filtrlarga mos mahsulot topilmadi",
+    "sort_label": "Saralash:",
+    "sort": {
+      "newest": "Yangi kelganlar",
+      "price_asc": "Narx: arzondan qimmatga",
+      "price_desc": "Narx: qimmatdan arzonga"
+    },
+    "filters": {
+      "from": "dan",
+      "to": "gacha"
+    }
+  },
+  "booking": {
+    "title": "Bron qilish",
+    "submit": "Bron qilish",
+    "back_home": "Orqaga qaytish",
+    "gallery_eyebrow": "Muhit va detallar",
+    "gallery_title": "Har bir lahza boshqacha",
+    "gallery_description": "Yumshoq yorug'lik, tabiiy materiallar va zamonaviy interyer makonni yanada iliq qiladi. Bu yerda atmosfera shunchaki fon emas, butun taassurotning bir qismi.",
+    "gallery_image_alt": "Restoran muhiti",
+    "form_title": "Stol band qilish uchun ma'lumotlarni to'ldiring",
+    "form_subtitle": "Sevimli taomingiz va ajoyib muhitda vaqtingizni biz bilan o'tkazing.",
+    "sheet_title": "Stol band qilish uchun",
+    "sheet_subtitle": "Sevimli taomingiz va ajoyib muhitda vaqtingizni o'tkazing.",
+    "user_fallback": "Foydalanuvchi",
+    "login_required": "Login qiling",
+    "your_name": "Ismingiz",
+    "date": "Sana",
+    "select_date": "Sanani tanlang",
+    "time": "Vaqt",
+    "select_time": "Vaqtni tanlang",
+    "guests": "Joy soni",
+    "extra_phone": "Qo'shimcha telefon",
+    "optional": "ixtiyoriy",
+    "optional_phone_placeholder": "Ixtiyoriy telefon raqam",
+    "add_extra_phone": "Qo'shimcha telefon qo'shish",
+    "leave_comment": "Izoh qoldirish",
+    "comment_placeholder": "Izohingizni yozing...",
+    "comment_short_placeholder": "Izoh..."
+  },
+  "order_page": {
+    "title": "Buyurtmani rasmiylashtirish",
+    "delivery_type": {
+      "title": "Yetkazib berish usuli",
+      "empty": "Buyurtma turlari mavjud emas.",
+      "options": {
+        "pickup": {
+          "label": "Restoran filialidan olib ketish",
+          "desc": "Buyurtmani filialdan o'zingiz olib ketasiz"
+        },
+        "delivery": {
+          "label": "Restoran yetkazib berish xizmati",
+          "desc": "Kuryer buyurtmani manzilingizga yetkazadi"
+        },
+        "bts_pickup": {
+          "label": "Olib ketish nuqtasi",
+          "desc": "Buyurtmani olib ketish nuqtasidan olasiz"
+        },
+        "yandex_delivery": {
+          "label": "Yandex yetkazib berish",
+          "desc": "Yandex kuryeri buyurtmani manzilingizga yetkazadi"
+        },
+        "noor_delivery": {
+          "label": "Noor yetkazib berish",
+          "desc": "Noor kuryeri buyurtmani manzilingizga yetkazadi"
+        }
+      }
+    },
+    "branches": {
+      "title": "Restoran manzili",
+      "branch": "Restoran filiali",
+      "view": "Filialni ko'rish",
+      "select_on_home": "Bosh sahifada filialni tanlang.",
+      "not_found": "Filiallar topilmadi."
+    },
+    "address": {
+      "not_selected": "Manzil tanlanmagan",
+      "not_deliverable": "Bu manzilga yetkazib bera olmaymiz. Boshqa manzil tanlang.",
+      "entrance": "Kirish yo'lagi"
+    },
+    "comment": {
+      "title": "Kuryer uchun izoh",
+      "placeholder": "Kuryer uchun izoh yozing..."
+    },
+    "shipping": {
+      "title": "Buyurtma vaqti",
+      "hint": "Sana va vaqtni birga tanlang",
+      "date": "Sana",
+      "time": "Vaqt"
+    },
+    "bonus": {
+      "title": "Bonus ballaringiz",
+      "rate": "1 ball = {amount} {currency}",
+      "balance": "{ball} ball",
+      "use": "Bonus ballarni buyurtmaga ishlatish"
+    },
+    "payment": {
+      "title": "To'lov usuli",
+      "load_error": "To'lov usullarini yuklab bo'lmadi.",
+      "caption": "{label} orqali to'lash",
+      "amount": "To'lov miqdori"
+    },
+    "promo": {
+      "question": "Sizda promo kod bormi?",
+      "current": "Promokod: {code}",
+      "placeholder": "Promo kod",
+      "apply": "Qo'llash",
+      "applied": "Promokod qo'llandi — {code}",
+      "error": "Promo-kodni qo'llab bo'lmadi."
+    },
+    "summary": {
+      "title": "Buyurtmangiz",
+      "delivery_price": "Yetkazib berish narxi",
+      "unavailable": "Mavjud bo'lmagan mahsulotlar",
+      "bonus": "Bonus ballar",
+      "total": "Umumiy narx",
+      "product_discount": "Mahsulotlar chegirmasi",
+      "promo_discount": "Promokod chegirmasi"
+    },
+    "waiting": {
+      "title": "To'lov kutilmoqda",
+      "hint_with_type": "To'lovni {payment} orqali yakunlang, so'ng pastdagi tugmani bosing.",
+      "hint": "To'lovni yakunlang, so'ng pastdagi tugmani bosing.",
+      "method": "To'lov usuli:",
+      "check": "To'lovni tekshirish",
+      "go_to_payment": "To'lovga o'tish"
+    },
+    "invoice": {
+      "title": "Zakaz"
+    },
+    "errors": {
+      "branch_required": "Filial tanlash kerak",
+      "date_required": "Sanani tanlang",
+      "time_required": "Vaqtni tanlang",
+      "create_failed": "Buyurtma berib bo'lmadi. Qayta urinib ko'ring.",
+      "provider_disabled": "{name} restoran tomonidan yoqilmagan.",
+      "payment_link_failed": "To'lov havolasini yaratib bo'lmadi.",
+      "payment_failed": "To'lov amalga oshmadi yoki bekor qilindi.",
+      "cart_empty": "Savatcha bo'sh.",
+      "delivery_type_required": "Xizmat turini tanlang",
+      "payment_type_required": "To'lov usulini tanlang"
+    }
+  },
+  "orders": {
+    "tabs": {
+      "active": "Faol",
+      "all": "Barchasi"
+    },
+    "empty_title": "Buyurtmalar topilmadi",
+    "empty_hint": "Hozircha buyurtmalaringiz yo'q.",
+    "login_required": "Buyurtmalarni ko'rish uchun tizimga kiring",
+    "title_number": "Buyurtma #{id}",
+    "support": "Qo'llab-quvvatlash",
+    "not_found": "Buyurtma topilmadi.",
+    "status": {
+      "NEW": "Yangi",
+      "PROGRESS": "Tayyorlanmoqda",
+      "READY": "Tayyor",
+      "ON_THE_WAY": "Yo'lda",
+      "DELIVERED": "Yetkazildi",
+      "COMPLETED": "Yakunlandi",
+      "CANCEL": "Bekor qilindi",
+      "CANCELED_BY_CUSTOMER": "Mijoz tomonidan bekor qilindi"
+    },
+    "card": {
+      "shop_address": "Restoran manzili",
+      "created_at": "Yaratilgan sana va vaqt",
+      "full_name": "Ism va familiya",
+      "phone_number": "Telefon raqami",
+      "total_price": "Umumiy narx",
+      "cancel_description": "ID-{id} raqamli buyurtma bekor qilinadi."
+    },
+    "cancel": {
+      "button": "Buyurtmani bekor qilish",
+      "cancelling": "Bekor qilinmoqda...",
+      "confirm_title": "Buyurtmani bekor qilasizmi?",
+      "confirm_description": "Bu amalni ortga qaytarib bo'lmaydi.",
+      "confirm_yes": "Ha, bekor qilish",
+      "call_shop": "Restoranga qo'ng'iroq qilish",
+      "failed": "Buyurtmani bekor qilib bo'lmadi."
+    },
+    "pay_amount": "To'lov qilish ({amount})",
+    "timeline": {
+      "accepted": "Qabul qilindi",
+      "preparing": "Tayyorlanmoqda",
+      "ready": "Tayyor",
+      "handed_over": "Topshirildi",
+      "cancelled": "Bekor qilingan",
+      "by_customer": "mijoz tomonidan"
+    },
+    "detail": {
+      "delivery_address": "Yetkazib berish manzili",
+      "pickup_address": "Olib ketish manzili",
+      "branch_with_name": "Filial: {name}",
+      "items_title": "Buyurtma tarkibi",
+      "product_fallback": "Mahsulot",
+      "unit_fallback": "dona",
+      "payment_info": "To'lov ma'lumotlari",
+      "products_price": "Mahsulot narxi",
+      "payment_method": "To'lov usuli",
+      "payment_status": "To'lov holati",
+      "paid": "To'langan",
+      "unpaid": "To'lanmagan",
+      "total_payment": "Jami to'lov"
+    },
+    "service_types": {
+      "PICKUP": "Filialdan olib ketish",
+      "DELIVERY": "Yetkazib berish",
+      "YANDEX_DELIVERY": "Yandex yetkazib berish",
+      "NOOR_DELIVERY": "Noor yetkazib berish"
+    },
+    "route": {
+      "title": "Yetkazib berish yo'nalishi",
+      "from": "Qayerdan",
+      "to": "Qayerga",
+      "address_missing": "Manzil ko'rsatilmagan",
+      "chip_branch": "Buyurtma shu filialdan",
+      "open_in_maps": "Yo'nalishni xaritada ochish"
+    },
+    "branch_info": {
+      "title": "Restoran filiali",
+      "schedule": "Ish jadvali",
+      "go_to_address": "Manzilga borish"
+    }
+  },
+  "profile_page": {
+    "user_fallback": "Foydalanuvchi",
+    "login_prompt": "Profilga kirish uchun bosing",
+    "contact_label": "Aloqa uchun",
+    "socials_title": "Ijtimoiy tarmoqlar:",
+    "powered_by": "<link>Robosell.uz</link> tomonidan taqdim etilgan",
+    "menu": {
+      "edit_profile": "Profilni tahrirlash",
+      "addresses": "Manzillarim",
+      "notifications": "Bildirishnomalar",
+      "language": "Til",
+      "contact_us": "Biz bilan bog'lanish"
+    },
+    "logout_dialog": {
+      "title": "Chiqasizmi?",
+      "description": "Profilingizdan chiqishni tasdiqlaysizmi?"
+    },
+    "language_sheet": {
+      "title": "Tilni tanlang"
+    },
+    "about": {
+      "working_hours_empty": "Ish vaqti ko'rsatilmagan",
+      "branches": "Filiallar",
+      "branches_empty": "Filiallar topilmadi",
+      "contacts": "Aloqa ma'lumotlari",
+      "contacts_empty": "Aloqa ma'lumotlari mavjud emas"
+    },
+    "addresses": {
+      "login_required": "Manzillarni ko'rish uchun tizimga kiring",
+      "add_new": "Yangi manzil qo'shish",
+      "empty_title": "Saqlangan manzil yo'q",
+      "empty_hint": "Yetkazib berish uchun manzil qo'shing",
+      "add": "Manzil qo'shish",
+      "edit_aria": "Manzilni tahrirlash",
+      "delete_aria": "Manzilni o'chirish",
+      "delete_title": "Manzilni o'chirasizmi?"
+    },
+    "edit": {
+      "login_required": "Profilni tahrirlash uchun tizimga kiring",
+      "name_saved": "Ism saqlandi",
+      "name_required": "Ismingizni kiriting"
+    },
+    "notifications": {
+      "login_required": "Bildirishnomalarni ko'rish uchun tizimga kiring",
+      "load_error": "Bildirishnomalarni yuklab bo'lmadi",
+      "empty": "Bildirishnomalar yo'q"
+    }
+  },
+  "chat": {
+    "connection_error": "Ulanish yo'q. Birozdan so'ng qayta urinib ko'ring.",
+    "header": {
+      "title": "Qo'llab-quvvatlash",
+      "online": "Online",
+      "call_aria": "Qo'ng'iroq qilish"
+    },
+    "input": {
+      "placeholder": "Xabaringizni yozing...",
+      "attach_file_aria": "Fayl biriktirish",
+      "remove_file_aria": "Faylni olib tashlash",
+      "send_aria": "Yuborish"
+    },
+    "message": {
+      "order_title": "Buyurtma #{id}",
+      "products_count": "Mahsulotlar soni:",
+      "products_count_value": "{count} ta",
+      "go_to_order": "Buyurtmaga o'tish →"
+    },
+    "list": {
+      "empty": "Hozircha xabarlar yo'q",
+      "scroll_down": "Pastga tushish"
+    }
+  },
+  "shared": {
+    "close_modal": "Modalni yopish",
+    "and": "va",
+    "date": {
+      "today": "Bugun",
+      "yesterday": "Kecha"
+    },
+    "shop_closed": {
+      "title": "Restoran hozircha yopiq",
+      "default_message": "Restoran ish vaqti tugagan!",
+      "opening_soon": "Tez orada ochamiz!",
+      "no_schedule": "Ish vaqti ko'rsatilmagan",
+      "opens_today": "Bugun {open} - {close} da ishlaymiz",
+      "opens_tomorrow": "Ertaga {open} - {close} da ishlaymiz",
+      "opens_on_day": "{day}: {open} - {close}",
+      "view_all_hours": "Barcha kunlar bo'yicha ish vaqtini ko'rish"
+    },
+    "not_found": {
+      "title": "Restoran topilmadi",
+      "description": "Shop id noto'g'ri yoki restoran vaqtincha mavjud emas. Linkni tekshirib qayta urinib ko'ring."
+    },
+    "image_viewer": "Rasm"
+  },
+  "location": {
+    "branch_picker": {
+      "choose_from_list": "Ro'yxatdan tanlash ({count})",
+      "close_list": "Ro'yxatni yopish",
+      "schedule": "Ish jadvali",
+      "show_more_days": "Yana {count} kun ko'rsatish",
+      "pick_here": "Bu yerdan olaman"
+    },
+    "resolving": "Manzil aniqlanmoqda...",
+    "delivery_address_title": "Yetkazib berish manzili",
+    "delete_address": "Manzilni o'chirish",
+    "my_addresses": "Manzillarim",
+    "addresses_loading": "Manzillar yuklanmoqda...",
+    "select_address_aria": "Manzilni tanlash",
+    "edit_address": "Manzilni tahrirlash",
+    "create_new": "Yangi yaratish",
+    "address_details": "Manzil ma'lumotlari",
+    "courier_comment": "Kuryer uchun izoh",
+    "address_name": "Manzil nomi",
+    "search_address": "Manzilni qidirish",
+    "branch_label": "{name} filiali"
+  },
+  "product": {
+    "branch_switched": "Filial almashtirildi — {name}",
+    "not_in_this_branch": "Bu filialda yo'q",
+    "not_in_branch": "{name}da yo'q",
+    "available_in_branch": "{name}da bor",
+    "not_in_any_branch": "Hech qaysi filialda mavjud emas",
+    "gram_unit": "g",
+    "choose_other_branch": "Boshqa filialni tanlash",
+    "unavailable": "Bu mahsulot tanlangan filialda mavjud emas",
+    "sale_label": "{label} chegirma",
+    "description": "Taom tavsifi",
+    "resize_detail": "Mahsulot oynasi o'lchamini o'zgartirish",
+    "in_stock": "Mavjud"
+  },
+  "errors": {
+    "generic": "Xatolik yuz berdi, qayta urinib ko'ring.",
+    "network": "Internet aloqasi yo'q. Ulanishni tekshirib, qayta urinib ko'ring.",
+    "timeout": "So'rov vaqti tugadi. Qayta urinib ko'ring."
+  }
 }

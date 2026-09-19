@@ -1,22 +1,35 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { AxiosResponse } from "axios";
 import type { YMapsApi } from "react-yandex-maps";
 
-import { createAddress } from "@/apis/address";
-import { useLocationStore } from "@/store/location";
-import { useAuthStore } from "@/store/auth";
-import { DEFAULT_CENTER, YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
+import {
+  createAddress,
+  deleteAddress,
+  getAddresses,
+  updateAddress,
+  updateAddressStatus,
+  type AddressProps,
+} from "@/apis/address";
+import { useLocationStore } from "@/stores/location";
+import { useAuthStore } from "@/stores/auth";
+import {
+  DEFAULT_CENTER,
+  YANDEX_ADDRESS_LANG,
+  YANDEX_KEYS,
+} from "@/constants/yandex";
 import { requestYandexGeocode } from "@/utils/yandex";
 import type {
   BoundsChangeEvent,
   Coordinates,
-  GeocodeResponse,
   MapInstance,
   SearchAddress,
   YandexGeocoderResponse,
 } from "@/types/yandex";
+
+type LocationScreen = "list" | "map" | "details";
 
 const toNullableNumber = (value: string) => {
   const cleanValue = value.trim();
@@ -24,14 +37,27 @@ const toNullableNumber = (value: string) => {
   return cleanValue ? Number(cleanValue) : null;
 };
 
+const toInputValue = (value: number | null) => {
+  return value ? String(value) : "";
+};
+
 export const useLocationModal = () => {
-  const [mapConstructor, setMapConstructor] = useState<YMapsApi | null>(null);
-  const mapConstructorRef = useRef<YMapsApi | null>(null);
+  const queryClient = useQueryClient();
   const mapInstanceRef = useRef<MapInstance | null>(null);
   const geocodeRequestRef = useRef(0);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const programmaticMoveRef = useRef(false);
   const address = useLocationStore((state) => state.address);
+  const setAddress = useLocationStore((state) => state.setAddress);
+  const clearAddressById = useLocationStore((state) => state.clearAddressById);
+  const editingAddress = useLocationStore((state) => state.editingAddress);
+  const setEditingAddress = useLocationStore((state) => state.setEditingAddress);
+  const locationModal = useLocationStore((state) => state.locationModal);
+  const setLocationModal = useLocationStore((state) => state.setLocationModal);
+  const auth = useAuthStore((state) => state.auth);
+  const hasAccess = useAuthStore((state) => state.hasAccess);
+  const [screen, setScreen] = useState<LocationScreen>("list");
+  const [editingAddressId, setEditingAddressId] = useState<number | null>(null);
   const [addressName, setAddressName] = useState(address);
   const [isResolving, setIsResolving] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -41,25 +67,125 @@ export const useLocationModal = () => {
   const [room, setRoom] = useState("");
   const [comment, setComment] = useState("");
   const [addressTitle, setAddressTitle] = useState("");
-  const [detailsModal, setDetailsModal] = useState(false);
   const [zoom, setZoom] = useState(13);
   const [center, setCenter] = useState<Coordinates>(DEFAULT_CENTER);
   const [yandexKeyIndex, setYandexKeyIndex] = useState(0);
   const [mapRenderKey, setMapRenderKey] = useState(0);
   const mapState = useMemo(() => ({ zoom, center }), [zoom, center]);
   const yandexKey = YANDEX_KEYS[yandexKeyIndex];
-  const setAddress = useLocationStore((state) => state.setAddress);
-  const locationModal = useLocationStore((state) => state.locationModal);
-  const setLocationModal = useLocationStore((state) => state.setLocationModal);
-  const auth = useAuthStore((state) => state.auth);
-  const setLoginModal = useAuthStore((state) => state.setLoginModal);
+  const addressesQuery = useQuery({
+    enabled: hasAccess && Boolean(auth?.customer),
+    queryKey: ["user-addresses", auth?.customer],
+    queryFn: getAddresses,
+  });
+  const addresses = addressesQuery.data?.data;
+  const currentAddress =
+    addresses?.find((item) => item.is_current) ?? addresses?.[0] ?? null;
+  const activeAddressId = editingAddressId ?? currentAddress?.id ?? null;
+
+  const invalidateAddresses = (customer?: number) => {
+    queryClient.invalidateQueries({ queryKey: ["user-addresses", customer] });
+  };
+
   const createAddressMutation = useMutation({
     mutationFn: createAddress,
-    onSuccess: (_, variables) => {
-      setAddress(variables.address);
+    // Selects the new address by the id the saved list actually holds — the
+    // create response's own `[0].id` isn't reliably there, and a null id
+    // left the new address unticked in the saved-addresses list. The list
+    // is refetched (not just invalidated) so the lookup sees the new row;
+    // match order: response id, then the exact coordinates just saved, then
+    // the backend's current address (is_current: true was sent).
+    onSuccess: async (response, variables) => {
+      const createdId = response.data?.[0]?.id ?? null;
+      let created: AddressProps | undefined;
+
+      try {
+        const fresh = await queryClient.fetchQuery({
+          queryKey: ["user-addresses", variables.customer],
+          queryFn: getAddresses,
+        });
+        const list = fresh.data ?? [];
+
+        created =
+          list.find((item) => item.id === createdId) ??
+          list.find(
+            (item) =>
+              item.latitude === variables.latitude &&
+              item.longitude === variables.longitude,
+          ) ??
+          list.find((item) => item.is_current);
+      } catch {
+        // Fall back to what the create call itself gave us.
+      }
+
+      setAddress(created?.address ?? variables.address, {
+        id: created?.id ?? createdId,
+        latitude: variables.latitude,
+        longitude: variables.longitude,
+      });
+      invalidateAddresses(variables.customer);
       handleClose();
     },
   });
+
+  const updateAddressMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof updateAddress>[1] }) =>
+      updateAddress(id, data),
+    onSuccess: (response, variables) => {
+      const nextAddress = response.data.address || variables.data.address;
+
+      setAddress(nextAddress, {
+        id: response.data.id ?? variables.id,
+        latitude: variables.data.latitude,
+        longitude: variables.data.longitude,
+      });
+      invalidateAddresses(auth?.customer);
+      handleClose();
+    },
+  });
+
+  const updateCurrentMutation = useMutation({
+    mutationFn: updateAddressStatus,
+    onSuccess: (response, id) => {
+      const selected =
+        addresses?.find((item) => item.id === id) ?? response.data ?? null;
+
+      if (selected) {
+        setAddress(selected.address, {
+          id: selected.id,
+          latitude: selected.latitude,
+          longitude: selected.longitude,
+        });
+      }
+      invalidateAddresses(auth?.customer);
+      handleClose();
+    },
+  });
+
+  const deleteAddressMutation = useMutation({
+    mutationFn: deleteAddress,
+    onSuccess: (_, id) => {
+      // Same order as profile/addresses: drop it from the cached list before
+      // clearing the store, so Location's "fall back to the current saved
+      // address" effect can't re-select the deleted one from a stale list.
+      queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
+        ["user-addresses", auth?.customer],
+        (old) =>
+          old && { ...old, data: old.data.filter((item) => item.id !== id) },
+      );
+      clearAddressById(id);
+      invalidateAddresses(auth?.customer);
+      handleClose();
+    },
+  });
+
+  useEffect(() => {
+    if (!locationModal || !editingAddress) return;
+
+    fillAddressForm(editingAddress);
+    setScreen("map");
+    setEditingAddress(null);
+  }, [editingAddress, locationModal, setEditingAddress]);
 
   const getYandexGeocode = (params: Record<string, string>) => {
     return requestYandexGeocode({
@@ -69,33 +195,46 @@ export const useLocationModal = () => {
     });
   };
 
+  const fillAddressForm = (item?: AddressProps | null) => {
+    setEditingAddressId(item?.id ?? null);
+    setAddressName(item?.address ?? "");
+    setAddressTitle(item?.name ?? "");
+    setEntrance(toInputValue(item?.entrance ?? null));
+    setFloor(toInputValue(item?.floor ?? null));
+    setRoom(toInputValue(item?.room ?? null));
+    setComment(item?.comment ?? "");
+
+    if (item) {
+      const coords: Coordinates = [item.longitude, item.latitude];
+
+      setCenter(coords);
+      setZoom(18);
+      setMapRenderKey((key) => key + 1);
+      mapInstanceRef.current?.setCenter(coords, 18, {
+        duration: 500,
+        timingFunction: "ease-in-out",
+      });
+    }
+  };
+
   const setAddressByCoords = async (coords: Coordinates) => {
     const requestId = geocodeRequestRef.current + 1;
     geocodeRequestRef.current = requestId;
     setIsResolving(true);
-    const api = mapConstructorRef.current ?? mapConstructor;
-    const handleAddress = (nextAddress: unknown) => {
-      if (requestId === geocodeRequestRef.current && nextAddress) {
-        setAddressName(String(nextAddress));
-      }
-    };
-
-    api?.geocode(coords).then((response: GeocodeResponse) => {
-      const nearest = response?.geoObjects?.get(0);
-      handleAddress(nearest?.properties?.get("text"));
-    });
 
     try {
       const data = await getYandexGeocode({
         format: "json",
-        lang: YANDEX_LANG,
+        lang: YANDEX_ADDRESS_LANG,
         geocode: `${coords[0]},${coords[1]}`,
       });
-      const address =
+      const nextAddress =
         data.response?.GeoObjectCollection?.featureMember?.[0]?.GeoObject
           ?.metaDataProperty?.GeocoderMetaData?.text;
 
-      handleAddress(address);
+      if (requestId === geocodeRequestRef.current && nextAddress) {
+        setAddressName(nextAddress);
+      }
     } finally {
       if (requestId === geocodeRequestRef.current) {
         setIsResolving(false);
@@ -105,53 +244,112 @@ export const useLocationModal = () => {
 
   function handleClose() {
     setSearchResults([]);
-    setDetailsModal(false);
+    setScreen("list");
+    setEditingAddressId(null);
+    setEditingAddress(null);
     setLocationModal(false)();
   }
+
+  const handleAddAddress = () => {
+    fillAddressForm(null);
+    setCenter(DEFAULT_CENTER);
+    setZoom(16);
+    setMapRenderKey((key) => key + 1);
+    setScreen("map");
+    void setAddressByCoords(DEFAULT_CENTER);
+  };
+
+  // openLocationMap(): start directly on the map screen for a new address.
+  // Reacts to the store change in a subscription callback rather than an
+  // effect body, so no state is set synchronously during an effect.
+  useEffect(
+    () =>
+      useLocationStore.subscribe((state, previousState) => {
+        if (!state.locationMapRequest || previousState.locationMapRequest) {
+          return;
+        }
+
+        state.clearLocationMapRequest();
+        handleAddAddress();
+      }),
+    // Subscribed once; handleAddAddress only calls stable state setters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  const handleEditAddress = (item: AddressProps) => {
+    fillAddressForm(item);
+    setScreen("map");
+  };
 
   const handleOpenDetails = () => {
     if (!addressName.trim() || isResolving) return;
 
-    setDetailsModal(true);
+    setScreen("details");
   };
 
   const handleBackToMap = () => {
-    setDetailsModal(false);
+    setScreen("map");
   };
 
+  const getAddressPayload = () => ({
+    address: addressName,
+    latitude: center[1],
+    longitude: center[0],
+    name: addressTitle.trim() || null,
+    entrance: toNullableNumber(entrance),
+    floor: toNullableNumber(floor),
+    room: toNullableNumber(room),
+    comment: comment.trim() || null,
+    is_current: true,
+  });
+
   const handleSubmit = () => {
-    if (!addressName.trim() || createAddressMutation.isPending) return;
+    if (!addressName.trim()) return;
+
+    const payload = getAddressPayload();
+
     if (!auth?.customer) {
-      setLoginModal(true)();
+      setAddress(payload.address, {
+        id: null,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
+      });
+      handleClose();
+      return;
+    }
+
+    if (editingAddressId) {
+      updateAddressMutation.mutate({ id: editingAddressId, data: payload });
       return;
     }
 
     createAddressMutation.mutate({
       customer: auth.customer,
-      address: addressName,
-      latitude: center[1],
-      longitude: center[0],
-      name: addressTitle.trim() || null,
-      entrance: toNullableNumber(entrance),
-      floor: toNullableNumber(floor),
-      room: toNullableNumber(room),
-      comment: comment.trim() || null,
-      is_current: true,
+      ...payload,
     });
   };
 
-  const handleLoad = (api: YMapsApi) => {
-    setMapConstructor(api);
-    mapConstructorRef.current = api;
+  const handleDeleteAddress = () => {
+    if (!editingAddressId || deleteAddressMutation.isPending) return;
 
-    api.geocode(center).then((response: GeocodeResponse) => {
-      const nearest = response?.geoObjects?.get(0);
-      const nextAddress = nearest?.properties?.get("text");
+    deleteAddressMutation.mutate(editingAddressId);
+  };
 
-      if (nextAddress) {
-        setAddressName(String(nextAddress));
-      }
+  const handleSelectSavedAddress = (item: AddressProps) => {
+    setEditingAddressId(item.id);
+    setAddress(item.address, {
+      id: item.id,
+      latitude: item.latitude,
+      longitude: item.longitude,
     });
+    updateCurrentMutation.mutate(item.id);
+  };
+
+  const handleLoad = (_api: YMapsApi) => {
+    if (!addressName) {
+      void setAddressByCoords(center);
+    }
   };
 
   const handleBoundsChange = (event: BoundsChangeEvent) => {
@@ -172,7 +370,7 @@ export const useLocationModal = () => {
         ? prevCenter
         : newCoords,
     );
-    setAddressByCoords(newCoords);
+    void setAddressByCoords(newCoords);
   };
 
   const handleUserCurrentLocation = () => {
@@ -188,7 +386,7 @@ export const useLocationModal = () => {
         mapInstanceRef.current?.setCenter(newCoords, 18);
         setCenter(newCoords);
         setZoom(18);
-        setAddressByCoords(newCoords);
+        void setAddressByCoords(newCoords);
       },
       (error) => {
         alert(error.message);
@@ -208,7 +406,7 @@ export const useLocationModal = () => {
 
     getYandexGeocode({
       format: "json",
-      lang: YANDEX_LANG,
+      lang: YANDEX_ADDRESS_LANG,
       geocode: value,
       results: "8",
     })
@@ -240,10 +438,8 @@ export const useLocationModal = () => {
   const handleSelectAddress = (item: SearchAddress) => {
     setAddressName(item.address || item.name);
     setSearchResults([]);
-    const mapInstance = mapInstanceRef.current;
-
     programmaticMoveRef.current = true;
-    mapInstance?.setCenter(item.coords, 18, {
+    mapInstanceRef.current?.setCenter(item.coords, 18, {
       duration: 600,
       timingFunction: "ease-in-out",
     });
@@ -251,7 +447,7 @@ export const useLocationModal = () => {
     setCenter(item.coords);
     setZoom(18);
     setMapRenderKey((key) => key + 1);
-    setAddressByCoords(item.coords);
+    void setAddressByCoords(item.coords);
 
     setTimeout(() => {
       programmaticMoveRef.current = false;
@@ -275,33 +471,48 @@ export const useLocationModal = () => {
     }, 400);
   };
 
+  const isPending =
+    createAddressMutation.isPending ||
+    updateAddressMutation.isPending ||
+    updateCurrentMutation.isPending ||
+    deleteAddressMutation.isPending;
+
   return {
     state: {
+      activeAddressId,
       addressName,
       addressTitle,
+      addresses,
       center,
       comment,
-      detailsModal,
+      detailsModal: screen === "details",
+      editingAddressId,
       entrance,
       floor,
       isResolving,
       isSearching,
       locationModal,
+      mapModal: screen === "map",
       mapRenderKey,
       mapState,
       room,
+      screen,
       searchResults,
       yandexKey,
     },
     actions: {
-      handleBoundsChange,
+      handleAddAddress,
       handleBackToMap,
+      handleBoundsChange,
       handleChangeSearch,
       handleClose,
+      handleDeleteAddress,
+      handleEditAddress,
       handleLoad,
       handleOpenDetails,
       handleSearchCenter,
       handleSelectAddress,
+      handleSelectSavedAddress,
       handleSubmit,
       handleUserCurrentLocation,
       setAddressTitle,
@@ -315,7 +526,10 @@ export const useLocationModal = () => {
       mapInstanceRef,
     },
     status: {
-      isCreateAddressPending: createAddressMutation.isPending,
+      isCreateAddressPending: isPending,
     },
   };
 };
+
+
+
