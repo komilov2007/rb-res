@@ -232,8 +232,8 @@ const BranchInfoSheet = ({
                       }`}
                     >
                       <span className="shrink-0">
-                        {t(`weekdays.${dayNumber}`)}
-                        {isToday && ` (${t("common.today")})`}:
+                        {t(`weekdays_${dayNumber}`)}
+                        {isToday && ` (${t("common_today")})`}:
                       </span>
                       {isClosed ? (
                         <span>—</span>

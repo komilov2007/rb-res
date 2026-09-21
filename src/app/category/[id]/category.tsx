@@ -72,7 +72,7 @@ const CategoryContent = () => {
             variant="plain"
             size="none"
             onClick={handleBack}
-            aria-label={t("common.back")}
+            aria-label={t("common_back")}
             className="text-black"
           >
             <ChevronLeft size={22} />

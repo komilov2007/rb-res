@@ -69,7 +69,9 @@ export const PAYMENT_CARD_CONFIG: Partial<
     type,
     {
       get label() {
-        return translate(`payment_types.${type}`);
+        // Message keys are lower-case (payment_types_cash); the payment
+        // type enum is upper-case (CASH).
+        return translate(`payment_types_${type.toLowerCase()}`);
       },
     },
   ]),

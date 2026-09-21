@@ -90,7 +90,7 @@ const PaymentWaiting = ({
         className="gap-2 text-sm font-medium text-muted-foreground"
       >
         <ArrowLeft size={18} />
-        {t("common.back")}
+        {t("common_back")}
       </Button>
     </div>
   );

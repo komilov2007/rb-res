@@ -50,7 +50,7 @@ const PaymentMethod = () => {
                     onClick={retry}
                     className="h-9 rounded-xl bg-gray10 px-4 text-sm font-bold text-black"
                   >
-                    {t("common.retry")}
+                    {t("common_retry")}
                   </Button>
                 </div>
               )}

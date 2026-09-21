@@ -56,7 +56,7 @@ const CommentDrawer = ({ open, value, onClose, onSave }: CommentDrawerProps) => 
             size="primaryWide"
             onClick={handleSave}
           >
-            {t("common.save")}
+            {t("common_save")}
           </Button>
         </SheetFooter>
       </SheetContent>

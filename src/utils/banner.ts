@@ -38,7 +38,7 @@ export const getTodayWorkTime = (
   const today = workingTime[String(day)];
   const firstHour = today?.hours[0];
 
-  if (!today || today.is_closed || !firstHour) return t("common.closed");
+  if (!today || today.is_closed || !firstHour) return t("common_closed");
 
   return `${formatTime(firstHour.open)}-${formatTime(firstHour.close)}`;
 };

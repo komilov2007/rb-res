@@ -34,7 +34,7 @@ const XButton = ({
   return (
     <button
       type={type}
-      aria-label={ariaLabel ?? t("common.close")}
+      aria-label={ariaLabel ?? t("common_close")}
       className={cn(xButtonVariants({ size, className }))}
       {...props}
     >

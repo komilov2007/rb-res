@@ -280,7 +280,7 @@ const BranchMapPicker = ({
                                   className="flex items-start justify-between gap-3 text-xs font-medium text-gray220"
                                 >
                                   <span className="shrink-0">
-                                    {t(`weekdays.${index + 1}`)}:
+                                    {t(`weekdays_${index + 1}`)}:
                                   </span>
                                   {isClosed ? (
                                     <span>—</span>

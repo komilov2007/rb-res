@@ -51,7 +51,7 @@ const CategoriesContent = () => {
             variant="plain"
             size="none"
             onClick={() => router.push(`${ROUTER.HOME}${shopQuery}`)}
-            aria-label={t("common.back")}
+            aria-label={t("common_back")}
             className="text-black"
           >
             <ChevronLeft size={22} />

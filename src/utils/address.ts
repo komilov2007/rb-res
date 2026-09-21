@@ -9,7 +9,7 @@ import { translate } from "@/utils/translate";
 
 // "Chilonzor" -> "Chilonzor filiali"; names that already say "filial" stay.
 export const getBranchLabel = (name?: string | null) => {
-  if (!name) return translate("common.branch");
+  if (!name) return translate("common_branch");
   return /filial/i.test(name)
     ? name
     : translate("location.branch_label", { name });

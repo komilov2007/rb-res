@@ -49,7 +49,7 @@ const ProfilePageShell = ({
               variant="plain"
               size="none"
               onClick={goBackToProfile}
-              aria-label={t("common.back")}
+              aria-label={t("common_back")}
               className="text-black"
             >
               <ChevronLeft size={22} />
@@ -76,7 +76,7 @@ const ProfilePageShell = ({
                     variant="plain"
                     size="none"
                     onClick={goBackToProfile}
-                    aria-label={t("common.back")}
+                    aria-label={t("common_back")}
                     className="text-black"
                   >
                     <ChevronLeft size={22} />

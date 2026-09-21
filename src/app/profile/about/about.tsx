@@ -96,10 +96,10 @@ const AboutContent = () => {
                   }`}
                 >
                   <span className="shrink-0">
-                    {t(`weekdays.${index + 1}`)}
+                    {t(`weekdays_${index + 1}`)}
                   </span>
                   {isClosed ? (
-                    <span className="text-red">{t("common.closed")}</span>
+                    <span className="text-red">{t("common_closed")}</span>
                   ) : (
                     <span
                       className={`text-right ${isToday ? "text-primary" : "text-black"}`}

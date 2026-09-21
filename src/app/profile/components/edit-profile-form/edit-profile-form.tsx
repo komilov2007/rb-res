@@ -69,7 +69,7 @@ const EditProfileForm = () => {
       goBackToProfile();
     },
     onError: (error) => {
-      setError(getApiErrorMessage(error, t("common.error")));
+      setError(getApiErrorMessage(error, t("common_error")));
     },
   });
 
@@ -138,7 +138,7 @@ const EditProfileForm = () => {
           size="primaryWide"
           onClick={goBackToProfile}
         >
-          {t("common.cancel")}
+          {t("common_cancel")}
         </Button>
         <Button
           type="submit"
@@ -146,7 +146,7 @@ const EditProfileForm = () => {
           size="primaryWide"
           disabled={!shopid || update.isPending}
         >
-          {t("common.save")}
+          {t("common_save")}
         </Button>
       </div>
     </form>

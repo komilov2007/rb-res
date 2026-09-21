@@ -202,7 +202,7 @@ const OrderDetailCard = ({
               onClick={() => setConfirmOpen(false)}
               className="rounded-2xl"
             >
-              {t("common.cancel")}
+              {t("common_cancel")}
             </Button>
             <Button
               type="button"
@@ -212,7 +212,7 @@ const OrderDetailCard = ({
               onClick={() => cancelMutation.mutate()}
               className="rounded-2xl bg-red/10 text-red"
             >
-              {t("common.confirm")}
+              {t("common_confirm")}
             </Button>
           </div>
         </DialogContent>

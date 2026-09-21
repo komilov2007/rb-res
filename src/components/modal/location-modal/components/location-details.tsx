@@ -143,7 +143,7 @@ const LocationDetails = ({
           disabled={isResolving || isPending || !addressName.trim()}
           onClick={onSubmit}
         >
-          {t("common.confirm")}
+          {t("common_confirm")}
         </Button>
       </div>
     </div>

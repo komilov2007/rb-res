@@ -76,7 +76,7 @@ const CancelOrder = ({
                 onClick={() => setConfirmOpen(false)}
                 className="flex-1 font-medium"
               >
-                {t("common.no")}
+                {t("common_no")}
               </Button>
               <Button
                 type="button"

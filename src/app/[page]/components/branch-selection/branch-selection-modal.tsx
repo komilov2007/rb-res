@@ -148,7 +148,7 @@ const ShowMoreToggle = ({
     >
       {expanded ? (
         <>
-          {t("common.show_less")}
+          {t("common_show_less")}
           <ChevronUp size={16} />
         </>
       ) : (

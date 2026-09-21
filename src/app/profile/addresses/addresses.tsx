@@ -221,7 +221,7 @@ const AddressesContent = () => {
               onClick={() => setDeleting(null)}
               className="rounded-2xl"
             >
-              {t("common.cancel")}
+              {t("common_cancel")}
             </Button>
             <Button
               type="button"
@@ -231,7 +231,7 @@ const AddressesContent = () => {
               onClick={() => deleting && deleteMutation.mutate(deleting.id)}
               className="rounded-2xl bg-red/10 text-red"
             >
-              {t("common.delete")}
+              {t("common_delete")}
             </Button>
           </div>
         </DialogContent>

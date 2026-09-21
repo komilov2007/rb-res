@@ -357,7 +357,7 @@ const Profile = () => {
               onClick={() => setLogoutOpen(false)}
               className="rounded-2xl"
             >
-              {t("common.cancel")}
+              {t("common_cancel")}
             </Button>
             <Button
               type="button"

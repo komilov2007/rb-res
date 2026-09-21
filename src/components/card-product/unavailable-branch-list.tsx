@@ -87,7 +87,7 @@ const UnavailableBranchList = ({
 
       {isLoading ? (
         <p className="py-2 text-center text-xs font-medium text-gray220">
-          {t("common.loading")}
+          {t("common_loading")}
         </p>
       ) : availableBranches.length === 0 ? (
         <p className="py-2 text-center text-xs font-medium text-gray220">

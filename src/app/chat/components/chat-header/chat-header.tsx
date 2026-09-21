@@ -23,7 +23,7 @@ const ChatHeader = () => {
           variant="plain"
           size="none"
           onClick={() => router.back()}
-          aria-label={t("common.back")}
+          aria-label={t("common_back")}
           className="shrink-0 text-black"
         >
           <ChevronLeft size={22} />

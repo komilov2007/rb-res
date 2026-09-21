@@ -60,7 +60,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
           <button
             type="button"
             onClick={onClose}
-            aria-label={t("common.close")}
+            aria-label={t("common_close")}
             className="flex h-9 w-9 items-center justify-center rounded-full text-white"
           >
             <X size={22} />
@@ -100,7 +100,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
               <button
                 type="button"
                 onClick={() => goTo(index - 1)}
-                aria-label={t("common.back")}
+                aria-label={t("common_back")}
                 className="absolute left-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
               >
                 <ChevronLeft size={22} />
@@ -108,7 +108,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
               <button
                 type="button"
                 onClick={() => goTo(index + 1)}
-                aria-label={t("common.continue")}
+                aria-label={t("common_continue")}
                 className="absolute right-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
               >
                 <ChevronRight size={22} />

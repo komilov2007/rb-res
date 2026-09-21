@@ -49,7 +49,7 @@ const ShopClosedModal = () => {
     }
 
     return t("shared.shop_closed.opens_on_day", {
-      day: t(`weekdays.${nextOpening.dayIndex}`),
+      day: t(`weekdays_${nextOpening.dayIndex}`),
       open: nextOpening.open,
       close: nextOpening.close,
     });
