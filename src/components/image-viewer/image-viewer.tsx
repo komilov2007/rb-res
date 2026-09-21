@@ -51,7 +51,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
         }}
         className="left-0 top-0 flex h-dvh w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-0 bg-black p-0 ring-0 sm:max-w-none"
       >
-        <DialogTitle className="sr-only">{t("shared.image_viewer")}</DialogTitle>
+        <DialogTitle className="sr-only">{t("shared_image_viewer")}</DialogTitle>
 
         <div className="flex shrink-0 items-center justify-between px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 text-white">
           <span className="text-sm font-medium">

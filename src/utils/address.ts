@@ -12,7 +12,7 @@ export const getBranchLabel = (name?: string | null) => {
   if (!name) return translate("common_branch");
   return /filial/i.test(name)
     ? name
-    : translate("location.branch_label", { name });
+    : translate("location_branch_label", { name });
 };
 
 // Country/city parts geocoded addresses start with — they carry no

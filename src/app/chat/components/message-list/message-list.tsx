@@ -134,7 +134,7 @@ const MessageList = ({
 
         {chronological.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center text-center text-sm text-gray220">
-            {t("chat.list.empty")}
+            {t("chat_list_empty")}
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -166,7 +166,7 @@ const MessageList = ({
         <button
           type="button"
           onClick={scrollToBottom}
-          aria-label={t("chat.list.scroll_down")}
+          aria-label={t("chat_list_scroll_down")}
           className="absolute bottom-3 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-[0_4px_16px_rgba(15,23,42,0.16)]"
         >
           <ArrowDown size={18} />

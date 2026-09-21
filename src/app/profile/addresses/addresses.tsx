@@ -104,12 +104,12 @@ const AddressesContent = () => {
       className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/40 bg-white text-sm font-medium text-primary"
     >
       <Plus size={18} strokeWidth={2.4} />
-      {t("profile_page.addresses.add_new")}
+      {t("profile_page_addresses_add_new")}
     </button>
   );
 
   if (!hasAccess) {
-    return <LoginRequired message={t("profile_page.addresses.login_required")} />;
+    return <LoginRequired message={t("profile_page_addresses_login_required")} />;
   }
 
   if (addressesQuery.isLoading) {
@@ -129,10 +129,10 @@ const AddressesContent = () => {
           <MapPin size={24} />
         </span>
         <p className="text-base font-bold text-black">
-          {t("profile_page.addresses.empty_title")}
+          {t("profile_page_addresses_empty_title")}
         </p>
         <p className="text-sm text-gray220">
-          {t("profile_page.addresses.empty_hint")}
+          {t("profile_page_addresses_empty_hint")}
         </p>
         <Button
           type="button"
@@ -142,7 +142,7 @@ const AddressesContent = () => {
           className="mt-1 h-11 gap-2 rounded-2xl bg-primary px-5 text-sm font-bold text-white"
         >
           <Plus size={16} strokeWidth={2.4} />
-          {t("profile_page.addresses.add")}
+          {t("profile_page_addresses_add")}
         </Button>
       </div>
     );
@@ -180,7 +180,7 @@ const AddressesContent = () => {
             <button
               type="button"
               onClick={() => handleEdit(item)}
-              aria-label={t("profile_page.addresses.edit_aria")}
+              aria-label={t("profile_page_addresses_edit_aria")}
               className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gray10 text-gray220"
             >
               <Edit3 size={15} />
@@ -188,7 +188,7 @@ const AddressesContent = () => {
             <button
               type="button"
               onClick={() => setDeleting(item)}
-              aria-label={t("profile_page.addresses.delete_aria")}
+              aria-label={t("profile_page_addresses_delete_aria")}
               className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-red/10 text-red"
             >
               <Trash2 size={15} />
@@ -208,7 +208,7 @@ const AddressesContent = () => {
           showCloseButton={false}
         >
           <DialogTitle className="text-center text-xl font-bold text-black">
-            {t("profile_page.addresses.delete_title")}
+            {t("profile_page_addresses_delete_title")}
           </DialogTitle>
           <DialogDescription className="text-center text-sm font-normal text-gray220">
             {deleting ? getShortAddress(deleting.address) : ""}
@@ -244,7 +244,7 @@ const Addresses = () => {
   const t = useTranslations();
 
   return (
-    <ProfilePageShell title={t("profile_page.menu.addresses")}>
+    <ProfilePageShell title={t("profile_page_menu_addresses")}>
       {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <AddressesContent />

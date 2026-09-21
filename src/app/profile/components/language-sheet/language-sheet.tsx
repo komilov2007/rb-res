@@ -72,7 +72,7 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
           className="max-w-[380px] rounded-3xl border border-gray180 bg-white p-6"
         >
           <DialogTitle className="text-lg font-bold text-black">
-            {t("profile_page.language_sheet.title")}
+            {t("profile_page_language_sheet_title")}
           </DialogTitle>
           <div className="mt-4 flex flex-col gap-2">{options}</div>
         </DialogContent>
@@ -87,7 +87,7 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
         className="rounded-t-3xl border-gray180 shadow-none"
       >
         <SheetHeader>
-          <SheetTitle>{t("profile_page.language_sheet.title")}</SheetTitle>
+          <SheetTitle>{t("profile_page_language_sheet_title")}</SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-2 px-4 pb-[max(16px,env(safe-area-inset-bottom))]">

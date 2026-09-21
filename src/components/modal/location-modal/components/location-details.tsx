@@ -61,7 +61,7 @@ const LocationDetails = ({
     <div className="flex h-full w-full flex-col bg-white px-5 pb-5 pt-4">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-[21px] font-bold leading-7 text-black">
-          {t("location.address_details")}
+          {t("location_address_details")}
         </h2>
         <XButton size="lg" onClick={onClose} className="bg-gray10" />
       </div>
@@ -123,14 +123,14 @@ const LocationDetails = ({
           IconStart={MessageSquare}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          placeholder={t("location.courier_comment")}
+          placeholder={t("location_courier_comment")}
           wrapperClassName={inputClassName}
         />
         <Input
           IconStart={Home}
           value={addressTitle}
           onChange={(event) => setAddressTitle(event.target.value)}
-          placeholder={t("location.address_name")}
+          placeholder={t("location_address_name")}
           wrapperClassName={inputClassName}
         />
       </div>

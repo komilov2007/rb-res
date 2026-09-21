@@ -29,6 +29,6 @@ export const getSkuMeta = (sku: ProductSkuProps) => {
   const unit = sku.unit?.unit || sku.unit?.name;
 
   if (sku.amount > 0 && unit) return `${sku.amount} ${unit}`;
-  if (sku.status === "UNLIMITED") return translate("product.in_stock");
+  if (sku.status === "UNLIMITED") return translate("product_in_stock");
   return null;
 };

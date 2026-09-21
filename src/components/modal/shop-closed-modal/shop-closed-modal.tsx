@@ -32,23 +32,23 @@ const ShopClosedModal = () => {
   const nextOpening = getNextOpening(general?.data.working_time);
 
   const getOpeningLabel = () => {
-    if (!nextOpening) return t("shared.shop_closed.no_schedule");
+    if (!nextOpening) return t("shared_shop_closed_no_schedule");
 
     if (nextOpening.daysAhead === 0) {
-      return t("shared.shop_closed.opens_today", {
+      return t("shared_shop_closed_opens_today", {
         open: nextOpening.open,
         close: nextOpening.close,
       });
     }
 
     if (nextOpening.daysAhead === 1) {
-      return t("shared.shop_closed.opens_tomorrow", {
+      return t("shared_shop_closed_opens_tomorrow", {
         open: nextOpening.open,
         close: nextOpening.close,
       });
     }
 
-    return t("shared.shop_closed.opens_on_day", {
+    return t("shared_shop_closed_opens_on_day", {
       day: t(`weekdays_${nextOpening.dayIndex}`),
       open: nextOpening.open,
       close: nextOpening.close,
@@ -82,16 +82,16 @@ const ShopClosedModal = () => {
         />
 
         <h2 className="mt-1 text-lg font-bold text-black">
-          {t("shared.shop_closed.title")}
+          {t("shared_shop_closed_title")}
         </h2>
         <p className="mt-1 text-sm font-normal text-gray220">
-          {general?.data.message || t("shared.shop_closed.default_message")}
+          {general?.data.message || t("shared_shop_closed_default_message")}
         </p>
         {/* "We'll open soon" only fits a same-day reopening — saying it when
             the next window is days away would be wrong. */}
         {nextOpening?.daysAhead === 0 && (
           <p className="mt-0.5 text-sm font-medium text-primary">
-            {t("shared.shop_closed.opening_soon")}
+            {t("shared_shop_closed_opening_soon")}
           </p>
         )}
 
@@ -111,7 +111,7 @@ const ShopClosedModal = () => {
               {getOpeningLabel()}
             </span>
             <span className="mt-0.5 block text-xs font-medium text-gray220">
-              {t("shared.shop_closed.view_all_hours")}
+              {t("shared_shop_closed_view_all_hours")}
             </span>
           </span>
           <ChevronRight size={16} className="shrink-0 text-gray220" />

@@ -61,7 +61,7 @@ const UnavailableBranchList = ({
     >
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-bold text-black">
-          {t("product.available_in_branch", { name: branch.name })}
+          {t("product_available_in_branch", { name: branch.name })}
         </span>
         <span className="block truncate text-xs font-medium text-gray220">
           {getShortAddress(branch.address)}
@@ -81,8 +81,8 @@ const UnavailableBranchList = ({
           below are what's meant to actually draw the eye (accent color). */}
       <p className="text-xs font-medium text-gray220">
         {currentBranchName
-          ? t("product.not_in_branch", { name: currentBranchName })
-          : t("product.not_in_this_branch")}
+          ? t("product_not_in_branch", { name: currentBranchName })
+          : t("product_not_in_this_branch")}
       </p>
 
       {isLoading ? (
@@ -91,7 +91,7 @@ const UnavailableBranchList = ({
         </p>
       ) : availableBranches.length === 0 ? (
         <p className="py-2 text-center text-xs font-medium text-gray220">
-          {t("product.not_in_any_branch")}
+          {t("product_not_in_any_branch")}
         </p>
       ) : availableBranches.length === 1 ? (
         availableRow(availableBranches[0])

@@ -65,11 +65,11 @@ const Profile = () => {
 
   const profile = data?.data;
   const name = hasAccess
-    ? profile?.firstname || t("profile_page.user_fallback")
+    ? profile?.firstname || t("profile_page_user_fallback")
     : t("login");
   const phone = hasAccess
     ? profile?.phone || "-"
-    : t("profile_page.login_prompt");
+    : t("profile_page_login_prompt");
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -117,7 +117,7 @@ const Profile = () => {
             type="button"
             variant="icon-solid"
             size="icon-lg"
-            aria-label={t("profile_page.menu.edit_profile")}
+            aria-label={t("profile_page_menu_edit_profile")}
             onClick={() => router.push(`${ROUTER.PROFILE_EDIT}${shopQuery}`)}
             className="bg-gray10 text-gray220"
           >
@@ -156,7 +156,7 @@ const Profile = () => {
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-normal text-gray220">
-              {t("profile_page.contact_label")}
+              {t("profile_page_contact_label")}
             </p>
             <p className="truncate text-sm font-medium text-[#3D3D3D]">
               {businessPhone}
@@ -168,7 +168,7 @@ const Profile = () => {
       {socials.length > 0 && (
         <div className="mt-3 border-t border-gray180/60 pt-3">
           <p className="text-sm font-bold text-black">
-            {t("profile_page.socials_title")}
+            {t("profile_page_socials_title")}
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             {socials.map((social) => {
@@ -197,7 +197,7 @@ const Profile = () => {
         </div>
       )}
       <p className="mt-3 text-sm font-normal text-gray220">
-        {t.rich("profile_page.powered_by", {
+        {t.rich("profile_page_powered_by", {
           link: (chunks) => (
             <a
               href="https://robosell.uz/"
@@ -254,7 +254,7 @@ const Profile = () => {
             {hasAccess && (
               <ProfileItem
                 icon={Edit3}
-                label={t("profile_page.menu.edit_profile")}
+                label={t("profile_page_menu_edit_profile")}
                 onClick={() =>
                   router.push(`${ROUTER.PROFILE_EDIT}${shopQuery}`)
                 }
@@ -271,7 +271,7 @@ const Profile = () => {
             />
             <ProfileItem
               icon={MapPin}
-              label={t("profile_page.menu.addresses")}
+              label={t("profile_page_menu_addresses")}
               onClick={() =>
                 router.push(`${ROUTER.PROFILE_ADDRESSES}${shopQuery}`)
               }
@@ -282,14 +282,14 @@ const Profile = () => {
           <ProfileGroup>
             <ProfileItem
               icon={Bell}
-              label={t("profile_page.menu.notifications")}
+              label={t("profile_page_menu_notifications")}
               onClick={() =>
                 router.push(`${ROUTER.PROFILE_NOTIFICATIONS}${shopQuery}`)
               }
             />
             <ProfileItem
               icon={Globe2}
-              label={t("profile_page.menu.language")}
+              label={t("profile_page_menu_language")}
               value={languageLabel}
               onClick={() => setLanguageOpen(true)}
             />
@@ -302,7 +302,7 @@ const Profile = () => {
                 channel already in this app, not a new one. */}
             <ProfileItem
               icon={MessageCircle}
-              label={t("profile_page.menu.contact_us")}
+              label={t("profile_page_menu_contact_us")}
               onClick={() => router.push(`${ROUTER.CHAT}${shopQuery}`)}
             />
           </ProfileGroup>
@@ -326,7 +326,7 @@ const Profile = () => {
 
           <div className="min-w-0 flex-1 rounded-2xl border border-gray180 bg-white p-6">
             <h2 className="mb-4 text-lg font-bold text-black">
-              {t("profile_page.menu.edit_profile")}
+              {t("profile_page_menu_edit_profile")}
             </h2>
             <EditProfileForm />
           </div>
@@ -344,10 +344,10 @@ const Profile = () => {
           showCloseButton={false}
         >
           <DialogTitle className="text-center text-xl font-bold text-black">
-            {t("profile_page.logout_dialog.title")}
+            {t("profile_page_logout_dialog_title")}
           </DialogTitle>
           <DialogDescription className="text-center text-sm font-normal text-gray220">
-            {t("profile_page.logout_dialog.description")}
+            {t("profile_page_logout_dialog_description")}
           </DialogDescription>
           <div className="mt-2 grid grid-cols-2 gap-3">
             <Button

@@ -35,7 +35,7 @@ const LocationSearch = ({
           }
         }}
         IconStart={Search}
-        placeholder={t("location.search_address")}
+        placeholder={t("location_search_address")}
         wrapperClassName={inputClassName}
       />
       {(isSearching || results.length > 0) && (

@@ -84,7 +84,7 @@ const CardProduct = ({
     // The header chip and every other unavailable card read this same
     // store, so they already update the instant setPickup runs — this
     // toast is purely a confirmation, not what drives that update.
-    toast.success(t("product.branch_switched", { name: branch.name }), {
+    toast.success(t("product_branch_switched", { name: branch.name }), {
       duration: 2500,
     });
   };
@@ -155,7 +155,7 @@ const CardProduct = ({
 
           {isUnavailable && (
             <span className="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold leading-none text-white">
-              {t("product.not_in_this_branch")}
+              {t("product_not_in_this_branch")}
             </span>
           )}
 
@@ -210,7 +210,7 @@ const CardProduct = ({
 
               {product.amount > 0 && (
                 <span className="mt-1.5 block text-xs font-medium text-gray220">
-                  {product.amount} {t("product.gram_unit")}
+                  {product.amount} {t("product_gram_unit")}
                 </span>
               )}
             </div>

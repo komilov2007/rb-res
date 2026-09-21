@@ -148,7 +148,7 @@ export const useChat = () => {
         });
 
         if (!sendFile(response.data.file, trimmed)) {
-          toast.error(t("chat.connection_error"));
+          toast.error(t("chat_connection_error"));
           return;
         }
 
@@ -166,7 +166,7 @@ export const useChat = () => {
     if (!trimmed) return;
 
     if (!sendText(trimmed)) {
-      toast.error(t("chat.connection_error"));
+      toast.error(t("chat_connection_error"));
       return;
     }
 

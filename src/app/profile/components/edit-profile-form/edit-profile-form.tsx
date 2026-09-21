@@ -65,7 +65,7 @@ const EditProfileForm = () => {
 
       void queryClient.invalidateQueries({ queryKey: ["general", shopid] });
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
-      toast.success(t("profile_page.edit.name_saved"));
+      toast.success(t("profile_page_edit_name_saved"));
       goBackToProfile();
     },
     onError: (error) => {
@@ -79,7 +79,7 @@ const EditProfileForm = () => {
     if (!shopid || update.isPending) return;
 
     if (!firstname.trim()) {
-      setError(t("profile_page.edit.name_required"));
+      setError(t("profile_page_edit_name_required"));
       return;
     }
 
@@ -88,7 +88,7 @@ const EditProfileForm = () => {
   };
 
   if (!hasAccess) {
-    return <LoginRequired message={t("profile_page.edit.login_required")} />;
+    return <LoginRequired message={t("profile_page_edit_login_required")} />;
   }
 
   return (

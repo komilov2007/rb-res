@@ -76,7 +76,7 @@ const AboutContent = () => {
           <LinesSkeleton />
         ) : !workingTime ? (
           <p className="text-sm text-gray220">
-            {t("profile_page.about.working_hours_empty")}
+            {t("profile_page_about_working_hours_empty")}
           </p>
         ) : (
           <ul className="flex flex-col gap-1">
@@ -118,12 +118,12 @@ const AboutContent = () => {
         )}
       </Section>
 
-      <Section title={t("profile_page.about.branches")}>
+      <Section title={t("profile_page_about_branches")}>
         {isBranchesLoading ? (
           <LinesSkeleton />
         ) : branches.length === 0 ? (
           <p className="text-sm text-gray220">
-            {t("profile_page.about.branches_empty")}
+            {t("profile_page_about_branches_empty")}
           </p>
         ) : (
           <ul className="flex flex-col gap-2">
@@ -163,12 +163,12 @@ const AboutContent = () => {
         workingTime={workingTime}
       />
 
-      <Section title={t("profile_page.about.contacts")}>
+      <Section title={t("profile_page_about_contacts")}>
         {isGeneralLoading ? (
           <LinesSkeleton />
         ) : !phone && socials.length === 0 ? (
           <p className="text-sm text-gray220">
-            {t("profile_page.about.contacts_empty")}
+            {t("profile_page_about_contacts_empty")}
           </p>
         ) : (
           <div className="flex flex-col gap-3">

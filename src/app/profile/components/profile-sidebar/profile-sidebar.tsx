@@ -107,11 +107,11 @@ const ProfileSidebar = () => {
 
   const profile = data?.data;
   const name = hasAccess
-    ? profile?.firstname || t("profile_page.user_fallback")
+    ? profile?.firstname || t("profile_page_user_fallback")
     : t("login");
   const phone = hasAccess
     ? profile?.phone || "-"
-    : t("profile_page.login_prompt");
+    : t("profile_page_login_prompt");
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -162,7 +162,7 @@ const ProfileSidebar = () => {
                 type="button"
                 variant="icon-solid"
                 size="icon-lg"
-                aria-label={t("profile_page.menu.edit_profile")}
+                aria-label={t("profile_page_menu_edit_profile")}
                 onClick={() =>
                   router.push(`${ROUTER.PROFILE_EDIT}${shopQuery}`)
                 }
@@ -195,7 +195,7 @@ const ProfileSidebar = () => {
           {hasAccess && (
             <SidebarRow
               icon={Edit3}
-              label={t("profile_page.menu.edit_profile")}
+              label={t("profile_page_menu_edit_profile")}
               // Bare /profile now shows this same form by default in the
               // content pane (no more "Xush kelibsiz" placeholder), so it
               // reads as active there too, not just on /profile/edit itself.
@@ -218,7 +218,7 @@ const ProfileSidebar = () => {
           />
           <SidebarRow
             icon={MapPin}
-            label={t("profile_page.menu.addresses")}
+            label={t("profile_page_menu_addresses")}
             active={pathname?.startsWith(ROUTER.PROFILE_ADDRESSES)}
             onClick={() =>
               router.push(`${ROUTER.PROFILE_ADDRESSES}${shopQuery}`)
@@ -230,7 +230,7 @@ const ProfileSidebar = () => {
         <div className="overflow-hidden rounded-2xl border border-gray180 bg-white">
           <SidebarRow
             icon={Bell}
-            label={t("profile_page.menu.notifications")}
+            label={t("profile_page_menu_notifications")}
             active={pathname?.startsWith(ROUTER.PROFILE_NOTIFICATIONS)}
             onClick={() =>
               router.push(`${ROUTER.PROFILE_NOTIFICATIONS}${shopQuery}`)
@@ -238,7 +238,7 @@ const ProfileSidebar = () => {
           />
           <SidebarRow
             icon={Globe2}
-            label={t("profile_page.menu.language")}
+            label={t("profile_page_menu_language")}
             value={languageLabel}
             onClick={() => setLanguageOpen(true)}
           />
@@ -252,7 +252,7 @@ const ProfileSidebar = () => {
               channel already in this app, not a new one. */}
           <SidebarRow
             icon={MessageCircle}
-            label={t("profile_page.menu.contact_us")}
+            label={t("profile_page_menu_contact_us")}
             active={pathname?.startsWith(ROUTER.CHAT)}
             onClick={() => router.push(`${ROUTER.CHAT}${shopQuery}`)}
           />
@@ -294,7 +294,7 @@ const ProfileSidebar = () => {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-normal text-gray220">
-                    {t("profile_page.contact_label")}
+                    {t("profile_page_contact_label")}
                   </p>
                   <p className="truncate text-sm font-medium text-[#3D3D3D]">
                     {businessPhone}
@@ -306,7 +306,7 @@ const ProfileSidebar = () => {
             {socials.length > 0 && (
               <div className={businessPhone ? "mt-3" : ""}>
                 <p className="text-sm font-bold text-black">
-                  {t("profile_page.socials_title")}
+                  {t("profile_page_socials_title")}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {socials.map((social) => {
@@ -335,7 +335,7 @@ const ProfileSidebar = () => {
               </div>
             )}
             <p className="mt-3 text-xs font-normal text-gray220">
-              {t.rich("profile_page.powered_by", {
+              {t.rich("profile_page_powered_by", {
                 link: (chunks) => (
                   <a
                     href="https://robosell.uz/"
@@ -363,10 +363,10 @@ const ProfileSidebar = () => {
           showCloseButton={false}
         >
           <DialogTitle className="text-center text-xl font-bold text-black">
-            {t("profile_page.logout_dialog.title")}
+            {t("profile_page_logout_dialog_title")}
           </DialogTitle>
           <DialogDescription className="text-center text-sm font-normal text-gray220">
-            {t("profile_page.logout_dialog.description")}
+            {t("profile_page_logout_dialog_description")}
           </DialogDescription>
           <div className="mt-2 grid grid-cols-2 gap-3">
             <Button

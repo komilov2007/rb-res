@@ -8,7 +8,7 @@ export const PRODUCT_UNAVAILABLE_MESSAGE =
   "Bu mahsulot tanlangan filialda mavjud emas";
 
 export const getProductUnavailableMessage = () =>
-  translate("product.unavailable");
+  translate("product_unavailable");
 
 // A fixed toast id keeps repeated taps from stacking duplicate toasts.
 export const showProductUnavailable = (details?: string) =>

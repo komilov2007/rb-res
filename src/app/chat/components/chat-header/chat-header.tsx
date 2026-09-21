@@ -35,18 +35,18 @@ const ChatHeader = () => {
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-black">
-            {t("chat.header.title")}
+            {t("chat_header_title")}
           </p>
           <p className="flex items-center gap-1.5 truncate text-xs text-gray220">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
-            {t("chat.header.online")}
+            {t("chat_header_online")}
           </p>
         </div>
 
         {phone && (
           <a
             href={`tel:${phone}`}
-            aria-label={t("chat.header.call_aria")}
+            aria-label={t("chat_header_call_aria")}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray10 text-gray220"
           >
             <Phone size={17} />

@@ -56,7 +56,7 @@ const LocationModal = () => {
       className={className}
       onClick={actions.handleOpenDetails}
     >
-      {state.isResolving ? t("location.resolving") : t("continue")}
+      {state.isResolving ? t("location_resolving") : t("continue")}
     </Button>
   );
 
@@ -97,7 +97,7 @@ const LocationModal = () => {
     <div className="flex h-full w-full flex-col bg-white p-4">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-xl font-bold text-black">
-          {t("location.delivery_address_title")}
+          {t("location_delivery_address_title")}
         </h2>
         <XButton
           size="lg"
@@ -132,7 +132,7 @@ const LocationModal = () => {
                 onClick={actions.handleDeleteAddress}
                 disabled={status.isCreateAddressPending}
                 className="bg-red-500 text-white"
-                aria-label={t("location.delete_address")}
+                aria-label={t("location_delete_address")}
               >
                 <Trash2 size={17} />
               </Button>

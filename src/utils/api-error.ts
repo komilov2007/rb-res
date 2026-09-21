@@ -23,7 +23,7 @@ export const TIMEOUT_ERROR_MESSAGE =
 // qo'llab bo'lmadi." — misleading for a plain connectivity failure).
 export const getApiErrorMessage = (
   error: unknown,
-  fallback: string = translate("errors.generic"),
+  fallback: string = translate("errors_generic"),
 ) => {
   if (isAxiosError(error)) {
     if (typeof error.response?.data?.message === "string") {
@@ -32,8 +32,8 @@ export const getApiErrorMessage = (
 
     if (!error.response) {
       return error.code === "ECONNABORTED"
-        ? translate("errors.timeout")
-        : translate("errors.network");
+        ? translate("errors_timeout")
+        : translate("errors_network");
     }
   }
 

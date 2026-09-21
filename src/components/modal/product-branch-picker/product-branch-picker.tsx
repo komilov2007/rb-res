@@ -49,7 +49,7 @@ const ProductBranchPicker = () => {
       workingTime={general?.data?.working_time}
       value={branchId}
       onSelect={handleSelect}
-      title={t("product.choose_other_branch")}
+      title={t("product_choose_other_branch")}
     />
   );
 };

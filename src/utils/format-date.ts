@@ -39,8 +39,8 @@ export const getChatDateLabel = (isoDate: string) => {
 
   yesterday.setDate(today.getDate() - 1);
 
-  if (isSameDay(date, today)) return translate("shared.date.today");
-  if (isSameDay(date, yesterday)) return translate("shared.date.yesterday");
+  if (isSameDay(date, today)) return translate("shared_date_today");
+  if (isSameDay(date, yesterday)) return translate("shared_date_yesterday");
 
   return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
 };

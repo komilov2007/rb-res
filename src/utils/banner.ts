@@ -49,7 +49,7 @@ export const getServicesTitle = (
 ) => {
   const services = getActiveServiceNames(shop, t);
 
-  if (services.length > 1) return services.join(` ${t("shared.and")} `);
+  if (services.length > 1) return services.join(` ${t("shared_and")} `);
   if (services.length === 1) return services[0];
 
   return t("service");

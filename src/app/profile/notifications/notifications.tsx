@@ -39,7 +39,7 @@ const NotificationsContent = () => {
 
   if (!hasAccess) {
     return (
-      <LoginRequired message={t("profile_page.notifications.login_required")} />
+      <LoginRequired message={t("profile_page_notifications_login_required")} />
     );
   }
 
@@ -57,7 +57,7 @@ const NotificationsContent = () => {
     return (
       <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center">
         <p className="text-sm font-medium text-gray220">
-          {t("profile_page.notifications.load_error")}
+          {t("profile_page_notifications_load_error")}
         </p>
         <Button
           type="button"
@@ -82,7 +82,7 @@ const NotificationsContent = () => {
           <BellOff size={24} />
         </span>
         <p className="text-base font-bold text-black">
-          {t("profile_page.notifications.empty")}
+          {t("profile_page_notifications_empty")}
         </p>
       </div>
     );
@@ -126,7 +126,7 @@ const Notifications = () => {
   const t = useTranslations();
 
   return (
-    <ProfilePageShell title={t("profile_page.menu.notifications")}>
+    <ProfilePageShell title={t("profile_page_menu_notifications")}>
       {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <NotificationsContent />

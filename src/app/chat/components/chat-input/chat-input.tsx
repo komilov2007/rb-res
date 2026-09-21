@@ -74,7 +74,7 @@ const ChatInput = ({
           <button
             type="button"
             onClick={onClearFile}
-            aria-label={t("chat.input.remove_file_aria")}
+            aria-label={t("chat_input_remove_file_aria")}
             className="shrink-0 text-gray220"
           >
             <X size={16} />
@@ -93,7 +93,7 @@ const ChatInput = ({
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          aria-label={t("chat.input.attach_file_aria")}
+          aria-label={t("chat_input_attach_file_aria")}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray10 text-gray220"
         >
           <Paperclip size={18} />
@@ -103,7 +103,7 @@ const ChatInput = ({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={t("chat.input.placeholder")}
+          placeholder={t("chat_input_placeholder")}
           rows={1}
           // text-base (16px): under 16px, iOS Safari auto-zooms the whole
           // page (including the fixed navbar) when this textarea gets focus.
@@ -114,7 +114,7 @@ const ChatInput = ({
           type="button"
           onClick={onSend}
           disabled={!canSend || isSending}
-          aria-label={t("chat.input.send_aria")}
+          aria-label={t("chat_input_send_aria")}
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-white ${
             isSending ? "" : "disabled:opacity-40"
           }`}

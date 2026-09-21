@@ -169,7 +169,7 @@ const BranchMapPicker = ({
               onClick={openList}
               className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_10px_24px_rgba(0,0,0,0.16)]"
             >
-              {t("location.branch_picker.choose_from_list", {
+              {t("location_branch_picker_choose_from_list", {
                 count: activeBranches.length,
               })}
             </button>
@@ -191,7 +191,7 @@ const BranchMapPicker = ({
               <button
                 type="button"
                 onClick={closeList}
-                aria-label={t("location.branch_picker.close_list")}
+                aria-label={t("location_branch_picker_close_list")}
                 className="flex h-11 w-full shrink-0 items-center justify-center"
               >
                 <span className="h-1.5 w-10 rounded-full bg-gray180" />
@@ -264,7 +264,7 @@ const BranchMapPicker = ({
                             at once, no show-more toggle. */}
                         <div className="flex flex-col gap-1.5">
                           <p className="text-xs font-bold text-black">
-                            {t("location.branch_picker.schedule")}
+                            {t("location_branch_picker_schedule")}
                           </p>
                           <ul className="flex flex-col gap-1">
                             {WEEKDAYS.map((day, index) => {
@@ -307,7 +307,7 @@ const BranchMapPicker = ({
                             size="primaryWide"
                             onClick={() => chooseBranch(branch)}
                           >
-                            {t("location.branch_picker.pick_here")}
+                            {t("location_branch_picker_pick_here")}
                           </Button>
                         )}
                       </div>

@@ -95,7 +95,7 @@ const MessageItem = ({ message }: MessageItemProps) => {
           <div className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-1.5 text-sm font-bold text-black">
               <ShoppingBag size={15} className="text-gray220" />
-              {t("chat.message.order_title", { id: message.order_id ?? "" })}
+              {t("chat_message_order_title", { id: message.order_id ?? "" })}
             </span>
             {time && (
               <span className="shrink-0 text-[11px] text-gray220">
@@ -110,9 +110,9 @@ const MessageItem = ({ message }: MessageItemProps) => {
 
           {typeof message.products_count === "number" && (
             <p className="mt-1 text-xs text-gray220">
-              {t("chat.message.products_count")}{" "}
+              {t("chat_message_products_count")}{" "}
               <span className="font-medium text-black">
-                {t("chat.message.products_count_value", {
+                {t("chat_message_products_count_value", {
                   count: message.products_count,
                 })}
               </span>
@@ -128,7 +128,7 @@ const MessageItem = ({ message }: MessageItemProps) => {
             }
             className="mt-2 flex h-9 w-full items-center justify-center rounded-xl bg-gray10 text-sm font-medium text-black"
           >
-            {t("chat.message.go_to_order")}
+            {t("chat_message_go_to_order")}
           </button>
         </div>
       </div>

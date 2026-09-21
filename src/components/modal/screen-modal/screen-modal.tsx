@@ -51,7 +51,7 @@ const ModalScreen = ({
         {children}
       </div>
       <button
-        aria-label={t("shared.close_modal")}
+        aria-label={t("shared_close_modal")}
         className="absolute inset-0 -z-10"
         onClick={onClose}
       />

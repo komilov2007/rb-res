@@ -36,7 +36,7 @@ const LocationAddresses = ({
     <div className="flex max-h-[70dvh] w-full flex-col bg-white px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-4">
       <div className="shrink-0 border-b border-gray180 pb-3 flex items-center justify-between gap-4">
         <h2 className="text-[22px] font-bold leading-7 text-black">
-          {t("location.my_addresses")}
+          {t("location_my_addresses")}
         </h2>
         <XButton size="lg" onClick={onClose} className="bg-gray10" />
       </div>
@@ -44,7 +44,7 @@ const LocationAddresses = ({
       <div className="scroll-hidden max-h-[52dvh] min-h-0 overflow-y-auto">
         {!addresses && (
           <div className="py-8 text-sm font-normal text-gray220">
-            {t("location.addresses_loading")}
+            {t("location_addresses_loading")}
           </div>
         )}
 
@@ -65,7 +65,7 @@ const LocationAddresses = ({
                     ? "border-green-500 bg-green-500"
                     : "border-gray220 bg-white"
                 }`}
-                aria-label={t("location.select_address_aria")}
+                aria-label={t("location_select_address_aria")}
               >
                 {checked && <span className="h-2.5 w-2.5 rounded-full bg-white" />}
               </button>
@@ -89,7 +89,7 @@ const LocationAddresses = ({
                 type="button"
                 onClick={() => onEdit(item)}
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gray10 text-gray220"
-                aria-label={t("location.edit_address")}
+                aria-label={t("location_edit_address")}
               >
                 <SlidersHorizontal size={18} strokeWidth={2.2} />
               </button>
@@ -107,7 +107,7 @@ const LocationAddresses = ({
           className="h-11 justify-start gap-2 rounded-xl px-0 text-primary hover:bg-transparent"
         >
           <Plus size={19} strokeWidth={2.5} />
-          {t("location.create_new")}
+          {t("location_create_new")}
         </Button>
       </div>
     </div>

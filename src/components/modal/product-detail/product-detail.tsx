@@ -444,7 +444,7 @@ const ProductDetailMobile = () => {
 
               {detail.amount > 0 && (
                 <span className="shrink-0 rounded-full bg-gray10 px-3 py-1.5 text-xs font-bold text-gray220">
-                  {detail.amount} {unit ?? t("product.gram_unit")}
+                  {detail.amount} {unit ?? t("product_gram_unit")}
                 </span>
               )}
             </div>
@@ -463,14 +463,14 @@ const ProductDetailMobile = () => {
             {isUnavailableInBranch && (
               <div className="mt-3 rounded-xl bg-red-50 px-3 py-2">
                 <p className="text-sm font-medium text-red-500">
-                  {t("product.unavailable")}
+                  {t("product_unavailable")}
                 </p>
                 <button
                   type="button"
                   onClick={handleChooseAnotherBranch}
                   className="mt-1 text-sm font-bold text-black underline-offset-2 hover:underline"
                 >
-                  {t("product.choose_other_branch")}
+                  {t("product_choose_other_branch")}
                 </button>
               </div>
             )}
@@ -553,7 +553,7 @@ const ProductDetailMobile = () => {
                 <span
                   className={`absolute left-4 top-4 rounded-lg px-3 py-2 text-xs font-extrabold uppercase leading-none text-white ${saleBadgeClassName}`}
                 >
-                  {t("product.sale_label", { label: saleLabel })}
+                  {t("product_sale_label", { label: saleLabel })}
                 </span>
               )}
             </div>
@@ -604,14 +604,14 @@ const ProductDetailMobile = () => {
               {isUnavailableInBranch && (
                 <div className="mt-3 rounded-xl bg-red-50 px-3 py-2">
                   <p className="text-sm font-medium text-red-500">
-                    {t("product.unavailable")}
+                    {t("product_unavailable")}
                   </p>
                   <button
                     type="button"
                     onClick={handleChooseAnotherBranch}
                     className="mt-1 text-sm font-bold text-black underline-offset-2 hover:underline"
                   >
-                    {t("product.choose_other_branch")}
+                    {t("product_choose_other_branch")}
                   </button>
                 </div>
               )}
@@ -652,7 +652,7 @@ const ProductDetailMobile = () => {
             {description && (
               <div className="mt-6 border-t border-gray180 pt-5">
                 <h3 className="text-xs font-bold uppercase tracking-wide text-gray220">
-                  {t("product.description")}
+                  {t("product_description")}
                 </h3>
                 <p className="mt-3 text-[15px] leading-6 text-gray220">
                   {description}
@@ -743,7 +743,7 @@ const ProductDetailMobile = () => {
 
         <button
           type="button"
-          aria-label={t("product.resize_detail")}
+          aria-label={t("product_resize_detail")}
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             handleDragStart(

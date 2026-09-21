@@ -13,7 +13,7 @@ const EditProfile = () => {
   const t = useTranslations();
 
   return (
-    <ProfilePageShell title={t("profile_page.menu.edit_profile")} showDesktopBack>
+    <ProfilePageShell title={t("profile_page_menu_edit_profile")} showDesktopBack>
       {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <EditProfileForm />
