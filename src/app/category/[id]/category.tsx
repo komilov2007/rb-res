@@ -95,13 +95,13 @@ const CategoryContent = () => {
           <CategorySkeleton />
         ) : products.length === 0 ? (
           <p className="py-10 text-center text-sm font-medium text-gray220">
-            {t("catalog.empty_category")}
+            {t("catalog_empty_category")}
           </p>
         ) : (
           <>
             {hasBranch && availableCount === 0 && (
               <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-center text-sm font-medium text-gray220">
-                {t("catalog.empty_at_branch")}
+                {t("catalog_empty_at_branch")}
               </p>
             )}
             <div className="grid grid-cols-2 gap-1.75">

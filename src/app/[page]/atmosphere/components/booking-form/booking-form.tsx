@@ -55,10 +55,10 @@ const BookingForm = () => {
           <div className="absolute left-5 right-5 top-6 text-white lg:left-10 lg:right-10 lg:top-10">
             <span className="mb-4 block h-1 w-10 rounded-full bg-white" />
             <h2 className="max-w-md text-2xl font-bold leading-tight lg:text-4xl">
-              {t("booking.form_title")}
+              {t("booking_form_title")}
             </h2>
             <p className="mt-3 max-w-sm text-sm font-medium leading-6 text-white/90 lg:text-base lg:leading-7">
-              {t("booking.form_subtitle")}
+              {t("booking_form_subtitle")}
             </p>
           </div>
         </div>
@@ -76,8 +76,8 @@ const BookingForm = () => {
                   </p>
                   <p className="truncate text-sm font-medium text-black">
                     {hasAccess
-                      ? auth?.firstname || t("booking.user_fallback")
-                      : t("booking.login_required")}
+                      ? auth?.firstname || t("booking_user_fallback")
+                      : t("booking_login_required")}
                   </p>
                 </div>
               </div>
@@ -93,14 +93,14 @@ const BookingForm = () => {
                   <p className="truncate text-sm font-medium text-black">
                     {hasAccess && auth?.phone
                       ? `+998 ${formatPhone(auth.phone)}`
-                      : t("booking.login_required")}
+                      : t("booking_login_required")}
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="mt-4 grid gap-3 lg:grid-cols-2 lg:gap-4">
-              <Field label={t("booking.date")}>
+              <Field label={t("booking_date")}>
                 <DatePicker
                   value={date}
                   month={calendarMonth}
@@ -109,15 +109,15 @@ const BookingForm = () => {
                 />
               </Field>
 
-              <Field label={t("booking.time")}>
+              <Field label={t("booking_time")}>
                 <TimePicker
                   value={time}
                   onChange={setTime}
-                  placeholder={t("booking.select_time")}
+                  placeholder={t("booking_select_time")}
                 />
               </Field>
 
-              <Field label={t("booking.guests")}>
+              <Field label={t("booking_guests")}>
                 <div className={`${inputClassName} justify-between`}>
                   <div className="flex items-center gap-3">
                     <Users size={20} className="text-gray220" />
@@ -154,14 +154,14 @@ const BookingForm = () => {
 
               {showOptionalPhone ? (
                 <Field
-                  label={t("booking.extra_phone")}
-                  badge={t("booking.optional")}
+                  label={t("booking_extra_phone")}
+                  badge={t("booking_optional")}
                   className="lg:col-span-2"
                 >
                   <Input
                     inputMode="numeric"
                     onInput={handlePhoneInput}
-                    placeholder={t("booking.optional_phone_placeholder")}
+                    placeholder={t("booking_optional_phone_placeholder")}
                     wrapperClassName={inputClassName}
                     className={inputTextClassName}
                     startContent={<PhoneStart />}
@@ -184,18 +184,18 @@ const BookingForm = () => {
                   className="flex w-fit items-center gap-2 text-sm font-medium text-black lg:col-span-2"
                 >
                   <Plus size={17} />
-                  {t("booking.add_extra_phone")}
+                  {t("booking_add_extra_phone")}
                 </button>
               )}
 
-              <Field label={t("booking.leave_comment")} className="lg:col-span-2">
+              <Field label={t("booking_leave_comment")} className="lg:col-span-2">
                 <div className="flex min-h-20 rounded-2xl border border-gray180/80 bg-white px-5 py-4 shadow-[0_10px_24px_rgba(15,23,42,0.05)] focus-within:border-black lg:min-h-24">
                   <MessageSquareText
                     size={20}
                     className="mr-3 shrink-0 text-gray220"
                   />
                   <textarea
-                    placeholder={t("booking.comment_placeholder")}
+                    placeholder={t("booking_comment_placeholder")}
                     // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
                     className="min-h-14 w-full resize-none bg-transparent text-base font-normal text-black outline-none placeholder:text-gray220 lg:min-h-18"
                   />
@@ -210,7 +210,7 @@ const BookingForm = () => {
               onClick={handleSubmit}
               className="mt-4 h-12 w-full rounded-xl text-base"
             >
-              {t("booking.submit")}
+              {t("booking_submit")}
               <ArrowRight size={18} />
             </Button>
           </div>

@@ -62,7 +62,7 @@ const DatePicker = ({
           >
             {value
               ? formatSelectedDate(value, dateLocale)
-              : t("booking.select_date")}
+              : t("booking_select_date")}
           </span>
         </button>
       </PopoverTrigger>

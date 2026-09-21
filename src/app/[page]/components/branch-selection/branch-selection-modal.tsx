@@ -38,8 +38,8 @@ import { findClosestBranch, getBranchLabel, getShortAddress } from "./utils";
 const COLLAPSED_COUNT = 3;
 
 const TABS: { value: BranchSelectionServiceType; label: string }[] = [
-  { value: "DELIVERY", label: "home.branch_selection.tab_delivery" },
-  { value: "PICKUP", label: "home.branch_selection.tab_pickup" },
+  { value: "DELIVERY", label: "home_branch_selection_tab_delivery" },
+  { value: "PICKUP", label: "home_branch_selection_tab_pickup" },
 ];
 
 const getRowClassName = (checked: boolean) =>
@@ -273,9 +273,9 @@ const DeliveryTab = ({
       >
         <RowIcon />
         <span className="min-w-0 flex-1 text-sm font-normal text-gray220">
-          {t("home.branch_selection.new_address_placeholder")}
+          {t("home_branch_selection_new_address_placeholder")}
         </span>
-        <Pill tone="primary">{t("home.branch_selection.map_pill")}</Pill>
+        <Pill tone="primary">{t("home_branch_selection_map_pill")}</Pill>
       </button>
 
       {/* No saved addresses (and nothing picked): the "Yangi manzil
@@ -289,7 +289,7 @@ const DeliveryTab = ({
       ) && (
         <div className="flex flex-col gap-2">
           <SectionLabel>
-            {t("home.branch_selection.saved_addresses", {
+            {t("home_branch_selection_saved_addresses", {
               count: savedAddresses.length,
             })}
           </SectionLabel>
@@ -307,11 +307,11 @@ const DeliveryTab = ({
 
           {!hasAccess ? (
             <p className="py-2 text-sm font-normal text-gray220">
-              {t("home.branch_selection.login_for_saved")}
+              {t("home_branch_selection_login_for_saved")}
             </p>
           ) : !addresses ? (
             <p className="py-2 text-sm font-normal text-gray220">
-              {t("home.branch_selection.addresses_loading")}
+              {t("home_branch_selection_addresses_loading")}
             </p>
           ) : (
             visibleAddresses.map((item) => {
@@ -340,7 +340,7 @@ const DeliveryTab = ({
           <ShowMoreToggle
             total={savedAddresses.length}
             expanded={expanded}
-            labelKey="home.branch_selection.show_more_addresses"
+            labelKey="home_branch_selection_show_more_addresses"
             onToggle={() => setExpanded((value) => !value)}
           />
         </div>
@@ -400,7 +400,7 @@ const PickupTab = ({ selection, workingTime }: TabProps) => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-3">
         <SectionLabel>
-          {t("home.branch_selection.available_branches")}
+          {t("home_branch_selection_available_branches")}
         </SectionLabel>
         <button
           type="button"
@@ -408,13 +408,13 @@ const PickupTab = ({ selection, workingTime }: TabProps) => {
           className="flex shrink-0 items-center gap-1 text-xs font-bold text-primary"
         >
           <MapPin size={14} />
-          {t("home.branch_selection.pick_on_map")}
+          {t("home_branch_selection_pick_on_map")}
         </button>
       </div>
 
       {branches.length === 0 && (
         <p className="py-2 text-sm font-normal text-gray220">
-          {t("home.branch_selection.branches_not_found")}
+          {t("home_branch_selection_branches_not_found")}
         </p>
       )}
 
@@ -448,7 +448,7 @@ const PickupTab = ({ selection, workingTime }: TabProps) => {
       <ShowMoreToggle
         total={branches.length}
         expanded={expanded}
-        labelKey="home.branch_selection.show_more_branches"
+        labelKey="home_branch_selection_show_more_branches"
         onToggle={() => setExpanded((value) => !value)}
       />
 
@@ -499,7 +499,7 @@ const SelectionContent = ({
     <div className="flex max-h-[85dvh] w-full min-w-0 flex-col">
       <div className="shrink-0 border-b border-gray180 px-5 pb-4 pr-14 pt-5">
         <DialogTitle className="text-lg font-bold text-black">
-          {t("home.branch_selection.title")}
+          {t("home_branch_selection_title")}
         </DialogTitle>
       </div>
 

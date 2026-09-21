@@ -94,7 +94,7 @@ const BannerSwiper = ({
                       className="h-full w-full object-cover shadow-2xs"
                       src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
                       onError={handleImageFallback}
-                      alt={t("home.banner_alt")}
+                      alt={t("home_banner_alt")}
                     />
                   </picture>
                 ) : (
@@ -105,7 +105,7 @@ const BannerSwiper = ({
                     }`}
                     src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
                     onError={handleImageFallback}
-                    alt={t("home.banner_alt")}
+                    alt={t("home_banner_alt")}
                   />
                 )
               }
@@ -120,7 +120,7 @@ const BannerSwiper = ({
               ? "left-[calc(50%-min(640px,37vw)-74px)] h-11 w-11"
               : "left-8 h-10 w-10"
           }`}
-          aria-label={t("home.prev_banner")}
+          aria-label={t("home_prev_banner")}
         >
           <ChevronLeft size={isDesktop ? 24 : 20} strokeWidth={2.5} />
         </button>
@@ -132,7 +132,7 @@ const BannerSwiper = ({
               ? "right-[calc(50%-min(640px,37vw)-74px)] h-11 w-11"
               : "right-8 h-10 w-10"
           }`}
-          aria-label={t("home.next_banner")}
+          aria-label={t("home_next_banner")}
         >
           <ChevronRight size={isDesktop ? 24 : 20} strokeWidth={2.5} />
         </button>
@@ -178,7 +178,7 @@ const BannerSwiper = ({
                   className="h-full w-full object-cover shadow-2xs"
                   src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
                   onError={handleImageFallback}
-                  alt={t("home.banner_alt")}
+                  alt={t("home_banner_alt")}
                 />
               </picture>
             ) : (
@@ -187,7 +187,7 @@ const BannerSwiper = ({
                 className="h-full w-full rounded-[16px] object-cover opacity-90 shadow-2xs"
                 src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
                 onError={handleImageFallback}
-                alt={t("home.banner_alt")}
+                alt={t("home_banner_alt")}
               />
             )}
           </SwiperSlide>
@@ -200,7 +200,7 @@ const BannerSwiper = ({
             type="button"
             onClick={() => swiperRef.current?.slidePrev()}
             className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-[0_6px_18px_rgba(17,24,39,0.14)] active:scale-95"
-            aria-label={t("home.prev_banner")}
+            aria-label={t("home_prev_banner")}
           >
             <ChevronLeft size={20} strokeWidth={2.5} />
           </button>
@@ -208,7 +208,7 @@ const BannerSwiper = ({
             type="button"
             onClick={() => swiperRef.current?.slideNext()}
             className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-[0_6px_18px_rgba(17,24,39,0.14)] active:scale-95"
-            aria-label={t("home.next_banner")}
+            aria-label={t("home_next_banner")}
           >
             <ChevronRight size={20} strokeWidth={2.5} />
           </button>

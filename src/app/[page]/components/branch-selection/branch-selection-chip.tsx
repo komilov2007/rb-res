@@ -55,7 +55,7 @@ const BranchSelectionChip = ({
     ? t("pickup")
     : serviceType === "DELIVERY"
       ? t("delivery_address")
-      : t("home.branch_selection.choose_address");
+      : t("home_branch_selection_choose_address");
   const value = isPickup
     ? getBranchLabel(branch?.name)
     : serviceType === "DELIVERY" && address
@@ -81,7 +81,7 @@ const BranchSelectionChip = ({
             value ? "font-medium text-black" : "font-normal text-gray220"
           }`}
         >
-          {value ?? t("home.branch_selection.not_selected")}
+          {value ?? t("home_branch_selection_not_selected")}
         </span>
         <ChevronRight size={15} className="shrink-0 text-gray220" />
       </span>

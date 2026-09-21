@@ -41,7 +41,7 @@ import TimePicker from "@/app/[page]/atmosphere/components/booking-form/componen
 const actions = [
   {
     key: "chat",
-    label: "home.mobile_action.chat",
+    label: "home_mobile_action_chat",
     Icon: MessageCircle,
   },
   {
@@ -53,7 +53,7 @@ const actions = [
   // sheet and handler below are left in place for that.
   // {
   //   key: "booking",
-  //   label: "booking.title",
+  //   label: "booking_title",
   //   Icon: CalendarCheck,
   // },
 ];
@@ -215,27 +215,27 @@ const MobileAction = () => {
         >
           <SheetHeader className="px-4 pb-2 pt-3">
             <span className="mx-auto h-1 w-10 rounded-full bg-gray180" />
-            <SheetTitle className="sr-only">{t("booking.title")}</SheetTitle>
+            <SheetTitle className="sr-only">{t("booking_title")}</SheetTitle>
           </SheetHeader>
 
           <div className="grid grid-cols-[118px_minmax(0,1fr)] gap-3 overflow-y-auto px-4 pb-5">
             <div className="sticky top-0 h-[360px] overflow-hidden rounded-2xl bg-black">
               <img
                 src="/boking.png"
-                alt={t("booking.title")}
+                alt={t("booking_title")}
                 className="h-full w-full object-cover opacity-75"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/20 to-black/65" />
               <div className="absolute inset-x-3 bottom-4 text-white">
                 <span className="mb-2 block h-1 w-8 rounded-full bg-white" />
                 <p className="text-[10px] font-bold uppercase leading-3 text-white">
-                  {t("booking.title")}
+                  {t("booking_title")}
                 </p>
                 <h3 className="mt-2 text-lg font-bold leading-5">
-                  {t("booking.sheet_title")}
+                  {t("booking_sheet_title")}
                 </h3>
                 <p className="mt-2 text-xs font-medium leading-4 text-white/85">
-                  {t("booking.sheet_subtitle")}
+                  {t("booking_sheet_subtitle")}
                 </p>
               </div>
             </div>
@@ -245,7 +245,7 @@ const MobileAction = () => {
                 IconStart={User}
                 value={auth?.firstname ?? ""}
                 readOnly
-                placeholder={t("booking.your_name")}
+                placeholder={t("booking_your_name")}
                 wrapperClassName="h-10 rounded-xl bg-gray10 px-3"
                 className="text-xs font-normal text-black"
               />
@@ -269,7 +269,7 @@ const MobileAction = () => {
               <TimePicker
                 value={time}
                 onChange={setTime}
-                placeholder={t("booking.time")}
+                placeholder={t("booking_time")}
               />
 
               <Input
@@ -277,7 +277,7 @@ const MobileAction = () => {
                 value={guestCount}
                 onChange={(event) => handleGuestChange(event.target.value)}
                 inputMode="numeric"
-                placeholder={t("booking.guests")}
+                placeholder={t("booking_guests")}
                 wrapperClassName="h-10 rounded-xl bg-gray10 px-3"
                 className="text-xs font-normal text-black"
               />
@@ -288,7 +288,7 @@ const MobileAction = () => {
                   className="mr-2 shrink-0 text-gray220"
                 />
                 <textarea
-                  placeholder={t("booking.comment_short_placeholder")}
+                  placeholder={t("booking_comment_short_placeholder")}
                   // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
                   className="min-h-14 w-full resize-none bg-transparent text-base font-normal text-black outline-none placeholder:text-gray220"
                 />
@@ -300,7 +300,7 @@ const MobileAction = () => {
                 size="none"
                 className="h-11 w-full rounded-xl text-sm"
               >
-                {t("booking.submit")}
+                {t("booking_submit")}
                 <ArrowRight size={16} />
               </Button>
             </form>

@@ -548,7 +548,7 @@ const Categories = () => {
                 type="button"
                 onClick={() => setShowAllMobile(false)}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-gray10 text-black"
-                aria-label={t("home.close_categories")}
+                aria-label={t("home_close_categories")}
               >
                 <ChevronUp size={17} strokeWidth={2.4} />
               </button>
@@ -563,7 +563,7 @@ const Categories = () => {
             <Button
               variant="swiperNav"
               size="swiperNav"
-              aria-label={t("home.prev_categories")}
+              aria-label={t("home_prev_categories")}
               onClick={() => swiper?.slidePrev()}
               className="absolute -left-12 top-[38%] z-20 hidden -translate-y-1/2 lg:flex"
             >
@@ -623,7 +623,7 @@ const Categories = () => {
             <Button
               variant="swiperNav"
               size="swiperNav"
-              aria-label={t("home.next_categories")}
+              aria-label={t("home_next_categories")}
               onClick={() => swiper?.slideNext()}
               className="absolute -right-12 top-[38%] z-20 hidden -translate-y-1/2 lg:flex"
             >

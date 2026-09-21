@@ -272,7 +272,7 @@ const CartItem = ({
 
               {isUnavailable && (
                 <p className="mt-0.5 text-xs font-medium text-red-500">
-                  {t("cart_drawer.unavailable_at_branch")}
+                  {t("cart_drawer_unavailable_at_branch")}
                 </p>
               )}
 

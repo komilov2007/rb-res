@@ -71,11 +71,11 @@ const CategoriesContent = () => {
             className="flex items-center gap-1.5 font-medium hover:text-black"
           >
             <Home size={14} />
-            {t("catalog.home")}
+            {t("catalog_home")}
           </Link>
           <ChevronRight size={14} />
           <span className="font-medium text-black">
-            {t("catalog.all_categories")}
+            {t("catalog_all_categories")}
           </span>
         </nav>
       </div>
@@ -92,7 +92,7 @@ const CategoriesContent = () => {
             </div>
           ) : categories.length === 0 ? (
             <p className="py-10 text-center text-sm font-medium text-gray220">
-              {t("catalog.not_found")}
+              {t("catalog_not_found")}
             </p>
           ) : (
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6 lg:gap-6">

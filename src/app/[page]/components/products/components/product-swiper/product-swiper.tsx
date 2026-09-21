@@ -61,7 +61,7 @@ const ProductSwiper = ({
         <Button
           variant="swiperNav"
           size="swiperNav"
-          aria-label={t("home.prev_products")}
+          aria-label={t("home_prev_products")}
           onClick={() => swiper?.slidePrev()}
           className="absolute -left-12 top-[36%] z-20 hidden -translate-y-1/2 lg:flex"
         >
@@ -106,7 +106,7 @@ const ProductSwiper = ({
         <Button
           variant="swiperNav"
           size="swiperNav"
-          aria-label={t("home.next_products")}
+          aria-label={t("home_next_products")}
           onClick={() => swiper?.slideNext()}
           className="absolute -right-12 top-[36%] z-20 hidden -translate-y-1/2 lg:flex"
         >

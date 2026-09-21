@@ -32,7 +32,7 @@ const GalleryModal = ({
           {activeImage && (
             <img
               src={activeImage}
-              alt={t("booking.gallery_image_alt")}
+              alt={t("booking_gallery_image_alt")}
               className="max-h-full w-full object-contain"
             />
           )}
@@ -62,7 +62,7 @@ const GalleryModal = ({
               >
                 <img
                   src={image.src}
-                  alt={t("booking.gallery_image_alt")}
+                  alt={t("booking_gallery_image_alt")}
                   className="h-full w-full object-cover"
                 />
               </button>

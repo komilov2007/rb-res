@@ -113,7 +113,7 @@ const BranchDialog = ({
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
                   <Navigation size={14} strokeWidth={2.6} />
                 </span>
-                {t("home.header.directions")}
+                {t("home_header_directions")}
               </button>
             </div>
           </div>

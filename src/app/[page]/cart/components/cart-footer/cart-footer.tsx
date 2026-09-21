@@ -37,7 +37,7 @@ const CartFooter = ({
         <div className="mb-3 flex items-center justify-between gap-3 text-sm font-medium text-gray220">
           <span className="flex items-center gap-2">
             <Truck size={16} className="text-gray220" />
-            {t("cart_drawer.delivery_price")}
+            {t("cart_drawer_delivery_price")}
           </span>
           <span>
             {formatPrice(deliveryPrice)} {t("sum")}

@@ -88,7 +88,7 @@ const BranchPickerSheet = ({
               tab, so the two pickers read as the same control. */}
           <div className="flex items-center justify-between gap-3">
             <p className="text-[11px] font-normal tracking-wider text-gray220">
-              {t("home.branch_selection.available_branches")}
+              {t("home_branch_selection_available_branches")}
             </p>
             {availableBranches.length > 0 && (
               <button
@@ -97,7 +97,7 @@ const BranchPickerSheet = ({
                 className="flex shrink-0 items-center gap-1 text-xs font-bold text-primary"
               >
                 <MapPin size={14} />
-                {t("home.branch_selection.pick_on_map")}
+                {t("home_branch_selection_pick_on_map")}
               </button>
             )}
           </div>

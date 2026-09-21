@@ -33,7 +33,7 @@ const Atmosphere = () => {
               className=" gap-2 text-sm font-medium text-black"
             >
               <ArrowLeft size={18} />
-              {t("booking.back_home")}
+              {t("booking_back_home")}
             </Button>
             <AtmosphereGallery />
           </div>

@@ -26,7 +26,7 @@ export const getWeekDays = (locale: string) => {
 };
 
 export const formatSelectedDate = (value: string, locale: string) => {
-  if (!value) return translate("booking.select_date");
+  if (!value) return translate("booking_select_date");
 
   const date = getLocalDate(value);
 

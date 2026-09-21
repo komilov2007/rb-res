@@ -38,7 +38,7 @@ const AtmosphereGallery = () => {
 
         <div className="lg:pl-2">
           <p className="text-xs font-bold uppercase tracking-[0.45em] text-black">
-            {t("booking.gallery_eyebrow")}
+            {t("booking_gallery_eyebrow")}
           </p>
           <div className="mt-4 flex items-center gap-2">
             <span className="h-px w-14 bg-black" />
@@ -47,10 +47,10 @@ const AtmosphereGallery = () => {
             <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
           </div>
           <h2 className="mt-7 max-w-[430px] font-serif text-[42px] font-medium leading-[0.95] text-black lg:text-[64px]">
-            {t("booking.gallery_title")}
+            {t("booking_gallery_title")}
           </h2>
           <p className="mt-6 max-w-[520px] text-sm font-medium leading-7 text-gray220 lg:text-base">
-            {t("booking.gallery_description")}
+            {t("booking_gallery_description")}
           </p>
         </div>
       </div>
@@ -71,7 +71,7 @@ const AtmosphereGallery = () => {
               >
                 <img
                   src={image.src}
-                  alt={t("booking.gallery_image_alt")}
+                  alt={t("booking_gallery_image_alt")}
                   className="h-full w-full object-cover"
                 />
               </button>

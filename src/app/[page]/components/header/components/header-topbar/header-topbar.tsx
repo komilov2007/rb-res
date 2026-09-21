@@ -54,7 +54,7 @@ const HeaderTopbar = ({
                       strokeWidth={2.3}
                       className="shrink-0 text-gray220"
                     />
-                    <span>{t("home.header.branches")}</span>
+                    <span>{t("home_header_branches")}</span>
                     <ChevronDown size={14} className="shrink-0" />
                   </button>
                 </PopoverTrigger>

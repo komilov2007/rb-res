@@ -42,13 +42,13 @@ const PriceRange = ({ min, max, value, onChange }: PriceRangeProps) => {
         <div className="flex h-10 flex-1 items-center justify-between gap-1 rounded-lg bg-gray10 px-3 text-sm font-medium text-black">
           <span className="truncate">{formatPrice(from)}</span>
           <span className="shrink-0 text-xs font-normal text-gray220">
-            {t("catalog.filters.from")}
+            {t("catalog_filters_from")}
           </span>
         </div>
         <div className="flex h-10 flex-1 items-center justify-between gap-1 rounded-lg bg-gray10 px-3 text-sm font-medium text-black">
           <span className="truncate">{formatPrice(to)}</span>
           <span className="shrink-0 text-xs font-normal text-gray220">
-            {t("catalog.filters.to")}
+            {t("catalog_filters_to")}
           </span>
         </div>
       </div>

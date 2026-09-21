@@ -23,9 +23,9 @@ import { useDesktopView, type CategorySortOption } from "./useDesktopView";
 
 // `label` holds a translation key, resolved with t() at render.
 const SORT_OPTIONS: { value: CategorySortOption; label: string }[] = [
-  { value: "default", label: "catalog.sort.newest" },
-  { value: "price_asc", label: "catalog.sort.price_asc" },
-  { value: "price_desc", label: "catalog.sort.price_desc" },
+  { value: "default", label: "catalog_sort_newest" },
+  { value: "price_asc", label: "catalog_sort_price_asc" },
+  { value: "price_desc", label: "catalog_sort_price_desc" },
 ];
 
 // Half of max-w-7xl (1280px), the page's own content container. On screens
@@ -116,14 +116,14 @@ const DesktopView = ({
             className="flex items-center gap-1.5 font-medium hover:text-black"
           >
             <Home size={14} />
-            {t("catalog.home")}
+            {t("catalog_home")}
           </Link>
           <ChevronRight size={14} />
           <Link
             href={`${ROUTER.CATEGORIES}${shopQuery}`}
             className="font-medium hover:text-black"
           >
-            {t("catalog.all_categories")}
+            {t("catalog_all_categories")}
           </Link>
           <ChevronRight size={14} />
           <span className="font-medium text-black">{categoryName}</span>
@@ -184,7 +184,7 @@ const DesktopView = ({
                 className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-gray220 hover:bg-gray10"
               >
                 <ChevronLeft size={16} className="shrink-0" />
-                {t("catalog.all_categories")}
+                {t("catalog_all_categories")}
               </Link>
 
               {categories.map((category) => (
@@ -237,7 +237,7 @@ const DesktopView = ({
             <h2 className="text-xl font-bold text-black">{categoryName}</h2>
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray220">
-                {t("catalog.sort_label")}
+                {t("catalog_sort_label")}
               </span>
               <Select
                 value={sort}
@@ -259,7 +259,7 @@ const DesktopView = ({
 
           {hasBranch && availableCount === 0 && (
             <p className="rounded-2xl bg-gray10 px-4 py-3 text-center text-sm font-medium text-gray220">
-              {t("catalog.empty_at_branch")}
+              {t("catalog_empty_at_branch")}
             </p>
           )}
 
@@ -271,11 +271,11 @@ const DesktopView = ({
             </div>
           ) : isCategoryEmpty ? (
             <p className="py-10 text-center text-sm font-medium text-gray220">
-              {t("catalog.empty_category")}
+              {t("catalog_empty_category")}
             </p>
           ) : isFilteredEmpty ? (
             <p className="py-10 text-center text-sm font-medium text-gray220">
-              {t("catalog.no_filter_match")}
+              {t("catalog_no_filter_match")}
             </p>
           ) : (
             <div className="grid grid-cols-4 gap-4">
