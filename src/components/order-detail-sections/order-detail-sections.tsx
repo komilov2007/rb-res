@@ -1,89 +1,32 @@
 "use client";
 
-import { createElement, Fragment, useState, type ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { Fragment, useState } from "react";
 import {
-  AlertCircle,
-  CheckCircle2,
   ChevronRight,
-  FileText,
   Footprints,
   MapPin,
   UtensilsCrossed,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { getBranches } from "@/apis/branches";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
 import { getShortAddress } from "@/utils/address";
 import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC, handleImageFallback } from "@/utils/image";
-import type {
-  OrderDetail,
-  PaymentTypeProps,
-  ServiceTypeValue,
-} from "@/types/order";
+import type { OrderDetail } from "@/types/order";
 
 import BranchInfoSheet from "@/components/branch-info-sheet";
 import DeliveryRouteSheet from "@/components/delivery-route-sheet";
 import StatusTimeline from "@/components/status-timeline";
-import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "@/constants/payment-types";
+import { useBranches } from "@/hooks/useBranches";
 
-// Confirmed set — provider-delivery service types count as "delivery" for
-// the address-display rule below, matching order-placing's own check
-// (STEP 32) that this section set was extracted from.
-const DELIVERY_TYPES: ServiceTypeValue[] = [
-  "DELIVERY",
-  "NOOR_DELIVERY",
-  "YANDEX_DELIVERY",
-];
-
-// Display-only labels for the "Xizmat turi" row's free-of-charge fallback —
-// not a new backend contract, just copy for the already-confirmed
-// ServiceTypeValue enum.
-const SERVICE_TYPE_LABELS: Record<ServiceTypeValue, string> = {
-  PICKUP: "orders_service_types_pickup",
-  BTS_PICKUP: "orders_service_types_pickup",
-  DELIVERY: "orders_service_types_delivery",
-  YANDEX_DELIVERY: "orders_service_types_yandex_delivery",
-  NOOR_DELIVERY: "orders_service_types_noor_delivery",
-};
+import { DELIVERY_TYPES } from "./constants";
+import { SectionLabel } from "./parts";
+import PaymentSection from "./payment-section";
 
 type OrderDetailSectionsProps = {
   detail: OrderDetail;
 };
-
-// Darker than the page's usual muted gray (text-gray220) but deliberately
-// kept at font-normal — a touch more contrast without turning these into a
-// second layer of bold headings competing with the value/price text.
-const SectionLabel = ({
-  icon,
-  children,
-}: {
-  icon: ReactNode;
-  children: ReactNode;
-}) => (
-  <div className="flex items-center gap-2 text-[11px] font-normal tracking-wide text-black/90 ">
-    {icon}
-    {children}
-  </div>
-);
-
-const InfoRow = ({
-  label,
-  value,
-  valueClassName = "text-black",
-}: {
-  label: string;
-  value: ReactNode;
-  valueClassName?: string;
-}) => (
-  <div className="flex items-center justify-between text-sm">
-    <span className="font-medium text-gray220">{label}</span>
-    <span className={`font-medium ${valueClassName}`}>{value}</span>
-  </div>
-);
 
 // The read-only sections of an order's detail view (status, pickup/delivery
 // address, items, payment/price breakdown) — shared by order-placing (the
@@ -96,7 +39,6 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
   const t = useTranslations();
   const [mapOpen, setMapOpen] = useState(false);
   const [routeMapOpen, setRouteMapOpen] = useState(false);
-  const { shopid } = useShopid();
   const { data: general } = useGeneral();
   const isDelivery = DELIVERY_TYPES.includes(detail.service_type);
   const displayAddress = isDelivery ? detail.address : detail.branch.address;
@@ -107,32 +49,9 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
   // id/name/address, not coordinates — needed for both cases now: the
   // pickup branch-info sheet, and the delivery route sheet's "ships from"
   // point.
-  const { data: branches } = useQuery({
-    enabled: Boolean(shopid),
-    queryKey: ["branches", shopid],
-    queryFn: () => getBranches(shopid as string),
-  });
+  const { data: branches } = useBranches();
   const mapBranch =
     branches?.data.find((item) => item.id === detail.branch.id) ?? null;
-  const amount = Number(detail.amount);
-  const deliveryPrice = Number(detail.delivery_price) || 0;
-  const paymentType = detail.payment_type as PaymentTypeProps;
-  const paymentLabel =
-    PAYMENT_CARD_CONFIG[paymentType]?.label ?? detail.payment_type;
-  const hasDiscount =
-    typeof detail.discount_amount === "number" && detail.discount_amount > 0;
-  const promoPercent =
-    (detail.promo_code?.type === "PERCENT" ||
-      detail.promo_code?.type === "PERCENTAGE") &&
-    typeof detail.promo_code.percent === "number"
-      ? detail.promo_code.percent
-      : null;
-  // `item.amount` is treated as the line total (same reading my-orders'
-  // own summary uses for the products subtotal).
-  const itemsSubtotal = detail.items.reduce(
-    (sum, item) => sum + (typeof item.amount === "number" ? item.amount : 0),
-    0,
-  );
 
   return (
     <Fragment>
@@ -258,87 +177,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
           </ul>
         </section>
 
-        <section className="py-5">
-          <SectionLabel icon={<FileText size={13} />}>
-            {t("orders_detail_payment_info")}
-          </SectionLabel>
-          <div className="mt-3 flex flex-col gap-2.5">
-            <InfoRow
-              label={t("orders_detail_products_price")}
-              value={`${formatPrice(itemsSubtotal)} ${t("sum")}`}
-            />
-            {(hasDiscount || promoPercent !== null) && (
-              <InfoRow
-                label={t("discount")}
-                valueClassName="text-green-500"
-                value={
-                  <span className="inline-flex items-center gap-2">
-                    {promoPercent !== null && (
-                      <span className="rounded-full bg-red px-2 py-0.5 text-[10px] font-medium leading-none text-white">
-                        -{promoPercent}%
-                      </span>
-                    )}
-                    {hasDiscount
-                      ? `-${formatPrice(detail.discount_amount ?? 0)} ${t("sum")}`
-                      : null}
-                  </span>
-                }
-              />
-            )}
-            <InfoRow
-              label={t("service_type")}
-              value={
-                SERVICE_TYPE_LABELS[detail.service_type]
-                  ? t(SERVICE_TYPE_LABELS[detail.service_type])
-                  : detail.service_type
-              }
-            />
-            {isDelivery && (
-              <InfoRow
-                label={t("order_page_summary_delivery_price")}
-                value={`${formatPrice(deliveryPrice)} ${t("sum")}`}
-              />
-            )}
-            <InfoRow
-              label={t("orders_detail_payment_method")}
-              value={
-                <span className="inline-flex items-center gap-2">
-                  <span className="flex h-5 shrink-0 items-center overflow-hidden [&_svg]:h-auto [&_svg]:max-h-5 [&_svg]:w-auto [&_svg]:max-w-14">
-                    {createElement(getPaymentIcon(paymentType))}
-                  </span>
-                  {paymentLabel}
-                </span>
-              }
-            />
-            <InfoRow
-              label={t("orders_detail_payment_status")}
-              valueClassName={detail.is_paid ? "text-green-500" : "text-red"}
-              value={
-                <span className="inline-flex items-center gap-2">
-                  {detail.is_paid ? (
-                    <CheckCircle2 size={14} />
-                  ) : (
-                    <AlertCircle size={14} />
-                  )}
-                  {detail.is_paid
-                    ? t("orders_detail_paid")
-                    : t("orders_detail_unpaid")}
-                </span>
-              }
-            />
-          </div>
-
-          <div className="mt-3 border-t border-gray180 pt-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-black">
-                {t("orders_detail_total_payment")}:
-              </span>
-              <span className="text-xl font-medium text-black">
-                {formatPrice(amount)} {t("sum")}
-              </span>
-            </div>
-          </div>
-        </section>
+        <PaymentSection detail={detail} isDelivery={isDelivery} />
       </div>
 
       <BranchInfoSheet

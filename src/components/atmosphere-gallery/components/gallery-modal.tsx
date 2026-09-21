@@ -1,10 +1,10 @@
-import { X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-import { galleryImages } from "../constants";
+import { galleryImages } from "@/constants/atmosphere";
 
 type GalleryModalProps = {
   activeImage: string | null;
@@ -18,6 +18,13 @@ const GalleryModal = ({
   onSelect,
 }: GalleryModalProps) => {
   const t = useTranslations();
+  const total = galleryImages.length;
+  const hasMany = total > 1;
+  const activeIndex = galleryImages.findIndex(
+    (image) => image.src === activeImage,
+  );
+  const goTo = (next: number) =>
+    onSelect(galleryImages[(next + total) % total].src);
 
   return (
     <Dialog
@@ -35,6 +42,30 @@ const GalleryModal = ({
               alt={t("booking_gallery_image_alt")}
               className="max-h-full w-full object-contain"
             />
+          )}
+          {hasMany && (
+            <>
+              <Button
+                type="button"
+                variant="plain"
+                size="none"
+                onClick={() => goTo(activeIndex - 1)}
+                aria-label={t("common_back")}
+                className="absolute left-3 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/45 text-white backdrop-blur-md"
+              >
+                <ChevronLeft size={22} />
+              </Button>
+              <Button
+                type="button"
+                variant="plain"
+                size="none"
+                onClick={() => goTo(activeIndex + 1)}
+                aria-label={t("common_continue")}
+                className="absolute right-3 top-1/2 h-10 w-10 -translate-y-1/2 rounded-full bg-black/45 text-white backdrop-blur-md"
+              >
+                <ChevronRight size={22} />
+              </Button>
+            </>
           )}
           <Button
             type="button"

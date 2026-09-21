@@ -8,8 +8,8 @@ import { useBranchSelectionStore } from "@/stores/branch-selection";
 import Banner from "@/app/[page]/components/banner";
 import Products from "@/app/[page]/components/products";
 import Categories from "@/app/[page]/components/categories";
-import PageLayout from "@/app/[page]/components/page-layout";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
+import PageLayout from "@/components/page-layout";
+import { useBranchSelection } from "@/components/branch-selection";
 
 const Page = () => {
   const { isLoading, isError } = useGeneral();

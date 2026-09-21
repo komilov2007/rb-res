@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -15,6 +15,10 @@ type ImageViewerProps = {
 };
 
 const SWIPE_THRESHOLD = 50;
+
+// Items are image URLs by default; a video file URL (e.g. the atmosphere
+// page's hero clip) is played in place of an <img>.
+const isVideoSrc = (src: string) => /\.(mp4|webm|mov)(\?|#|$)/i.test(src);
 
 // Fullscreen image viewer (black backdrop, "n/total" counter, close button,
 // swipe/arrows between images). Built on the Radix Dialog so it stacks
@@ -85,15 +89,26 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
             if (delta < -SWIPE_THRESHOLD) goTo(index + 1);
           }}
         >
-          {images[index] && (
-            <img
-              src={getImageSrc(images[index])}
-              onError={handleImageFallback}
-              alt=""
-              className="max-h-full max-w-full select-none object-contain"
-              draggable={false}
-            />
-          )}
+          {images[index] &&
+            (isVideoSrc(images[index]) ? (
+              <video
+                key={images[index]}
+                src={images[index]}
+                autoPlay
+                controls
+                loop
+                playsInline
+                className="max-h-full max-w-full object-contain"
+              />
+            ) : (
+              <img
+                src={getImageSrc(images[index])}
+                onError={handleImageFallback}
+                alt=""
+                className="max-h-full max-w-full select-none object-contain"
+                draggable={false}
+              />
+            ))}
 
           {hasMany && (
             <>
@@ -101,7 +116,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                 type="button"
                 onClick={() => goTo(index - 1)}
                 aria-label={t("common_back")}
-                className="absolute left-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
+                className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-md"
               >
                 <ChevronLeft size={22} />
               </button>
@@ -109,7 +124,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                 type="button"
                 onClick={() => goTo(index + 1)}
                 aria-label={t("common_continue")}
-                className="absolute right-3 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white lg:flex"
+                className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-md"
               >
                 <ChevronRight size={22} />
               </button>
@@ -130,19 +145,34 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                   }
                 }}
                 // Exactly 6 per row: (width − 5 gaps of 0.5rem) / 6.
-                className={`aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 overflow-hidden rounded-xl border-2 transition-opacity ${
+                className={`relative aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 overflow-hidden rounded-xl border-2 transition-opacity ${
                   imageIndex === index
                     ? "border-white opacity-100"
                     : "border-transparent opacity-50"
                 }`}
               >
-                <img
-                  src={getImageSrc(image)}
-                  onError={handleImageFallback}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  draggable={false}
-                />
+                {isVideoSrc(image) ? (
+                  <>
+                    <video
+                      src={image}
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="h-full w-full object-cover"
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/30 text-white">
+                      <Play size={16} fill="currentColor" />
+                    </span>
+                  </>
+                ) : (
+                  <img
+                    src={getImageSrc(image)}
+                    onError={handleImageFallback}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    draggable={false}
+                  />
+                )}
               </button>
             ))}
           </div>

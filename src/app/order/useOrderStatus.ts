@@ -7,14 +7,14 @@ import { toast } from "sonner";
 
 import { getOrderStatus } from "@/apis/order";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 
 const POLL_INTERVAL_MS = 10000;
 
 export const useOrderStatus = () => {
   const router = useRouter();
   const t = useTranslations();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
   const externalId = searchParams.get("externalId");

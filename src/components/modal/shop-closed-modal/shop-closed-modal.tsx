@@ -8,7 +8,7 @@ import ClosedIcon from "@/assets/icons/closed.png";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ROUTER } from "@/constants/router";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useShopStatusStore } from "@/stores/shop-status";
 import { getNextOpening } from "@/utils/working-time";
 
@@ -19,7 +19,7 @@ import { getNextOpening } from "@/utils/working-time";
 const ShopClosedModal = () => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const { data: general } = useGeneral();
   const closedModalOpen = useShopStatusStore((state) => state.closedModalOpen);
   const closeClosedModal = useShopStatusStore(

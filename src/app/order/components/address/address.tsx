@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { ChevronRight, MapPin, MessageSquareText } from "lucide-react";
 
-import { getAddresses } from "@/apis/address";
 import Input from "@/components/ui/input";
 import { isServiceDelivery } from "@/constants/delivery-type";
 import { useAuthStore } from "@/stores/auth";
 import { useLocationStore } from "@/stores/location";
 import { getDigits } from "@/utils/format-number";
 import type { OrderFormValues } from "@/types/order";
+import { useAddresses } from "@/hooks/useAddresses";
 
 import CommentDrawer from "../comment-drawer";
 import {
@@ -51,11 +50,7 @@ const Address = () => {
   const setLocationModal = useLocationStore((state) => state.setLocationModal);
   const [commentOpen, setCommentOpen] = useState(false);
 
-  const { data: addressesData } = useQuery({
-    enabled: Boolean(customerId),
-    queryKey: ["user-addresses", customerId],
-    queryFn: getAddresses,
-  });
+  const { data: addressesData } = useAddresses(customerId);
   const selectedAddress =
     addressesData?.data.find((item) => item.id === addressId) ?? null;
   const { isAllowed } = useAddressDeliverable(deliveryType, selectedAddress);
@@ -66,7 +61,7 @@ const Address = () => {
     <section className="rounded-2xl bg-white p-4">
       <button
         type="button"
-        onClick={setLocationModal(true)}
+        onClick={() => setLocationModal(true)}
         className="flex w-full items-center gap-3 text-left"
       >
         <MapPin size={18} className="shrink-0 text-gray220" />

@@ -1,6 +1,7 @@
 import type { BannerProps } from "@/types/banner";
 import type { GeneralProps } from "@/types/general";
 import { formatPrice } from "@/utils/format-price";
+import { formatTime, getDayIndex } from "@/utils/working-time";
 import type { useTranslations } from "next-intl";
 
 type Translate = ReturnType<typeof useTranslations>;
@@ -34,7 +35,7 @@ export const getTodayWorkTime = (
 ) => {
   if (!workingTime) return t("work_time");
 
-  const day = new Date().getDay() || 7;
+  const day = getDayIndex();
   const today = workingTime[String(day)];
   const firstHour = today?.hours[0];
 
@@ -66,10 +67,6 @@ export const getServicesText = (
   if (services[0] === t("pickup")) return t("pickup_yourself");
 
   return t("available_services");
-};
-
-const formatTime = (time: string) => {
-  return time.slice(0, 5);
 };
 
 const getActiveServiceNames = (

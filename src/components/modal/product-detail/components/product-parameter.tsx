@@ -11,7 +11,7 @@ type ProductParameterPropsType = {
   onSelect: (skuId: number) => void;
   pricePrefix?: string;
   multiple?: boolean;
-  variant?: "default" | "parametrChip";
+  variant?: "default" | "parameterChip";
   error?: boolean;
 };
 
@@ -26,7 +26,7 @@ const ProductParameter = ({
 }: ProductParameterPropsType) => {
   if (!parameter.skus?.length) return null;
 
-  if (variant === "parametrChip") {
+  if (variant === "parameterChip") {
     return (
       <div className="space-y-3">
         <p className="text-base font-bold leading-5 text-black">

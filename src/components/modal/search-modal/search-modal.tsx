@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { getProducts } from "@/apis/products";
 import { getCategories } from "@/apis/categories";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { hasSearchValue } from "@/utils/search";
 import { normalizeCategories } from "@/utils/product";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ const SectionTitle = ({ children }: { children: string }) => (
 const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   const search = useDebounce(value);
   const hasSearch = hasSearchValue(search);
   const openProductDetail = useProductDetailStore(

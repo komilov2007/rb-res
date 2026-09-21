@@ -38,7 +38,7 @@ const BookingForm = () => {
 
   const handleSubmit = () => {
     if (!hasAccess) {
-      setLoginModal(true)();
+      setLoginModal(true);
     }
   };
 
@@ -47,7 +47,7 @@ const BookingForm = () => {
       <form className="mx-auto grid w-full overflow-hidden rounded-[22px] border border-gray180/70 bg-white shadow-[0_18px_48px_rgba(15,23,42,0.10)] lg:grid-cols-[0.9fr_1fr]">
         <div className="relative max-h-[600px] overflow-hidden bg-black lg:h-full">
           <img
-            src="/boking.png"
+            src="/booking.png"
             alt=""
             className="h-full w-full object-cover"
           />

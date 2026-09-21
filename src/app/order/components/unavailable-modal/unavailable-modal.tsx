@@ -14,7 +14,7 @@ import {
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useCartStore } from "@/stores/cart";
 
 type UnavailableModalProps = {
@@ -30,7 +30,7 @@ const UnavailableModal = ({
 }: UnavailableModalProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const openCartModal = useCartStore((state) => state.openCartModal);
   const setUnavailableItemIds = useCartStore(

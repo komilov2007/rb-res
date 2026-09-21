@@ -22,7 +22,7 @@ const LoginRequired = ({ message }: LoginRequiredProps) => {
         type="button"
         variant="plain"
         size="none"
-        onClick={setLoginModal(true)}
+        onClick={() => setLoginModal(true)}
         className="h-11 gap-2 rounded-2xl bg-primary px-5 text-sm font-bold text-white"
       >
         <LogIn size={16} />

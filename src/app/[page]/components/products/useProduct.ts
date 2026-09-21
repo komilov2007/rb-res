@@ -2,7 +2,7 @@
 
 import { getCategories } from "@/apis/categories";
 import { getProducts } from "@/apis/products";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import {
   groupProductsByCategory,
   normalizeCategories,
@@ -39,7 +39,7 @@ export const productsQueryOptions = (shopid?: string) =>
   });
 
 export const useProduct = () => {
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   // A callback ref (not a plain useRef) so the observer effect below is
   // notified exactly when the sentinel div actually mounts, instead of
   // depending on fetch state to "discover" it on a later re-render.

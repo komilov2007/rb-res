@@ -23,10 +23,13 @@ export const useLanguage = () => {
   const [open, setOpen] = useState(false);
   const value: LanguageValue = isLanguage(locale) ? locale : defaultLocale;
   const shopLanguages = general?.data.languages?.filter(isLanguage);
-  // The shop's languages, plus the active one and the app default, so the
+  // The shop's languages, plus the app default and the active one, so the
   // current language is always shown and the user can always switch back.
+  // The order is fixed (default first, then the shop's own order) and does
+  // not depend on which language is selected — picking one no longer moves
+  // it to the top of the list.
   const availableLanguages: LanguageValue[] = shopLanguages?.length
-    ? Array.from(new Set<LanguageValue>([value, defaultLocale, ...shopLanguages]))
+    ? Array.from(new Set<LanguageValue>([defaultLocale, ...shopLanguages, value]))
     : ["uz", "ru", "en", "tr"];
 
   const handleChangeLanguage = (language: string) => {

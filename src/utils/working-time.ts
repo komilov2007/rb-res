@@ -9,7 +9,8 @@ export type NextOpeningProps = {
   close: string;
 };
 
-const formatTime = (time: string) => time.slice(0, 5);
+// "10:00:00" -> "10:00".
+export const formatTime = (time: string) => time.slice(0, 5);
 
 const toMinutes = (time: string) => {
   const [hour, minute] = formatTime(time).split(":");
@@ -17,9 +18,9 @@ const toMinutes = (time: string) => {
   return Number(hour) * 60 + Number(minute);
 };
 
-// Monday=1..Sunday=7 — the same getDay() || 7 conversion src/utils/banner.ts
-// and src/components/branch-info-sheet already use for working_time lookups.
-const getDayIndex = (date: Date) => date.getDay() || 7;
+// Monday=1..Sunday=7, matching GeneralProps["working_time"] keys and the
+// WEEKDAYS order. Today by default.
+export const getDayIndex = (date: Date = new Date()) => date.getDay() || 7;
 
 // The first working window the shop opens in from `now` onward: a later
 // window today if one exists, otherwise the first window of the next day

@@ -1,26 +1,24 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { getBranches } from "@/apis/branches";
 import BranchInfoSheet from "@/components/branch-info-sheet";
 import type { BranchProps } from "@/types/branch";
-import { getBranchLabel } from "@/app/[page]/components/branch-selection/utils";
+import { getBranchLabel } from "@/components/branch-selection/utils";
 import { WEEKDAYS } from "@/constants/weekdays";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
+import { useBranches } from "@/hooks/useBranches";
 import {
   formatSocialName,
   getSocialIcon,
   getSocialStyle,
 } from "@/utils/socials";
 
-import ProfilePageShell from "../components/profile-page-shell";
+import { formatTime, getDayIndex } from "@/utils/working-time";
 
-const formatTime = (time: string) => time.slice(0, 5);
+import ProfilePageShell from "../components/profile-page-shell";
 
 const Section = ({
   title,
@@ -50,15 +48,10 @@ const LinesSkeleton = () => (
 // the branch list, both already fetched elsewhere in the app.
 const AboutContent = () => {
   const t = useTranslations();
-  const { shopid, hasShopId } = useShopid();
   const { data: general, isLoading: isGeneralLoading } = useGeneral();
-  const { data: branchesData, isLoading: isBranchesLoading } = useQuery({
-    enabled: hasShopId,
-    queryKey: ["branches", shopid],
-    queryFn: () => getBranches(shopid as string),
-  });
+  const { data: branchesData, isLoading: isBranchesLoading } = useBranches();
   // working_time keys are Monday=1 … Sunday=7.
-  const [todayKey] = useState(() => String(new Date().getDay() || 7));
+  const [todayKey] = useState(() => String(getDayIndex()));
   // Same read-only branch info + map sheet the order detail page opens.
   const [infoBranch, setInfoBranch] = useState<BranchProps | null>(null);
 
@@ -157,6 +150,7 @@ const AboutContent = () => {
       </Section>
 
       <BranchInfoSheet
+        desktop="drawer"
         open={Boolean(infoBranch)}
         onClose={() => setInfoBranch(null)}
         branch={infoBranch}

@@ -1,9 +1,9 @@
 "use client";
 import "swiper/css";
 
-import { ProductsSkeleton } from "@/components/ui/skleton";
+import { ProductsSkeleton } from "@/components/ui/skeleton";
 import { hasDiscount } from "@/utils/product";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
+import { useBranchSelection } from "@/components/branch-selection";
 
 import { CategoryProducts, DiscountProducts } from "./components";
 import { useProduct } from "./useProduct";

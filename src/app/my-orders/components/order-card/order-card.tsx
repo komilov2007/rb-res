@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { ROUTER } from "@/constants/router";
 import { formatPrice } from "@/utils/format-price";
 import { formatOrderDate } from "@/utils/format-date";
@@ -20,7 +20,7 @@ type OrderCardProps = {
 const OrderCard = ({ order }: OrderCardProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
 
   const itemCount = order.items.reduce((sum, item) => sum + item.count, 0);
   const firstPhoto = order.items[0]?.photo;

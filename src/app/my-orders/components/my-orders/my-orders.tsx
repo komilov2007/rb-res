@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { ChevronLeft, PackageSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
-import MobileFooter from "@/app/[page]/components/mobile/mobile-footer";
+import MobileFooter from "@/components/mobile-footer";
 
 import Button from "@/components/ui/button";
 
-import { usePage } from "../../usePage";
+import { useMyOrders } from "@/hooks/useMyOrders";
 import OrderCard from "../order-card";
 
 const TABS = [
@@ -59,7 +59,7 @@ const MyOrders = () => {
     isLoading,
     isFetchingNextPage,
     bottomRef,
-  } = usePage();
+  } = useMyOrders();
 
   return (
     <div className="flex min-h-screen flex-col bg-gray10 pb-[74px] lg:pb-0">

@@ -7,4 +7,5 @@ export const REACT_QUERY_KEYS = {
   MY_ORDERS: "my-orders",
   ORDER_DETAIL: "order-detail",
   ACTIVE_ORDERS_COUNT: "active-orders-count",
+  CART_DELIVERY_CALCULATION: "cart-delivery-calculation",
 } as const;

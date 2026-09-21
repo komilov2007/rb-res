@@ -5,7 +5,7 @@ import { useCartStore } from "@/stores/cart";
 import { useBoolean } from "@/hooks/useBoolean";
 import type { CardProductProps } from "@/types/product";
 import { useProductDetailStore } from "@/stores/product-detail";
-import { AddNotParametrCart, getCartList } from "@/apis/cart";
+import { addNoParameterCart, getCartList } from "@/apis/cart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth";
 import { normalizeCartItems } from "@/utils/cart";
@@ -41,7 +41,7 @@ export const useCardProduct = ({
       productId: number;
       quantity: number;
       data: { branch_id?: string };
-    }) => AddNotParametrCart(customerId, productId, quantity, data),
+    }) => addNoParameterCart(customerId, productId, quantity, data),
   });
   const cartItem = carts.find((item) => item.product.id === product.id);
   const quantity = cartItem?.quantity ?? 0;
@@ -96,7 +96,7 @@ export const useCardProduct = ({
     // stack. After login the home page opens the address/branch selection
     // itself (app/page.tsx) when none is saved yet.
     if (!customerId) {
-      setLoginModal(true)();
+      setLoginModal(true);
       return;
     }
 
@@ -113,7 +113,7 @@ export const useCardProduct = ({
 
   const handleIncrement = async () => {
     if (!customerId) {
-      setLoginModal(true)();
+      setLoginModal(true);
       return;
     }
 
@@ -158,7 +158,7 @@ export const useCardProduct = ({
 
   const handleChangeQuantity = async (quantity: number) => {
     if (!customerId) {
-      setLoginModal(true)();
+      setLoginModal(true);
       return;
     }
 
@@ -187,7 +187,4 @@ export const useCardProduct = ({
     handleChangeQuantity,
   };
 };
-
-
-
 

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Dialog as SheetPrimitive } from "radix-ui";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import XButton from "@/components/ui/x-button";
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {

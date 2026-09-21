@@ -4,37 +4,18 @@ import { Suspense, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 
-import ChatHeader from "./components/chat-header";
-import ChatInput from "./components/chat-input";
-import MessageList from "./components/message-list";
-import { useChat } from "./useChat";
+import ChatPanel from "@/components/chat-panel";
 
 const subscribeNoop = () => () => {};
 
 const ChatContent = () => {
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
-  const {
-    messages,
-    isLoading,
-    isLoadingMore,
-    hasMore,
-    loadMore,
-    messageText,
-    setMessageText,
-    selectedFile,
-    previewUrl,
-    setSelectedFile,
-    clearSelectedFile,
-    canSend,
-    isSendingFile,
-    handleSend,
-  } = useChat();
 
   // AuthProvider populates the auth store from localStorage in its own
   // effect; since it's an ancestor, that effect fires *after* this
@@ -57,33 +38,13 @@ const ChatContent = () => {
     if (!mustLogin) return;
 
     router.replace(`${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`);
-    setLoginModal(true)();
+    setLoginModal(true);
   }, [mustLogin, router, shopid, setLoginModal]);
 
   if (!isHydrated || !hasAccess) return null;
 
   return (
-    <div className="flex h-dvh flex-col bg-gray10">
-      <ChatHeader />
-      <MessageList
-        messages={messages}
-        isLoading={isLoading}
-        isLoadingMore={isLoadingMore}
-        hasMore={hasMore}
-        onLoadMore={loadMore}
-      />
-      <ChatInput
-        value={messageText}
-        onChange={setMessageText}
-        selectedFile={selectedFile}
-        previewUrl={previewUrl}
-        onSelectFile={setSelectedFile}
-        onClearFile={clearSelectedFile}
-        canSend={canSend}
-        isSending={isSendingFile}
-        onSend={handleSend}
-      />
-    </div>
+    <ChatPanel onBack={() => router.back()} className="h-dvh" />
   );
 };
 

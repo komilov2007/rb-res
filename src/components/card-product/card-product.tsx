@@ -1,20 +1,15 @@
 import { Flame } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
-import type { BranchProps } from "@/types/branch";
 import type { CardProductProps } from "@/types/product";
-import { useShopid } from "@/hooks/useShopId";
-import { useBranchSelectionStore } from "@/stores/branch-selection";
-import { useCardBranchPopoverStore } from "@/stores/card-branch-popover";
 import { useProductDetailStore } from "@/stores/product-detail";
 import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
-import { showProductUnavailable } from "@/utils/branch-availability";
 
 import CartAction from "./cart-action";
 import UnavailableBranchList from "./unavailable-branch-list";
 import UnavailablePopover from "./unavailable-popover";
+import { useCardBranchPopover } from "./useCardBranchPopover";
 import { useCardProduct } from "./useCardProduct";
 import {
   CARD_HEIGHT_CLASS,
@@ -44,50 +39,18 @@ const CardProduct = ({
   const openProductDetail = useProductDetailStore(
     (state) => state.openProductDetail,
   );
-  const { shopid } = useShopid();
-  const setPickup = useBranchSelectionStore((state) => state.setPickup);
-  // Only one product's popover open at a time, by id — opening this card's
-  // implicitly closes whichever other card's was open (its own comparison
-  // below just stops matching), no explicit "close the others" call needed.
-  const openPopoverProductId = useCardBranchPopoverStore(
-    (state) => state.openProductId,
-  );
-  const openCardBranchPopover = useCardBranchPopoverStore(
-    (state) => state.openCardBranchPopover,
-  );
-  const closeCardBranchPopover = useCardBranchPopoverStore(
-    (state) => state.closeCardBranchPopover,
-  );
-  const isBranchPopoverOpen = openPopoverProductId === product.id;
+  const {
+    isBranchPopoverOpen,
+    handleUnavailableTap,
+    handleSelectBranch,
+    closeCardBranchPopover,
+  } = useCardBranchPopover(product);
   const isDiscountCard = shouldUseDiscountCard(variant, isDiscount);
   const saleVariantClassName = SALE_VARIANT_CLASS_NAMES[saleBadgeVariant];
   const saleLabel =
     product.sale_type === "PERCENT"
       ? `-${product.sale_amount}%`
       : `-${formatPrice(product.sale_amount ?? 0)} ${t("sum")}`;
-  // A product with no branches at all can't be fixed by switching branch —
-  // that's a dead end, so it stays a plain toast. Otherwise open the inline
-  // popover, overlaid right on this card, offering the actual fix.
-  const handleUnavailableTap = () => {
-    if (!product.branches?.length) {
-      showProductUnavailable();
-      return;
-    }
-
-    openCardBranchPopover(product.id);
-  };
-  const handleSelectBranch = (branch: BranchProps) => {
-    if (!shopid) return;
-
-    setPickup(shopid, branch.id);
-    closeCardBranchPopover();
-    // The header chip and every other unavailable card read this same
-    // store, so they already update the instant setPickup runs — this
-    // toast is purely a confirmation, not what drives that update.
-    toast.success(t("product_branch_switched", { name: branch.name }), {
-      duration: 2500,
-    });
-  };
 
   return (
     <article

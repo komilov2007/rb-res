@@ -4,7 +4,7 @@ import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 const xButtonVariants = cva(
   "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray10 text-black transition-colors hover:bg-gray180 disabled:pointer-events-none disabled:opacity-50",
   {

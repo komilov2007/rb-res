@@ -6,7 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { times } from "../constants";
+import { BOOKING_TIMES } from "@/constants/booking";
 
 type TimePickerProps = {
   value: string;
@@ -34,7 +34,7 @@ const TimePicker = ({ value, placeholder, onChange }: TimePickerProps) => {
       </PopoverTrigger>
       <PopoverContent align="start" className="w-80 p-3">
         <div className="grid max-h-60 grid-cols-3 gap-2 overflow-y-auto pr-1">
-          {times.map((time) => {
+          {BOOKING_TIMES.map((time) => {
             const isActive = value === time;
 
             return (

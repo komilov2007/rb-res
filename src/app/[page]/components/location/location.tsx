@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-import { getAddresses } from "@/apis/address";
-import { BranchSelectionChip } from "@/app/[page]/components/branch-selection";
+import { BranchSelectionChip } from "@/components/branch-selection";
 import { useAuthStore } from "@/stores/auth";
 import { useLocationStore } from "@/stores/location";
+import { useAddresses } from "@/hooks/useAddresses";
 
 type LocationProps = {
   className?: string;
@@ -19,11 +18,7 @@ const Location = ({ className, labelClassName }: LocationProps) => {
   const setAddress = useLocationStore((state) => state.setAddress);
   const auth = useAuthStore((state) => state.auth);
   const hasAccess = useAuthStore((state) => state.hasAccess);
-  const { data: addresses } = useQuery({
-    enabled: hasAccess && Boolean(auth?.customer),
-    queryKey: ["user-addresses", auth?.customer],
-    queryFn: getAddresses,
-  });
+  const { data: addresses } = useAddresses(auth?.customer, hasAccess && Boolean(auth?.customer));
   const currentAddress =
     addresses?.data.find((item) => item.is_current) ?? addresses?.data[0];
 

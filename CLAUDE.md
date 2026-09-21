@@ -989,3 +989,16 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Subagentlar
+
+Loyihada 6 ta lokal subagent bor (`.claude/agents/`, git'ga push qilinmaydi):
+
+- **kod-korish** — yozilgan kodni arxitekturaga solishtirib tekshiradi (faqat hisobot, kod yozmaydi)
+- **kod-optimaze** — mavjud kodni arxitekturaga moslab qayta yozadi (refactor, dizayn/API'ga tegmaydi)
+- **yangi-task** — YANGI sahifa/feature yaratadi (yangi route, yangi page.tsx). Rasm berilsa, UI'ni 1:1 chizadi.
+- **yangi-task-item** — MAVJUD feature ichiga kichik qo'shimcha qo'shadi (yangi to'lov turi, yangi maydon, yangi menyu bandi va h.k.) — yangi sahifa yaratmaydi, loyihada mavjud narsadan foydalanadi, faqat yo'q bo'lsa loyihaga mos qilib qo'shadi. Rasm berilsa, UI'ni 1:1 chizadi.
+- **hooks-store-foydalanish** — hook/store joylashuvi bo'yicha maslahat beradi (kod yozmaydi)
+- **bug-fix** — tasvirlangan xatoni topib, minimal o'zgarish bilan tuzatadi, boshqa fayllarga tegmaydi
+
+Farqlash: yangi route kerakmi → **yangi-task**. Mavjud feature'ga qo'shimcha kerakmi → **yangi-task-item**. Mos vaziyatda tegishli agent avtomatik yoki qo'lda chaqirilsin.

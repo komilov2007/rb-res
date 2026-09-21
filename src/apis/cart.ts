@@ -38,17 +38,17 @@ export const postCart = async (
   customerId: number | string,
   data: PostCartPayload,
 ) => {
-  return await request.post(`webapp/card/add/${customerId}`, data);
+  return await request.post<unknown>(`webapp/card/add/${customerId}`, data);
 };
 
 export const postCartProductList = async (
   customerId: number | string,
   data: PostCartListPayload[],
 ) => {
-  return await request.post(`webapp/card/add/all/${customerId}`, data);
+  return await request.post<unknown>(`webapp/card/add/all/${customerId}`, data);
 };
 
-export const AddNotParametrCart = async (
+export const addNoParameterCart = async (
   customerId: number | string,
   productId: number,
   quantity: number,
@@ -72,11 +72,11 @@ export const updateCartItem = async (
 };
 
 export const removeCartItem = async (id: number) => {
-  return await request.post(`webapp/card/remove/${id}`);
+  return await request.post<unknown>(`webapp/card/remove/${id}`);
 };
 
 export const clearCartList = async (customerId: number | string) => {
-  return await request.post(`webapp/card/clear/all/${customerId}`);
+  return await request.post<unknown>(`webapp/card/clear/all/${customerId}`);
 };
 
 export type UpdateCartStatusPayload = {

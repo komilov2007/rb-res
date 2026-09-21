@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { BranchMapPicker } from "@/components/branch-map-picker";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
+import { useBranchSelection } from "@/components/branch-selection";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useProductBranchPickerStore } from "@/stores/product-branch-picker";

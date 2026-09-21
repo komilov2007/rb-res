@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, MapPin, PackageX } from "lucide-react";
+import { MapPin, PackageX } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { BranchMapPicker } from "@/components/branch-map-picker";
@@ -13,20 +13,9 @@ import {
 import { useBoolean } from "@/hooks/useBoolean";
 import type { GeneralProps } from "@/types/general";
 import { getBranchLabel, getShortAddress } from "@/utils/address";
+import RadioMark from "@/components/ui/radio-mark";
 
 import type { BranchOptionProps } from "./useBranches";
-
-const RadioMark = ({ checked }: { checked: boolean }) => (
-  <span
-    className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 ${
-      checked
-        ? "border-green-500 bg-green-500 text-white"
-        : "border-gray180 bg-white"
-    }`}
-  >
-    {checked && <Check size={14} strokeWidth={3} />}
-  </span>
-);
 
 type BranchPickerSheetProps = {
   open: boolean;

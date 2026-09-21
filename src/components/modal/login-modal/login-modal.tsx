@@ -12,8 +12,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { useAuthStore } from "@/stores/auth";
 import { loginUser } from "@/apis/auth";
-import { setUser } from "@/lib/user";
-import { useShopid } from "@/hooks/useShopId";
+import { setUser } from "@/utils/user";
+import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useCartStore } from "@/stores/cart";
 import { getCartList, postCartProductList } from "@/apis/cart";
@@ -21,7 +21,7 @@ import { normalizeCartItems } from "@/utils/cart";
 
 const LoginModal = () => {
   const t = useTranslations();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const queryClient = useQueryClient();
   const [phone, setPhone] = useState("");
@@ -34,7 +34,7 @@ const LoginModal = () => {
 
   const handleClose = () => {
     setPhone("");
-    setLoginModal(false)();
+    setLoginModal(false);
   };
 
   const login = useMutation({
@@ -92,7 +92,7 @@ const LoginModal = () => {
       // effect) runs while this modal or the cart sync above is still pending.
       // The cart sync itself authenticates via setUser's stored token.
       handleClose();
-      setSignupModal(!(res.data.firstname && res.data.firstname.length > 0))();
+      setSignupModal(!(res.data.firstname && res.data.firstname.length > 0));
       setAuth(res.data);
     },
   });
@@ -138,7 +138,7 @@ const LoginModal = () => {
 
   if (isDesktop) {
     return (
-      <Dialog open={loginModal} onOpenChange={setLoginModal(false)}>
+      <Dialog open={loginModal} onOpenChange={() => setLoginModal(false)}>
         {/* z-[100] matches the mobile variant's ModalScreen below — both
             variants of this modal need to reliably sit above any other
             overlay (e.g. the cart drawer's Sheet), not just the shared

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { getPromoCode } from "@/apis/order";
 import { getApiErrorMessage } from "@/utils/api-error";
@@ -25,7 +25,7 @@ const PromoCode = () => {
   const t = useTranslations();
   const { control, setValue } = useFormContext<OrderFormValues>();
   const promocode = useWatch({ control, name: "promocode" });
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const customerId = useAuthStore((state) => state.auth?.customer);
 
   const [isOpen, setIsOpen] = useState(false);

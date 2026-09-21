@@ -4,15 +4,15 @@ import { Suspense } from "react";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import MobileFooter from "@/app/[page]/components/mobile/mobile-footer";
+import MobileFooter from "@/components/mobile-footer";
 
-import FloatingCart from "@/app/[page]/components/floating-cart";
-import Footer from "@/app/[page]/components/footer";
-import Header from "@/app/[page]/components/header";
+import FloatingCart from "@/components/floating-cart";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import CardProduct from "@/components/card-product";
 import ProductDetailMobile from "@/components/modal/product-detail";
 import Button from "@/components/ui/button";
-import { ProductCardSkeleton } from "@/components/ui/skleton";
+import { ProductCardSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
 import { useCartStore } from "@/stores/cart";
 

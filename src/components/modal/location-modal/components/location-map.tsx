@@ -1,9 +1,13 @@
+import { useRef } from "react";
 import { Navigation } from "lucide-react";
 import { Map, YMaps, type YMapsApi } from "react-yandex-maps";
 
-import LocationPinIcon from "@/assets/icons/location-pin-icon";
 import { YANDEX_LANG } from "@/constants/yandex";
-import type { BoundsChangeEvent, MapInstance } from "@/types/yandex";
+import type {
+  BoundsChangeEvent,
+  Coordinates,
+  MapInstance,
+} from "@/types/yandex";
 
 type LocationMapProps = {
   yandexKey: string;
@@ -20,6 +24,30 @@ type LocationMapProps = {
   setMapInstance: (instance: MapInstance | null) => void;
 };
 
+type MapEvent = { get: (key: string) => unknown };
+
+// The slice of the ymaps API used to keep a default placemark on the map
+// centre (react-yandex-maps doesn't type these).
+type CenterPin = {
+  geometry: { setCoordinates: (coordinates: Coordinates) => void };
+};
+type PinMap = MapInstance & {
+  geoObjects: { add: (object: unknown) => void };
+  events: { add: (type: string, handler: (event: MapEvent) => void) => void };
+  options: {
+    get: (key: "projection") => {
+      fromGlobalPixels: (point: [number, number], zoom: number) => Coordinates;
+    };
+  };
+};
+type PinYMapsApi = YMapsApi & {
+  Placemark: new (
+    geometry: Coordinates,
+    properties: Record<string, never>,
+    options: Record<string, unknown>,
+  ) => CenterPin;
+};
+
 const LocationMap = ({
   yandexKey,
   mapKey,
@@ -31,28 +59,57 @@ const LocationMap = ({
   onCurrentLocation,
   setMapInstance,
 }: LocationMapProps) => {
+  const apiRef = useRef<PinYMapsApi | null>(null);
+  const mapRef = useRef<PinMap | null>(null);
+  const pinnedMapRef = useRef<PinMap | null>(null);
+
+  // The picked point is always the map centre (dragging the map moves the
+  // point, reverse-geocoded on action end). The marker is Yandex's own
+  // default placemark, kept on that centre: during the drag/zoom animation
+  // (actiontick, from the in-flight tick's pixel centre) and after any view
+  // change (boundschange). Transparent to pointer events, so dragging on it
+  // still drags the map. Re-attached whenever the <Map> is re-keyed.
+  const attachCenterPin = () => {
+    const api = apiRef.current;
+    const map = mapRef.current;
+
+    if (!api || !map || pinnedMapRef.current === map) return;
+
+    pinnedMapRef.current = map;
+
+    const pin = new api.Placemark(
+      map.getCenter(),
+      {},
+      {
+        hasBalloon: false,
+        hasHint: false,
+        interactivityModel: "default#transparent",
+      },
+    );
+
+    map.geoObjects.add(pin);
+    map.events.add("actiontick", (event) => {
+      const tick = event.get("tick") as {
+        globalPixelCenter: [number, number];
+        zoom: number;
+      };
+
+      pin.geometry.setCoordinates(
+        map.options
+          .get("projection")
+          .fromGlobalPixels(tick.globalPixelCenter, tick.zoom),
+      );
+    });
+    map.events.add("boundschange", (event) => {
+      pin.geometry.setCoordinates(event.get("newCenter") as Coordinates);
+    });
+  };
+
   return (
     <div className="location-yandex-map relative h-full min-h-0 w-full overflow-hidden bg-gray10">
-      <style jsx global>{`
-        .location-yandex-map [class*="controls-pane"],
-        .location-yandex-map [class*="controls__toolbar"],
-        .location-yandex-map [class*="float-button"],
-        .location-yandex-map [class*="search"],
-        .location-yandex-map [class*="traffic"],
-        .location-yandex-map [class*="type-selector"],
-        .location-yandex-map [class*="fullscreen"],
-        .location-yandex-map [class*="ruler"],
-        .location-yandex-map [class*="geolocation"],
-        .location-yandex-map [class*="copyright"],
-        .location-yandex-map [class*="gototech"],
-        .location-yandex-map [class*="gotoymaps"],
-        .location-yandex-map [class*="scale"] {
-          display: none !important;
-        }
-      `}</style>
       <YMaps
         query={{
-          load: "Map",
+          load: "Map,Placemark",
           // @ts-expect-error react-yandex-maps types do not include Uzbek, but Yandex accepts it.
           lang: YANDEX_LANG,
           coordorder: "longlat",
@@ -62,9 +119,15 @@ const LocationMap = ({
         <Map
           key={mapKey}
           state={mapState}
-          onLoad={onLoad}
+          onLoad={(api) => {
+            apiRef.current = api as PinYMapsApi;
+            attachCenterPin();
+            onLoad(api);
+          }}
           instanceRef={(instance) => {
+            mapRef.current = (instance as PinMap | null) ?? null;
             setMapInstance((instance as MapInstance | null) ?? null);
+            attachCenterPin();
           }}
           onActionEnd={onBoundsChange}
           modules={["geocode", "SuggestView"]}
@@ -79,10 +142,6 @@ const LocationMap = ({
           className={className}
         />
       </YMaps>
-
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-[100000000] -translate-x-1/2 -translate-y-full">
-        <LocationPinIcon className="text-primary drop-shadow-[0_8px_16px_rgba(0,0,0,0.14)]" />
-      </div>
 
       <button
         type="button"

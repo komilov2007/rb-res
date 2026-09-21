@@ -7,11 +7,14 @@ import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
-import { openPaymentLink } from "@/lib/telegram";
+import { useShopId } from "@/hooks/useShopId";
+import { openPaymentLink } from "@/utils/telegram";
 import type { PaymentTypeProps } from "@/types/order";
 
-import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "../payment-method/constants";
+import {
+  PAYMENT_CARD_CONFIG,
+  getPaymentIcon,
+} from "../payment-method/constants";
 
 type PaymentWaitingProps = {
   paymentUrl: string | null;
@@ -24,7 +27,7 @@ const PaymentWaiting = ({
 }: PaymentWaitingProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
 
   const goHome = () => {
     router.push(`${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`);

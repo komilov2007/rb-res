@@ -1,7 +1,7 @@
 ﻿import type { CardProductProps, ProductProps } from "@/types/product";
 import { create } from "zustand";
 
-type ProductDetailVariant = "default" | "parametrChip";
+type ProductDetailVariant = "default" | "parameterChip";
 type ProductDetailDesktopVariant = "center" | "rightDrawer";
 
 type ProductDetailStoreProps = {
@@ -46,6 +46,4 @@ export const useProductDetailStore = create<ProductDetailStoreProps>()(
     },
   }),
 );
-
-
 

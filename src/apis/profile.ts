@@ -1,5 +1,5 @@
 import { request } from "@/configs/requests";
-import { getUser } from "@/lib/user";
+import { getUser } from "@/utils/user";
 import type { UserInfo } from "@/types/profile";
 import { isServer } from "@/utils/is-server";
 

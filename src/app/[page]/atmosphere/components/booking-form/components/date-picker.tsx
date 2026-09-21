@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/popover";
 
 import { DATE_LOCALES } from "../constants";
+import { getDateValue } from "@/utils/format-date";
+
 import {
   formatSelectedDate,
-  getDateValue,
   getMonthDays,
   getWeekDays,
 } from "../utils";

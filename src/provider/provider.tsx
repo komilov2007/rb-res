@@ -13,8 +13,9 @@ import LoginModal from "@/components/modal/login-modal";
 import SignupModal from "@/components/modal/signup-modal";
 import LocationModal from "@/components/modal/location-modal";
 import ShopClosedModal from "@/components/modal/shop-closed-modal";
+import ChatModal from "@/components/chat-modal";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { getMessages } from "@/utils/i18n";
 import { onest } from "@/utils/fonts";
 import type { ChildrenProps } from "@/types/children";
@@ -50,6 +51,11 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
                           <LocationModal />
                         </Suspense>
                         <ShopClosedModal />
+                        {/* Desktop support chat; useChat reads shop_id via
+                            useSearchParams, hence the Suspense boundary. */}
+                        <Suspense fallback={null}>
+                          <ChatModal />
+                        </Suspense>
                         {/* richColors: gives toast.success/toast.error their
                             green/red backgrounds — without it every toast
                             renders in sonner's plain default style regardless
@@ -76,6 +82,4 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
     </html>
   );
 };
-
-
 

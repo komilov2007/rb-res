@@ -7,10 +7,10 @@ import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
 import { useShopStatusStore } from "@/stores/shop-status";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { updateCartStatus } from "@/apis/cart";
 import { ROUTER } from "@/constants/router";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
+import { useBranchSelection } from "@/components/branch-selection";
 import { showProductUnavailable } from "@/utils/branch-availability";
 
 // rb-restaurant currently only operates as RESTAURANT. The SHOP branch is kept
@@ -20,7 +20,7 @@ const isShopBusiness = false;
 
 export const useCartFooter = (total: number) => {
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
 
   const carts = useCartStore((state) => state.carts);
   const closeCartModal = useCartStore((state) => state.closeCartModal);
@@ -72,7 +72,7 @@ export const useCartFooter = (total: number) => {
       // top of a still-open drawer instead of being the only overlay.
       closeCartModal();
       setPendingCheckout(true);
-      setLoginModal(true)();
+      setLoginModal(true);
       return;
     }
 
@@ -81,7 +81,7 @@ export const useCartFooter = (total: number) => {
     if (!hasFirstname) {
       closeCartModal();
       setPendingCheckout(true);
-      setSignupModal(true)();
+      setSignupModal(true);
       return;
     }
 

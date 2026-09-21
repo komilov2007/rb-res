@@ -1,32 +1,16 @@
 "use client";
 
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { isPickupType } from "@/constants/delivery-type";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 import type { OrderFormValues } from "@/types/order";
+import RadioMark from "@/components/ui/radio-mark";
 
 import Branches from "../branches";
 import { getOrderOption } from "./constants";
-
-const RadioIndicator = ({
-  checked,
-  className = "",
-}: {
-  checked: boolean;
-  className?: string;
-}) => (
-  <span
-    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-      checked ? "border-green-500 bg-green-500" : "border-gray180"
-    } ${className}`}
-  >
-    {checked && <Check size={12} strokeWidth={3} className="text-white" />}
-  </span>
-);
 
 type DeliveryTypeProps = {
   // Already filtered to active services known to ORDER_OPTIONS.
@@ -91,7 +75,7 @@ const DeliveryType = ({
                           {t(option.desc)}
                         </span>
                       </span>
-                      <RadioIndicator checked={checked} />
+                      <RadioMark checked={checked} size="sm" />
                     </button>
                   );
                 })}

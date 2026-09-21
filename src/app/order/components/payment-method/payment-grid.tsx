@@ -1,30 +1,12 @@
 "use client";
 
-import { Check } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import type { OrderFormValues, PaymentTypeProps } from "@/types/order";
+import RadioMark from "@/components/ui/radio-mark";
 
 import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "./constants";
-
-const RadioIndicator = ({
-  checked,
-  hasError = false,
-  className = "",
-}: {
-  checked: boolean;
-  hasError?: boolean;
-  className?: string;
-}) => (
-  <span
-    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-      checked ? "border-green-500 bg-green-500" : hasError ? "border-red" : "border-gray180"
-    } ${className}`}
-  >
-    {checked && <Check size={12} strokeWidth={3} className="text-white" />}
-  </span>
-);
 
 type PaymentGridProps = {
   visiblePaymentTypes: PaymentTypeProps[];
@@ -83,8 +65,9 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
                   <span className="flex h-8 shrink-0 items-center justify-start overflow-hidden [&_svg]:h-auto [&_svg]:max-h-8 [&_svg]:w-auto [&_svg]:max-w-30">
                     <Icon />
                   </span>
-                  <RadioIndicator
+                  <RadioMark
                     checked={checked && !isDisabled}
+                    size="sm"
                     hasError={hasError}
                   />
                 </div>

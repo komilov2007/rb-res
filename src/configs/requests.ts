@@ -1,5 +1,5 @@
 import { refreshToken } from "@/apis/refresh-token";
-import { clearUser, getUser } from "@/lib/user";
+import { clearUser, getUser } from "@/utils/user";
 import { useAuthStore } from "@/stores/auth";
 import { getApiErrorMessage } from "@/utils/api-error";
 import { getLanguage, isServer } from "@/utils/is-server";

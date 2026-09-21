@@ -1,21 +1,19 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ChevronLeft, Phone, Store } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Map, YMaps } from "react-yandex-maps";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 import Button from "@/components/ui/button";
 import ModalScreen from "@/components/modal/screen-modal";
-import { WEEKDAYS } from "@/constants/weekdays";
 import { YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 
+import BranchCard from "./branch-card";
 import { useBranchMapPicker } from "./useBranchMapPicker";
-
-const formatTime = (time: string) => time.slice(0, 5);
 
 type BranchMapPickerProps = {
   open: boolean;
@@ -82,35 +80,9 @@ const BranchMapPicker = ({
         </div>
 
         <div className="branch-map-picker relative min-h-0 flex-1">
-          {/* Yandex Maps' terms of use prohibit hiding/obscuring the
-              copyright panel ("Open in Yandex Maps" / "Terms of use" links
-              and the Yandex Maps logo) — this CSS block hides that panel
-              anyway, copied verbatim (same selectors, same `style jsx
-              global` technique) from the other places this app already does
-              this: src/components/modal/location-modal/components/location-map.tsx
-              and src/app/[page]/components/header/components/branch-dialog/branch-dialog.tsx.
-              Applying it here only for consistency with that existing,
-              pre-established in-app decision — it does not make the
-              underlying ToS conflict go away. Whether to keep doing this
-              across the app or revert it everywhere is a business decision,
-              not a technical one. */}
+          {/* The map chrome inside .branch-map-picker is hidden by the
+              shared rule in globals.css (see its ToS note there). */}
           <style jsx global>{`
-            .branch-map-picker [class*="controls-pane"],
-            .branch-map-picker [class*="controls__toolbar"],
-            .branch-map-picker [class*="float-button"],
-            .branch-map-picker [class*="search"],
-            .branch-map-picker [class*="traffic"],
-            .branch-map-picker [class*="type-selector"],
-            .branch-map-picker [class*="fullscreen"],
-            .branch-map-picker [class*="ruler"],
-            .branch-map-picker [class*="geolocation"],
-            .branch-map-picker [class*="copyright"],
-            .branch-map-picker [class*="gototech"],
-            .branch-map-picker [class*="gotoymaps"],
-            .branch-map-picker [class*="scale"] {
-              display: none !important;
-            }
-
             /* Swiper's default .swiper-wrapper alignment is
                align-items: stretch, so every slide in the row stretches to
                match the tallest one — that's what was padding out the
@@ -118,8 +90,10 @@ const BranchMapPicker = ({
                wrapperClass prop, so this overrides it via a scoped selector
                instead — a single style tag is required per component
                (styled-jsx doesn't allow a second one), so it lives here
-               alongside the map chrome rules above rather than next to the
-               Swiper below.
+               rather than next to the Swiper below. It stays in this
+               component (not globals.css) on purpose: it ties on
+               specificity with swiper's own .swiper-autoheight
+               .swiper-wrapper rule, so it must load after swiper's CSS.
                flex-end (not flex-start): autoHeight sizes the wrapper to
                the ACTIVE card only, and the whole sheet grows upward from a
                bottom anchor as that active card expands — with flex-start,
@@ -229,88 +203,13 @@ const BranchMapPicker = ({
                           : "!h-auto !w-[85%] max-w-[340px]"
                       }
                     >
-                      <div
-                        className={`flex flex-col gap-4 rounded-2xl bg-white p-5 ${
-                          branch.id === activeId ? "ring-2 ring-green-500" : ""
-                        }`}
-                      >
-                        <div className="flex items-start gap-2">
-                          <Store
-                            size={16}
-                            className="mt-0.5 shrink-0 text-gray220"
-                          />
-                          <p className="text-sm font-bold text-black">
-                            {branch.name}
-                          </p>
-                        </div>
-                        <p className="text-sm font-medium text-gray220">
-                          {branch.address}
-                        </p>
-
-                        {branch.phone && (
-                          <a
-                            href={`tel:${branch.phone}`}
-                            className="flex items-center gap-2 text-sm font-medium text-black"
-                          >
-                            <Phone
-                              size={14}
-                              className="shrink-0 text-gray220"
-                            />
-                            {branch.phone}
-                          </a>
-                        )}
-
-                        {/* Always fully expanded — the whole week is shown
-                            at once, no show-more toggle. */}
-                        <div className="flex flex-col gap-1.5">
-                          <p className="text-xs font-bold text-black">
-                            {t("location_branch_picker_schedule")}
-                          </p>
-                          <ul className="flex flex-col gap-1">
-                            {WEEKDAYS.map((day, index) => {
-                              const entry = workingTime?.[String(index + 1)];
-                              const isClosed =
-                                !entry ||
-                                entry.is_closed ||
-                                entry.hours.length === 0;
-
-                              return (
-                                <li
-                                  key={day}
-                                  className="flex items-start justify-between gap-3 text-xs font-medium text-gray220"
-                                >
-                                  <span className="shrink-0">
-                                    {t(`weekdays_${index + 1}`)}:
-                                  </span>
-                                  {isClosed ? (
-                                    <span>—</span>
-                                  ) : (
-                                    <span className="text-right text-black">
-                                      {entry.hours.map((hour, hourIndex) => (
-                                        <span key={hourIndex} className="block">
-                                          {formatTime(hour.open)} -{" "}
-                                          {formatTime(hour.close)}
-                                        </span>
-                                      ))}
-                                    </span>
-                                  )}
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
-
-                        {!readOnly && (
-                          <Button
-                            type="button"
-                            variant="primary-solid"
-                            size="primaryWide"
-                            onClick={() => chooseBranch(branch)}
-                          >
-                            {t("location_branch_picker_pick_here")}
-                          </Button>
-                        )}
-                      </div>
+                      <BranchCard
+                        branch={branch}
+                        isActive={branch.id === activeId}
+                        workingTime={workingTime}
+                        readOnly={readOnly}
+                        onChoose={() => chooseBranch(branch)}
+                      />
                     </SwiperSlide>
                   );
                 })}

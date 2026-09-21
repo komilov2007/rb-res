@@ -2,6 +2,10 @@ import { translate } from "@/utils/translate";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
+// Local calendar day as "YYYY-MM-DD" (no UTC shift, unlike toISOString).
+export const getDateValue = (date: Date) =>
+  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
 // Manual DD.MM.YYYY HH:mm formatting instead of Intl.DateTimeFormat — this
 // project doesn't rely on locale data anywhere else, so a fixed format
 // avoids environment-dependent surprises.

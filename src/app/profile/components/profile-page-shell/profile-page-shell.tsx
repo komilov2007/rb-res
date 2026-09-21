@@ -5,21 +5,16 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import PageLayout from "@/app/[page]/components/page-layout";
+import PageLayout from "@/components/page-layout";
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 
 import ProfileSidebar from "../profile-sidebar";
 
 type ProfilePageShellProps = {
   title: string;
   children: ReactNode;
-  // Desktop only. Default false: these routes are reached from the always-
-  // visible left sidebar, not from one another, so a "back into the
-  // sidebar" arrow is redundant there — mobile has no such persistent menu
-  // and always keeps its own back button regardless of this prop.
-  showDesktopBack?: boolean;
 };
 
 // Shared shell for profile sub-pages. Mobile keeps its own sticky back +
@@ -31,11 +26,10 @@ type ProfilePageShellProps = {
 const ProfilePageShell = ({
   title,
   children,
-  showDesktopBack = false,
 }: ProfilePageShellProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const goBackToProfile = () =>
     router.push(`${ROUTER.PROFILE}${shopid ? `?shop_id=${shopid}` : ""}`);
 
@@ -70,19 +64,9 @@ const ProfilePageShell = ({
 
             <div className="min-w-0 flex-1 rounded-2xl border border-gray180 bg-white p-6">
               <div className="flex items-center gap-3 pb-4">
-                {showDesktopBack && (
-                  <Button
-                    type="button"
-                    variant="plain"
-                    size="none"
-                    onClick={goBackToProfile}
-                    aria-label={t("common_back")}
-                    className="text-black"
-                  >
-                    <ChevronLeft size={22} />
-                  </Button>
-                )}
-                <h1 className="min-w-0 truncate text-lg font-extrabold text-black">
+                {/* No back arrow on desktop: every profile page is one click
+                    away in the persistent sidebar. */}
+                <h1 className="min-w-0 truncate text-lg font-medium text-black">
                   {title}
                 </h1>
               </div>

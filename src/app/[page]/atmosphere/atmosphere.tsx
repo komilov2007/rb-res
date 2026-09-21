@@ -4,17 +4,17 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import PageLayout from "@/app/[page]/components/page-layout";
+import PageLayout from "@/components/page-layout";
 import Button from "@/components/ui/button";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 
-import AtmosphereGallery from "./components/atmosphere-gallery";
+import AtmosphereGallery from "@/components/atmosphere-gallery";
 import BookingForm from "./components/booking-form";
 
 const Atmosphere = () => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
 
   const handleBackHome = () => {
     router.push(`/${shopid ? `?shop_id=${shopid}` : ""}`);

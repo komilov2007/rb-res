@@ -378,3 +378,84 @@ a {
   left: unset;
   transform: none;
 }
+
+/*
+ * Yandex Maps chrome (toolbars, search, traffic, zoom ruler, copyright panel,
+ * "Open in Yandex Maps" links) hidden inside every map wrapper in the app:
+ * branch-dialog, branch-info-sheet, branch-map-picker, delivery-route-sheet
+ * and location-map. `!important`, so the rule wins regardless of where this
+ * stylesheet lands relative to Yandex's own injected styles.
+ *
+ * Yandex Maps' terms of use prohibit hiding/obscuring the copyright panel
+ * ("Open in Yandex Maps" / "Terms of use" links and the Yandex Maps logo).
+ * This is a pre-existing in-app decision kept as-is; it does not make the
+ * underlying ToS conflict go away. Whether to keep doing this or revert it
+ * everywhere is a business decision, not a technical one.
+ */
+.branch-yandex-map [class*="controls-pane"],
+.branch-yandex-map [class*="controls__toolbar"],
+.branch-yandex-map [class*="float-button"],
+.branch-yandex-map [class*="search"],
+.branch-yandex-map [class*="traffic"],
+.branch-yandex-map [class*="type-selector"],
+.branch-yandex-map [class*="fullscreen"],
+.branch-yandex-map [class*="ruler"],
+.branch-yandex-map [class*="geolocation"],
+.branch-yandex-map [class*="copyright"],
+.branch-yandex-map [class*="gototech"],
+.branch-yandex-map [class*="gotoymaps"],
+.branch-yandex-map [class*="scale"],
+.branch-info-map [class*="controls-pane"],
+.branch-info-map [class*="controls__toolbar"],
+.branch-info-map [class*="float-button"],
+.branch-info-map [class*="search"],
+.branch-info-map [class*="traffic"],
+.branch-info-map [class*="type-selector"],
+.branch-info-map [class*="fullscreen"],
+.branch-info-map [class*="ruler"],
+.branch-info-map [class*="geolocation"],
+.branch-info-map [class*="copyright"],
+.branch-info-map [class*="gototech"],
+.branch-info-map [class*="gotoymaps"],
+.branch-info-map [class*="scale"],
+.branch-map-picker [class*="controls-pane"],
+.branch-map-picker [class*="controls__toolbar"],
+.branch-map-picker [class*="float-button"],
+.branch-map-picker [class*="search"],
+.branch-map-picker [class*="traffic"],
+.branch-map-picker [class*="type-selector"],
+.branch-map-picker [class*="fullscreen"],
+.branch-map-picker [class*="ruler"],
+.branch-map-picker [class*="geolocation"],
+.branch-map-picker [class*="copyright"],
+.branch-map-picker [class*="gototech"],
+.branch-map-picker [class*="gotoymaps"],
+.branch-map-picker [class*="scale"],
+.delivery-route-map [class*="controls-pane"],
+.delivery-route-map [class*="controls__toolbar"],
+.delivery-route-map [class*="float-button"],
+.delivery-route-map [class*="search"],
+.delivery-route-map [class*="traffic"],
+.delivery-route-map [class*="type-selector"],
+.delivery-route-map [class*="fullscreen"],
+.delivery-route-map [class*="ruler"],
+.delivery-route-map [class*="geolocation"],
+.delivery-route-map [class*="copyright"],
+.delivery-route-map [class*="gototech"],
+.delivery-route-map [class*="gotoymaps"],
+.delivery-route-map [class*="scale"],
+.location-yandex-map [class*="controls-pane"],
+.location-yandex-map [class*="controls__toolbar"],
+.location-yandex-map [class*="float-button"],
+.location-yandex-map [class*="search"],
+.location-yandex-map [class*="traffic"],
+.location-yandex-map [class*="type-selector"],
+.location-yandex-map [class*="fullscreen"],
+.location-yandex-map [class*="ruler"],
+.location-yandex-map [class*="geolocation"],
+.location-yandex-map [class*="copyright"],
+.location-yandex-map [class*="gototech"],
+.location-yandex-map [class*="gotoymaps"],
+.location-yandex-map [class*="scale"] {
+  display: none !important;
+}

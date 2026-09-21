@@ -13,12 +13,12 @@ type AuthStoreProps = {
   profileModalVariant: "dropdown" | "center";
   redirectLogin?: string;
   setAuth: (auth?: AuthProps) => void;
-  setLoginModal: (loginModal: boolean, redirectLogin?: string) => () => void;
-  setSignupModal: (signupModal: boolean) => () => void;
+  setLoginModal: (loginModal: boolean, redirectLogin?: string) => void;
+  setSignupModal: (signupModal: boolean) => void;
   setProfileModal: (
     profileModal: boolean,
     variant?: "dropdown" | "center",
-  ) => () => void;
+  ) => void;
   logout: () => void;
 };
 export const useAuthStore = create<AuthStoreProps>()((set) => ({
@@ -33,15 +33,15 @@ export const useAuthStore = create<AuthStoreProps>()((set) => ({
     set({ auth, hasAccess: Boolean(auth?.access) });
   },
 
-  setLoginModal: (loginModal, redirectLogin) => () => {
+  setLoginModal: (loginModal, redirectLogin) => {
     set({ loginModal, redirectLogin });
   },
 
-  setSignupModal: (signupModal) => () => {
+  setSignupModal: (signupModal) => {
     set({ signupModal });
   },
 
-  setProfileModal: (profileModal, variant = "dropdown") => () => {
+  setProfileModal: (profileModal, variant = "dropdown") => {
     set({ profileModal, profileModalVariant: variant });
   },
 

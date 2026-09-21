@@ -3,6 +3,15 @@ import type { CartItemProps } from "@/types/cart";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import {
+  addProduct,
+  decrementProduct,
+  getCartCount,
+  incrementProduct,
+  setProductQuantity,
+  withoutProduct,
+} from "@/utils/cart-items";
+
 type CartVariant = "desktop" | "mobile";
 type CartStoreProps = {
   cartCount: number;
@@ -37,10 +46,6 @@ type CartStoreProps = {
   confirmRemoveCart: () => void;
   clearCart: () => void;
   setPendingCheckout: (pendingCheckout: boolean) => void;
-};
-
-const getCartCount = (carts: CartItemProps[]) => {
-  return carts.reduce((total, item) => total + item.quantity, 0);
 };
 
 export const useCartStore = create<CartStoreProps>()(
@@ -99,9 +104,7 @@ export const useCartStore = create<CartStoreProps>()(
 
         if (productId === null) return;
 
-        const newCarts = get().carts.filter(
-          (item) => item.product.id !== productId,
-        );
+        const newCarts = withoutProduct(get().carts, productId);
 
         set({
           carts: newCarts,
@@ -140,54 +143,21 @@ export const useCartStore = create<CartStoreProps>()(
         }));
       },
       removeCart: (productId) => {
-        const newCarts = get().carts.filter(
-          (item) => item.product.id !== productId,
-        );
+        const newCarts = withoutProduct(get().carts, productId);
         set({
           carts: newCarts,
           cartCount: getCartCount(newCarts),
         });
       },
       addCart: (product) => {
-        const carts = get().carts;
-        const findProduct = carts.find((item) => item.product.id === product.id);
-        if (findProduct) {
-          const newCarts = carts.map((item) =>
-            item.product.id === product.id
-              ? {
-                  ...item,
-                  quantity: Math.min(item.quantity + 1, 999),
-                }
-              : item,
-          );
-          set({
-            carts: newCarts,
-            cartCount: getCartCount(newCarts),
-          });
-          return;
-        }
-        const newCarts = [
-          ...carts,
-          {
-            product,
-            quantity: 1,
-          },
-        ];
+        const newCarts = addProduct(get().carts, product);
         set({
           carts: newCarts,
           cartCount: getCartCount(newCarts),
         });
       },
       setCartQuantity: (productId, quantity) => {
-        const normalizedQuantity = Math.max(0, quantity);
-        const carts = get().carts;
-        const newCarts = normalizedQuantity === 0
-          ? carts.filter((item) => item.product.id !== productId)
-          : carts.map((item) =>
-              item.product.id === productId
-                ? { ...item, quantity: normalizedQuantity }
-                : item,
-            );
+        const newCarts = setProductQuantity(get().carts, productId, quantity);
 
         set({
           carts: newCarts,
@@ -195,15 +165,7 @@ export const useCartStore = create<CartStoreProps>()(
         });
       },
       incrementCart: (productId) => {
-        const carts = get().carts;
-        const newCarts = carts.map((item) =>
-          item.product.id === productId
-            ? {
-                ...item,
-                quantity: Math.min(item.quantity + 1, 999),
-              }
-            : item,
-        );
+        const newCarts = incrementProduct(get().carts, productId);
         set({
           carts: newCarts,
           cartCount: getCartCount(newCarts),
@@ -211,25 +173,8 @@ export const useCartStore = create<CartStoreProps>()(
       },
 
       decrementCart: (productId) => {
-        const carts = get().carts;
-        const item = carts.find((item) => item.product.id === productId);
-        if (!item) return;
-        if (item.quantity === 1) {
-          const newCarts = carts.filter((item) => item.product.id !== productId);
-          set({
-            carts: newCarts,
-            cartCount: getCartCount(newCarts),
-          });
-          return;
-        }
-        const newCarts = carts.map((item) =>
-          item.product.id === productId
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-              }
-            : item,
-        );
+        const newCarts = decrementProduct(get().carts, productId);
+        if (!newCarts) return;
         set({
           carts: newCarts,
           cartCount: getCartCount(newCarts),

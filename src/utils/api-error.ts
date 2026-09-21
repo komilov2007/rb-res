@@ -2,14 +2,6 @@ import { isAxiosError } from "axios";
 
 import { translate } from "@/utils/translate";
 
-// Uzbek source strings, kept exported for compatibility — user-facing
-// output goes through translate() below (errors.* keys).
-export const GENERIC_ERROR_MESSAGE = "Xatolik yuz berdi, qayta urinib ko'ring.";
-export const NETWORK_ERROR_MESSAGE =
-  "Internet aloqasi yo'q. Ulanishni tekshirib, qayta urinib ko'ring.";
-export const TIMEOUT_ERROR_MESSAGE =
-  "So'rov vaqti tugadi. Qayta urinib ko'ring.";
-
 // The shared request instance surfaces backend errors as ordinary
 // AxiosErrors with a `{ message, ... }` body (confirmed live — e.g. the
 // 401 interceptor path's `{"message":"...","code":"not_authenticated"}`,

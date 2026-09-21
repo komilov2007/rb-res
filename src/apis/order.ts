@@ -174,7 +174,7 @@ export const cancelOrder = async (
   orderId: number | string,
   shopId: string,
 ) => {
-  return await request.post(`webapp/order/cancel/${orderId}/${shopId}`);
+  return await request.post<unknown>(`webapp/order/cancel/${orderId}/${shopId}`);
 };
 
 export type ProceedToPaymentResponse = {

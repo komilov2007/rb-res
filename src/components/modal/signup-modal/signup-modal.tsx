@@ -13,8 +13,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
 import { signUp } from "@/apis/auth";
-import { setUser } from "@/lib/user";
-import { useShopid } from "@/hooks/useShopId";
+import { setUser } from "@/utils/user";
+import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getLocalPhone } from "@/utils/format-number";
 
@@ -23,7 +23,7 @@ import { getLocalPhone } from "@/utils/format-number";
 // updates auth, which is what lets a pending checkout continue.
 const SignupModal = () => {
   const t = useTranslations();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const queryClient = useQueryClient();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [firstname, setFirstname] = useState("");
@@ -35,7 +35,7 @@ const SignupModal = () => {
 
   const closeModal = () => {
     setFirstname("");
-    setSignupModal(false)();
+    setSignupModal(false);
   };
 
   // Dismissed without a name: the user stays where they are and any pending

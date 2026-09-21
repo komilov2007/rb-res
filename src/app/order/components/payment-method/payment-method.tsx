@@ -6,7 +6,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import type { OrderFormValues } from "@/types/order";
 
 import PromoCode from "../promo-code";
@@ -18,7 +18,7 @@ const PaymentMethod = () => {
   const t = useTranslations();
   const { control } = useFormContext<OrderFormValues>();
   const deliveryType = useWatch({ control, name: "delivery_type" });
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
 
   // useSuspenseQuery always fetches on mount — unlike useQuery there's no
   // `enabled` escape hatch, so the query-owning subtree below is only ever

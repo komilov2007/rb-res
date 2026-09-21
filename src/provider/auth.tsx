@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 
-import { getUser } from "@/lib/user";
-import { useShopid } from "@/hooks/useShopId";
+import { getUser } from "@/utils/user";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const setAuth = useAuthStore((state) => state.setAuth);
 
   useEffect(() => {

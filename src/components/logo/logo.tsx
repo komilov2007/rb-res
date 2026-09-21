@@ -2,11 +2,11 @@
 
 import { ROUTER } from "@/constants/router";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 
 const Logo = () => {
   const { data, isLoading } = useGeneral();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const logo = data?.data.logo;
   const href = `${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`;
 

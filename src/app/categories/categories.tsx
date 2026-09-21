@@ -6,15 +6,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import MobileFooter from "@/app/[page]/components/mobile/mobile-footer";
+import MobileFooter from "@/components/mobile-footer";
 
-import Footer from "@/app/[page]/components/footer";
-import Header from "@/app/[page]/components/header";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { getCategories } from "@/apis/categories";
 import Button from "@/components/ui/button";
-import { CategoryTileSkeleton } from "@/components/ui/skleton";
+import { CategoryTileSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { normalizeCategories } from "@/utils/product";
 
@@ -23,7 +23,7 @@ import { normalizeCategories } from "@/utils/product";
 const CategoriesContent = () => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   // Same query as the home categories strip, so the list is shared/cached.
   const { data, isLoading } = useQuery({
     enabled: hasShopId,

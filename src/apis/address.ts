@@ -1,5 +1,5 @@
 import { request } from "@/configs/requests";
-import { getUser } from "@/lib/user";
+import { getUser } from "@/utils/user";
 import { isServer } from "@/utils/is-server";
 
 export type CreateAddressPayload = {
@@ -66,7 +66,7 @@ export const updateAddressStatus = async (id: number) => {
 };
 
 export const deleteAddress = async (id: number) => {
-  return await request.delete(
+  return await request.delete<unknown>(
     `webapp/user/profile/address/${id}/delete`,
     uzHeaders,
   );
@@ -85,5 +85,4 @@ export const getAddresses = async () => {
     uzHeaders,
   );
 };
-
 

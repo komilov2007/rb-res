@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 import { getNotifications, normalizeNotifications } from "@/apis/notification";
 import Button from "@/components/ui/button";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { formatOrderDate } from "@/utils/format-date";
 
@@ -27,7 +27,7 @@ const NotificationSkeleton = () => (
 
 const NotificationsContent = () => {
   const t = useTranslations();
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   const customerId = useAuthStore((state) => state.auth?.customer);
   const hasAccess = useAuthStore((state) => state.hasAccess);
 

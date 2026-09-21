@@ -1,15 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { getBranches } from "@/apis/branches";
-import { getShortAddress } from "@/app/[page]/components/branch-selection/utils";
-import { useShopid } from "@/hooks/useShopId";
+import { getShortAddress } from "@/components/branch-selection/utils";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import type { BranchProps } from "@/types/branch";
 import type { ProductProps } from "@/types/product";
+import { useBranches } from "@/hooks/useBranches";
 
 type UnavailableBranchListProps = {
   product: ProductProps;
@@ -32,12 +30,7 @@ const UnavailableBranchList = ({
 }: UnavailableBranchListProps) => {
   const t = useTranslations();
   const currentBranchId = useBranchSelectionStore((state) => state.branchId);
-  const { shopid, hasShopId } = useShopid();
-  const { data, isLoading } = useQuery({
-    enabled: hasShopId,
-    queryKey: ["branches", shopid],
-    queryFn: () => getBranches(shopid as string),
-  });
+  const { data, isLoading } = useBranches();
 
   const allBranches = data?.data ?? [];
   const currentBranchName = allBranches.find(

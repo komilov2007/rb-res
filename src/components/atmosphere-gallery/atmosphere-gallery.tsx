@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import GalleryArrow from "./components/gallery-arrow";
 import GalleryModal from "./components/gallery-modal";
 import GalleryStyles from "./components/gallery-styles";
-import { galleryImages, posterSrc, videoSrc } from "./constants";
+import { galleryImages, posterSrc, videoSrc } from "@/constants/atmosphere";
 
 const AtmosphereGallery = () => {
   const t = useTranslations();
@@ -22,46 +22,46 @@ const AtmosphereGallery = () => {
   };
 
   return (
-    <div className="mt-4">
-      <div className="grid items-center gap-7 lg:grid-cols-[1.35fr_0.85fr] lg:gap-9">
+    <div className="lg:mt-4">
+      <div className="grid items-center gap-5 lg:grid-cols-[1.35fr_0.85fr] lg:gap-9">
         <div className="overflow-hidden rounded-l-xl rounded-r-[44px] bg-black lg:rounded-r-[96px]">
           <video
             controls
             muted
             playsInline
             poster={posterSrc}
-            className="h-[230px] w-full object-cover lg:h-[370px]"
+            className="h-[210px] w-full object-cover lg:h-[370px]"
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
         </div>
 
         <div className="lg:pl-2">
-          <p className="text-xs font-bold uppercase tracking-[0.45em] text-black">
+          <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-black lg:text-xs lg:tracking-[0.45em]">
             {t("booking_gallery_eyebrow")}
           </p>
-          <div className="mt-4 flex items-center gap-2">
+          <div className="mt-3 flex items-center gap-2 lg:mt-4">
             <span className="h-px w-14 bg-black" />
             <span className="h-1.5 w-1.5 rounded-full bg-black" />
             <span className="h-1.5 w-1.5 rounded-full bg-black/60" />
             <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
           </div>
-          <h2 className="mt-7 max-w-[430px] font-serif text-[42px] font-medium leading-[0.95] text-black lg:text-[64px]">
+          <h2 className="mt-4 max-w-[430px] font-serif text-[36px] font-medium leading-[0.95] text-black lg:mt-7 lg:text-[64px]">
             {t("booking_gallery_title")}
           </h2>
-          <p className="mt-6 max-w-[520px] text-sm font-medium leading-7 text-gray220 lg:text-base">
+          <p className="mt-3 max-w-[520px] text-sm font-medium leading-6 text-gray220 lg:mt-6 lg:text-base lg:leading-7">
             {t("booking_gallery_description")}
           </p>
         </div>
       </div>
 
-      <div className="group relative mt-8 overflow-hidden">
+      <div className="group relative -mx-4 mt-6 overflow-hidden lg:mx-0 lg:mt-8">
         <div
           ref={scrollRef}
           className="scroll-hidden overflow-x-auto"
           style={{ scrollbarWidth: "none" }}
         >
-          <div className="atmosphere-marquee flex w-max gap-3 lg:gap-4">
+          <div className="atmosphere-marquee flex w-max gap-2 lg:gap-4">
             {loopImages.map((image, index) => (
               <button
                 key={`${image.src}-${index}`}

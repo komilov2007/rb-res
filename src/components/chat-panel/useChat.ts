@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
 import { getChatList, sendChatFile } from "@/apis/chat";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { useChatStore } from "@/stores/chat";
 
@@ -17,12 +17,11 @@ type SelectedFileState = { file: File; previewUrl: string | null } | null;
 
 export const useChat = () => {
   const t = useTranslations();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const customerId = useAuthStore((state) => state.auth?.customer);
 
   const messages = useChatStore((state) => state.messages);
   const hasMore = useChatStore((state) => state.hasMore);
-  const page = useChatStore((state) => state.page);
   const setInitialMessages = useChatStore((state) => state.setInitialMessages);
   const appendOlderMessages = useChatStore(
     (state) => state.appendOlderMessages,
@@ -112,7 +111,10 @@ export const useChat = () => {
     try {
       const response = await getChatList(customerId, {
         limit: PAGE_SIZE,
-        offset: page * PAGE_SIZE,
+        // Everything already on screen, not page × size: messages that
+        // arrived over the socket shift the server list, so a page-based
+        // offset would re-fetch rows already shown (duplicate keys).
+        offset: messages.length,
       });
 
       appendOlderMessages(response.data.results, response.data.count);

@@ -13,9 +13,10 @@ import RemoveCartDialog from "./components/trash-dialog";
 import { useCartFooter } from "./components/cart-footer/useCartFooter";
 import { getCartList } from "@/apis/cart";
 import { getDeliveryCalculation } from "@/apis/order";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useAuthStore } from "@/stores/auth";
 import { useGeneral } from "@/hooks/useGeneral";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { getCartTotal, normalizeCartItems } from "@/utils/cart";
 
 const CartDrawer = () => {
@@ -27,7 +28,7 @@ const CartDrawer = () => {
   const customerId = useAuthStore((state) => state.auth?.customer);
   const latitude = useLocationStore((state) => state.latitude);
   const longitude = useLocationStore((state) => state.longitude);
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   const { data: general } = useGeneral();
 
   const isMobile = cartVariant === "mobile";
@@ -56,25 +57,40 @@ const CartDrawer = () => {
     refetchOnMount: "always",
     staleTime: 0,
   });
+  // Delivery price is calculated once per cart opening, not on every
+  // counter tap: the total is snapshotted when the drawer opens (or when
+  // the first non-empty total shows up) and cleared when it closes.
+  const [calculationTotal, setCalculationTotal] = useState<number | null>(
+    null,
+  );
+
+  if (isCartOpen && calculationTotal === null && total > 0) {
+    setCalculationTotal(total);
+  }
+
+  if (!isCartOpen && calculationTotal !== null) {
+    setCalculationTotal(null);
+  }
+
   const { data: deliveryCalculation } = useQuery({
     enabled:
       isCartOpen &&
       hasShopId &&
       Boolean(customerId) &&
-      total > 0 &&
+      calculationTotal !== null &&
       (!usesProviderDelivery || (Boolean(latitude) && Boolean(longitude))),
     queryKey: [
-      "cart-delivery-calculation",
+      REACT_QUERY_KEYS.CART_DELIVERY_CALCULATION,
       shopid,
       customerId,
-      total,
+      calculationTotal,
       usesProviderDelivery ? shopDeliveryService : null,
       usesProviderDelivery ? latitude : null,
       usesProviderDelivery ? longitude : null,
     ],
     queryFn: () =>
       getDeliveryCalculation(customerId as number, shopid as string, {
-        total_amount: total,
+        total_amount: calculationTotal as number,
         ...(usesProviderDelivery
           ? {
               service_type: shopDeliveryService,

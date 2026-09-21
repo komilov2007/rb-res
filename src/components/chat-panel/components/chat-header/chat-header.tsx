@@ -1,17 +1,21 @@
 "use client";
 
-import { ChevronLeft, Headphones, Phone } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ChevronLeft, Headphones, Phone, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 import { useGeneral } from "@/hooks/useGeneral";
 
+type ChatHeaderProps = {
+  onBack: () => void;
+  // "close" (X) inside the desktop modal, "back" (‹) on the /chat page.
+  backIcon?: "back" | "close";
+};
+
 // Support online status is presentational copy matching the design, not
 // backend data — no presence/typing API is documented for chat.
-const ChatHeader = () => {
+const ChatHeader = ({ onBack, backIcon = "back" }: ChatHeaderProps) => {
   const t = useTranslations();
-  const router = useRouter();
   const { data: general } = useGeneral();
   const phone = general?.data.business_phone;
 
@@ -22,11 +26,11 @@ const ChatHeader = () => {
           type="button"
           variant="plain"
           size="none"
-          onClick={() => router.back()}
-          aria-label={t("common_back")}
+          onClick={onBack}
+          aria-label={backIcon === "close" ? t("common_close") : t("common_back")}
           className="shrink-0 text-black"
         >
-          <ChevronLeft size={22} />
+          {backIcon === "close" ? <X size={20} /> : <ChevronLeft size={22} />}
         </Button>
 
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray10 text-gray220">

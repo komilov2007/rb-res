@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 import type { ProductProps } from "@/types/product";
@@ -29,11 +29,20 @@ export const useDesktopView = ({ categoryId, products }: UseDesktopViewParams) =
 
   const [minBound, maxBound] = priceBounds;
 
-  // Switching categories shouldn't carry over the previous one's filter.
-  useEffect(() => {
+  // Switching categories (or the loaded products' price bounds changing)
+  // shouldn't carry over the previous filter. Reset during render when the
+  // inputs change (React's "storing information from previous renders"
+  // pattern) instead of in an effect, which cost an extra render. Not a
+  // `key` on DesktopView: the bounds are only known here, and remounting
+  // the whole view on every product-set change would recreate its DOM.
+  const resetKey = `${categoryId}:${minBound}:${maxBound}`;
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey);
     setPriceRange([minBound, maxBound]);
     setSort("default");
-  }, [categoryId, minBound, maxBound]);
+  }
 
   // Dragging the slider fires setPriceRange on every step — debounced so the
   // grid isn't re-filtered on each intermediate value, only once dragging

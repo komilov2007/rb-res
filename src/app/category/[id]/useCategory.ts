@@ -5,16 +5,18 @@ import { useParams } from "next/navigation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { getCategories } from "@/apis/categories";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
-import { productsQueryOptions } from "@/app/[page]/components/products/useProduct";
-import { useShopid } from "@/hooks/useShopId";
+import { useBranchSelection } from "@/components/branch-selection";
+import {
+  productsQueryOptions,
+} from "@/app/[page]/components/products/useProduct";
+import { useShopId } from "@/hooks/useShopId";
 import type { ProductProps } from "@/types/product";
 import { normalizeCategories } from "@/utils/product";
 
 export const useCategory = () => {
   const { id } = useParams<{ id: string }>();
   const categoryId = Number(id);
-  const { shopid, hasShopId } = useShopid();
+  const { shopid, hasShopId } = useShopId();
   const { branchId } = useBranchSelection();
 
   // Same query as the home product list (shared cache). No category filter

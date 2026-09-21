@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 import ImageViewer from "@/components/image-viewer";
 import { ROUTER } from "@/constants/router";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import type { ChatFileProps, MessageProps } from "@/types/chat";
 import { formatChatTime } from "@/utils/format-date";
 import { formatFileSize } from "@/utils/format-file";
@@ -84,7 +84,7 @@ const MessageFile = ({ file }: { file: ChatFileProps }) => {
 const MessageItem = ({ message }: MessageItemProps) => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const isOwn = !message.is_bot;
   const time = formatChatTime(message.created_at);
 

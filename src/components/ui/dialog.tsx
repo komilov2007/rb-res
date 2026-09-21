@@ -4,7 +4,7 @@ import * as React from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { useTranslations } from "next-intl";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import XButton from "@/components/ui/x-button";
 

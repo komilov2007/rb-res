@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { PackageSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { usePage } from "@/app/my-orders/usePage";
+import { useMyOrders } from "@/hooks/useMyOrders";
 import { useAuthStore } from "@/stores/auth";
 import { formatPhone, getLocalPhone } from "@/utils/format-number";
 import LoginRequired from "../components/login-required";
@@ -83,7 +83,7 @@ const OrdersContent = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const auth = useAuthStore((state) => state.auth);
   const { orders, isActive, setIsActive, isLoading, isFetchingNextPage, bottomRef } =
-    usePage();
+    useMyOrders();
   // Keyed by order id so each card's expand/collapse is independent —
   // owned here rather than inside OrderDetailCard so there's no ambiguity
   // about whether that state could ever be shared between cards.

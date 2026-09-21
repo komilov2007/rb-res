@@ -4,7 +4,7 @@ import Button from "@/components/ui/button";
 import XButton from "@/components/ui/x-button";
 import { Trash2 } from "lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useLocationModal } from "./use-location-modal";
+import { useLocationModal } from "./useLocationModal";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
@@ -150,7 +150,7 @@ const LocationModal = () => {
       <>
         <Dialog
           open={state.locationModal && !state.detailsModal}
-          onOpenChange={actions.setLocationModal(false)}
+          onOpenChange={() => actions.setLocationModal(false)}
         >
           <DialogContent
             showCloseButton={false}
@@ -161,7 +161,7 @@ const LocationModal = () => {
         </Dialog>
         <Dialog
           open={state.locationModal && state.detailsModal}
-          onOpenChange={actions.setLocationModal(false)}
+          onOpenChange={() => actions.setLocationModal(false)}
         >
           <DialogContent
             showCloseButton={false}
@@ -190,9 +190,4 @@ const LocationModal = () => {
 };
 
 export default LocationModal;
-
-
-
-
-
 

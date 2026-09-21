@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { cancelOrder } from "@/apis/order";
 import Button from "@/components/ui/button";
 import {
   Dialog,
@@ -13,8 +11,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
-import { useShopid } from "@/hooks/useShopId";
+import { useCancelOrder } from "@/hooks/useCancelOrder";
 import type { MyOrderListItem, MyOrderListItemProduct } from "@/types/order";
 import { formatOrderDate } from "@/utils/format-date";
 import { formatPrice } from "@/utils/format-price";
@@ -80,8 +77,6 @@ const OrderDetailCard = ({
   onToggleExpand,
 }: OrderDetailCardProps) => {
   const t = useTranslations();
-  const { shopid } = useShopid();
-  const queryClient = useQueryClient();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const isPickup =
@@ -93,14 +88,8 @@ const OrderDetailCard = ({
   // constraint, not every "not yet delivered" status.
   const isCancellable = order.status.status === "NEW";
 
-  const cancelMutation = useMutation({
-    mutationFn: () => cancelOrder(order.id, shopid as string),
-    onSuccess: () => {
-      setConfirmOpen(false);
-      void queryClient.invalidateQueries({
-        queryKey: [REACT_QUERY_KEYS.MY_ORDERS],
-      });
-    },
+  const { cancelOrder, isCancelling } = useCancelOrder(order.id, {
+    onSuccess: () => setConfirmOpen(false),
   });
 
   return (
@@ -208,8 +197,8 @@ const OrderDetailCard = ({
               type="button"
               variant="plain"
               size="lg"
-              disabled={cancelMutation.isPending}
-              onClick={() => cancelMutation.mutate()}
+              disabled={isCancelling}
+              onClick={() => cancelOrder()}
               className="rounded-2xl bg-red/10 text-red"
             >
               {t("common_confirm")}

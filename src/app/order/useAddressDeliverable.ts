@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { checkDeliveryAddress, type AddressProps } from "@/apis/address";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import type { DeliveryType } from "@/types/order";
 
 // Translation key — rendered via t() in the address section.
@@ -19,7 +19,7 @@ export const useAddressDeliverable = (
   deliveryType: DeliveryType | null | undefined,
   address: AddressProps | null,
 ) => {
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const latitude = address?.latitude;
   const longitude = address?.longitude;
 

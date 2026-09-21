@@ -13,5 +13,8 @@ export const ROUTER = {
   PROFILE_ADDRESSES: "/profile/addresses",
   PROFILE_NOTIFICATIONS: "/profile/notifications",
   PROFILE_ABOUT: "/profile/about",
+  PROFILE_LANGUAGE: "/profile/language",
   CHAT: "/chat",
+  BOOKING: "/booking",
+  ATMOSPHERE: "/atmosphere",
 };

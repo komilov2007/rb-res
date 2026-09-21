@@ -2,7 +2,6 @@ import { create } from "zustand";
 import type { MessageProps } from "@/types/chat";
 
 type ChatStoreProps = {
-  page: number;
   count: number;
   messages: MessageProps[];
   hasMore: boolean;
@@ -16,8 +15,7 @@ type ChatStoreProps = {
   reset: () => void;
 };
 
-const initialState: Pick<ChatStoreProps, "page" | "count" | "messages" | "hasMore"> = {
-  page: 1,
+const initialState: Pick<ChatStoreProps, "count" | "messages" | "hasMore"> = {
   count: 0,
   messages: [],
   hasMore: true,
@@ -27,17 +25,21 @@ export const useChatStore = create<ChatStoreProps>()((set) => ({
   ...initialState,
 
   setInitialMessages: (messages, count) => {
-    set({ messages, count, page: 1, hasMore: messages.length < count });
+    set({ messages, count, hasMore: messages.length < count });
   },
 
   appendOlderMessages: (older, count) => {
     set((state) => {
-      const messages = [...state.messages, ...older];
+      // Never show the same message twice, whatever the offset returned.
+      const seen = new Set(state.messages.map((message) => message.id));
+      const messages = [
+        ...state.messages,
+        ...older.filter((message) => !seen.has(message.id)),
+      ];
 
       return {
         messages,
         count,
-        page: state.page + 1,
         hasMore: messages.length < count,
       };
     });

@@ -2,7 +2,7 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 
 type QueryValue = [string, string | null | undefined];
 
-export const createQueryString = (
+const createQueryString = (
   values: QueryValue[],
   searchParams: ReadonlyURLSearchParams,
 ) => {

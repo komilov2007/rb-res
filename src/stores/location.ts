@@ -24,7 +24,7 @@ type LocationStoreProps = {
   locationMapRequest: boolean;
   setAddress: (address: string, meta?: LocationAddressMeta) => void;
   setEditingAddress: (address: AddressProps | null) => void;
-  setLocationModal: (locationModal: boolean) => () => void;
+  setLocationModal: (locationModal: boolean) => void;
   openLocationMap: () => void;
   clearLocationMapRequest: () => void;
   clearLocation: () => void;
@@ -58,7 +58,7 @@ export const useLocationStore = create<LocationStoreProps>()(
         set({ editingAddress });
       },
 
-      setLocationModal: (locationModal) => () => {
+      setLocationModal: (locationModal) => {
         set({ locationModal });
       },
 

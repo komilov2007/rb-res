@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { clearUser, getUser, setUser } from "@/lib/user";
+import { clearUser, getUser, setUser } from "@/utils/user";
 import type { AuthProps } from "@/types/auth";
 import { isServer } from "@/utils/is-server";
 

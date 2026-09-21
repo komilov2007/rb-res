@@ -7,7 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
-import { useBranchSelection } from "@/app/[page]/components/branch-selection";
+import { useBranchSelection } from "@/components/branch-selection";
 import { ROUTER } from "@/constants/router";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";

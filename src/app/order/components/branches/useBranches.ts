@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 
 import { useBoolean } from "@/hooks/useBoolean";
-import { useShopid } from "@/hooks/useShopId";
+import { useShopId } from "@/hooks/useShopId";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
@@ -46,7 +46,7 @@ type UseBranchesProps = {
 
 export const useBranches = ({ branches, value }: UseBranchesProps) => {
   const { setValue } = useFormContext<OrderFormValues>();
-  const { shopid } = useShopid();
+  const { shopid } = useShopId();
   const setPickup = useBranchSelectionStore((state) => state.setPickup);
   const carts = useCartStore((state) => state.carts);
   const latitude = useLocationStore((state) => state.latitude);
