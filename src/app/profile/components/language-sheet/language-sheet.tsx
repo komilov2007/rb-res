@@ -44,7 +44,7 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
           onClose();
         }}
         className={`flex h-11 items-center gap-3 rounded-xl border px-3 text-left transition-colors ${
-          checked ? "border-primary bg-gray10" : "border-gray180"
+          checked ? "border-green-500 bg-green-500/10" : "border-gray180"
         }`}
       >
         <Icon />
@@ -53,7 +53,9 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
         </span>
         <span
           className={`grid h-5 w-5 place-items-center rounded-full border-2 ${
-            checked ? "border-primary bg-primary text-white" : "border-gray180"
+            checked
+              ? "border-green-500 bg-green-500 text-white"
+              : "border-gray180"
           }`}
         >
           {checked && <Check size={12} strokeWidth={3} />}

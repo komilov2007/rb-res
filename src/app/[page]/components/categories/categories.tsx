@@ -6,7 +6,7 @@ import { ROUTER } from "@/constants/router";
 import { CategoriesSkeleton } from "@/components/ui/skleton";
 import { useShopid } from "@/hooks/useShopId";
 import type { CategoriesProps } from "@/types/categories";
-import { handleImageFallback } from "@/utils/image";
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { normalizeCategories } from "@/utils/product";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
@@ -398,7 +398,7 @@ const Categories = () => {
         } ${getMobileImageClassName()}`}
       >
         <img
-          src={item.photo}
+          src={getImageSrc(item.photo)}
           alt={item.name}
           onError={handleImageFallback}
           className={`h-full w-full object-cover ${
@@ -468,7 +468,7 @@ const Categories = () => {
         >
           <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">
             <img
-              src={item.photo}
+              src={getImageSrc(item.photo)}
               alt={item.name}
               onError={handleImageFallback}
               className="h-full w-full object-cover"
@@ -489,7 +489,7 @@ const Categories = () => {
         }`}
       >
         <img
-          src={item.photo}
+          src={getImageSrc(item.photo)}
           alt={item.name}
           onError={handleImageFallback}
           className="absolute inset-0 h-full w-full object-cover brightness-75"

@@ -77,7 +77,7 @@ const SelectItem = ({
     >
       <ItemText>{children}</ItemText>
       <ItemIndicator className="absolute right-2">
-        <Check size={16} className="text-blue30" />
+        <Check size={16} className="text-green-500" />
       </ItemIndicator>
     </Item>
   );

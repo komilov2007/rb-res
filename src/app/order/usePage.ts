@@ -142,10 +142,12 @@ export const usePage = () => {
   const { data: general, refetch: refetchGeneral } = useGeneral();
   const openClosedModal = useShopStatusStore((state) => state.openClosedModal);
   const { data: profile } = useProfile();
-  // The pickup branch is picked only on the home page now (src/app/[page]/
-  // components/branch-selection) — this just mirrors it into the form, see
-  // the sync effect below. Already null whenever home isn't actually in
-  // PICKUP mode (useBranchSelection's own logic).
+  // The shared pickup branch (home selector, header chip, product
+  // availability) mirrored into the form — see the sync effect below. The
+  // order page's own branch picker writes back to that same store rather
+  // than only to the form, so this stays the single source of truth.
+  // Already null whenever home isn't actually in PICKUP mode
+  // (useBranchSelection's own logic).
   const { branchId: homeBranchId } = useBranchSelection();
   const addressId = useLocationStore((state) => state.addressId);
   const storeAddress = useLocationStore((state) => state.address);
@@ -363,12 +365,13 @@ export const usePage = () => {
     form,
   ]);
 
-  // The pickup branch field is read-only on this page now (src/app/order/
-  // components/branches) — it always mirrors the branch chosen on the home
-  // page's own selector, never a value picked here. homeBranchId is already
-  // null whenever home isn't actually in PICKUP mode (useBranchSelection's
-  // own logic), so this only needs to gate on the order's *own* delivery
-  // type being a pickup one.
+  // Keeps the form's branch equal to the shared selection. Picking a branch
+  // in this page's own picker (src/app/order/components/branches) calls
+  // setPickup, so homeBranchId changes and this effect re-applies the same
+  // value — one direction of sync, no fight between the two. homeBranchId is
+  // already null whenever home isn't actually in PICKUP mode
+  // (useBranchSelection's own logic), so this only needs to gate on the
+  // order's *own* delivery type being a pickup one.
   useEffect(() => {
     if (!isPickupType(deliveryType)) return;
 

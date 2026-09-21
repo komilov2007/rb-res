@@ -242,9 +242,13 @@
     "branches": {
       "title": "Restoran adresi",
       "branch": "Restoran şubesi",
-      "view": "Şubeyi görüntüle",
-      "select_on_home": "Ana sayfadan bir şube seçin.",
-      "not_found": "Şube bulunamadı."
+      "change": "Şubeyi değiştir",
+      "select": "Şube seç",
+      "select_hint": "Siparişi teslim alacağınız şubeyi seçin.",
+      "not_found": "Şube bulunamadı.",
+      "picker_title": "Şube seçin",
+      "picker_none_available": "Hiçbir şubede sepetinizdeki tüm ürünler yok. Sepeti düzenleyin veya teslimatı seçin.",
+      "picker_missing": "Bu şubede yok: {names}"
     },
     "address": {
       "not_selected": "Adres seçilmedi",

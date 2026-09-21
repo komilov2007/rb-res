@@ -61,7 +61,9 @@ const LocationAddresses = ({
                 type="button"
                 onClick={() => onSelect(item)}
                 className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border ${
-                  checked ? "border-primary bg-primary" : "border-gray220 bg-white"
+                  checked
+                    ? "border-green-500 bg-green-500"
+                    : "border-gray220 bg-white"
                 }`}
                 aria-label={t("location.select_address_aria")}
               >

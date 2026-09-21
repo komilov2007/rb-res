@@ -242,9 +242,13 @@
     "branches": {
       "title": "Restaurant address",
       "branch": "Restaurant branch",
-      "view": "View branch",
-      "select_on_home": "Select a branch on the home page.",
-      "not_found": "No branches found."
+      "change": "Change branch",
+      "select": "Select branch",
+      "select_hint": "Choose a branch to pick your order up from.",
+      "not_found": "No branches found.",
+      "picker_title": "Select a branch",
+      "picker_none_available": "No branch has every item in your cart. Edit your cart or choose delivery instead.",
+      "picker_missing": "Not available here: {names}"
     },
     "address": {
       "not_selected": "No address selected",

@@ -44,7 +44,9 @@ const TABS: { value: BranchSelectionServiceType; label: string }[] = [
 
 const getRowClassName = (checked: boolean) =>
   `flex min-h-16 w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left transition-colors ${
-    checked ? "border-black bg-gray10" : "border-gray180 hover:border-gray220"
+    checked
+      ? "border-green-500 bg-green-500/10"
+      : "border-gray180 hover:border-gray220"
   }`;
 
 const SectionLabel = ({ children }: { children: ReactNode }) => (
@@ -71,7 +73,7 @@ const RadioMark = ({ checked }: { checked: boolean }) => (
   <span
     className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 ${
       checked
-        ? "border-primary bg-primary text-white"
+        ? "border-green-500 bg-green-500 text-white"
         : "border-gray180 bg-white"
     }`}
   >

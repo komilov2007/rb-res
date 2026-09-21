@@ -1,4 +1,4 @@
-﻿import { CATEGORY_BANNER_IMAGE } from "../../constants";
+﻿import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type CategoryBannerProps = {
   title: string;
@@ -15,7 +15,7 @@ const CategoryBanner = ({
   variant = "default",
   sizeVariant = "md",
 }: CategoryBannerProps) => {
-  const bannerImage = imageSrc ?? CATEGORY_BANNER_IMAGE;
+  const bannerImage = getImageSrc(imageSrc);
   const isDiscount = variant === "discount";
   const heightClassName =
     {
@@ -50,6 +50,7 @@ const CategoryBanner = ({
           <img
             className="h-full w-full border border-b-white object-cover"
             src={bannerImage}
+            onError={handleImageFallback}
             alt={title}
             loading="lazy"
           />

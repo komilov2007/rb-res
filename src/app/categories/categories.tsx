@@ -15,7 +15,7 @@ import Button from "@/components/ui/button";
 import { CategoryTileSkeleton } from "@/components/ui/skleton";
 import { ROUTER } from "@/constants/router";
 import { useShopid } from "@/hooks/useShopId";
-import { handleImageFallback } from "@/utils/image";
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { normalizeCategories } from "@/utils/product";
 
 // Every category as a tile in the home categories' style (photo with a
@@ -107,7 +107,7 @@ const CategoriesContent = () => {
                   className="relative flex aspect-square w-full items-end overflow-hidden rounded-xl bg-gray10 p-2 text-white transition-transform duration-300 active:scale-[0.98] lg:rounded-2xl lg:p-3"
                 >
                   <img
-                    src={category.photo}
+                    src={getImageSrc(category.photo)}
                     alt={category.name}
                     onError={handleImageFallback}
                     className="absolute inset-0 h-full w-full object-cover brightness-75"

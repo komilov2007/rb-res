@@ -10,7 +10,11 @@ import { useProductBranchPickerStore } from "@/stores/product-branch-picker";
 import { useProductDetailStore } from "@/stores/product-detail";
 import { useCartStore } from "@/stores/cart";
 import { formatPrice } from "@/utils/format-price";
-import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
+import {
+  getImageSrc,
+  handleImageFallback,
+  IMAGE_PLACEHOLDER_SRC,
+} from "@/utils/image";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
@@ -573,7 +577,7 @@ const ProductDetailMobile = () => {
                     }`}
                   >
                     <img
-                      src={photo}
+                      src={getImageSrc(photo)}
                       alt={`${detail.name} ${index + 1}`}
                       onError={handleImageFallback}
                       className="h-full w-full object-cover"

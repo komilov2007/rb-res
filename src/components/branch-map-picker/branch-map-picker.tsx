@@ -231,7 +231,7 @@ const BranchMapPicker = ({
                     >
                       <div
                         className={`flex flex-col gap-4 rounded-2xl bg-white p-5 ${
-                          branch.id === activeId ? "ring-2 ring-primary" : ""
+                          branch.id === activeId ? "ring-2 ring-green-500" : ""
                         }`}
                       >
                         <div className="flex items-start gap-2">

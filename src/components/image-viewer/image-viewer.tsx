@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type ImageViewerProps = {
   images: string[];
@@ -86,7 +87,8 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
         >
           {images[index] && (
             <img
-              src={images[index]}
+              src={getImageSrc(images[index])}
+              onError={handleImageFallback}
               alt=""
               className="max-h-full max-w-full select-none object-contain"
               draggable={false}
@@ -135,7 +137,8 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                 }`}
               >
                 <img
-                  src={image}
+                  src={getImageSrc(image)}
+                  onError={handleImageFallback}
                   alt=""
                   className="h-full w-full object-cover"
                   draggable={false}

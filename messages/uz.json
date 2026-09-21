@@ -242,9 +242,13 @@
     "branches": {
       "title": "Restoran manzili",
       "branch": "Restoran filiali",
-      "view": "Filialni ko'rish",
-      "select_on_home": "Bosh sahifada filialni tanlang.",
-      "not_found": "Filiallar topilmadi."
+      "change": "Filialni o'zgartirish",
+      "select": "Filialni tanlash",
+      "select_hint": "Buyurtmani olib ketish uchun filialni tanlang.",
+      "not_found": "Filiallar topilmadi.",
+      "picker_title": "Filialni tanlang",
+      "picker_none_available": "Hech bir filialda savatingizdagi barcha mahsulotlar mavjud emas. Savatni tahrirlang yoki yetkazib berishni tanlang.",
+      "picker_missing": "Bu filialda yo'q: {names}"
     },
     "address": {
       "not_selected": "Manzil tanlanmagan",

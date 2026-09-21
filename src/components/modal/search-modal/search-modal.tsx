@@ -11,7 +11,11 @@ import { normalizeCategories } from "@/utils/product";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatPrice } from "@/utils/format-price";
-import { IMAGE_PLACEHOLDER_SRC, handleImageFallback } from "@/utils/image";
+import {
+  IMAGE_PLACEHOLDER_SRC,
+  getImageSrc,
+  handleImageFallback,
+} from "@/utils/image";
 import { useProductDetailStore } from "@/stores/product-detail";
 import {
   ChevronRight,
@@ -118,7 +122,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white text-gray220">
                         {category.photo ? (
                           <img
-                            src={category.photo}
+                            src={getImageSrc(category.photo)}
                             alt=""
                             onError={handleImageFallback}
                             className="h-full w-full object-cover"

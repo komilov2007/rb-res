@@ -1,4 +1,4 @@
-﻿import { CATEGORY_BANNER_IMAGE } from "../../constants";
+﻿import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type CategoryBanner2Props = {
   title: string;
@@ -7,7 +7,7 @@ type CategoryBanner2Props = {
 };
 
 const CategoryBanner2 = ({ title, imageSrc, videoSrc }: CategoryBanner2Props) => {
-  const bannerImage = imageSrc ?? CATEGORY_BANNER_IMAGE;
+  const bannerImage = getImageSrc(imageSrc);
 
   return (
     <div className=" lg:flex lg:flex-col">
@@ -27,6 +27,7 @@ const CategoryBanner2 = ({ title, imageSrc, videoSrc }: CategoryBanner2Props) =>
             <img
               className="h-full w-full border border-b-white object-cover"
               src={bannerImage}
+              onError={handleImageFallback}
               alt={title}
               loading="lazy"
             />

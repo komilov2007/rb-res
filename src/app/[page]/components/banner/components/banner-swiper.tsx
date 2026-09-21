@@ -1,4 +1,5 @@
 import type { BannerProps } from "@/types/banner";
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { getBannerTarget } from "@/utils/banner";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -86,12 +87,13 @@ const BannerSwiper = ({
                   >
                     <source
                       media="(min-width: 1024px)"
-                      srcSet={banner.desktop_photo}
+                      srcSet={getImageSrc(banner.desktop_photo, banner.mobile_photo)}
                     />
                     <img
                       draggable={false}
                       className="h-full w-full object-cover shadow-2xs"
-                      src={banner.mobile_photo || banner.desktop_photo}
+                      src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
+                      onError={handleImageFallback}
                       alt={t("home.banner_alt")}
                     />
                   </picture>
@@ -101,7 +103,8 @@ const BannerSwiper = ({
                     className={`h-full w-full rounded-[16px] object-cover transition-opacity duration-500 shadow-2xs ${
                       isActive ? "opacity-100" : "opacity-55"
                     }`}
-                    src={banner.mobile_photo || banner.desktop_photo}
+                    src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
+                    onError={handleImageFallback}
                     alt={t("home.banner_alt")}
                   />
                 )
@@ -168,12 +171,13 @@ const BannerSwiper = ({
               <picture className="block h-full w-full">
                 <source
                   media="(min-width: 1024px)"
-                  srcSet={banner.desktop_photo}
+                  srcSet={getImageSrc(banner.desktop_photo, banner.mobile_photo)}
                 />
                 <img
                   draggable={false}
                   className="h-full w-full object-cover shadow-2xs"
-                  src={banner.mobile_photo || banner.desktop_photo}
+                  src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
+                  onError={handleImageFallback}
                   alt={t("home.banner_alt")}
                 />
               </picture>
@@ -181,7 +185,8 @@ const BannerSwiper = ({
               <img
                 draggable={false}
                 className="h-full w-full rounded-[16px] object-cover opacity-90 shadow-2xs"
-                src={banner.mobile_photo || banner.desktop_photo}
+                src={getImageSrc(banner.mobile_photo, banner.desktop_photo)}
+                onError={handleImageFallback}
                 alt={t("home.banner_alt")}
               />
             )}

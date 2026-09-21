@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import ImageViewer from "@/components/image-viewer";
-import { handleImageFallback } from "@/utils/image";
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type ProductDetailMediaProps = {
   image: string;
@@ -36,7 +36,7 @@ const ProductDetailMedia = ({
           sides — a slight crop is preferred over that empty margin. */}
       <div className="relative h-[45dvh] overflow-hidden rounded-[24px] bg-white lg:h-105 lg:rounded-none">
         <img
-          src={image}
+          src={getImageSrc(image)}
           alt={name}
           onError={handleImageFallback}
           onClick={() =>
@@ -67,7 +67,7 @@ const ProductDetailMedia = ({
               }`}
             >
               <img
-                src={photo}
+                src={getImageSrc(photo)}
                 alt={`${name} ${index + 1}`}
                 onError={handleImageFallback}
                 className="h-full w-full object-cover"
