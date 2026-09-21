@@ -21,10 +21,10 @@ const ShippingTime = () => {
     <section className="rounded-2xl bg-white p-4">
       <h2 className="flex items-center gap-2 text-sm font-bold text-black">
         <CalendarClock size={18} className="text-gray220" />
-        {t("order_page.shipping.title")}
+        {t("order_page_shipping_title")}
       </h2>
       <p className="mt-0.5 text-xs font-medium text-gray220">
-        {t("order_page.shipping.hint")}
+        {t("order_page_shipping_hint")}
       </p>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
@@ -36,7 +36,7 @@ const ShippingTime = () => {
             <div>
               <Input
                 type="date"
-                aria-label={t("order_page.shipping.date")}
+                aria-label={t("order_page_shipping_date")}
                 min={today}
                 wrapperClassName="!h-11 !rounded-xl !px-3"
                 className="text-black"
@@ -60,7 +60,7 @@ const ShippingTime = () => {
             <div>
               <Input
                 type="time"
-                aria-label={t("order_page.shipping.time")}
+                aria-label={t("order_page_shipping_time")}
                 wrapperClassName="!h-11 !rounded-xl !px-3"
                 className="text-black"
                 value={field.value ?? ""}

@@ -86,7 +86,7 @@ const OrderDetailCard = ({
 
   const isPickup =
     order.service_type === "PICKUP" || order.service_type === "BTS_PICKUP";
-  const locationLabel = isPickup ? t("orders.card.shop_address") : t("delivery_address");
+  const locationLabel = isPickup ? t("orders_card_shop_address") : t("delivery_address");
   const locationValue = isPickup ? order.branch : order.address;
   // Matches the confirmed rule on the order detail page (my-order-summary.tsx:
   // isCancellable = status === "NEW") — that's the verified backend
@@ -119,7 +119,7 @@ const OrderDetailCard = ({
 
       <div>
         <p className="text-xs font-normal text-gray220">
-          {t("orders.card.created_at")}
+          {t("orders_card_created_at")}
         </p>
         <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>
           {formatOrderDate(order.created_at).replace(" ", "; ")}
@@ -128,14 +128,14 @@ const OrderDetailCard = ({
 
       {customerName && (
         <div>
-          <p className="text-xs font-normal text-gray220">{t("orders.card.full_name")}</p>
+          <p className="text-xs font-normal text-gray220">{t("orders_card_full_name")}</p>
           <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>{customerName}</p>
         </div>
       )}
 
       {customerPhone && (
         <div>
-          <p className="text-xs font-normal text-gray220">{t("orders.card.phone_number")}</p>
+          <p className="text-xs font-normal text-gray220">{t("orders_card_phone_number")}</p>
           <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>{customerPhone}</p>
         </div>
       )}
@@ -165,7 +165,7 @@ const OrderDetailCard = ({
       </div>
 
       <div className="flex items-center justify-between border-t border-gray180/60 pt-3">
-        <span className="text-xs font-normal text-gray220">{t("orders.card.total_price")}</span>
+        <span className="text-xs font-normal text-gray220">{t("orders_card_total_price")}</span>
         <span className={VALUE_CLASS_NAME}>
           {formatPrice(order.amount)} {t("sum")}
         </span>
@@ -179,7 +179,7 @@ const OrderDetailCard = ({
           onClick={() => setConfirmOpen(true)}
           className="h-11 w-full rounded-xl bg-red/10 text-sm font-bold text-red"
         >
-          {t("orders.cancel.button")}
+          {t("orders_cancel_button")}
         </Button>
       )}
 
@@ -189,10 +189,10 @@ const OrderDetailCard = ({
           showCloseButton={false}
         >
           <DialogTitle className="text-center text-xl font-bold text-black">
-            {t("orders.cancel.confirm_title")}
+            {t("orders_cancel_confirm_title")}
           </DialogTitle>
           <DialogDescription className="text-center text-sm font-normal text-gray220">
-            {t("orders.card.cancel_description", { id: order.id })}
+            {t("orders_card_cancel_description", { id: order.id })}
           </DialogDescription>
           <div className="mt-2 grid grid-cols-2 gap-3">
             <Button

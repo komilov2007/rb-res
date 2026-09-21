@@ -23,17 +23,17 @@ const BonusPoint = () => {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-bold text-black">
-            {t("order_page.bonus.title")}
+            {t("order_page_bonus_title")}
           </h2>
           <p className="mt-0.5 text-xs font-medium text-gray220">
-            {t("order_page.bonus.rate", {
+            {t("order_page_bonus_rate", {
               amount: general?.data.cashback_amount ?? 0,
               currency: general?.data.currency?.code ?? "",
             })}
           </p>
         </div>
         <span className="shrink-0 rounded-full bg-gray10 px-3 py-1 text-sm font-bold text-black">
-          {t("order_page.bonus.balance", { ball: formatPrice(cashbackBall) })}
+          {t("order_page_bonus_balance", { ball: formatPrice(cashbackBall) })}
         </span>
       </div>
 
@@ -41,7 +41,7 @@ const BonusPoint = () => {
 
       <label className="flex items-center justify-between gap-3">
         <span className="text-sm font-normal text-black">
-          {t("order_page.bonus.use")}
+          {t("order_page_bonus_use")}
         </span>
         <Controller
           control={control}

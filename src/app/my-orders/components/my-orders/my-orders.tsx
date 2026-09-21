@@ -11,8 +11,8 @@ import { usePage } from "../../usePage";
 import OrderCard from "../order-card";
 
 const TABS = [
-  { key: true, label: "orders.tabs.active" },
-  { key: false, label: "orders.tabs.all" },
+  { key: true, label: "orders_tabs_active" },
+  { key: false, label: "orders_tabs_all" },
 ] as const;
 
 // Matches this project's established skeleton style (animate-pulse +
@@ -40,10 +40,10 @@ const EmptyOrders = () => {
         <PackageSearch size={28} strokeWidth={1.8} />
       </div>
       <h3 className="mt-4 text-base font-extrabold text-black">
-        {t("orders.empty_title")}
+        {t("orders_empty_title")}
       </h3>
       <p className="mt-2 max-w-[280px] text-sm leading-6 text-gray220">
-        {t("orders.empty_hint")}
+        {t("orders_empty_hint")}
       </p>
     </div>
   );

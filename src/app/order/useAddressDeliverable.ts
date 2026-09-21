@@ -5,7 +5,7 @@ import { useShopid } from "@/hooks/useShopId";
 import type { DeliveryType } from "@/types/order";
 
 // Translation key — rendered via t() in the address section.
-export const ADDRESS_NOT_DELIVERABLE_MESSAGE = "order_page.address.not_deliverable";
+export const ADDRESS_NOT_DELIVERABLE_MESSAGE = "order_page_address_not_deliverable";
 
 // Same check as rb-shop's order/components/address-deliverable — the backend
 // decides whether the selected address lies in one of the shop's delivery

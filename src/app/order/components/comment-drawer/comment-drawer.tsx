@@ -34,14 +34,14 @@ const CommentDrawer = ({ open, value, onClose, onSave }: CommentDrawerProps) => 
     <Sheet open={open} onOpenChange={(next) => !next && onClose()}>
       <SheetContent side="bottom" className="rounded-t-3xl">
         <SheetHeader>
-          <SheetTitle>{t("order_page.comment.title")}</SheetTitle>
+          <SheetTitle>{t("order_page_comment_title")}</SheetTitle>
         </SheetHeader>
 
         <div className="px-4 pb-2">
           <textarea
             autoFocus
             rows={4}
-            placeholder={t("order_page.comment.placeholder")}
+            placeholder={t("order_page_comment_placeholder")}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.

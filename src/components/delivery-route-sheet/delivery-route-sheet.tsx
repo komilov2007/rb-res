@@ -243,7 +243,7 @@ const DeliveryRouteSheet = ({
     const customerPlacemark = new api.Placemark(
       customerPoint,
       {
-        balloonContentHeader: t("orders.detail.delivery_address"),
+        balloonContentHeader: t("orders_detail_delivery_address"),
         balloonContentBody: address ?? "",
       },
       {
@@ -263,8 +263,8 @@ const DeliveryRouteSheet = ({
     // added once both points are known, so the branch chip isn't shown twice
     // (renderMarkers first runs with the branch alone, before geocoding).
     const chips = [
-      { point: origin, text: t("orders.route.chip_branch") },
-      { point: customerPoint, text: t("orders.detail.delivery_address") },
+      { point: origin, text: t("orders_route_chip_branch") },
+      { point: customerPoint, text: t("orders_detail_delivery_address") },
     ].map(({ point, text }) => {
       const chip = new api.Placemark(
         point,
@@ -356,7 +356,7 @@ const DeliveryRouteSheet = ({
             <ChevronLeft size={22} />
           </Button>
           <h1 className="text-base font-medium text-black">
-            {t("orders.route.title")}
+            {t("orders_route_title")}
           </h1>
         </div>
 
@@ -375,7 +375,7 @@ const DeliveryRouteSheet = ({
               </div>
               <div className="min-w-0 flex-1 pb-4">
                 <p className="text-[11px] uppercase tracking-wide text-gray220">
-                  {t("orders.route.from")}
+                  {t("orders_route_from")}
                 </p>
                 <p className="truncate text-sm text-black">
                   {getBranchLabel(branch.name)}
@@ -392,13 +392,13 @@ const DeliveryRouteSheet = ({
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] uppercase tracking-wide text-gray220">
-                  {t("orders.route.to")}
+                  {t("orders_route_to")}
                 </p>
                 {/* One line only: the short form (country/city dropped),
                     ellipsized if it's still too long — the full geocoded
                     text wrapped to 2-3 lines here. */}
                 <p className="truncate text-sm text-gray220">
-                  {address ? getShortAddress(address) : t("orders.route.address_missing")}
+                  {address ? getShortAddress(address) : t("orders_route_address_missing")}
                 </p>
               </div>
             </li>
@@ -508,7 +508,7 @@ const DeliveryRouteSheet = ({
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
               <MapPinned size={14} strokeWidth={2.4} />
             </span>
-            {t("orders.route.open_in_maps")}
+            {t("orders_route_open_in_maps")}
           </button>
         </div>
       </div>

@@ -47,7 +47,7 @@ export const useOrderPlacing = () => {
       });
     },
     onError: (error) => {
-      setCancelError(getApiErrorMessage(error, t("orders.cancel.failed")));
+      setCancelError(getApiErrorMessage(error, t("orders_cancel_failed")));
     },
   });
 

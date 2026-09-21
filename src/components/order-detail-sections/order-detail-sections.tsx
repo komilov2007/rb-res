@@ -43,11 +43,11 @@ const DELIVERY_TYPES: ServiceTypeValue[] = [
 // not a new backend contract, just copy for the already-confirmed
 // ServiceTypeValue enum.
 const SERVICE_TYPE_LABELS: Record<ServiceTypeValue, string> = {
-  PICKUP: "orders.service_types.PICKUP",
-  BTS_PICKUP: "orders.service_types.PICKUP",
-  DELIVERY: "orders.service_types.DELIVERY",
-  YANDEX_DELIVERY: "orders.service_types.YANDEX_DELIVERY",
-  NOOR_DELIVERY: "orders.service_types.NOOR_DELIVERY",
+  PICKUP: "orders_service_types_pickup",
+  BTS_PICKUP: "orders_service_types_pickup",
+  DELIVERY: "orders_service_types_delivery",
+  YANDEX_DELIVERY: "orders_service_types_yandex_delivery",
+  NOOR_DELIVERY: "orders_service_types_noor_delivery",
 };
 
 type OrderDetailSectionsProps = {
@@ -146,8 +146,8 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
             icon={isDelivery ? <MapPin size={13} /> : <Footprints size={13} />}
           >
             {isDelivery
-              ? t("orders.detail.delivery_address")
-              : t("orders.detail.pickup_address")}
+              ? t("orders_detail_delivery_address")
+              : t("orders_detail_pickup_address")}
           </SectionLabel>
           {isDelivery ? (
             // Delivery: one compact row for the customer's own delivery
@@ -165,7 +165,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-black">
-                  {t("orders.detail.delivery_address")}
+                  {t("orders_detail_delivery_address")}
                 </p>
                 {displayAddress && (
                   <p className="mt-0.5 truncate text-xs font-medium text-gray220">
@@ -188,7 +188,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-black">
-                  {t("orders.detail.branch_with_name", {
+                  {t("orders_detail_branch_with_name", {
                     name: detail.branch.name,
                   })}
                 </p>
@@ -210,7 +210,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               </span>
               <div className="min-w-0">
                 <p className="text-sm font-medium text-black">
-                  {t("orders.detail.branch_with_name", {
+                  {t("orders_detail_branch_with_name", {
                     name: detail.branch.name,
                   })}
                 </p>
@@ -226,7 +226,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
 
         <section className="py-5">
           <SectionLabel icon={<UtensilsCrossed size={13} />}>
-            {t("orders.detail.items_title")}
+            {t("orders_detail_items_title")}
           </SectionLabel>
           <ul className="mt-3 flex flex-col gap-3">
             {detail.items.map((item, index) => (
@@ -241,11 +241,11 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-black">
-                    {item.name ?? t("orders.detail.product_fallback")}
+                    {item.name ?? t("orders_detail_product_fallback")}
                   </p>
                   <p className="text-xs font-medium text-gray220">
                     {item.count ?? 1}{" "}
-                    {item.unit ?? t("orders.detail.unit_fallback")}
+                    {item.unit ?? t("orders_detail_unit_fallback")}
                   </p>
                 </div>
                 {typeof item.amount === "number" && (
@@ -260,11 +260,11 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
 
         <section className="py-5">
           <SectionLabel icon={<FileText size={13} />}>
-            {t("orders.detail.payment_info")}
+            {t("orders_detail_payment_info")}
           </SectionLabel>
           <div className="mt-3 flex flex-col gap-2.5">
             <InfoRow
-              label={t("orders.detail.products_price")}
+              label={t("orders_detail_products_price")}
               value={`${formatPrice(itemsSubtotal)} ${t("sum")}`}
             />
             {(hasDiscount || promoPercent !== null) && (
@@ -295,12 +295,12 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
             />
             {isDelivery && (
               <InfoRow
-                label={t("order_page.summary.delivery_price")}
+                label={t("order_page_summary_delivery_price")}
                 value={`${formatPrice(deliveryPrice)} ${t("sum")}`}
               />
             )}
             <InfoRow
-              label={t("orders.detail.payment_method")}
+              label={t("orders_detail_payment_method")}
               value={
                 <span className="inline-flex items-center gap-2">
                   <span className="flex h-5 shrink-0 items-center overflow-hidden [&_svg]:h-auto [&_svg]:max-h-5 [&_svg]:w-auto [&_svg]:max-w-14">
@@ -311,7 +311,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               }
             />
             <InfoRow
-              label={t("orders.detail.payment_status")}
+              label={t("orders_detail_payment_status")}
               valueClassName={detail.is_paid ? "text-green-500" : "text-red"}
               value={
                 <span className="inline-flex items-center gap-2">
@@ -321,8 +321,8 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
                     <AlertCircle size={14} />
                   )}
                   {detail.is_paid
-                    ? t("orders.detail.paid")
-                    : t("orders.detail.unpaid")}
+                    ? t("orders_detail_paid")
+                    : t("orders_detail_unpaid")}
                 </span>
               }
             />
@@ -331,7 +331,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
           <div className="mt-3 border-t border-gray180 pt-3">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-black">
-                {t("orders.detail.total_payment")}:
+                {t("orders_detail_total_payment")}:
               </span>
               <span className="text-xl font-medium text-black">
                 {formatPrice(amount)} {t("sum")}

@@ -187,7 +187,7 @@ const BranchInfoSheet = ({
             <ChevronLeft size={22} />
           </Button>
           <h1 className="text-base font-extrabold text-black">
-            {t("orders.branch_info.title")}
+            {t("orders_branch_info_title")}
           </h1>
         </div>
 
@@ -213,7 +213,7 @@ const BranchInfoSheet = ({
             <hr className="my-3 border-gray180" />
 
             <div>
-              <p className="text-xs font-bold text-black">{t("orders.branch_info.schedule")}</p>
+              <p className="text-xs font-bold text-black">{t("orders_branch_info_schedule")}</p>
               <ul className="mt-1.5 flex flex-col gap-1">
                 {WEEKDAYS.map((day, index) => {
                   const dayNumber = index + 1;
@@ -320,7 +320,7 @@ const BranchInfoSheet = ({
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
               <MapPinned size={14} strokeWidth={2.4} />
             </span>
-            {t("orders.branch_info.go_to_address")}
+            {t("orders_branch_info_go_to_address")}
           </button>
         </div>
       </div>

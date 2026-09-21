@@ -56,7 +56,7 @@ const CancelOrder = ({
           ) : (
             <Ban size={17} />
           )}
-          {isCancelling ? t("orders.cancel.cancelling") : t("orders.cancel.button")}
+          {isCancelling ? t("orders_cancel_cancelling") : t("orders_cancel_button")}
         </Button>
         {cancelError && (
           <span className="mt-2 block text-xs text-red">{cancelError}</span>
@@ -64,9 +64,9 @@ const CancelOrder = ({
 
         <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
           <DialogContent>
-            <DialogTitle>{t("orders.cancel.confirm_title")}</DialogTitle>
+            <DialogTitle>{t("orders_cancel_confirm_title")}</DialogTitle>
             <DialogDescription>
-              {t("orders.cancel.confirm_description")}
+              {t("orders_cancel_confirm_description")}
             </DialogDescription>
             <DialogFooter className="flex-row gap-2">
               <Button
@@ -89,7 +89,7 @@ const CancelOrder = ({
                   setConfirmOpen(false);
                 }}
               >
-                {t("orders.cancel.confirm_yes")}
+                {t("orders_cancel_confirm_yes")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -105,7 +105,7 @@ const CancelOrder = ({
         className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary10 text-sm font-medium text-primary"
       >
         <Phone size={16} />
-        {t("orders.cancel.call_shop")}
+        {t("orders_cancel_call_shop")}
       </a>
     );
   }

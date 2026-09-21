@@ -58,7 +58,7 @@ const Branches = ({
       ) : (
         <>
           <h2 className="text-sm font-bold text-black">
-            {t("order_page.branches.title")}
+            {t("order_page_branches_title")}
           </h2>
 
           {selectedBranch ? (
@@ -91,13 +91,13 @@ const Branches = ({
                 onClick={picker.setTrue}
                 className="mt-3 w-full justify-center"
               >
-                {t("order_page.branches.change")}
+                {t("order_page_branches_change")}
               </Button>
             </>
           ) : (
             <>
               <p className="pt-0.5 text-xs font-medium text-gray220">
-                {t("order_page.branches.select_hint")}
+                {t("order_page_branches_select_hint")}
               </p>
               <Button
                 type="button"
@@ -106,7 +106,7 @@ const Branches = ({
                 onClick={picker.setTrue}
                 className="mt-3 w-full justify-center"
               >
-                {t("order_page.branches.select")}
+                {t("order_page_branches_select")}
               </Button>
             </>
           )}
@@ -119,7 +119,7 @@ const Branches = ({
 
       {isError && (
         <p className="mt-2 px-1 text-xs text-gray220">
-          {t("order_page.branches.not_found")}
+          {t("order_page_branches_not_found")}
         </p>
       )}
 

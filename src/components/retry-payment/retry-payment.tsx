@@ -38,7 +38,7 @@ const RetryPayment = ({
       className="font-medium"
     >
       <CreditCard size={17} />
-      {t("orders.pay_amount", {
+      {t("orders_pay_amount", {
         amount: `${formatPrice(amount)} ${t("sum")}`,
       })}
     </Button>

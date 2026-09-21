@@ -29,7 +29,7 @@ const PaymentMethod = () => {
   return (
     <section className="rounded-2xl bg-white p-4">
       <h2 className="text-sm font-bold text-black">
-        {t("order_page.payment.title")}
+        {t("order_page_payment_title")}
       </h2>
 
       {isReady ? (
@@ -41,7 +41,7 @@ const PaymentMethod = () => {
               fallback={(retry) => (
                 <div className="mt-3 flex flex-col items-start gap-2">
                   <p className="text-xs font-medium text-gray220">
-                    {t("order_page.payment.load_error")}
+                    {t("order_page_payment_load_error")}
                   </p>
                   <Button
                     type="button"

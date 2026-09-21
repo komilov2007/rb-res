@@ -11,24 +11,24 @@ type OrderOptionProps = {
 // Rendered via t(). Only service types present in general.services are rendered.
 export const ORDER_OPTIONS: Record<Lowercase<DeliveryType>, OrderOptionProps> = {
   pickup: {
-    label: "order_page.delivery_type.options.pickup.label",
-    desc: "order_page.delivery_type.options.pickup.desc",
+    label: "order_page_delivery_type_options_pickup_label",
+    desc: "order_page_delivery_type_options_pickup_desc",
   },
   delivery: {
-    label: "order_page.delivery_type.options.delivery.label",
-    desc: "order_page.delivery_type.options.delivery.desc",
+    label: "order_page_delivery_type_options_delivery_label",
+    desc: "order_page_delivery_type_options_delivery_desc",
   },
   bts_pickup: {
-    label: "order_page.delivery_type.options.bts_pickup.label",
-    desc: "order_page.delivery_type.options.bts_pickup.desc",
+    label: "order_page_delivery_type_options_bts_pickup_label",
+    desc: "order_page_delivery_type_options_bts_pickup_desc",
   },
   yandex_delivery: {
-    label: "order_page.delivery_type.options.yandex_delivery.label",
-    desc: "order_page.delivery_type.options.yandex_delivery.desc",
+    label: "order_page_delivery_type_options_yandex_delivery_label",
+    desc: "order_page_delivery_type_options_yandex_delivery_desc",
   },
   noor_delivery: {
-    label: "order_page.delivery_type.options.noor_delivery.label",
-    desc: "order_page.delivery_type.options.noor_delivery.desc",
+    label: "order_page_delivery_type_options_noor_delivery_label",
+    desc: "order_page_delivery_type_options_noor_delivery_desc",
   },
 };
 

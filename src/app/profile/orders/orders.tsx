@@ -12,8 +12,8 @@ import ProfilePageShell from "../components/profile-page-shell";
 import OrderDetailCard from "./components/order-detail-card";
 
 const TABS = [
-  { key: true, label: "orders.tabs.active" },
-  { key: false, label: "orders.tabs.all" },
+  { key: true, label: "orders_tabs_active" },
+  { key: false, label: "orders_tabs_all" },
 ] as const;
 
 // Mirrors OrderDetailCard's own section-by-section layout (id+badge,
@@ -62,10 +62,10 @@ const EmptyOrders = () => {
         <PackageSearch size={28} strokeWidth={1.8} />
       </div>
       <h3 className="mt-4 text-base font-extrabold text-black">
-        {t("orders.empty_title")}
+        {t("orders_empty_title")}
       </h3>
       <p className="mt-2 max-w-70 text-sm leading-6 text-gray220">
-        {t("orders.empty_hint")}
+        {t("orders_empty_hint")}
       </p>
     </div>
   );
@@ -90,7 +90,7 @@ const OrdersContent = () => {
   const [expandedIds, setExpandedIds] = useState<Record<number, boolean>>({});
 
   if (!hasAccess) {
-    return <LoginRequired message={t("orders.login_required")} />;
+    return <LoginRequired message={t("orders_login_required")} />;
   }
 
   const customerPhone = auth?.phone

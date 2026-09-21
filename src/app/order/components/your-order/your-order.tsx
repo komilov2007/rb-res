@@ -39,7 +39,7 @@ const YourOrder = ({
   return (
     <section className="rounded-2xl bg-white p-4">
       <h2 className="text-sm font-bold text-black">
-        {t("order_page.summary.title")}
+        {t("order_page_summary_title")}
       </h2>
 
       <div className="mt-3 flex items-center justify-between text-sm font-medium text-gray220">
@@ -51,7 +51,7 @@ const YourOrder = ({
 
       {productDiscount > 0 && (
         <div className="mt-2 flex items-center justify-between text-sm font-medium text-green-500">
-          <span>{t("order_page.summary.product_discount")}</span>
+          <span>{t("order_page_summary_product_discount")}</span>
           <span>
             -{formatPrice(productDiscount)} {t("sum")}
           </span>
@@ -60,7 +60,7 @@ const YourOrder = ({
 
       {promoTotal !== null && (
         <div className="mt-2 flex items-center justify-between text-sm font-medium text-green-500">
-          <span>{t("order_page.summary.promo_discount")}</span>
+          <span>{t("order_page_summary_promo_discount")}</span>
           <span>
             -{formatPrice(cartTotal - promoTotal)} {t("sum")}
           </span>
@@ -69,7 +69,7 @@ const YourOrder = ({
 
       {deliveryPrice > 0 && (
         <div className="mt-2 flex items-center justify-between text-sm font-medium text-gray220">
-          <span>{t("order_page.summary.delivery_price")}</span>
+          <span>{t("order_page_summary_delivery_price")}</span>
           <span>
             {formatPrice(deliveryPrice)} {t("sum")}
           </span>
@@ -78,7 +78,7 @@ const YourOrder = ({
 
       {unavailableTotal > 0 && (
         <div className="mt-2 flex items-center justify-between text-sm font-medium text-red">
-          <span>{t("order_page.summary.unavailable")}</span>
+          <span>{t("order_page_summary_unavailable")}</span>
           <span>
             -{formatPrice(unavailableTotal)} {t("sum")}
           </span>
@@ -87,7 +87,7 @@ const YourOrder = ({
 
       {cashbackBall > 0 && (
         <div className="mt-2 flex items-center justify-between text-sm font-medium text-green-500">
-          <span>{t("order_page.summary.bonus")}</span>
+          <span>{t("order_page_summary_bonus")}</span>
           <span>
             -{formatPrice(cashbackBall)} {t("sum")}
           </span>
@@ -98,7 +98,7 @@ const YourOrder = ({
 
       <div className="flex items-center justify-between">
         <span className="text-sm font-bold text-black">
-          {t("order_page.summary.total")}
+          {t("order_page_summary_total")}
         </span>
         <span className="flex flex-col items-end">
           {oldPrice !== null && (

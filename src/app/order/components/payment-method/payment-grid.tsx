@@ -55,7 +55,7 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
             const checked = field.value === type;
             const isDisabled = getIsDisabled(type);
             const Icon = getPaymentIcon(type);
-            const caption = t("order_page.payment.caption", { label: config.label });
+            const caption = t("order_page_payment_caption", { label: config.label });
 
             const handleSelect = () => {
               if (isDisabled) return;

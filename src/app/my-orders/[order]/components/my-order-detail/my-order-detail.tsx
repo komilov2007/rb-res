@@ -65,7 +65,7 @@ const MyOrderDetail = () => {
           </Button>
           <div className="min-w-0 flex-1 text-center">
             <h1 className="truncate text-base font-medium text-black">
-              {t("orders.title_number", { id: orderId })}
+              {t("orders_title_number", { id: orderId })}
             </h1>
             {detail && (
               <p className="mt-0.5 flex items-center justify-center gap-2 text-xs font-medium text-gray220">
@@ -81,7 +81,7 @@ const MyOrderDetail = () => {
             onClick={() =>
               router.push(`${ROUTER.CHAT}${shopid ? `?shop_id=${shopid}` : ""}`)
             }
-            aria-label={t("orders.support")}
+            aria-label={t("orders_support")}
             className="shrink-0 text-black"
           >
             <Headphones size={20} />
@@ -94,7 +94,7 @@ const MyOrderDetail = () => {
       ) : isError || !detail ? (
         <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+env(safe-area-inset-top))]">
           <p className="text-sm font-medium text-gray220">
-            {t("orders.not_found")}
+            {t("orders_not_found")}
           </p>
         </div>
       ) : (

@@ -43,18 +43,18 @@ const PaymentWaiting = ({
 
       <div>
         <h1 className="text-lg font-extrabold text-black">
-          {t("order_page.waiting.title")}
+          {t("order_page_waiting_title")}
         </h1>
         <p className="mt-1 text-sm text-gray220">
           {paymentLabel
-            ? t("order_page.waiting.hint_with_type", { payment: paymentLabel })
-            : t("order_page.waiting.hint")}
+            ? t("order_page_waiting_hint_with_type", { payment: paymentLabel })
+            : t("order_page_waiting_hint")}
         </p>
       </div>
 
       {paymentType && (
         <div className="flex items-center justify-center gap-2 text-sm text-gray220">
-          <span>{t("order_page.waiting.method")}</span>
+          <span>{t("order_page_waiting_method")}</span>
           <span className="flex h-8 shrink-0 items-center justify-center overflow-hidden [&_svg]:h-auto [&_svg]:max-h-8 [&_svg]:w-auto [&_svg]:max-w-24">
             {createElement(getPaymentIcon(paymentType as PaymentTypeProps))}
           </span>
@@ -67,7 +67,7 @@ const PaymentWaiting = ({
           variant="primary-solid"
           size="primaryWide"
         >
-          {t("order_page.waiting.check")}
+          {t("order_page_waiting_check")}
         </Button>
 
         {paymentUrl && (
@@ -77,7 +77,7 @@ const PaymentWaiting = ({
             size="primaryWide"
             onClick={() => openPaymentLink(paymentUrl)}
           >
-            {t("order_page.waiting.go_to_payment")}
+            {t("order_page_waiting_go_to_payment")}
           </Button>
         )}
       </div>

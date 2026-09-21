@@ -24,10 +24,10 @@ const STEP_FOR_STATUS: Partial<Record<OrderStatusValue, number>> = {
 };
 
 const STEP_LABELS = [
-  "orders.timeline.accepted",
-  "orders.timeline.preparing",
-  "orders.timeline.ready",
-  "orders.timeline.handed_over",
+  "orders_timeline_accepted",
+  "orders_timeline_preparing",
+  "orders_timeline_ready",
+  "orders_timeline_handed_over",
 ];
 
 const STEP_ICONS = [Check, ChefHat, ShoppingBag, PackageCheck];
@@ -51,11 +51,11 @@ const StatusTimeline = ({ status }: StatusTimelineProps) => {
     return (
       <p className="flex items-center gap-2 text-sm">
         <span className="h-2 w-2 shrink-0 rounded-full bg-red" />
-        <span className="font-medium text-red">{t("orders.timeline.cancelled")}</span>
+        <span className="font-medium text-red">{t("orders_timeline_cancelled")}</span>
         {/* Plain CANCEL doesn't say who cancelled — no guessed reason. */}
         {status === "CANCELED_BY_CUSTOMER" && (
           <span className="min-w-0 truncate text-gray220">
-            · {t("orders.timeline.by_customer")}
+            · {t("orders_timeline_by_customer")}
           </span>
         )}
       </p>

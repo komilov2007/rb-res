@@ -56,11 +56,11 @@ const DeliveryType = ({
     <>
       <section className="rounded-2xl bg-white p-4">
         <h2 className="pb-2 text-sm font-bold text-black">
-          {t("order_page.delivery_type.title")}
+          {t("order_page_delivery_type_title")}
         </h2>
         {services.length === 0 ? (
           <p className="text-xs font-medium text-gray220">
-            {t("order_page.delivery_type.empty")}
+            {t("order_page_delivery_type_empty")}
           </p>
         ) : (
           <Controller

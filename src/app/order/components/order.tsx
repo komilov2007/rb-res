@@ -108,7 +108,7 @@ const Order = () => {
             <ChevronLeft size={22} />
           </Button>
           <h1 className="text-base font-extrabold text-black">
-            {t("order_page.title")}
+            {t("order_page_title")}
           </h1>
         </div>
       </div>

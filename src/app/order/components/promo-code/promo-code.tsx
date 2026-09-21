@@ -42,7 +42,7 @@ const PromoCode = () => {
       setPromoError(null);
       setIsOpen(false);
       toast.success(
-        t("order_page.promo.applied", { code: response.data.promo_code }),
+        t("order_page_promo_applied", { code: response.data.promo_code }),
       );
     },
     // The backend's own message (e.g. "Promo-kod topilmadi", "Eng kam
@@ -50,7 +50,7 @@ const PromoCode = () => {
     // buyurtmangizni berdingiz") — not a single hardcoded string, since
     // which of those it is changes what the user should actually do next.
     onError: (error) => {
-      setPromoError(getApiErrorMessage(error, t("order_page.promo.error")));
+      setPromoError(getApiErrorMessage(error, t("order_page_promo_error")));
     },
   });
 
@@ -80,8 +80,8 @@ const PromoCode = () => {
           <Ticket size={18} className="shrink-0 text-gray220" />
           <span className="truncate">
             {promocode
-              ? t("order_page.promo.current", { code: promocode })
-              : t("order_page.promo.question")}
+              ? t("order_page_promo_current", { code: promocode })
+              : t("order_page_promo_question")}
           </span>
         </span>
         <ChevronDown
@@ -97,7 +97,7 @@ const PromoCode = () => {
           <div className="flex items-center gap-2">
             <Input
               autoFocus
-              placeholder={t("order_page.promo.placeholder")}
+              placeholder={t("order_page_promo_placeholder")}
               wrapperClassName="!h-11"
               value={promoCodeInput}
               onChange={(event) => {
@@ -113,7 +113,7 @@ const PromoCode = () => {
               disabled={promoCodeMutation.isPending || !promoCodeInput.trim()}
               onClick={applyPromoCode}
             >
-              {t("order_page.promo.apply")}
+              {t("order_page_promo_apply")}
             </Button>
           </div>
           {promoError && (

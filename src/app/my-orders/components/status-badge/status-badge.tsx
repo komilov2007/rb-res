@@ -3,14 +3,14 @@ import { useTranslations } from "next-intl";
 import type { OrderStatusValue } from "@/types/order";
 
 const STATUS_LABELS: Record<OrderStatusValue, string> = {
-  NEW: "orders.status.NEW",
-  PROGRESS: "orders.status.PROGRESS",
-  READY: "orders.status.READY",
-  ON_THE_WAY: "orders.status.ON_THE_WAY",
-  DELIVERED: "orders.status.DELIVERED",
-  COMPLETED: "orders.status.COMPLETED",
-  CANCEL: "orders.status.CANCEL",
-  CANCELED_BY_CUSTOMER: "orders.status.CANCELED_BY_CUSTOMER",
+  NEW: "orders_status_new",
+  PROGRESS: "orders_status_progress",
+  READY: "orders_status_ready",
+  ON_THE_WAY: "orders_status_on_the_way",
+  DELIVERED: "orders_status_delivered",
+  COMPLETED: "orders_status_completed",
+  CANCEL: "orders_status_cancel",
+  CANCELED_BY_CUSTOMER: "orders_status_canceled_by_customer",
 };
 
 type BadgeVariant = "success" | "warning" | "danger";

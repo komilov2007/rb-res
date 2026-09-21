@@ -71,7 +71,7 @@ const Address = () => {
       >
         <MapPin size={18} className="shrink-0 text-gray220" />
         <p className="min-w-0 flex-1 truncate text-sm font-medium text-black">
-          {selectedAddress?.address || t("order_page.address.not_selected")}
+          {selectedAddress?.address || t("order_page_address_not_selected")}
         </p>
         <ChevronRight size={18} className="shrink-0 text-gray220" />
       </button>
@@ -94,7 +94,7 @@ const Address = () => {
             name="entrance"
             render={({ field }) => (
               <Input
-                placeholder={t("order_page.address.entrance")}
+                placeholder={t("order_page_address_entrance")}
                 inputMode="numeric"
                 wrapperClassName="!h-11 !rounded-xl !px-3"
                 value={field.value ?? ""}
@@ -156,7 +156,7 @@ const Address = () => {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-normal text-black">
-            {t("order_page.comment.title")}
+            {t("order_page_comment_title")}
           </span>
           {comment && (
             <span className="block truncate text-xs font-medium text-gray220">

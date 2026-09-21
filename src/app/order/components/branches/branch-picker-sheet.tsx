@@ -80,7 +80,7 @@ const BranchPickerSheet = ({
         className="max-h-[85dvh] rounded-t-3xl bg-gray10"
       >
         <SheetHeader className="shrink-0 pr-12">
-          <SheetTitle>{t("order_page.branches.picker_title")}</SheetTitle>
+          <SheetTitle>{t("order_page_branches_picker_title")}</SheetTitle>
         </SheetHeader>
 
         <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 pb-[max(20px,env(safe-area-inset-bottom))]">
@@ -111,13 +111,13 @@ const BranchPickerSheet = ({
             ))
           ) : options.length === 0 ? (
             <p className="py-6 text-center text-sm font-medium text-gray220">
-              {t("order_page.branches.not_found")}
+              {t("order_page_branches_not_found")}
             </p>
           ) : (
             <>
               {hasNoneAvailable && (
                 <p className="rounded-2xl bg-red/10 px-3 py-2.5 text-xs font-medium text-red">
-                  {t("order_page.branches.picker_none_available")}
+                  {t("order_page_branches_picker_none_available")}
                 </p>
               )}
 
@@ -163,7 +163,7 @@ const BranchPickerSheet = ({
 
                       {!isAvailable && (
                         <span className="mt-1.5 line-clamp-2 block text-xs font-medium text-red">
-                          {t("order_page.branches.picker_missing", {
+                          {t("order_page_branches_picker_missing", {
                             names: missingNames.join(", "),
                           })}
                         </span>

@@ -18,7 +18,7 @@ const PlaceOrder = ({ displayTotal, isSubmitting }: PlaceOrderProps) => {
       <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-3 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))]">
         <div>
           <p className="text-xs font-medium text-gray220">
-            {t("order_page.payment.amount")}
+            {t("order_page_payment_amount")}
           </p>
           <p className="text-lg font-extrabold text-black">
             {formatPrice(displayTotal)} {t("sum")}

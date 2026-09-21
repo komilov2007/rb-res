@@ -393,7 +393,7 @@ export const usePage = () => {
     mutationFn: (payload: CreateOrderPayload) => createOrder(payload),
     onError: (error) => {
       setSubmitError(
-        getApiErrorMessage(error, t("order_page.errors.create_failed")),
+        getApiErrorMessage(error, t("order_page_errors_create_failed")),
       );
     },
   });
@@ -449,7 +449,7 @@ export const usePage = () => {
       if (!data.url || !isValidPaymentUrl(data.url.url)) {
         const name = ONLINE_PAYMENT_TYPE_NAMES[paymentType] ?? paymentType;
 
-        toast.error(t("order_page.errors.provider_disabled", { name }));
+        toast.error(t("order_page_errors_provider_disabled", { name }));
         goHome();
         return;
       }
@@ -495,7 +495,7 @@ export const usePage = () => {
       const { bot_token, payment } = tokenResponse.data;
 
       const invoice = await createTelegramInvoiceLink(bot_token, {
-        title: t("order_page.invoice.title"),
+        title: t("order_page_invoice_title"),
         description: "Test description",
         payload: "custom_payload",
         provider_token: payment.token,
@@ -504,14 +504,14 @@ export const usePage = () => {
       });
 
       if (!invoice.ok || !invoice.result) {
-        setSubmitError(t("order_page.errors.payment_link_failed"));
+        setSubmitError(t("order_page_errors_payment_link_failed"));
         return;
       }
 
       const status = await openTelegramInvoice(invoice.result);
 
       if (status !== "paid") {
-        setSubmitError(t("order_page.errors.payment_failed"));
+        setSubmitError(t("order_page_errors_payment_failed"));
         return;
       }
 
@@ -552,7 +552,7 @@ export const usePage = () => {
     const orderItems = buildItems();
 
     if (orderItems.length === 0) {
-      toast.error(t("order_page.errors.cart_empty"));
+      toast.error(t("order_page_errors_cart_empty"));
       return;
     }
 

@@ -20,12 +20,12 @@ export const orderSchema = yup.object().shape(
       .mixed<DeliveryType>()
       .oneOf(DELIVERY_TYPES)
       .nullable()
-      .required(() => translate("order_page.errors.delivery_type_required")),
+      .required(() => translate("order_page_errors_delivery_type_required")),
 
     payment_type: yup
       .string()
       .nullable()
-      .required(() => translate("order_page.errors.payment_type_required")),
+      .required(() => translate("order_page_errors_payment_type_required")),
     branch: yup
       .number()
       .nullable()
@@ -34,8 +34,8 @@ export const orderSchema = yup.object().shape(
         is: isPickupType,
         then: (schema) =>
           schema
-            .required(() => translate("order_page.errors.branch_required"))
-            .nonNullable(() => translate("order_page.errors.branch_required")),
+            .required(() => translate("order_page_errors_branch_required"))
+            .nonNullable(() => translate("order_page_errors_branch_required")),
       }),
     address: yup
       .number()
@@ -66,8 +66,8 @@ export const orderSchema = yup.object().shape(
         is: isFilled,
         then: (schema) =>
           schema
-            .required(() => translate("order_page.errors.date_required"))
-            .nonNullable(() => translate("order_page.errors.date_required")),
+            .required(() => translate("order_page_errors_date_required"))
+            .nonNullable(() => translate("order_page_errors_date_required")),
       }),
     shipping_time: yup
       .string()
@@ -77,8 +77,8 @@ export const orderSchema = yup.object().shape(
         is: isFilled,
         then: (schema) =>
           schema
-            .required(() => translate("order_page.errors.time_required"))
-            .nonNullable(() => translate("order_page.errors.time_required")),
+            .required(() => translate("order_page_errors_time_required"))
+            .nonNullable(() => translate("order_page_errors_time_required")),
       }),
     delivery_price: yup.number().nullable().default(null),
     delivery_price_type: yup.string().nullable().default(null),
