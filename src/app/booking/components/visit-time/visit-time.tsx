@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarClock, CalendarDays, Clock3 } from "lucide-react";
+import { CalendarClock, CalendarDays } from "lucide-react";
+import { IconClockHour3Filled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
@@ -35,6 +37,7 @@ const VisitTime = () => {
     control,
     getValues,
     setValue,
+    trigger,
     formState: { errors },
   } = useFormContext<BookingFormValues>();
   const [days] = useState(getBookingDays);
@@ -55,13 +58,18 @@ const VisitTime = () => {
           render={({ field }) => (
             <div className="min-w-0">
               <Select
-                value={field.value || undefined}
+                value={field.value}
                 onValueChange={(value) => {
                   field.onChange(value);
+                  const time = getValues("time");
+
                   // A slot that's fine on another day may already be over
                   // today — drop it rather than keep a past time.
-                  if (isPastSlot(value, getValues("time"))) {
+                  if (isPastSlot(value, time)) {
                     setValue("time", "", { shouldValidate: true });
+                  } else if (time) {
+                    // "Within working hours" depends on the day too.
+                    void trigger("time");
                   }
                 }}
               >
@@ -94,15 +102,15 @@ const VisitTime = () => {
           name="time"
           render={({ field }) => (
             <div className="min-w-0">
-              <Select
-                value={field.value || undefined}
-                onValueChange={field.onChange}
-              >
+              {/* "" (not undefined) shows the placeholder: undefined makes
+                  Radix uncontrolled and it keeps showing the last picked
+                  slot after the time is cleared. */}
+              <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger
                   aria-label={t("booking_time")}
                   className={triggerClassName(Boolean(errors.time))}
                 >
-                  <Clock3 size={18} className="shrink-0 text-gray220" />
+                  <IconClockHour3Filled size={18} className="shrink-0 text-gray220" />
                   <SelectValue placeholder={t("booking_select_time")} />
                 </SelectTrigger>
                 <SelectContent className={contentClassName}>

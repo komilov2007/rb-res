@@ -7,6 +7,10 @@ import { useLocationStore } from "@/stores/location";
 type AuthStoreProps = {
   auth?: AuthProps;
   hasAccess: boolean;
+  // False until AuthProvider has read the stored session (on mount, after
+  // hydration) — lets pages show a loading state instead of the guest view
+  // while the real session is still unknown.
+  isAuthReady: boolean;
   loginModal: boolean;
   signupModal: boolean;
   profileModal: boolean;
@@ -24,13 +28,14 @@ type AuthStoreProps = {
 export const useAuthStore = create<AuthStoreProps>()((set) => ({
   auth: undefined,
   hasAccess: false,
+  isAuthReady: false,
   loginModal: false,
   signupModal: false,
   profileModal: false,
   profileModalVariant: "dropdown",
 
   setAuth: (auth) => {
-    set({ auth, hasAccess: Boolean(auth?.access) });
+    set({ auth, hasAccess: Boolean(auth?.access), isAuthReady: true });
   },
 
   setLoginModal: (loginModal, redirectLogin) => {

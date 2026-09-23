@@ -7,6 +7,7 @@ import { YANDEX_LANG } from "@/constants/yandex";
 import type { BranchProps } from "@/types/branch";
 import type { Coordinates } from "@/types/yandex";
 import { requestYandexGeocode } from "@/utils/yandex";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // The delivery address's map point, geocoded from its text near the branch.
 export const useCustomerPoint = (
@@ -28,7 +29,7 @@ export const useCustomerPoint = (
   const geocodeQuery = useQuery({
     enabled: open && Boolean(address) && Boolean(branch),
     queryKey: [
-      "order-detail-address-geocode",
+      REACT_QUERY_KEYS.ORDER_DETAIL_ADDRESS_GEOCODE,
       address,
       branch?.longitude,
       branch?.latitude,

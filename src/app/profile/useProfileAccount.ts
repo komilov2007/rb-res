@@ -20,7 +20,7 @@ export const useProfileAccount = () => {
   const { shopid } = useShopId();
   const locale = useLocale();
   const t = useTranslations();
-  const { data, isLoading } = useProfile();
+  const { data, isLoading: isProfileLoading } = useProfile();
   const { data: general } = useGeneral();
   const [languageOpen, setLanguageOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -28,8 +28,12 @@ export const useProfileAccount = () => {
   // After confirming logout the page keeps its logged-in look until the home
   // page replaces it — otherwise the guest view flashes during navigation.
   const hasAccess = useAuthStore((state) => state.hasAccess) || isLeaving;
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const logout = useAuthStore((state) => state.logout);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
+  // Skeleton while the session is still unknown (before AuthProvider reads
+  // it) or the logged-in profile is loading — never the guest view.
+  const isLoading = !isAuthReady || (hasAccess && isProfileLoading);
 
   const languageLabel =
     languages[locale as LanguageValue]?.label ?? languages.uz.label;
@@ -74,7 +78,6 @@ export const useProfileAccount = () => {
 
   return {
     router,
-    shopid,
     shopQuery,
     isLoading,
     hasAccess,

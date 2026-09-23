@@ -6,9 +6,8 @@ import { useTranslations } from "next-intl";
 import { galleryImages } from "@/constants/atmosphere";
 
 import { ATMOSPHERE_VIDEO_SRC, type AtmosphereVariantProps } from "../../constants";
+import { pad } from "../../utils";
 import { useScrollScene } from "./useScrollScene";
-
-const pad = (value: number) => String(value).padStart(2, "0");
 
 // Alternating frames: full-bleed tall, then inset — the rhythm of a
 // printed lookbook.

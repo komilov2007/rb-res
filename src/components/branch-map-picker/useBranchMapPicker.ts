@@ -25,6 +25,12 @@ type UseBranchMapPickerProps = {
   // lives outside this hook/component, so open state is owned by the caller.
   open: boolean;
   onClose: () => void;
+  // Desktop drawer only: tapping a pin also opens Yandex's balloon above it
+  // with the branch name and address. Off on mobile, where the map is the
+  // whole screen and the tapped branch's card already slides in underneath —
+  // a balloon there would just cover the map (the same call
+  // useDeliveryRouteMap documents for its own pins).
+  balloons?: boolean;
 };
 
 export const useBranchMapPicker = ({
@@ -33,6 +39,7 @@ export const useBranchMapPicker = ({
   onSelect,
   open,
   onClose,
+  balloons = false,
 }: UseBranchMapPickerProps) => {
   const list = useBoolean();
   const swiperRef = useRef<SwiperClass | null>(null);
@@ -91,6 +98,20 @@ export const useBranchMapPicker = ({
             iconImageHref: buildPinHref(isActivePin),
             iconImageSize: isActivePin ? [48, 48] : [40, 40],
             iconImageOffset: isActivePin ? [-24, -48] : [-20, -40],
+            // openBalloonOnClick is Yandex's default, so this only has to
+            // turn it OFF where we don't want it.
+            openBalloonOnClick: balloons,
+            // Keep the pin drawn under its own balloon (Yandex hides it by
+            // default), and never let the balloon fall back to the panel
+            // layout that covers the whole map — at the drawer's width that
+            // is the mode it would otherwise pick.
+            hideIconOnBalloonOpen: false,
+            balloonPanelMaxMapArea: 0,
+            // The balloon anchors on the geometry point, which is the pin's
+            // bottom tip (see iconImageOffset), so by default it opens over
+            // the pin. Lift it by the pin's own height plus a few px of gap
+            // to sit clear above it.
+            balloonOffset: isActivePin ? [0, -56] : [0, -48],
           },
         ) as PlacemarkInstance;
 
@@ -98,7 +119,7 @@ export const useBranchMapPicker = ({
         mapInstance.geoObjects.add(placemark);
       });
     },
-    [],
+    [balloons],
   );
 
   const openList = () => list.setTrue();
@@ -112,10 +133,18 @@ export const useBranchMapPicker = ({
   // has even mounted (list.setTrue() below only takes effect on the next
   // render), so swiperRef.current would still be null at this point and
   // slideTo() would silently no-op.
-  const selectBranch = (branch: BranchProps) => {
+  // Moves the highlight and the map view, nothing else. Split out of
+  // selectBranch so the desktop drawer's list rows can reuse it: a row click
+  // must leave the map in exactly the state a pin click would, without
+  // opening mobile's card sheet (which desktop doesn't render).
+  const highlightBranch = (branch: BranchProps) => {
     setActiveId(branch.id);
     setMapState({ center: branchCenter(branch), zoom: 15 });
     renderPlacemarks(activeBranches, branch.id, selectBranch);
+  };
+
+  const selectBranch = (branch: BranchProps) => {
+    highlightBranch(branch);
 
     if (!list.value) {
       list.setTrue();
@@ -191,6 +220,41 @@ export const useBranchMapPicker = ({
     renderPlacemarks(activeBranches, activeId, selectBranch);
   };
 
+  // renderPlacemarks only ever runs from the map's own onLoad/instanceRef
+  // and from an explicit pin tap / card swipe. When the branch list resolves
+  // *after* the map instance already did — the usual async order — none of
+  // those fire, so the map keeps whatever pin set existed at load time
+  // (often none). This re-runs it whenever the set itself changes.
+  // activeId is read through a ref rather than being a dependency: the
+  // highlight is already redrawn synchronously by highlightBranch and
+  // handleSlideChange, so depending on it here would rebuild every pin twice
+  // per selection on mobile.
+  const latestRef = useRef({ activeId, selectBranch });
+
+  // Written in an effect, not during render — the React Compiler lint rule
+  // forbids touching a ref while rendering. Declared before the effect below
+  // so it has committed the fresh values by the time that one runs.
+  useEffect(() => {
+    latestRef.current = { activeId, selectBranch };
+  });
+
+  useEffect(() => {
+    if (!open) return;
+
+    const { activeId: currentId, selectBranch: onPinClick } = latestRef.current;
+
+    // Same reason the open-transition block above fits the bounds: without
+    // this the pins appear but the view is still on DEFAULT_CENTER, leaving
+    // several branches off-screen — which reads as the very same bug.
+    // Guarded on "nothing highlighted yet" so it never yanks the view away
+    // from a branch the user already picked.
+    if (currentId === null && activeBranches.length > 0) {
+      setMapState(getDefaultOverview(activeBranches));
+    }
+
+    renderPlacemarks(activeBranches, currentId, (branch) => onPinClick(branch));
+  }, [open, activeBranches, renderPlacemarks]);
+
   const handleMapLoad = (api: unknown) => {
     mapApiRef.current = api as BranchYMapsApi;
     handleMapReady();
@@ -209,9 +273,15 @@ export const useBranchMapPicker = ({
     mapState,
     openList,
     closeList,
+    highlightBranch,
     handleSlideChange,
     chooseBranch,
     handleMapLoad,
     handleMapInstance,
   };
 };
+
+// Lets the desktop drawer take the controller as a prop, so the hook is
+// still called exactly once (in branch-map-picker.tsx) and the map logic
+// isn't duplicated per layout.
+export type BranchMapPickerController = ReturnType<typeof useBranchMapPicker>;

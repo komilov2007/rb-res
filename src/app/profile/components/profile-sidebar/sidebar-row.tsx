@@ -11,8 +11,8 @@ type SidebarRowProps = {
 
 // One menu row of the desktop profile sidebar: an inset rounded row
 // inside its group card (see SIDEBAR_GROUP_CLASS_NAME). Hover lifts it on
-// grey and nudges the chevron; the current route's row gets a soft primary
-// tint only — icon and text stay as they are.
+// grey and nudges the chevron; the current route's row gets a gray fill
+// only — icon and text stay as they are.
 const SidebarRow = ({
   icon: Icon,
   label,
@@ -25,7 +25,7 @@ const SidebarRow = ({
     onClick={onClick}
     aria-current={active ? "page" : undefined}
     className={`group flex h-11 w-full shrink-0 items-center gap-3 rounded-xl px-2 text-left outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-primary/40 ${
-      active ? "bg-primary10 text-black" : "text-black hover:bg-gray10"
+      active ? "bg-gray10 text-black" : "text-black hover:bg-gray10/60"
     }`}
   >
     <span
@@ -37,11 +37,11 @@ const SidebarRow = ({
     >
       <Icon size={16} />
     </span>
-    <span className="min-w-0 flex-1 truncate text-sm font-medium">
+    <span className="min-w-0 flex-1 truncate text-sm font-normal">
       {label}
     </span>
     {value && (
-      <span className="max-w-25 truncate text-xs font-medium text-gray220">
+      <span className="max-w-25 truncate text-[13px] font-medium text-gray220/70">
         {value}
       </span>
     )}
@@ -54,9 +54,9 @@ const SidebarRow = ({
   </button>
 );
 
-// The card SidebarRows sit in: padded so the rows' own rounded hover and
-// active backgrounds stay inset instead of running into the card edges.
+// The section SidebarRows sit in (the sidebar divides its sections with
+// lines instead of nesting cards).
 export const SIDEBAR_GROUP_CLASS_NAME =
-  "flex flex-col gap-0.5 rounded-2xl border border-gray180 bg-white p-1.5";
+  "flex flex-col gap-0.5 py-3";
 
 export default SidebarRow;

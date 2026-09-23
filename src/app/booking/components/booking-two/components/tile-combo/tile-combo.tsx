@@ -5,7 +5,7 @@ import { Check, ChevronDown } from "lucide-react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { TileError, TileIcon, TileLabel, tileClassName } from "./two-field";
+import { TileError, TileIcon, TileLabel, tileClassName } from "../two-field";
 
 export type ComboOption = {
   value: string;

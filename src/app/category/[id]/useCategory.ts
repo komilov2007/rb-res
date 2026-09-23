@@ -6,12 +6,11 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { getCategories } from "@/apis/categories";
 import { useBranchSelection } from "@/components/branch-selection";
-import {
-  productsQueryOptions,
-} from "@/app/[page]/components/products/useProduct";
+import { productsQueryOptions } from "@/app/[page]/components/products/useProduct";
 import { useShopId } from "@/hooks/useShopId";
 import type { ProductProps } from "@/types/product";
 import { normalizeCategories } from "@/utils/product";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const useCategory = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,13 +31,15 @@ export const useCategory = () => {
   } = useInfiniteQuery(productsQueryOptions(shopid));
   const { data: categories } = useQuery({
     enabled: hasShopId,
-    queryKey: ["categories", shopid],
+    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
     queryFn: () => getCategories(shopid as string),
   });
 
+  // Stops on error: hasNextPage stays true after a failed page, so without
+  // the isError guard this would refetch it forever.
   useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) void fetchNextPage();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    if (hasNextPage && !isFetchingNextPage && !isError) void fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, isError, fetchNextPage]);
 
   const products =
     data?.pages

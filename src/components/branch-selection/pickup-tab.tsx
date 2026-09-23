@@ -1,15 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin } from "lucide-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { BranchMapPicker } from "@/components/branch-map-picker";
-import { useBoolean } from "@/hooks/useBoolean";
-import { useDeviceLocation } from "@/hooks/useDeviceLocation";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
-import { useLocationStore } from "@/stores/location";
-import { getDistanceKm } from "@/utils/distance";
+import type { BranchProps } from "@/types/branch";
 import RadioMark from "@/components/ui/radio-mark";
 
 import { getBranchLabel } from "./utils";
@@ -22,32 +18,26 @@ import {
   TabProps,
 } from "./selection-parts";
 
-export const PickupTab = ({ selection, workingTime }: TabProps) => {
+type PickupTabProps = TabProps & {
+  // Nearest first, computed by BranchSelectionModal (useNearestBranches) so
+  // these rows and the map picker show the same branches in the same order.
+  branches: BranchProps[];
+  // Opens the map picker. Owned by BranchSelectionModal, not here: it closes
+  // this modal as it opens, which would unmount a picker rendered from here.
+  onOpenMap: () => void;
+};
+
+export const PickupTab = ({
+  selection,
+  branches,
+  onOpenMap,
+}: PickupTabProps) => {
   const t = useTranslations();
-  const latitude = useLocationStore((state) => state.latitude);
-  const longitude = useLocationStore((state) => state.longitude);
   const setPickup = useBranchSelectionStore((state) => state.setPickup);
   const setSelectionModal = useBranchSelectionStore(
     (state) => state.setSelectionModal,
   );
   const [expanded, setExpanded] = useState(false);
-  const mapPicker = useBoolean();
-  const hasAddressCoords = latitude !== null && longitude !== null;
-  // Without a saved delivery point, distances fall back to the device
-  // location (silently skipped if unavailable or denied).
-  const deviceCoords = useDeviceLocation(!hasAddressCoords);
-
-  const origin =
-    latitude !== null && longitude !== null
-      ? { latitude, longitude }
-      : deviceCoords;
-  // Nearest first; API order when no origin is known.
-  const branches = selection.branches
-    .map((branch) => ({
-      branch,
-      km: origin ? getDistanceKm(origin, branch) : null,
-    }))
-    .sort((a, b) => (a.km ?? 0) - (b.km ?? 0));
   const visibleBranches = expanded
     ? branches
     : branches.slice(0, COLLAPSED_COUNT);
@@ -60,21 +50,28 @@ export const PickupTab = ({ selection, workingTime }: TabProps) => {
         </SectionLabel>
         <button
           type="button"
-          onClick={mapPicker.setTrue}
-          className="flex shrink-0 items-center gap-1 text-xs font-bold text-primary"
+          onClick={onOpenMap}
+          className="flex shrink-0 items-center gap-1 text-xs font-medium text-primary"
         >
-          <MapPin size={14} />
+          <IconMapPinFilled size={14} />
           {t("home_branch_selection_pick_on_map")}
         </button>
       </div>
 
-      {branches.length === 0 && (
+      {/* Branches still loading: row-sized skeletons instead of the
+          "not found" note. */}
+      {!selection.isReady &&
+        Array.from({ length: COLLAPSED_COUNT }).map((_, index) => (
+          <div key={index} className="skeleton h-16 w-full rounded-2xl" />
+        ))}
+
+      {selection.isReady && branches.length === 0 && (
         <p className="py-2 text-sm font-normal text-gray220">
           {t("home_branch_selection_branches_not_found")}
         </p>
       )}
 
-      {visibleBranches.map(({ branch }) => {
+      {visibleBranches.map((branch) => {
         const checked =
           selection.serviceType === "PICKUP" &&
           selection.branchId === branch.id;
@@ -106,21 +103,6 @@ export const PickupTab = ({ selection, workingTime }: TabProps) => {
         expanded={expanded}
         labelKey="home_branch_selection_show_more_branches"
         onToggle={() => setExpanded((value) => !value)}
-      />
-
-      <BranchMapPicker
-        open={mapPicker.value}
-        onClose={mapPicker.setFalse}
-        branches={selection.branches}
-        workingTime={workingTime}
-        value={selection.serviceType === "PICKUP" ? selection.branchId : null}
-        onSelect={(branchId) => {
-          if (!selection.shopid) return;
-
-          setPickup(selection.shopid, branchId);
-          // A pick is final — close right away, same as the list rows above.
-          setSelectionModal(false);
-        }}
       />
     </div>
   );

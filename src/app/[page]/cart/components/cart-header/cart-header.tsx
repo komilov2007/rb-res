@@ -1,5 +1,6 @@
 ﻿import { useTranslations } from "next-intl";
-import { ChevronLeft, Trash2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { IconTrashFilled } from "@tabler/icons-react";
 
 import XButton from "@/components/ui/x-button";
 import {
@@ -52,8 +53,8 @@ const CartHeader = ({ isMobile, viewingItem, onBack }: CartHeaderProps) => {
               <SheetTitle
                 className={
                   isMobile
-                    ? "text-lg font-extrabold text-black"
-                    : "text-xl font-extrabold text-black"
+                    ? "text-lg font-medium text-black"
+                    : "text-xl font-medium text-black"
                 }
               >
                 {t("cart")}
@@ -70,9 +71,9 @@ const CartHeader = ({ isMobile, viewingItem, onBack }: CartHeaderProps) => {
                 <button
                   type="button"
                   onClick={openClearCartModal}
-                  className="flex items-center gap-1.5 text-xs font-bold text-red transition-opacity hover:opacity-75"
+                  className="flex items-center gap-1.5 text-xs font-medium text-red transition-opacity hover:opacity-75"
                 >
-                  <Trash2 size={15} strokeWidth={2.2} />
+                  <IconTrashFilled size={15} />
                   <span>{t("clear_cart")}</span>
                 </button>
               )}

@@ -37,7 +37,7 @@ const DeleteAddressDialog = ({
         className="max-w-[340px] rounded-3xl bg-white p-5"
         showCloseButton={false}
       >
-        <DialogTitle className="text-center text-xl font-bold text-black">
+        <DialogTitle className="text-center text-xl font-medium text-black">
           {t("profile_page_addresses_delete_title")}
         </DialogTitle>
         <DialogDescription className="text-center text-sm font-normal text-gray220">

@@ -5,7 +5,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { getCartTotal } from "@/utils/cart";
 import { PRICED_DELIVERY_TYPES } from "@/constants/delivery-type";
 import type { OrderFormValues } from "@/types/order";
-import { UnavailableState } from "./constants";
+import type { UnavailableState } from "./constants";
 import type { CartItemProps } from "@/types/cart";
 
 type UseOrderTotalsProps = {
@@ -38,7 +38,8 @@ export const useOrderTotals = ({
   profile,
 }: UseOrderTotalsProps) => {
   // Cart item ids createOrder reported unavailable for the current
-  // service/branch — excluded from `items` and subtracted from the total.
+  // service/branch — only marked in the cart; the order keeps the whole
+  // cart so a branch change re-checks every item.
   const unavailableItemIds =
     unavailable &&
     unavailable.deliveryType === deliveryType &&
@@ -47,12 +48,6 @@ export const useOrderTotals = ({
       : [];
 
   const cartTotal = getCartTotal(carts);
-  const unavailableTotal = getCartTotal(
-    carts.filter(
-      (item) =>
-        typeof item.id === "number" && unavailableItemIds.includes(item.id),
-    ),
-  );
   // Delivery is only charged for address deliveries with a FIXED/FLEXABLE
   // delivery price type.
   const orderDeliveryPrice =
@@ -77,14 +72,12 @@ export const useOrderTotals = ({
     0,
     (appliedPromoTotal ?? cartTotal) +
       orderDeliveryPrice -
-      unavailableTotal -
       cashbackBall,
   );
 
   return {
     unavailableItemIds,
     cartTotal,
-    unavailableTotal,
     orderDeliveryPrice,
     cashbackBall,
     appliedPromoTotal,

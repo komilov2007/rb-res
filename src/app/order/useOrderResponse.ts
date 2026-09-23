@@ -9,12 +9,14 @@ import { useShopId } from "@/hooks/useShopId";
 import { type CreateOrderResponse } from "@/apis/order";
 import { ROUTER } from "@/constants/router";
 import type { OrderFormValues } from "@/types/order";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { getPlacedOrderUrl } from "@/utils/orders";
 import { openPaymentLink } from "@/utils/telegram";
 import {
   ONLINE_PAYMENT_TYPES,
   ONLINE_PAYMENT_TYPE_NAMES,
   isValidPaymentUrl,
-  UnavailableState,
+  type UnavailableState,
 } from "./constants";
 
 type UseOrderResponseProps = {
@@ -35,15 +37,14 @@ export const useOrderResponse = ({
   const t = useTranslations();
   const { shopid } = useShopId();
   const clearCart = useCartStore((state) => state.clearCart);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   // Group A (direct payment types) and Group B (after a paid Telegram
-  // invoice) both land here once the order is actually created. Always
-  // navigates in-app to the real order-placing/invoice page (STEP 28); only
-  // an explicit "Done" action from that page closes the Mini App.
+  // invoice) both land here once the order is actually created. Mobile:
+  // the order-placing page (as before). Desktop: the profile's
+  // "Buyurtmalarim" with the new order's card opened.
   const finishOrder = (order: number) => {
-    router.push(
-      `${ROUTER.ORDER_PLACING}/${order}${shopid ? `?shop_id=${shopid}` : ""}`,
-    );
+    router.push(getPlacedOrderUrl(isDesktop, shopid, order));
   };
 
   const goHome = () => {
@@ -56,7 +57,7 @@ export const useOrderResponse = ({
   ) => {
     if (data.unavailable_products && data.unavailable_products.length > 0) {
       // The order doesn't proceed: the user either changes the branch or
-      // goes back to the cart; a resubmit excludes these items.
+      // goes back to the cart; the lines stay marked until either changes.
       setUnavailable({
         ids: [...unavailableItemIds, ...data.unavailable_products],
         deliveryType: values.delivery_type,

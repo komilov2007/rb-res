@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { IconTrashFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -12,10 +12,12 @@ import { getCartList, updateCartItem } from "@/apis/cart";
 import { getProductDetail } from "@/apis/products";
 import { useAuthStore } from "@/stores/auth";
 import { normalizeCartItems } from "@/utils/cart";
+import { getCartLineKey } from "@/utils/cart-items";
 import { getOldPrice } from "@/components/modal/product-detail/utils";
 import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/utils";
 import { getSelectedParameterNames, getSaleLabel } from "./utils";
 import { CartCounter } from "./cart-counter";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const CartItem = ({
   item,
@@ -35,6 +37,9 @@ export const CartItem = ({
   // Reported unavailable by the order page's createOrder call.
   const isUnavailable =
     typeof item.id === "number" && unavailableItemIds.includes(item.id);
+  // Inactive lines aren't ordered or counted (see isActiveCartLine) — shown
+  // faded with a label so that's visible; trash still works.
+  const isInactive = item.is_active === false;
   const queryClient = useQueryClient();
   const stockMutation = useMutation({
     mutationFn: ({
@@ -58,7 +63,7 @@ export const CartItem = ({
   // fields the list endpoint doesn't provide.
   const { data: productDetailData } = useQuery({
     enabled: Boolean(item.product.id),
-    queryKey: ["product-detail", item.product.id],
+    queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, item.product.id],
     queryFn: () => getProductDetail(item.product.id),
   });
   const productDetail = productDetailData?.data;
@@ -80,47 +85,48 @@ export const CartItem = ({
 
   const syncStockQuantity = async (nextQuantity: number) => {
     if (!customerId || !item.id) {
-      setCartQuantity(item.product.id, nextQuantity);
+      setCartQuantity(getCartLineKey(item), nextQuantity);
       return;
     }
 
-    const response = await stockMutation.mutateAsync({
-      id: item.id,
-      quantity: nextQuantity,
-      data: {
-        branch_id: branchId ? String(branchId) : undefined,
-      },
-    });
+    try {
+      const response = await stockMutation.mutateAsync({
+        id: item.id,
+        quantity: nextQuantity,
+        data: {
+          branch_id: branchId ? String(branchId) : undefined,
+        },
+      });
 
-    setCartQuantity(item.product.id, response.data.quantity);
+      setCartQuantity(getCartLineKey(item), response.data.quantity);
 
-    void refreshCartList();
+      await refreshCartList(customerId);
+    } catch {
+      // The global request interceptor already toasts the backend's message.
+    }
   };
 
-  const refreshCartList = async () => {
-    if (!customerId) return;
-
+  // fetchQuery with staleTime 0 already refetches and writes the fresh list
+  // into the CART_LIST cache — no extra invalidation (a second request).
+  const refreshCartList = async (customer: number) => {
     const cartListResponse = await queryClient.fetchQuery({
-      queryKey: ["cart-list", customerId],
-      queryFn: () => getCartList(customerId),
+      queryKey: [REACT_QUERY_KEYS.CART_LIST, customer],
+      queryFn: () => getCartList(customer),
       staleTime: 0,
     });
 
     setCarts(
       normalizeCartItems(cartListResponse.data, useCartStore.getState().carts),
     );
-    await queryClient.invalidateQueries({
-      queryKey: ["cart-list", customerId],
-    });
   };
 
   return (
     <li
-      className={
+      className={`${
         isMobile
           ? "border-b border-gray180 px-4 py-4"
           : "border-b border-gray180 px-6 py-5"
-      }
+      } ${isInactive ? "opacity-60" : ""}`}
     >
       <div
         role="button"
@@ -159,14 +165,20 @@ export const CartItem = ({
                 {item.product.name}
               </h3>
 
-              {isUnavailable && (
+              {isInactive ? (
                 <p className="mt-0.5 text-xs font-medium text-red-500">
-                  {t("cart_drawer_unavailable_at_branch")}
+                  {t("cart_drawer_inactive")}
                 </p>
+              ) : (
+                isUnavailable && (
+                  <p className="mt-0.5 text-xs font-medium text-red-500">
+                    {t("cart_drawer_unavailable_at_branch")}
+                  </p>
+                )
               )}
 
               {parameterNames.length > 0 && (
-                <p className="mt-0.5 truncate text-xs font-normal text-gray220">
+                <p className="info-value truncate">
                   {parameterNames.join(", ")}
                 </p>
               )}
@@ -178,7 +190,7 @@ export const CartItem = ({
                       {formatPrice(oldPrice)} {t("sum")}
                     </p>
                     <span
-                      className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-extrabold leading-none text-white ${SALE_VARIANT_CLASS_NAMES.red.badge}`}
+                      className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium leading-none text-white ${SALE_VARIANT_CLASS_NAMES.red.badge}`}
                     >
                       {saleLabel}
                     </span>
@@ -211,10 +223,10 @@ export const CartItem = ({
               size={isMobile ? "cartTrashMobile" : "cartTrash"}
               onClick={(event) => {
                 event.stopPropagation();
-                openRemoveModal(item.product.id);
+                openRemoveModal(getCartLineKey(item));
               }}
             >
-              <Trash2 size={15} strokeWidth={2} />
+              <IconTrashFilled size={15} />
             </Button>
           </div>
         </div>

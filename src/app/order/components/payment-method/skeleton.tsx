@@ -1,17 +1,9 @@
-// Matches the real grid's shape (grid-cols-2, rounded-2xl bordered cards)
-// and STEP 8's original branch-list skeleton treatment
-// (animate-pulse + bg-gray10/50), so the transition reads as "loading new
-// options" whether it's the very first render or a deliveryType change.
+// Same grid and card height as the real payment cards (payment-grid.tsx),
+// each card one solid shimmering block, so nothing jumps when they load.
 const PaymentMethodSkeleton = () => (
-  <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
+  <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-3">
     {Array.from({ length: 6 }).map((_, index) => (
-      <div
-        key={index}
-        className="flex flex-col gap-2 rounded-2xl border border-gray180 p-3"
-      >
-        <div className="h-8 w-8 animate-pulse rounded-lg bg-gray10/50" />
-        <div className="h-3 w-3/4 animate-pulse rounded-full bg-gray10/50" />
-      </div>
+      <div key={index} className="skeleton h-21.5 rounded-xl" />
     ))}
   </div>
 );

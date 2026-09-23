@@ -3,22 +3,25 @@ import type { CartItemProps } from "@/types/cart";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { getActiveCartCount } from "@/utils/cart";
 import {
   addProduct,
-  decrementProduct,
-  getCartCount,
-  incrementProduct,
-  setProductQuantity,
-  withoutProduct,
+  type CartLineKey,
+  setLineQuantity,
+  setPlainProductQuantity,
+  withoutLine,
 } from "@/utils/cart-items";
 
 type CartVariant = "desktop" | "mobile";
 type CartStoreProps = {
+  // Items on active lines only — the same count the checkout shows and
+  // orders (badges, floating cart).
   cartCount: number;
   carts: CartItemProps[];
   isCartOpen: boolean;
   cartVariant: CartVariant | null;
-  removeProductId: number | null;
+  // The cart line (getCartLineKey) the remove-confirm dialog is for.
+  removeLineKey: CartLineKey | null;
   clearCartConfirmOpen: boolean;
   // Set by useCartFooter's handleContinue when it has to interrupt checkout
   // to show the login modal — lets that same hook resume checkout once
@@ -32,14 +35,14 @@ type CartStoreProps = {
   setUnavailableItemIds: (unavailableItemIds: number[]) => void;
   setCarts: (carts: CartItemProps[]) => void;
   addCart: (product: ProductProps) => void;
-  incrementCart: (productId: number) => void;
-  decrementCart: (productId: number) => void;
-  setCartQuantity: (productId: number, quantity: number) => void;
-  removeCart: (productId: number) => void;
+  // One cart line (drawer rows); 0 removes it.
+  setCartQuantity: (lineKey: CartLineKey, quantity: number) => void;
+  // A product card's plain (no-parameter) line only; 0 removes it.
+  setProductQuantity: (productId: number, quantity: number) => void;
   openCartModal: (variant: CartVariant) => void;
   toggleCartModal: (variant: CartVariant) => void;
   closeCartModal: () => void;
-  openRemoveModal: (productId: number) => void;
+  openRemoveModal: (lineKey: CartLineKey) => void;
   closeRemoveModal: () => void;
   openClearCartModal: () => void;
   closeClearCartModal: () => void;
@@ -55,7 +58,7 @@ export const useCartStore = create<CartStoreProps>()(
       carts: [],
       isCartOpen: false,
       cartVariant: null,
-      removeProductId: null,
+      removeLineKey: null,
       clearCartConfirmOpen: false,
       pendingCheckout: false,
       unavailableItemIds: [],
@@ -71,19 +74,19 @@ export const useCartStore = create<CartStoreProps>()(
       setCarts: (carts) => {
         set({
           carts,
-          cartCount: getCartCount(carts),
+          cartCount: getActiveCartCount(carts),
         });
       },
 
-      openRemoveModal: (productId) => {
+      openRemoveModal: (lineKey) => {
         set({
-          removeProductId: productId,
+          removeLineKey: lineKey,
         });
       },
 
       closeRemoveModal: () => {
         set({
-          removeProductId: null,
+          removeLineKey: null,
         });
       },
 
@@ -100,16 +103,16 @@ export const useCartStore = create<CartStoreProps>()(
       },
 
       confirmRemoveCart: () => {
-        const productId = get().removeProductId;
+        const lineKey = get().removeLineKey;
 
-        if (productId === null) return;
+        if (lineKey === null) return;
 
-        const newCarts = withoutProduct(get().carts, productId);
+        const newCarts = withoutLine(get().carts, lineKey);
 
         set({
           carts: newCarts,
-          cartCount: getCartCount(newCarts),
-          removeProductId: null,
+          cartCount: getActiveCartCount(newCarts),
+          removeLineKey: null,
           clearCartConfirmOpen: false,
         });
       },
@@ -119,7 +122,7 @@ export const useCartStore = create<CartStoreProps>()(
           carts: [],
           isCartOpen: false,
           cartVariant: null,
-          removeProductId: null,
+          removeLineKey: null,
           clearCartConfirmOpen: false,
           pendingCheckout: false,
           unavailableItemIds: [],
@@ -142,42 +145,31 @@ export const useCartStore = create<CartStoreProps>()(
           cartVariant: state.isCartOpen ? null : variant,
         }));
       },
-      removeCart: (productId) => {
-        const newCarts = withoutProduct(get().carts, productId);
-        set({
-          carts: newCarts,
-          cartCount: getCartCount(newCarts),
-        });
-      },
       addCart: (product) => {
         const newCarts = addProduct(get().carts, product);
         set({
           carts: newCarts,
-          cartCount: getCartCount(newCarts),
+          cartCount: getActiveCartCount(newCarts),
         });
       },
-      setCartQuantity: (productId, quantity) => {
-        const newCarts = setProductQuantity(get().carts, productId, quantity);
+      setCartQuantity: (lineKey, quantity) => {
+        const newCarts = setLineQuantity(get().carts, lineKey, quantity);
 
         set({
           carts: newCarts,
-          cartCount: getCartCount(newCarts),
+          cartCount: getActiveCartCount(newCarts),
         });
       },
-      incrementCart: (productId) => {
-        const newCarts = incrementProduct(get().carts, productId);
-        set({
-          carts: newCarts,
-          cartCount: getCartCount(newCarts),
-        });
-      },
+      setProductQuantity: (productId, quantity) => {
+        const newCarts = setPlainProductQuantity(
+          get().carts,
+          productId,
+          quantity,
+        );
 
-      decrementCart: (productId) => {
-        const newCarts = decrementProduct(get().carts, productId);
-        if (!newCarts) return;
         set({
           carts: newCarts,
-          cartCount: getCartCount(newCarts),
+          cartCount: getActiveCartCount(newCarts),
         });
       },
     }),

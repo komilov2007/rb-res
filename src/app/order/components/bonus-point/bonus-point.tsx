@@ -19,27 +19,27 @@ const BonusPoint = () => {
   const cashbackBall = profile?.data.cashback_ball ?? 0;
 
   return (
-    <section className="rounded-2xl bg-white p-4">
-      <div className="flex items-start justify-between gap-3">
+    <section className="rounded-xl bg-white p-3">
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <h2 className="text-sm font-bold text-black">
+          <h2 className="text-sm font-medium text-black">
             {t("order_page_bonus_title")}
           </h2>
-          <p className="mt-0.5 text-xs font-medium text-gray220">
+          <p className="mt-0.5 text-xs font-normal text-gray220">
             {t("order_page_bonus_rate", {
               amount: general?.data.cashback_amount ?? 0,
               currency: general?.data.currency?.code ?? "",
             })}
           </p>
         </div>
-        <span className="shrink-0 rounded-full bg-gray10 px-3 py-1 text-sm font-bold text-black">
+        <span className="shrink-0 rounded-full bg-gray10 px-3 py-1 text-sm font-medium text-black">
           {t("order_page_bonus_balance", { ball: formatPrice(cashbackBall) })}
         </span>
       </div>
 
       <hr className="my-3 border-gray180" />
 
-      <label className="flex items-center justify-between gap-3">
+      <label className="flex items-center justify-between gap-2">
         <span className="text-sm font-normal text-black">
           {t("order_page_bonus_use")}
         </span>

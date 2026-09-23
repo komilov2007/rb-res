@@ -1,6 +1,7 @@
 "use client";
 
-import { Phone, Store } from "lucide-react";
+import { Store } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
@@ -34,36 +35,36 @@ const BranchCard = ({
         isActive ? "ring-2 ring-green-500" : ""
       }`}
     >
-      <div className="flex items-start gap-2">
-        <Store
-          size={16}
-          className="mt-0.5 shrink-0 text-gray220"
-        />
-        <p className="text-sm font-bold text-black">
-          {branch.name}
-        </p>
+      <div>
+        <div className="flex items-start gap-2">
+          <Store
+            size={16}
+            className="mt-0.5 shrink-0 text-gray220"
+          />
+          <p className="info-label">{branch.name}</p>
+        </div>
+        <p className="info-value">{branch.address}</p>
       </div>
-      <p className="text-sm font-medium text-gray220">
-        {branch.address}
-      </p>
 
       {branch.phone && (
         <a
           href={`tel:${branch.phone}`}
-          className="flex items-center gap-2 text-sm font-medium text-black"
+          className="flex items-center gap-2"
         >
-          <Phone
+          <IconPhoneFilled
             size={14}
             className="shrink-0 text-gray220"
           />
-          {branch.phone}
+          <span className="text-[13px] font-medium text-gray220/70">
+            {branch.phone}
+          </span>
         </a>
       )}
 
       {/* Always fully expanded — the whole week is shown
           at once, no show-more toggle. */}
       <div className="flex flex-col gap-1.5">
-        <p className="text-xs font-bold text-black">
+        <p className="text-xs font-medium text-black">
           {t("location_branch_picker_schedule")}
         </p>
         <ul className="flex flex-col gap-1">
@@ -77,15 +78,17 @@ const BranchCard = ({
             return (
               <li
                 key={day}
-                className="flex items-start justify-between gap-3 text-xs font-medium text-gray220"
+                className="flex items-start justify-between gap-3"
               >
-                <span className="shrink-0">
+                <span className="info-label shrink-0">
                   {t(`weekdays_${index + 1}`)}:
                 </span>
                 {isClosed ? (
-                  <span>—</span>
+                  <span className="text-[13px] font-medium text-gray220/70">
+                    —
+                  </span>
                 ) : (
-                  <span className="text-right text-black">
+                  <span className="text-right text-[13px] font-medium text-gray220/70">
                     {entry.hours.map((hour, hourIndex) => (
                       <span key={hourIndex} className="block">
                         {formatTime(hour.open)} -{" "}

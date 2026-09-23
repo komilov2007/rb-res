@@ -1,4 +1,6 @@
-import { ChefHat, Check, PackageCheck, ShoppingBag } from "lucide-react";
+import { Check, PackageCheck, ShoppingBag } from "lucide-react";
+import { IconChefHatFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import type { OrderStatusValue } from "@/types/order";
@@ -30,7 +32,7 @@ const STEP_LABELS = [
   "orders_timeline_handed_over",
 ];
 
-const STEP_ICONS = [Check, ChefHat, ShoppingBag, PackageCheck];
+const STEP_ICONS = [Check, IconChefHatFilled, ShoppingBag, PackageCheck];
 
 type StatusTimelineProps = {
   status: OrderStatusValue;

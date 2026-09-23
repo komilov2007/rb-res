@@ -24,6 +24,7 @@ import {
   NearestBranchPill,
   TabProps,
 } from "./selection-parts";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const DeliveryTab = ({
   selection,
@@ -48,7 +49,7 @@ export const DeliveryTab = ({
     mutationFn: updateAddressStatus,
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: ["user-addresses", auth?.customer],
+        queryKey: [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
       });
     },
   });
@@ -84,10 +85,10 @@ export const DeliveryTab = ({
       <button
         type="button"
         onClick={onOpenMap}
-        className={getRowClassName(false)}
+        className="flex min-h-16 w-full items-center gap-3 rounded-2xl border border-dashed border-primary/40 px-3 py-2.5 text-left transition-colors duration-200 hover:bg-primary10/60"
       >
         <RowIcon />
-        <span className="min-w-0 flex-1 text-sm font-normal text-gray220">
+        <span className="min-w-0 flex-1 text-sm font-normal text-black">
           {t("home_branch_selection_new_address_placeholder")}
         </span>
         <Pill tone="primary">{t("home_branch_selection_map_pill")}</Pill>
@@ -125,9 +126,15 @@ export const DeliveryTab = ({
               {t("home_branch_selection_login_for_saved")}
             </p>
           ) : !addresses ? (
-            <p className="py-2 text-sm font-normal text-gray220">
-              {t("home_branch_selection_addresses_loading")}
-            </p>
+            // Row-sized skeletons, same box as a saved-address row.
+            <div
+              aria-label={t("home_branch_selection_addresses_loading")}
+              className="flex flex-col gap-2"
+            >
+              {Array.from({ length: 2 }).map((_, index) => (
+                <div key={index} className="skeleton h-16 w-full rounded-2xl" />
+              ))}
+            </div>
           ) : (
             visibleAddresses.map((item) => {
               const checked = isDeliverySelected && addressId === item.id;

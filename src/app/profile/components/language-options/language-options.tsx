@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import RadioMark, { getOptionClassName } from "@/components/ui/radio-mark";
 
 import { useLanguage } from "@/components/language/useLanguage";
 import { languages } from "@/constants/language";
@@ -30,23 +30,13 @@ const LanguageOptions = ({ onSelect }: LanguageOptionsProps) => {
           handleChangeLanguage(key);
           onSelect?.();
         }}
-        className={`flex h-11 items-center gap-3 rounded-xl border px-3 text-left transition-colors ${
-          checked ? "border-green-500 bg-green-500/10" : "border-gray180"
-        }`}
+        className={`flex h-12 items-center gap-3 rounded-2xl px-3 text-left ${getOptionClassName(checked)}`}
       >
         <Icon />
-        <span className="flex-1 text-sm font-medium text-black">
+        <span className="flex-1 text-sm font-normal text-black">
           {language.label}
         </span>
-        <span
-          className={`grid h-5 w-5 place-items-center rounded-full border-2 ${
-            checked
-              ? "border-green-500 bg-green-500 text-white"
-              : "border-gray180"
-          }`}
-        >
-          {checked && <Check size={12} strokeWidth={3} />}
-        </span>
+        <RadioMark checked={checked} />
       </button>
     );
   });

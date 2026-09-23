@@ -35,7 +35,7 @@ const LocationAddresses = ({
   return (
     <div className="flex max-h-[70dvh] w-full flex-col bg-white px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-4">
       <div className="shrink-0 border-b border-gray180 pb-3 flex items-center justify-between gap-4">
-        <h2 className="text-[22px] font-bold leading-7 text-black">
+        <h2 className="text-[22px] font-medium leading-7 text-black">
           {t("location_my_addresses")}
         </h2>
         <XButton size="lg" onClick={onClose} className="bg-gray10" />
@@ -43,8 +43,21 @@ const LocationAddresses = ({
 
       <div className="scroll-hidden max-h-[52dvh] min-h-0 overflow-y-auto">
         {!addresses && (
-          <div className="py-8 text-sm font-normal text-gray220">
-            {t("location_addresses_loading")}
+          // Same row shape as a loaded address: radio, two text lines, edit button.
+          <div aria-label={t("location_addresses_loading")}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-3 border-b border-gray180 py-3 last:border-b-0"
+              >
+                <span className="skeleton h-5 w-5 shrink-0 rounded-full" />
+                <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <span className="skeleton h-4 w-3/5 rounded-full" />
+                  <span className="skeleton h-3 w-2/5 rounded-full" />
+                </span>
+                <span className="skeleton h-9 w-9 shrink-0 rounded-full" />
+              </div>
+            ))}
           </div>
         )}
 
@@ -75,11 +88,11 @@ const LocationAddresses = ({
                 onClick={() => onSelect(item)}
                 className="min-w-0 flex-1 text-left"
               >
-                <span className="line-clamp-1 text-sm font-medium leading-5 text-black">
+                <span className="info-label line-clamp-1">
                   {address.title}
                 </span>
                 {address.subtitle && (
-                  <span className="mt-0.5 block line-clamp-1 text-xs font-medium leading-4 text-gray220">
+                  <span className="info-value line-clamp-1">
                     {address.subtitle}
                   </span>
                 )}

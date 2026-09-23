@@ -5,6 +5,6 @@ import Atmosphere from ".";
 //   "two"   — full-screen vertical slides, one room per swipe
 //   "three" — auto "look around" tour: drifting scenes, story bars, tap to step
 //   "four"  — cinematic premium: curtain hero, word-by-word text, parallax photos
-const Page = () => <Atmosphere variant="four" />;
+const Page = () => <Atmosphere variant="one" />;
 
 export default Page;

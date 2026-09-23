@@ -31,7 +31,6 @@ const Categories = () => {
     categories,
     resolvedMobileLayoutVariant,
     isMobileScrollLayout,
-    isDesktopSwiperLayout,
     isDefaultDesktopVariant,
     mobileCategories,
     shouldShowActiveCategory,
@@ -117,7 +116,7 @@ const Categories = () => {
           ref={desktopListRef}
           className="scroll-hidden relative hidden w-full max-w-7xl overflow-visible lg:block"
         >
-          {isDesktopSwiperLayout && !isBeginning && (
+          {!isBeginning && (
             <Button
               variant="swiperNav"
               size="swiperNav"
@@ -129,55 +128,47 @@ const Categories = () => {
             </Button>
           )}
 
-          {isDesktopSwiperLayout ? (
-            <Swiper
-              modules={[A11y, FreeMode]}
-              spaceBetween={12}
-              freeMode={{ enabled: true }}
-              roundLengths={true}
-              centeredSlides={false}
-              slidesOffsetAfter={0}
-              slidesOffsetBefore={0}
-              watchOverflow={true}
-              onSwiper={(currentSwiper) => {
-                setSwiper(currentSwiper);
-                updateNavigation(currentSwiper);
-              }}
-              onSlideChange={updateNavigation}
-              onReachBeginning={updateNavigation}
-              onReachEnd={updateNavigation}
-              onFromEdge={updateNavigation}
-              slidesPerView={isDefaultDesktopVariant ? 9 : "auto"}
-              breakpoints={
-                isDefaultDesktopVariant
-                  ? {
-                      320: { slidesPerView: 4 },
-                      480: { slidesPerView: 5 },
-                      900: { slidesPerView: 7 },
-                      1024: { slidesPerView: 9 },
-                    }
-                  : undefined
-              }
-              className="pb-1"
-            >
-              {categories.map((item: CategoriesProps, index) => (
-                <SwiperSlide
-                  key={item.id}
-                  className={isDefaultDesktopVariant ? undefined : "!w-auto"}
-                >
-                  {renderDesktopCategory(item, index)}
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          ) : (
-            <div className="flex flex-wrap items-center justify-start gap-3 pb-1">
-              {categories.map((item: CategoriesProps, index) => (
-                <div key={item.id}>{renderDesktopCategory(item, index)}</div>
-              ))}
-            </div>
-          )}
+          <Swiper
+            modules={[A11y, FreeMode]}
+            spaceBetween={12}
+            freeMode={{ enabled: true }}
+            roundLengths={true}
+            centeredSlides={false}
+            slidesOffsetAfter={0}
+            slidesOffsetBefore={0}
+            watchOverflow={true}
+            onSwiper={(currentSwiper) => {
+              setSwiper(currentSwiper);
+              updateNavigation(currentSwiper);
+            }}
+            onSlideChange={updateNavigation}
+            onReachBeginning={updateNavigation}
+            onReachEnd={updateNavigation}
+            onFromEdge={updateNavigation}
+            slidesPerView={isDefaultDesktopVariant ? 9 : "auto"}
+            breakpoints={
+              isDefaultDesktopVariant
+                ? {
+                    320: { slidesPerView: 4 },
+                    480: { slidesPerView: 5 },
+                    900: { slidesPerView: 7 },
+                    1024: { slidesPerView: 9 },
+                  }
+                : undefined
+            }
+            className="pb-1"
+          >
+            {categories.map((item: CategoriesProps, index) => (
+              <SwiperSlide
+                key={item.id}
+                className={isDefaultDesktopVariant ? undefined : "!w-auto"}
+              >
+                {renderDesktopCategory(item, index)}
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
-          {isDesktopSwiperLayout && !isEnd && (
+          {!isEnd && (
             <Button
               variant="swiperNav"
               size="swiperNav"

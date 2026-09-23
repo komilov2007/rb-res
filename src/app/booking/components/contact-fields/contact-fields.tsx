@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, Plus, User, UserRound, X } from "lucide-react";
+import { Plus, UserRound, X } from "lucide-react";
+import { IconPhoneFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
@@ -46,31 +47,31 @@ const ContactFields = () => {
       {/* Read-only, same style profile/edit uses for its phone — changing
           either belongs to the profile, not to a single booking. */}
       <Input
-        IconStart={User}
+        IconStart={IconUserFilled}
         disabled
         readOnly
         value={name}
         aria-label={t("booking_your_name")}
         placeholder={t("booking_your_name")}
-        className="font-medium text-[#3D3D3D]"
+        className="font-normal text-[#3D3D3D]"
         wrapperClassName="!h-12 !rounded-xl bg-gray10"
       />
 
       <Input
-        IconStart={Phone}
+        IconStart={IconPhoneFilled}
         disabled
         readOnly
         value={phone ? `+998 ${formatPhone(phone)}` : ""}
         aria-label={t("phone_number")}
         placeholder={t("phone_number")}
-        className="font-medium text-[#3D3D3D]"
+        className="font-normal text-[#3D3D3D]"
         wrapperClassName="!h-12 !rounded-xl bg-gray10"
       />
 
       {showExtraPhone ? (
         <div>
           <div className="mb-1.5 flex items-center justify-between px-1">
-            <span className="text-xs font-medium text-gray220">
+            <span className="text-xs font-normal text-gray220">
               {t("booking_extra_phone")} · {t("booking_optional")}
             </span>
             <Button
@@ -105,7 +106,7 @@ const ContactFields = () => {
         <button
           type="button"
           onClick={() => setShowExtraPhone(true)}
-          className="flex w-fit items-center gap-1.5 px-1 text-sm font-medium text-primary"
+          className="flex w-fit items-center gap-1.5 px-1 text-sm font-normal text-primary"
         >
           <Plus size={16} strokeWidth={2.4} />
           {t("booking_add_extra_phone")}

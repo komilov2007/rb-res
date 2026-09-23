@@ -8,12 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperClass } from "swiper";
-import "swiper/css";
 import {
   getDesktopVariant,
   getMobileGap,
   getMobileLayoutVariant,
 } from "./variants";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Category bar state: the category list, the fixed-on-scroll modes with
 // the active section tracking, swiper navigation, and tap handling.
@@ -38,7 +38,7 @@ export const useCategories = () => {
   const { shopid, hasShopId } = useShopId();
   const { data, isLoading } = useQuery({
     enabled: hasShopId,
-    queryKey: ["categories", shopid],
+    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
     queryFn: () => getCategories(shopid as string),
   });
 
@@ -46,8 +46,6 @@ export const useCategories = () => {
   const resolvedMobileLayoutVariant = getMobileLayoutVariant();
   const isMobileScrollLayout = resolvedMobileLayoutVariant === "scroll";
   const isMobileFullLayout = resolvedMobileLayoutVariant === "full";
-  const isDesktopSwiperLayout =
-    isDesktopFixed || true;
   const effectiveDesktopVariant = getDesktopVariant(isDesktopFixed);
   const isDefaultDesktopVariant = effectiveDesktopVariant === "default";
   const mobileCategories =
@@ -169,7 +167,6 @@ export const useCategories = () => {
     categories,
     resolvedMobileLayoutVariant,
     isMobileScrollLayout,
-    isDesktopSwiperLayout,
     isDefaultDesktopVariant,
     mobileCategories,
     shouldShowActiveCategory,

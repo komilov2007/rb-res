@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { galleryImages } from "@/constants/atmosphere";
 
@@ -33,8 +33,13 @@ const GalleryModal = ({
     >
       <DialogContent
         showCloseButton={false}
+        aria-describedby={undefined}
         className="h-[88dvh] max-w-[calc(100vw-24px)] overflow-hidden rounded-2xl border-0 bg-black p-0 lg:grid lg:max-w-[1180px] lg:grid-cols-[1fr_260px]"
       >
+        {/* Radix requires a title for screen readers (console error without). */}
+        <DialogTitle className="sr-only">
+          {t("atmosphere_gallery_title")}
+        </DialogTitle>
         <div className="relative flex min-h-0 items-center justify-center bg-black">
           {activeImage && (
             <img
@@ -72,6 +77,7 @@ const GalleryModal = ({
             variant="plain"
             size="none"
             onClick={onClose}
+            aria-label={t("common_close")}
             className="absolute right-4 top-4 h-10 w-10 rounded-full bg-black/45 text-white backdrop-blur-md hover:text-gray220"
           >
             <X size={22} />

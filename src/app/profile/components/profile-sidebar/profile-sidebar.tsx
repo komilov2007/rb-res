@@ -2,16 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import {
-  Bell,
-  CircleHelp,
-  Edit3,
-  Globe2,
-  LogIn,
-  MapPin,
-  MessageCircle,
-  Package,
-} from "lucide-react";
+import { Globe2, LogIn, Package } from "lucide-react";
+import { IconBellFilled, IconHelpCircleFilled, IconMapPinFilled, IconMessageCircleFilled, IconPencilFilled } from "@tabler/icons-react";
 
 import { ROUTER } from "@/constants/router";
 import { useOpenChat } from "@/hooks/useOpenChat";
@@ -23,7 +15,7 @@ import LogoutDialog from "../logout-dialog";
 import SidebarContact from "./sidebar-contact";
 import SidebarRow, { SIDEBAR_GROUP_CLASS_NAME } from "./sidebar-row";
 
-// Desktop-only persistent left card for the whole profile family of routes
+// Desktop-only persistent left panel for the whole profile family of routes
 // (profile itself, addresses, notifications, about) — rendered by both
 // profile.tsx and ProfilePageShell so it stays put while navigating between
 // them. Fully self-contained (own data fetching, own modals) since it
@@ -55,7 +47,7 @@ const ProfileSidebar = () => {
 
   return (
     <>
-      <div className="flex w-96 shrink-0 flex-col gap-2">
+      <div className="flex w-96 shrink-0 flex-col divide-y divide-gray180">
         {/* Account card. */}
         <AccountCard
           variant="sidebar"
@@ -72,7 +64,7 @@ const ProfileSidebar = () => {
         <div className={SIDEBAR_GROUP_CLASS_NAME}>
           {hasAccess && (
             <SidebarRow
-              icon={Edit3}
+              icon={IconPencilFilled}
               label={t("profile_page_menu_edit_profile")}
               // Bare /profile shows this same form by default in the content
               // pane, so it reads as active there too, not just on
@@ -83,11 +75,6 @@ const ProfileSidebar = () => {
               onClick={() => router.push(`${ROUTER.PROFILE_EDIT}${shopQuery}`)}
             />
           )}
-          {/* Desktop-only destination: /profile/orders shows the same
-              order list inside this persistent sidebar's content pane
-              instead of navigating out to /my-orders, which has no desktop
-              layout of its own. Mobile's own "Buyurtmalarim" row (in
-              profile.tsx) still goes to /my-orders, unchanged. */}
           <SidebarRow
             icon={Package}
             label={t("order")}
@@ -95,7 +82,7 @@ const ProfileSidebar = () => {
             onClick={() => router.push(`${ROUTER.PROFILE_ORDERS}${shopQuery}`)}
           />
           <SidebarRow
-            icon={MapPin}
+            icon={IconMapPinFilled}
             label={t("profile_page_menu_addresses")}
             active={pathname?.startsWith(ROUTER.PROFILE_ADDRESSES)}
             onClick={() =>
@@ -107,7 +94,7 @@ const ProfileSidebar = () => {
         {/* Info. */}
         <div className={SIDEBAR_GROUP_CLASS_NAME}>
           <SidebarRow
-            icon={Bell}
+            icon={IconBellFilled}
             label={t("profile_page_menu_notifications")}
             active={pathname?.startsWith(ROUTER.PROFILE_NOTIFICATIONS)}
             onClick={() =>
@@ -125,7 +112,7 @@ const ProfileSidebar = () => {
             }
           />
           <SidebarRow
-            icon={CircleHelp}
+            icon={IconHelpCircleFilled}
             label={t("about_us")}
             active={pathname?.startsWith(ROUTER.PROFILE_ABOUT)}
             onClick={() => router.push(`${ROUTER.PROFILE_ABOUT}${shopQuery}`)}
@@ -133,20 +120,20 @@ const ProfileSidebar = () => {
           {/* Routes to the existing live chat feature — a real contact
               channel already in this app, not a new one. */}
           <SidebarRow
-            icon={MessageCircle}
+            icon={IconMessageCircleFilled}
             label={t("profile_page_menu_contact_us")}
             active={isChatModalOpen}
             onClick={openChat}
           />
         </div>
 
-        {/* Logout card — same padded group card as the menus above, with
+        {/* Logout section — same padded group as the menus above, with
             its own tinted hover (red for logout, primary for login). */}
         <div className={SIDEBAR_GROUP_CLASS_NAME}>
           <button
             type="button"
             onClick={handleAccountAction}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-bold outline-none transition-colors duration-150 focus-visible:ring-2 ${
+            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium outline-none transition-colors duration-150 focus-visible:ring-2 ${
               hasAccess
                 ? "text-red hover:bg-red/10 focus-visible:ring-red/40"
                 : "text-primary hover:bg-primary10 focus-visible:ring-primary/40"

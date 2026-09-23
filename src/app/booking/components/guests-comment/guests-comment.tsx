@@ -1,17 +1,17 @@
 "use client";
 
-import { MessageSquareText, Minus, Plus, Users } from "lucide-react";
+import { Minus, Plus, Users } from "lucide-react";
+import { IconMessageFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 
 import Button from "@/components/ui/button";
 import { getDigits } from "@/utils/format-number";
 
+import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "../../constants";
 import type { BookingFormValues } from "../../schema";
 import SectionTitle from "../section-title";
 
-const MIN_GUESTS = 1;
-const MAX_GUESTS = 999;
 
 const GuestsComment = () => {
   const t = useTranslations();
@@ -37,9 +37,9 @@ const GuestsComment = () => {
                   type="button"
                   variant="cart-plus"
                   size="cartActionMobile"
-                  disabled={field.value <= MIN_GUESTS}
+                  disabled={field.value <= BOOKING_MIN_GUESTS}
                   onClick={() =>
-                    field.onChange(Math.max(MIN_GUESTS, field.value - 1))
+                    field.onChange(Math.max(BOOKING_MIN_GUESTS, field.value - 1))
                   }
                   className="!text-black hover:!bg-gray180"
                 >
@@ -55,20 +55,20 @@ const GuestsComment = () => {
                     field.onChange(Number(getDigits(event.target.value, 3)))
                   }
                   onBlur={() => {
-                    if (field.value < MIN_GUESTS) field.onChange(MIN_GUESTS);
+                    if (field.value < BOOKING_MIN_GUESTS) field.onChange(BOOKING_MIN_GUESTS);
                     field.onBlur();
                   }}
                   onFocus={(event) => event.target.select()}
                   // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
-                  className="w-10 bg-transparent text-center text-base font-medium text-black outline-none"
+                  className="w-10 bg-transparent text-center text-base font-normal text-black outline-none"
                 />
                 <Button
                   type="button"
                   variant="cart-plus"
                   size="cartActionMobile"
-                  disabled={field.value >= MAX_GUESTS}
+                  disabled={field.value >= BOOKING_MAX_GUESTS}
                   onClick={() =>
-                    field.onChange(Math.min(MAX_GUESTS, field.value + 1))
+                    field.onChange(Math.min(BOOKING_MAX_GUESTS, field.value + 1))
                   }
                   className="!text-black hover:!bg-gray180"
                 >
@@ -84,7 +84,7 @@ const GuestsComment = () => {
 
       <div className="flex flex-col gap-3">
         <SectionTitle
-          Icon={MessageSquareText}
+          Icon={IconMessageFilled}
           title={t("booking_leave_comment")}
         />
         <Controller

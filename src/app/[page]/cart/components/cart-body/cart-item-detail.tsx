@@ -18,6 +18,7 @@ import {
 } from "@/components/modal/product-detail/utils";
 import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/utils";
 import { getSaleLabel } from "./utils";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Read-only view — the cart item's parameter is already fixed once it's in
 // the cart, so unlike the full ProductDetailMobile (which owns its own
@@ -31,7 +32,7 @@ export const CartItemDetail = ({ item }: { item: CartItemProps }) => {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const { data, isLoading } = useQuery({
     enabled: Boolean(item.product.id),
-    queryKey: ["product-detail", item.product.id],
+    queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, item.product.id],
     queryFn: () => getProductDetail(item.product.id),
   });
 
@@ -91,7 +92,7 @@ export const CartItemDetail = ({ item }: { item: CartItemProps }) => {
 
           <div className="px-4 pb-5 pt-4">
             {detail.category?.name && (
-              <span className="inline-flex rounded-lg bg-gray10 px-3 py-1 text-xs font-bold text-black">
+              <span className="inline-flex rounded-lg bg-gray10 px-3 py-1 text-xs font-medium text-black">
                 {detail.category.name}
               </span>
             )}
@@ -101,7 +102,7 @@ export const CartItemDetail = ({ item }: { item: CartItemProps }) => {
             </h2>
 
             <div className="mt-3 flex items-center gap-2">
-              <p className="text-lg font-bold text-black">
+              <p className="text-lg font-medium text-black">
                 {formatPrice(price)} {t("sum")}
               </p>
               {oldPrice && (

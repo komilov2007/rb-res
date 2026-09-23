@@ -23,16 +23,16 @@ const AtmospherePhotos = ({ onOpen }: AtmospherePhotosProps) => {
     <div className="relative z-10 -mt-6 rounded-t-[24px] bg-white px-4 pb-6 pt-5">
       <span className="mx-auto mb-4 block h-1 w-10 rounded-full bg-gray180" />
 
-      <p className="text-sm font-medium leading-6 text-gray220">
+      <p className="text-sm font-normal leading-6 text-gray220">
         {t("booking_gallery_description")}
       </p>
 
       <div className="mt-6 flex items-center justify-between">
-        <h3 className="flex items-center gap-2 text-sm font-bold text-black">
+        <h3 className="flex items-center gap-2 text-sm font-medium text-black">
           <Images size={18} className="text-gray220" />
           {t("atmosphere_gallery_title")}
         </h3>
-        <span className="text-xs font-medium text-gray220">
+        <span className="text-xs font-normal text-gray220">
           {galleryImages.length}
         </span>
       </div>

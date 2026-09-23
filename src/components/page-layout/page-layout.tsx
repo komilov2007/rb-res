@@ -11,17 +11,17 @@ import ProductDetailMobile from "@/components/modal/product-detail";
 
 type PageLayoutProps = {
   children: ReactNode;
-  showFloatingCart?: boolean;
 };
 
-const PageLayout = ({ children, showFloatingCart }: PageLayoutProps) => {
+const PageLayout = ({ children }: PageLayoutProps) => {
   return (
     <div className="min-h-screen bg-gray10 pb-[74px] lg:pb-0">
       <Header />
       <main className="bg-gray10">{children}</main>
-      <div className="h-3 bg-gray10" />
+      <div className="h-2 bg-gray10" />
       <Footer />
-      {showFloatingCart && <FloatingCart />}
+      {/* Desktop-only; sits under the Hand action button. */}
+      <FloatingCart />
       <MobileAction />
       <MobileFooter />
       <ProductDetailMobile />

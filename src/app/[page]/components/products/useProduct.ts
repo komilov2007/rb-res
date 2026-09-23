@@ -14,6 +14,7 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const PRODUCTS_LIMIT = 10;
 
@@ -21,7 +22,7 @@ const PRODUCTS_LIMIT = 10;
 export const productsQueryOptions = (shopid?: string) =>
   infiniteQueryOptions({
     enabled: Boolean(shopid),
-    queryKey: ["products", shopid],
+    queryKey: [REACT_QUERY_KEYS.PRODUCTS, shopid],
     queryFn: ({ pageParam }) =>
       getProducts(shopid as string, {
         limit: PRODUCTS_LIMIT,
@@ -58,7 +59,7 @@ export const useProduct = () => {
   } = useInfiniteQuery(productsQueryOptions(shopid));
   const { data: categories } = useQuery({
     enabled: hasShopId,
-    queryKey: ["categories", shopid],
+    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
     queryFn: () => getCategories(shopid as string),
   });
 

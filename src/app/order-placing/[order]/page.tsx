@@ -1,3 +1,10 @@
 import OrderPlacing from ".";
+import DesktopOrdersRedirect from "@/components/desktop-orders-redirect";
 
-export default OrderPlacing;
+const Page = () => (
+  <DesktopOrdersRedirect withOrder>
+    <OrderPlacing />
+  </DesktopOrdersRedirect>
+);
+
+export default Page;

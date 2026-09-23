@@ -21,7 +21,7 @@ const BookingHero = () => {
       onClick={() =>
         router.push(`${ROUTER.ATMOSPHERE}${shopid ? `?shop_id=${shopid}` : ""}`)
       }
-      className="relative block h-56 w-full overflow-hidden rounded-xl bg-black text-left"
+      className="relative block h-56 w-full overflow-hidden rounded-xl bg-black text-left lg:h-80"
     >
       <img
         src={galleryImages[0].src}
@@ -35,7 +35,7 @@ const BookingHero = () => {
       </span>
       <div className="absolute inset-x-4 bottom-4 text-white">
         <span className="mb-2 block h-1 w-8 rounded-full bg-white" />
-        <h2 className="text-lg font-bold leading-6">
+        <h2 className="text-lg font-medium leading-6">
           {t("booking_form_title")}
         </h2>
       </div>

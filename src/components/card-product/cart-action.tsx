@@ -1,5 +1,6 @@
 import { type ChangeEvent, type FocusEvent, useState } from "react";
-import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
+import { IconShoppingCartFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 type CartActionProps = {
@@ -59,9 +60,9 @@ const CartAction = ({
       <button
         onClick={onAdd}
         disabled={isLoading}
-        className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-bold text-white lg:ml-auto lg:w-full lg:translate-x-0 lg:px-4"
+        className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-medium text-white lg:ml-auto lg:w-full lg:translate-x-0 lg:px-4"
       >
-        <ShoppingCart size={16} strokeWidth={2.4} />
+        <IconShoppingCartFilled size={16} />
         <span className="whitespace-nowrap">{t("add_to_cart")}</span>
         <Plus size={18} strokeWidth={2.5} />
       </button>

@@ -21,7 +21,7 @@ const Products = () => {
 
   return (
     <>
-      <section className="mb-5 flex w-full items-center justify-center overflow-x-hidden px-4 pb-6 pt-0 lg:mb-0 lg:py-8">
+      <section className="flex w-full items-center justify-center overflow-x-hidden px-4 pb-6 pt-0 lg:py-8">
         <div className="flex w-full max-w-7xl flex-col gap-7 lg:gap-8">
           <DiscountProducts
             products={discountProducts}

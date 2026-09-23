@@ -32,16 +32,18 @@ const Page = () => {
     <Suspense>
       <PageLayout>
         {isLoading ? (
-          <div className="flex min-h-screen w-full items-center justify-center bg-white lg:min-h-[calc(100vh-146px)]">
+          <div className="flex min-h-screen w-full items-center justify-center bg-white lg:min-h-[calc(100vh-137px)]">
             <Loader />
           </div>
         ) : (
           <>
-            <section className="rounded-bl-[30px] rounded-br-[30px] bg-white py-0 lg:py-5">
+            {/* Desktop: slides 30px under the header (z-50) so the white fills its
+                rounded bottom corners — the two read as one block. */}
+            <section className="rounded-bl-[30px] rounded-br-[30px] bg-white py-0 lg:-mt-[30px] lg:pt-[50px] lg:pb-5">
               <Banner />
               <Categories />
             </section>
-            <div className="h-3 bg-gray10" />
+            <div className="h-2 bg-gray10" />
             <section className="rounded-[30px] bg-white">
               <Products />
             </section>

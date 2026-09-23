@@ -197,7 +197,6 @@ export const useLocationModal = () => {
       setComment,
       setEntrance,
       setFloor,
-      setLocationModal,
       setRoom,
     },
     refs: {

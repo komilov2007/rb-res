@@ -2,7 +2,6 @@
 
 import { type ChangeEvent, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { BannerSkeleton } from "@/components/ui/skeleton";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useBanner } from "@/app/[page]/components/banner/useBanner";
@@ -85,7 +84,7 @@ const Banner = () => {
             }`}
           >
             {isLoading ? (
-              <BannerSkeleton />
+              <div className="skeleton h-full w-full" />
             ) : (
               <BannerSwiper
                 banners={banners}
@@ -120,7 +119,7 @@ const Banner = () => {
               }`}
             >
               {isLoading ? (
-                <BannerSkeleton />
+                <div className="skeleton h-full w-full" />
               ) : (
                 <BannerSwiper
                   banners={banners}

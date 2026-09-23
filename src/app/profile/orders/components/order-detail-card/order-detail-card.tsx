@@ -17,7 +17,7 @@ import { formatOrderDate } from "@/utils/format-date";
 import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
 
-import StatusBadge from "@/app/my-orders/components/status-badge";
+import StatusBadge from "../status-badge";
 
 // Only used within this card's own product list — not shared elsewhere, so
 // it stays a plain local component rather than its own file.
@@ -38,20 +38,12 @@ const OrderItemRow = ({ item }: { item: MyOrderListItemProduct }) => {
           {item.count} {item.unit}
         </p>
       </div>
-      <p className="shrink-0 text-xs font-bold text-black">
+      <p className="shrink-0 text-xs font-medium text-black">
         {formatPrice(item.amount)} {t("sum")}
       </p>
     </li>
   );
 };
-
-// Softer than plain black/bold so the label (text-gray220) vs value contrast
-// reads as "muted label, legible-but-gentle value" rather than "muted label,
-// heavy black value" — still visibly darker/heavier than the label, just not
-// stark. No existing gray token in this project's palette sits between
-// gray220 and black, so this is a one-off value per the exact tone/weight
-// asked for here.
-const VALUE_CLASS_NAME = "text-[13px] font-medium text-[#3D3D3D]";
 
 type OrderDetailCardProps = {
   order: MyOrderListItem;
@@ -81,7 +73,9 @@ const OrderDetailCard = ({
 
   const isPickup =
     order.service_type === "PICKUP" || order.service_type === "BTS_PICKUP";
-  const locationLabel = isPickup ? t("orders_card_shop_address") : t("delivery_address");
+  const locationLabel = isPickup
+    ? t("orders_card_shop_address")
+    : t("delivery_address");
   const locationValue = isPickup ? order.branch : order.address;
   // Matches the confirmed rule on the order detail page (my-order-summary.tsx:
   // isCancellable = status === "NEW") — that's the verified backend
@@ -95,37 +89,35 @@ const OrderDetailCard = ({
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-gray180 bg-white p-4">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-bold text-black">ID-{order.id}</p>
+        <p className="text-sm font-medium text-black">ID-{order.id}</p>
         <StatusBadge status={order.status.status} />
       </div>
 
       {locationValue && (
         <div>
-          <p className="text-xs font-normal text-gray220">{locationLabel}</p>
-          <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>{locationValue}</p>
+          <p className="info-label">{locationLabel}</p>
+          <p className="info-value">{locationValue}</p>
         </div>
       )}
 
       <div>
-        <p className="text-xs font-normal text-gray220">
-          {t("orders_card_created_at")}
-        </p>
-        <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>
+        <p className="info-label">{t("orders_card_created_at")}</p>
+        <p className="info-value">
           {formatOrderDate(order.created_at).replace(" ", "; ")}
         </p>
       </div>
 
       {customerName && (
         <div>
-          <p className="text-xs font-normal text-gray220">{t("orders_card_full_name")}</p>
-          <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>{customerName}</p>
+          <p className="info-label">{t("orders_card_full_name")}</p>
+          <p className="info-value">{customerName}</p>
         </div>
       )}
 
       {customerPhone && (
         <div>
-          <p className="text-xs font-normal text-gray220">{t("orders_card_phone_number")}</p>
-          <p className={`mt-0.5 ${VALUE_CLASS_NAME}`}>{customerPhone}</p>
+          <p className="info-label">{t("orders_card_phone_number")}</p>
+          <p className="info-value">{customerPhone}</p>
         </div>
       )}
 
@@ -154,8 +146,8 @@ const OrderDetailCard = ({
       </div>
 
       <div className="flex items-center justify-between border-t border-gray180/60 pt-3">
-        <span className="text-xs font-normal text-gray220">{t("orders_card_total_price")}</span>
-        <span className={VALUE_CLASS_NAME}>
+        <span className="info-label">{t("orders_card_total_price")}</span>
+        <span className="text-sm font-medium text-black">
           {formatPrice(order.amount)} {t("sum")}
         </span>
       </div>
@@ -166,7 +158,7 @@ const OrderDetailCard = ({
           variant="plain"
           size="none"
           onClick={() => setConfirmOpen(true)}
-          className="h-11 w-full rounded-xl bg-red/10 text-sm font-bold text-red"
+          className="h-11 w-full rounded-xl bg-red/10 text-sm font-medium text-red"
         >
           {t("orders_cancel_button")}
         </Button>
@@ -177,7 +169,7 @@ const OrderDetailCard = ({
           className="max-w-[340px] rounded-3xl bg-white p-5"
           showCloseButton={false}
         >
-          <DialogTitle className="text-center text-xl font-bold text-black">
+          <DialogTitle className="text-center text-xl font-medium text-black">
             {t("orders_cancel_confirm_title")}
           </DialogTitle>
           <DialogDescription className="text-center text-sm font-normal text-gray220">

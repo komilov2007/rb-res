@@ -3,7 +3,6 @@
 import { Check, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { getShortAddress } from "@/components/branch-selection/utils";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import type { BranchProps } from "@/types/branch";
 import type { ProductProps } from "@/types/product";
@@ -39,12 +38,7 @@ const UnavailableBranchList = ({
   const availableBranches = allBranches.filter(
     (branch) => branch.is_active && product.branches?.includes(branch.id),
   );
-  // Two branches can share a display name (e.g. two "Chilonzor" locations)
-  // — that's real shop data, not a bug (confirmed against the live branch
-  // list API), but showing just the name in that case reads as the same
-  // place twice. The address underneath disambiguates it whenever that
-  // happens, so it's shown for every available row rather than only
-  // conditionally for colliding names.
+  // Name only — the card is too narrow for the address line.
   const availableRow = (branch: BranchProps) => (
     <button
       key={branch.id}
@@ -53,11 +47,8 @@ const UnavailableBranchList = ({
       className="flex w-full items-center gap-2.5 rounded-xl bg-primary10 px-3 py-2.5 text-left transition-colors hover:bg-primary10/70"
     >
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-bold text-black">
+        <span className="info-label block truncate">
           {t("product_available_in_branch", { name: branch.name })}
-        </span>
-        <span className="block truncate text-xs font-medium text-gray220">
-          {getShortAddress(branch.address)}
         </span>
       </span>
       {branch.id === currentBranchId ? (
@@ -79,9 +70,8 @@ const UnavailableBranchList = ({
       </p>
 
       {isLoading ? (
-        <p className="py-2 text-center text-xs font-medium text-gray220">
-          {t("common_loading")}
-        </p>
+        // Same height as one availableRow (py-2.5 + the name line).
+        <div className="skeleton h-10 w-full rounded-xl" />
       ) : availableBranches.length === 0 ? (
         <p className="py-2 text-center text-xs font-medium text-gray220">
           {t("product_not_in_any_branch")}

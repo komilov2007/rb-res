@@ -78,25 +78,25 @@ export const renderDetailContent = (ctx: ProductDetailRenderContext) => {
           />
           <div className="px-5 pt-4 lg:px-6 lg:pt-5">
             {detail.category?.name && (
-              <span className="inline-flex rounded-lg bg-gray10 px-3 py-1 text-xs font-bold text-black lg:rounded-xl lg:px-3.5 lg:py-1.5">
+              <span className="inline-flex rounded-lg bg-gray10 px-3 py-1 text-xs font-medium text-black lg:rounded-xl lg:px-3.5 lg:py-1.5">
                 {detail.category.name}
               </span>
             )}
 
             <div className="mt-3 flex items-start justify-between gap-4">
-              <h2 className="min-w-0 flex-1 text-lg font-bold leading-6 text-black lg:text-[22px] lg:leading-7">
+              <h2 className="min-w-0 flex-1 text-lg font-medium leading-6 text-black lg:text-[22px] lg:leading-7">
                 {detail.name}
               </h2>
 
               {detail.amount > 0 && (
-                <span className="shrink-0 rounded-full bg-gray10 px-3 py-1.5 text-xs font-bold text-gray220">
+                <span className="shrink-0 rounded-full bg-gray10 px-3 py-1.5 text-xs font-medium text-gray220">
                   {detail.amount} {unit ?? t("product_gram_unit")}
                 </span>
               )}
             </div>
 
             <div className="mt-3 flex items-center gap-2">
-              <p className="text-[22px] font-extrabold leading-7 text-black lg:text-[26px] lg:leading-8">
+              <p className="text-[22px] font-medium leading-7 text-black lg:text-[26px] lg:leading-8">
                 {formatPrice(price)} {t("sum")}
               </p>
               {oldPrice && (
@@ -114,7 +114,7 @@ export const renderDetailContent = (ctx: ProductDetailRenderContext) => {
                 <button
                   type="button"
                   onClick={handleChooseAnotherBranch}
-                  className="mt-1 text-sm font-bold text-black underline-offset-2 hover:underline"
+                  className="mt-1 text-sm font-medium text-black underline-offset-2 hover:underline"
                 >
                   {t("product_choose_other_branch")}
                 </button>

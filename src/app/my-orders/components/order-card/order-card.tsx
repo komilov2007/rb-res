@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MapPin } from "lucide-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { useShopId } from "@/hooks/useShopId";
@@ -54,7 +54,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <p className="text-sm font-bold text-black">№{order.id}</p>
+          <p className="text-sm font-medium text-black">№{order.id}</p>
           <StatusBadge status={order.status.status} />
         </div>
 
@@ -64,7 +64,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
 
         {locationText && (
           <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-gray220">
-            <MapPin size={13} className="shrink-0 text-gray220" />
+            <IconMapPinFilled size={13} className="shrink-0 text-gray220" />
             <span className="truncate">{locationText}</span>
           </div>
         )}
@@ -73,7 +73,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
           <span className="text-xs font-medium text-gray220">
             {t("cart_product_count", { count: itemCount })}
           </span>
-          <span className="text-sm font-bold text-black">
+          <span className="text-sm font-medium text-black">
             {formatPrice(order.amount)} {t("sum")}
           </span>
         </div>

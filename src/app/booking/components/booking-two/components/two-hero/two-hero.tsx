@@ -19,7 +19,7 @@ const TwoHero = () => {
     router.push(`${ROUTER.ATMOSPHERE}${shopid ? `?shop_id=${shopid}` : ""}`);
 
   return (
-    <div className="relative h-64 overflow-hidden rounded-b-2xl bg-gray10">
+    <div className="relative h-64 overflow-hidden rounded-b-2xl bg-gray10 lg:h-80 lg:rounded-2xl">
       <button
         type="button"
         onClick={openAtmosphere}
@@ -37,7 +37,7 @@ const TwoHero = () => {
         type="button"
         onClick={() => router.back()}
         aria-label={t("common_back")}
-        className="absolute left-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-md"
+        className="absolute left-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-md lg:hidden"
       >
         <ChevronLeft size={22} />
       </button>

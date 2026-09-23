@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChevronRight, Clock } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { IconClockFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import ClosedIcon from "@/assets/icons/closed.png";
@@ -69,11 +70,12 @@ const ShopClosedModal = () => {
     >
       <SheetContent
         side="bottom"
+        desktopModal
         showCloseButton={false}
         aria-describedby={undefined}
         className="items-center gap-0 rounded-t-3xl border-gray180 px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-3 text-center"
       >
-        <span className="mx-auto h-1 w-10 shrink-0 rounded-full bg-gray180" />
+        <span className="mx-auto h-1 w-10 shrink-0 rounded-full bg-gray180 lg:hidden" />
 
         <img
           src={ClosedIcon.src}
@@ -81,7 +83,7 @@ const ShopClosedModal = () => {
           className="mt-2 h-56 w-56 shrink-0 object-contain"
         />
 
-        <h2 className="mt-1 text-lg font-bold text-black">
+        <h2 className="mt-1 text-lg font-medium text-black">
           {t("shared_shop_closed_title")}
         </h2>
         <p className="mt-1 text-sm font-normal text-gray220">
@@ -104,13 +106,13 @@ const ShopClosedModal = () => {
           className="mt-4 flex w-full items-center gap-3 rounded-2xl border border-gray180 px-4 py-3 text-left"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary10 text-primary">
-            <Clock size={18} />
+            <IconClockFilled size={18} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-sm font-bold text-black">
+            <span className="info-label block">
               {getOpeningLabel()}
             </span>
-            <span className="mt-0.5 block text-xs font-medium text-gray220">
+            <span className="info-value block">
               {t("shared_shop_closed_view_all_hours")}
             </span>
           </span>

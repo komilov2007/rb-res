@@ -17,6 +17,7 @@ import { useLocationStore } from "@/stores/location";
 import { useAuthStore } from "@/stores/auth";
 
 import type { useAddressForm } from "./useAddressForm";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 type UseAddressMutationsProps = {
   addresses: AddressProps[] | undefined;
@@ -46,7 +47,9 @@ export const useAddressMutations = ({
   const auth = useAuthStore((state) => state.auth);
 
   const invalidateAddresses = (customer?: number) => {
-    queryClient.invalidateQueries({ queryKey: ["user-addresses", customer] });
+    queryClient.invalidateQueries({
+      queryKey: [REACT_QUERY_KEYS.USER_ADDRESSES, customer],
+    });
   };
 
   const createAddressMutation = useMutation({
@@ -63,7 +66,7 @@ export const useAddressMutations = ({
 
       try {
         const fresh = await queryClient.fetchQuery({
-          queryKey: ["user-addresses", variables.customer],
+          queryKey: [REACT_QUERY_KEYS.USER_ADDRESSES, variables.customer],
           queryFn: getAddresses,
         });
         const list = fresh.data ?? [];
@@ -132,7 +135,7 @@ export const useAddressMutations = ({
       // clearing the store, so Location's "fall back to the current saved
       // address" effect can't re-select the deleted one from a stale list.
       queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
-        ["user-addresses", auth?.customer],
+        [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
         (old) =>
           old && { ...old, data: old.data.filter((item) => item.id !== id) },
       );

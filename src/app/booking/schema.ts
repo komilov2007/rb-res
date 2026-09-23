@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { getDateValue } from "@/utils/format-date";
 import { translate } from "@/utils/translate";
 
+import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "./constants";
 import {
   isDayOff,
   isIsoDate,
@@ -92,7 +93,12 @@ export const bookingSchema = yup.object({
         return isWithinWorkingHours(workingTime, date, value);
       },
     ),
-  guests: yup.number().default(1).min(1).max(999).required(),
+  guests: yup
+    .number()
+    .default(BOOKING_MIN_GUESTS)
+    .min(BOOKING_MIN_GUESTS)
+    .max(BOOKING_MAX_GUESTS)
+    .required(),
   comment: yup.string().default(""),
 });
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { ChevronLeft, MapPinned, Phone, Store, X } from "lucide-react";
+import { ChevronLeft, MapPinned, Store, X } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Map, YMaps } from "react-yandex-maps";
 
@@ -14,7 +15,7 @@ import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 import { openBranchDirections } from "@/utils/directions";
 
-import BranchSchedule from "./branch-schedule";
+import BranchSchedule from "@/components/branch-schedule";
 import { MAP_OPTIONS, useBranchInfoMap } from "./useBranchInfoMap";
 
 type BranchInfoSheetProps = {
@@ -86,18 +87,18 @@ const BranchInfoSheet = ({
         <div className="shrink-0 bg-white px-4 pb-4 pt-3">
           <div className="flex items-start gap-2">
             <Store size={16} className="mt-0.5 shrink-0 text-gray220" />
-            <p className="text-sm font-bold text-black">{branch.name}</p>
+            <p className="info-label">{branch.name}</p>
           </div>
-          <p className="mt-1 pl-6 text-sm font-medium text-gray220">
-            {branch.address}
-          </p>
+          <p className="info-value pl-6">{branch.address}</p>
           {branch.phone && (
             <a
               href={`tel:${branch.phone}`}
-              className="mt-1 flex items-center gap-2 pl-6 text-sm font-medium text-black"
+              className="mt-1 flex items-center gap-2 pl-6"
             >
-              <Phone size={14} className="shrink-0 text-gray220" />
-              {branch.phone}
+              <IconPhoneFilled size={14} className="shrink-0 text-gray220" />
+              <span className="text-[13px] font-medium text-gray220/70">
+                {branch.phone}
+              </span>
             </a>
           )}
 
@@ -113,17 +114,16 @@ const BranchInfoSheet = ({
             src/components/branch-map-picker/branch-map-picker.tsx. */}
         <div className="branch-info-map relative mx-4 mb-2.5 mt-3 min-h-0 flex-1 overflow-hidden rounded-2xl bg-white">
 
-          {/* Same animate-pulse skeleton style Branches' own loading
-              state already uses — shown until the Yandex script has
-              actually loaded and constructed the map (onLoad), which can
-              take a beat on a slow connection. */}
+          {/* Shimmer skeleton until the Yandex script has actually loaded
+              and constructed the map (onLoad), which can take a beat on a
+              slow connection. */}
           {!isMapReady && (
-            <div className="absolute inset-0 z-10 animate-pulse bg-gray10" />
+            <div className="skeleton absolute inset-0 z-10" />
           )}
 
           <YMaps
             query={{
-              load: "Map,Placemark",
+              load: "Map,Placemark,geoObject.addon.balloon",
               // @ts-expect-error react-yandex-maps types do not include Uzbek, but Yandex accepts it.
               lang: YANDEX_LANG,
               coordorder: "longlat",
@@ -149,7 +149,7 @@ const BranchInfoSheet = ({
         <button
           type="button"
           onClick={() => openBranchDirections(branch)}
-          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 text-sm font-bold text-white"
+          className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 text-sm font-medium text-white"
         >
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
             <MapPinned size={14} strokeWidth={2.4} />

@@ -1,11 +1,12 @@
-import { Phone } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
+
 
 import { IconFlagUzbek } from "@/assets/icons/flag-uzbek";
 
 const PhoneStart = () => {
   return (
     <>
-      <Phone size={18} className="shrink-0 text-gray220" />
+      <IconPhoneFilled size={18} className="shrink-0 text-gray220" />
       <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden">
         <IconFlagUzbek />
       </span>

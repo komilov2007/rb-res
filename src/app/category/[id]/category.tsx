@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import MobileFooter from "@/components/mobile-footer";
 
-import FloatingCart from "@/components/floating-cart";
+import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import CardProduct from "@/components/card-product";
+import ProductBranchPicker from "@/components/modal/product-branch-picker";
 import ProductDetailMobile from "@/components/modal/product-detail";
 import Button from "@/components/ui/button";
 import { ProductCardSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
-import { useCartStore } from "@/stores/cart";
 
 import DesktopView from "./components/desktop-view";
 import { useCategory } from "./useCategory";
@@ -33,18 +33,16 @@ const CategorySkeleton = () => (
 const CategoryContent = () => {
   const t = useTranslations();
   const router = useRouter();
+  const category = useCategory();
   const {
     shopid,
-    categoryId,
     categoryName,
-    categories,
     products,
     isUnavailable,
     hasBranch,
     availableCount,
     isLoading,
-  } = useCategory();
-  const cartCount = useCartStore((state) => state.cartCount);
+  } = category;
 
   const handleBack = () => {
     router.push(`${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`);
@@ -55,9 +53,8 @@ const CategoryContent = () => {
       {/* pinBottomRow: only the bottom row (logo/search/cart) pins on
           scroll and drops its own bottom border, so it sits flush against
           the breadcrumb bar below. The topbar above it (phone/branches/
-          language) is untouched and scrolls away normally. Opt-in prop on
-          the shared Header, defaulting to false everywhere else — every
-          other route keeps its exact prior behavior. */}
+          language) is untouched and scrolls away normally. Every Header row
+          is `hidden lg:*`, so this renders nothing on mobile. */}
       <Header pinBottomRow />
 
       {/* Sticky (not fixed): the header keeps its own space in the layout, so
@@ -77,30 +74,25 @@ const CategoryContent = () => {
           >
             <ChevronLeft size={22} />
           </Button>
-          <h1 className="min-w-0 truncate text-base font-extrabold text-black">
+          <h1 className="min-w-0 truncate text-base font-medium text-black">
             {categoryName}
           </h1>
         </div>
       </div>
 
       {/* Mobile-only: same narrow centered column as before. Bottom spacing
-          matches the grid's row gap (16px), plus extra room while the
-          mobile floating cart bar is shown, so it never covers the last row. */}
-      <div
-        className={`mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pt-4 lg:hidden ${
-          cartCount > 0 ? "pb-24" : "pb-4"
-        }`}
-      >
+          matches the grid's row gap (16px). */}
+      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-4 pt-4 lg:hidden">
         {isLoading ? (
           <CategorySkeleton />
         ) : products.length === 0 ? (
-          <p className="py-10 text-center text-sm font-medium text-gray220">
+          <p className="py-10 text-center text-sm font-normal text-gray220">
             {t("catalog_empty_category")}
           </p>
         ) : (
           <>
             {hasBranch && availableCount === 0 && (
-              <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-center text-sm font-medium text-gray220">
+              <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-center text-sm font-normal text-gray220">
                 {t("catalog_empty_at_branch")}
               </p>
             )}
@@ -121,23 +113,17 @@ const CategoryContent = () => {
       {/* Desktop-only: rendered unconstrained (not inside a max-w-7xl/px-5
           wrapper) so its own panels can bleed their white background all
           the way to the viewport edges — see desktop-view.tsx. */}
-      <DesktopView
-        shopid={shopid}
-        categoryId={categoryId}
-        categoryName={categoryName}
-        categories={categories}
-        products={products}
-        isUnavailable={isUnavailable}
-        hasBranch={hasBranch}
-        availableCount={availableCount}
-        isLoading={isLoading}
-      />
+      <DesktopView {...category} />
 
       <Footer />
-      <FloatingCart />
       <ProductDetailMobile />
       {/* Bottom nav stays visible here too (these pages don't use PageLayout). */}
       <MobileFooter />
+      {/* Mounted here for the same reason PageLayout mounts them on other
+          pages: the desktop header chip opens the selection modal, and the
+          product detail's "choose another branch" opens the branch picker. */}
+      <BranchSelectionModal />
+      <ProductBranchPicker />
     </div>
   );
 };

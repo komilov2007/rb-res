@@ -3,7 +3,8 @@
 import { Suspense, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosResponse } from "axios";
-import { MapPin, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { deleteAddress, type AddressProps } from "@/apis/address";
@@ -18,13 +19,14 @@ import LoginRequired from "../components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
 import AddressRow from "./components/address-row";
 import DeleteAddressDialog from "./components/delete-address-dialog";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const AddressRowSkeleton = () => (
-  <div className="flex animate-pulse items-center gap-3 rounded-2xl border border-gray180 bg-white p-3">
-    <div className="h-9 w-9 shrink-0 rounded-full bg-gray10" />
+  <div className="flex items-center gap-3 rounded-2xl border border-transparent bg-white p-3">
+    <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
     <div className="min-w-0 flex-1 space-y-2">
-      <div className="h-4 w-28 rounded-full bg-gray10" />
-      <div className="h-3 w-full rounded-full bg-gray10" />
+      <div className="skeleton h-4 w-28 rounded-full" />
+      <div className="skeleton h-3 w-full rounded-full" />
     </div>
   </div>
 );
@@ -34,6 +36,7 @@ const AddressesContent = () => {
   const queryClient = useQueryClient();
   const auth = useAuthStore((state) => state.auth);
   const hasAccess = useAuthStore((state) => state.hasAccess);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const setEditingAddress = useLocationStore(
     (state) => state.setEditingAddress,
   );
@@ -57,13 +60,13 @@ const AddressesContent = () => {
       // whenever the store is empty, and with the stale list still holding
       // the deleted address it would immediately re-select it.
       queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
-        ["user-addresses", auth?.customer],
+        [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
         (old) =>
           old && { ...old, data: old.data.filter((item) => item.id !== id) },
       );
       clearAddressById(id);
       void queryClient.invalidateQueries({
-        queryKey: ["user-addresses", auth?.customer],
+        queryKey: [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
       });
     },
   });
@@ -79,24 +82,14 @@ const AddressesContent = () => {
     setLocationModal(true);
   };
 
-  const addButton = (
-    <button
-      type="button"
-      onClick={openLocationMap}
-      className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/40 bg-white text-sm font-medium text-primary"
-    >
-      <Plus size={18} strokeWidth={2.4} />
-      {t("profile_page_addresses_add_new")}
-    </button>
-  );
-
-  if (!hasAccess) {
+  if (isAuthReady && !hasAccess) {
     return (
       <LoginRequired message={t("profile_page_addresses_login_required")} />
     );
   }
 
-  if (addressesQuery.isLoading) {
+  // Session not read yet counts as loading, not as a guest.
+  if (!isAuthReady || addressesQuery.isLoading) {
     return (
       <>
         <AddressRowSkeleton />
@@ -108,11 +101,11 @@ const AddressesContent = () => {
 
   if (addresses.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center lg:border-0">
         <span className="grid h-14 w-14 place-items-center rounded-full bg-gray10 text-gray220">
-          <MapPin size={24} />
+          <IconMapPinFilled size={24} />
         </span>
-        <p className="text-base font-bold text-black">
+        <p className="text-base font-medium text-black">
           {t("profile_page_addresses_empty_title")}
         </p>
         <p className="text-sm text-gray220">
@@ -123,7 +116,7 @@ const AddressesContent = () => {
           variant="plain"
           size="none"
           onClick={openLocationMap}
-          className="mt-1 h-11 gap-2 rounded-2xl bg-primary px-5 text-sm font-bold text-white"
+          className="mt-1 h-11 gap-2 rounded-2xl bg-primary px-5 text-sm font-medium text-white"
         >
           <Plus size={16} strokeWidth={2.4} />
           {t("profile_page_addresses_add")}
@@ -144,8 +137,6 @@ const AddressesContent = () => {
         />
       ))}
 
-      {addButton}
-
       <DeleteAddressDialog
         address={deleting}
         isDeleting={deleteMutation.isPending}
@@ -156,11 +147,41 @@ const AddressesContent = () => {
   );
 };
 
+// "Add address", shown once the list has addresses (the empty state has its
+// own button). Rendered as the shell's footer so on desktop it stays pinned
+// under the scrolling list. Same cached addresses query as the list.
+const AddAddressFooter = () => {
+  const t = useTranslations();
+  const auth = useAuthStore((state) => state.auth);
+  const hasAccess = useAuthStore((state) => state.hasAccess);
+  const openLocationMap = useLocationStore((state) => state.openLocationMap);
+  const { data } = useAddresses(
+    auth?.customer,
+    hasAccess && Boolean(auth?.customer),
+  );
+
+  if (!hasAccess || !data?.data.length) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={openLocationMap}
+      className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/40 bg-white text-sm font-medium text-primary transition-colors hover:bg-primary10"
+    >
+      <Plus size={18} strokeWidth={2.4} />
+      {t("profile_page_addresses_add_new")}
+    </button>
+  );
+};
+
 const Addresses = () => {
   const t = useTranslations();
 
   return (
-    <ProfilePageShell title={t("profile_page_menu_addresses")}>
+    <ProfilePageShell
+      title={t("profile_page_menu_addresses")}
+      footer={<AddAddressFooter />}
+    >
       {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <AddressesContent />

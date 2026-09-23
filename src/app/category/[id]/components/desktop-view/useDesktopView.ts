@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 import type { ProductProps } from "@/types/product";
 
-// Only sort orders backed by real product fields — no popularity/rating
-// field exists on ProductProps, so no such option is offered here.
-export type CategorySortOption = "default" | "price_asc" | "price_desc";
+import { STICKY_GAP, type CategorySortOption } from "./constants";
 
 type UseDesktopViewParams = {
   categoryId: number;
@@ -17,6 +15,25 @@ type UseDesktopViewParams = {
 export const useDesktopView = ({ categoryId, products }: UseDesktopViewParams) => {
   const [sort, setSort] = useState<CategorySortOption>("default");
   const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+
+  // Measures the real, rendered <header> instead of hardcoding its height
+  // (93px) — a hand-picked number kept drifting from whatever the sticky
+  // header actually renders at, leaving the sidebar's stuck position either
+  // overlapping it or sitting too far below it. Re-measures on resize.
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    const headerEl = document.querySelector<HTMLElement>("header");
+    if (!headerEl) return;
+
+    const updateHeight = () => setHeaderHeight(headerEl.offsetHeight);
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(headerEl);
+
+    return () => observer.disconnect();
+  }, []);
 
   // The product-list endpoint has no price-range/sort params (see apis/products.ts),
   // so bounds come from whatever's already loaded for this category.
@@ -57,11 +74,8 @@ export const useDesktopView = ({ categoryId, products }: UseDesktopViewParams) =
   const debouncedPriceRange = isCurrentCategoryFilter
     ? debouncedFilter.priceRange
     : null;
-  const [minPrice, maxPrice] = isCurrentCategoryFilter
-    ? (debouncedPriceRange ?? priceBounds)
-    : priceBounds;
+  const [minPrice, maxPrice] = debouncedPriceRange ?? priceBounds;
   const isFiltering =
-    isCurrentCategoryFilter &&
     priceRange !== null &&
     debouncedPriceRange !== null &&
     (priceRange[0] !== debouncedPriceRange[0] ||
@@ -82,9 +96,11 @@ export const useDesktopView = ({ categoryId, products }: UseDesktopViewParams) =
     sort,
     setSort,
     priceBounds,
+    hasPriceSpread: maxBound > minBound,
     priceRange: priceRange ?? priceBounds,
     setPriceRange,
     visibleProducts,
     isFiltering,
+    stickyTop: headerHeight + STICKY_GAP,
   };
 };

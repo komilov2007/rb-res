@@ -28,14 +28,14 @@ const ModalScreen = ({
     <div
       className={`fixed inset-0 z-[100] bg-black/30 ${
         isBottom
-          ? "flex items-end"
+          ? "flex items-end lg:items-center lg:justify-center"
           : "lg:flex lg:items-center lg:justify-center"
       }`}
     >
       <div
         className={`flex w-full flex-col gap-4 bg-white p-4 ${
           isBottom
-            ? "max-h-[85dvh] rounded-t-3xl"
+            ? "max-h-[85dvh] rounded-t-3xl lg:max-w-[440px] lg:rounded-3xl"
             : "h-dvh lg:h-auto lg:max-h-[720px] lg:max-w-[440px] lg:rounded-3xl"
         } ${className}`}
       >
@@ -43,7 +43,7 @@ const ModalScreen = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-black">
               {icon}
-              <h2 className="text-xl font-bold">{title}</h2>
+              <h2 className="text-xl font-medium">{title}</h2>
             </div>
             <CloseButton onClose={onClose} />
           </div>

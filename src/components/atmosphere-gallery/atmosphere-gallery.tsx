@@ -22,7 +22,7 @@ const AtmosphereGallery = () => {
   };
 
   return (
-    <div className="lg:mt-4">
+    <div>
       <div className="grid items-center gap-5 lg:grid-cols-[1.35fr_0.85fr] lg:gap-9">
         <div className="overflow-hidden rounded-l-xl rounded-r-[44px] bg-black lg:rounded-r-[96px]">
           <video
@@ -37,7 +37,7 @@ const AtmosphereGallery = () => {
         </div>
 
         <div className="lg:pl-2">
-          <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-black lg:text-xs lg:tracking-[0.45em]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-black lg:text-xs lg:tracking-[0.45em]">
             {t("booking_gallery_eyebrow")}
           </p>
           <div className="mt-3 flex items-center gap-2 lg:mt-4">

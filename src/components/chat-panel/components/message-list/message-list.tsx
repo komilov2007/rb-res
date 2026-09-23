@@ -28,7 +28,7 @@ const MessageListSkeleton = () => (
     {Array.from({ length: 4 }).map((_, index) => (
       <div
         key={index}
-        className={`h-12 w-2/3 animate-pulse rounded-2xl bg-gray10 ${
+        className={`skeleton h-12 w-2/3 rounded-2xl ${
           index % 2 === 0 ? "self-start" : "self-end"
         }`}
       />

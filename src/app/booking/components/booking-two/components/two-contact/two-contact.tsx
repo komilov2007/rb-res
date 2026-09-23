@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, PhoneCall, Plus, User, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import { IconPhoneCallFilled, IconPhoneFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 import PhoneInput from "@/components/ui/phone-input";
 import { formatPhone } from "@/utils/format-number";
 
-import type { BookingFormValues } from "../../../schema";
-import TwoField from "./two-field";
+import type { BookingFormValues } from "@/app/booking/schema";
+import TwoField from "../two-field";
 
 // Name + phone from the profile (read-only), plus the optional extra
 // phone which stays a dashed "add" button until asked for.
@@ -30,13 +31,13 @@ const TwoContact = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <TwoField Icon={User} label={t("booking_your_name")}>
+      <TwoField Icon={IconUserFilled} label={t("booking_your_name")}>
         <span className="block truncate text-[15px] font-normal leading-5 text-black">
           {name || "—"}
         </span>
       </TwoField>
 
-      <TwoField Icon={Phone} label={t("phone_number")}>
+      <TwoField Icon={IconPhoneFilled} label={t("phone_number")}>
         <span className="block truncate text-[15px] font-normal leading-5 text-black">
           {phone ? `+998 ${formatPhone(phone)}` : "—"}
         </span>
@@ -44,7 +45,7 @@ const TwoContact = () => {
 
       {showExtraPhone ? (
         <TwoField
-          Icon={PhoneCall}
+          Icon={IconPhoneCallFilled}
           label={`${t("booking_extra_phone")} · ${t("booking_optional")}`}
           error={errors.extra_phone?.message}
           end={

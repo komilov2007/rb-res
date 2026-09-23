@@ -2,8 +2,13 @@
 
 import { Suspense, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { FormProvider } from "react-hook-form";
 
+import Breadcrumb from "@/components/breadcrumb";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import ProductDetailMobile from "@/components/modal/product-detail";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
@@ -35,7 +40,7 @@ const BookingForm = ({ variant = "one" }: BookingProps) => {
       <form
         noValidate
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex min-h-0 flex-1 flex-col"
+        className="flex min-h-0 flex-1 flex-col lg:flex-auto"
       >
         <Variant />
       </form>
@@ -44,6 +49,7 @@ const BookingForm = ({ variant = "one" }: BookingProps) => {
 };
 
 const BookingContent = ({ variant }: BookingProps) => {
+  const t = useTranslations();
   const router = useRouter();
   const { shopid } = useShopId();
   const hasAccess = useAuthStore((state) => state.hasAccess);
@@ -69,9 +75,19 @@ const BookingContent = ({ variant }: BookingProps) => {
 
   if (!isHydrated || !hasAccess) return null;
 
+  // Mobile: full-screen app shell (h-dvh, the variant scrolls inside).
+  // Desktop: the window scrolls between the site Header and Footer, like
+  // home (no PageLayout — its Hand button would cover the mobile submit bar).
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col lg:h-auto lg:min-h-screen lg:bg-gray10">
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <Breadcrumb items={[{ label: t("booking_title") }]} />
       <BookingForm variant={variant} />
+      <Footer />
+      {/* Header search results open the product detail modal. */}
+      <ProductDetailMobile />
     </div>
   );
 };

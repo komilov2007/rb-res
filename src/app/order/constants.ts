@@ -1,5 +1,3 @@
-"use client";
-
 import type { DeliveryType, OrderFormValues } from "@/types/order";
 
 // delivery_type starts empty: it's set to the first service the shop offers

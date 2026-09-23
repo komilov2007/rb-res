@@ -7,6 +7,7 @@ import { normalizeCartItems } from "@/utils/cart";
 import { showProductUnavailable } from "@/utils/branch-availability";
 import type { ProductDetailViewContext } from "./createSheetActions";
 import type { createSheetActions } from "./createSheetActions";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export type ProductDetailActionContext = ProductDetailViewContext &
   ReturnType<typeof createSheetActions>;
@@ -39,7 +40,7 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     if (!customerId) return;
 
     const cartListResponse = await queryClient.fetchQuery({
-      queryKey: ["cart-list", customerId],
+      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
       queryFn: () => getCartList(customerId),
       staleTime: 0,
     });
@@ -48,7 +49,7 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
       normalizeCartItems(cartListResponse.data, useCartStore.getState().carts),
     );
     await queryClient.invalidateQueries({
-      queryKey: ["cart-list", customerId],
+      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
     });
   };
 

@@ -5,8 +5,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPaymentList, type PaymentListItem } from "@/apis/order";
 import type { PaymentTypeProps } from "@/types/order";
 
-import { PAYMENT_TYPE_ICON_MAP } from "./constants";
+import { PAYMENT_TYPE_ICON_MAP } from "@/constants/payment-types";
 import PaymentGrid from "./payment-grid";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const ROBO_VARIANTS = ["ROBO_CLICK", "ROBO_PAYME", "ROBO_UZUM"] as const;
 
@@ -57,7 +58,7 @@ type PaymentMethodQueryProps = {
 
 const PaymentMethodQuery = ({ shopid, deliveryType }: PaymentMethodQueryProps) => {
   const { data } = useSuspenseQuery({
-    queryKey: ["payment-list", shopid, deliveryType],
+    queryKey: [REACT_QUERY_KEYS.PAYMENT_LIST, shopid, deliveryType],
     queryFn: () => getPaymentList(shopid, deliveryType),
   });
 

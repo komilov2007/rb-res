@@ -34,7 +34,7 @@ const PriceRange = ({ min, max, value, onChange }: PriceRangeProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h4 className="text-base font-bold text-black">
+      <h4 className="text-base font-medium text-black">
         {t("price")} <span className="font-normal text-gray220">(UZS)</span>
       </h4>
 

@@ -55,10 +55,14 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  desktopModal = false,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
+  // Mobile keeps the sheet; from lg up it becomes a centered modal (the
+  // side's position/slide classes are overridden, hence the "!").
+  desktopModal?: boolean;
 }) {
   return (
     <SheetPortal>
@@ -131,6 +135,18 @@ function SheetContent({
           "data-[side=top]:data-[state=closed]:slide-out-to-top-full",
           "data-[side=bottom]:data-[state=closed]:slide-out-to-bottom-full",
 
+          /*
+           * DESKTOP MODAL (opt-in)
+           */
+          desktopModal &&
+            cn(
+              "lg:inset-auto! lg:top-1/2! lg:left-1/2! lg:h-auto! lg:max-h-[85vh]!",
+              "lg:w-[calc(100%-2rem)]! lg:max-w-md! lg:-translate-x-1/2 lg:-translate-y-1/2",
+              "lg:rounded-2xl! lg:border! lg:border-gray180",
+              "lg:data-[state=open]:slide-in-from-bottom-2! lg:data-[state=open]:zoom-in-95",
+              "lg:data-[state=closed]:slide-out-to-bottom-2! lg:data-[state=closed]:zoom-out-95",
+            ),
+
           className,
         )}
         {...props}
@@ -174,7 +190,7 @@ function SheetTitle({
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn("text-base font-bold text-black", className)}
+      className={cn("text-base font-medium text-black", className)}
       {...props}
     />
   );

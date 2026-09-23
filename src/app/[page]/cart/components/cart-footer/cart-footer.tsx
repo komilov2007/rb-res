@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
-import { Truck } from "lucide-react";
+import { IconTruckFilled } from "@tabler/icons-react";
+
 
 import Button from "@/components/ui/button";
 import { formatPrice } from "@/utils/format-price";
@@ -34,12 +35,12 @@ const CartFooter = ({
       }
     >
       {deliveryPrice > 0 && (
-        <div className="mb-3 flex items-center justify-between gap-3 text-sm font-medium text-gray220">
-          <span className="flex items-center gap-2">
-            <Truck size={16} className="text-gray220" />
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <span className="info-label flex items-center gap-2">
+            <IconTruckFilled size={16} className="text-gray220" />
             {t("cart_drawer_delivery_price")}
           </span>
-          <span>
+          <span className="text-sm font-medium text-black">
             {formatPrice(deliveryPrice)} {t("sum")}
           </span>
         </div>

@@ -29,7 +29,7 @@ const ProductParameter = ({
   if (variant === "parameterChip") {
     return (
       <div className="space-y-3">
-        <p className="text-base font-bold leading-5 text-black">
+        <p className="text-base font-medium leading-5 text-black">
           {parameter.name}
         </p>
 
@@ -95,7 +95,7 @@ const ProductParameter = ({
 
   return (
     <div>
-      <p className="mb-3 text-base font-bold leading-5 text-black">
+      <p className="mb-3 text-base font-medium leading-5 text-black">
         {parameter.name}
       </p>
 
@@ -139,11 +139,11 @@ const ProductParameter = ({
                 </span>
 
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium leading-5 text-black">
+                  <span className="info-label block truncate">
                     {sku.name}
                   </span>
                   {meta && (
-                    <span className="block text-xs font-medium leading-4 text-gray220">
+                    <span className="info-value block">
                       {meta}
                     </span>
                   )}

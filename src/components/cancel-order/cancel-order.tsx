@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Ban, Loader2, Phone } from "lucide-react";
+import { Ban, Loader2 } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
@@ -104,7 +106,7 @@ const CancelOrder = ({
         href={`tel:${businessPhone}`}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary10 text-sm font-medium text-primary"
       >
-        <Phone size={16} />
+        <IconPhoneFilled size={16} />
         {t("orders_cancel_call_shop")}
       </a>
     );

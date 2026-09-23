@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import type { GeneralProps } from "@/types/general";
@@ -11,7 +11,7 @@ type SidebarContactProps = {
   socials: NonNullable<GeneralProps["socials"]>;
 };
 
-// The desktop sidebar's bottom card: shop phone, social links and the
+// The desktop sidebar's bottom section: shop phone, social links and the
 // "Robosell.uz tomonidan taqdim etilgan" line. Renders nothing when the
 // shop has neither a phone nor socials.
 const SidebarContact = ({ businessPhone, socials }: SidebarContactProps) => {
@@ -20,20 +20,20 @@ const SidebarContact = ({ businessPhone, socials }: SidebarContactProps) => {
   if (!businessPhone && socials.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-gray180 bg-white p-3">
+    <div className="px-2 py-3">
       {businessPhone && (
         <a
           href={`tel:${businessPhone}`}
           className="flex min-h-10 items-center gap-3"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray10 text-gray220">
-            <MapPin size={16} />
+            <IconPhoneFilled size={16} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-normal text-gray220">
+            <p className="info-label">
               {t("profile_page_contact_label")}
             </p>
-            <p className="truncate text-sm font-medium text-[#3D3D3D]">
+            <p className="info-value truncate">
               {businessPhone}
             </p>
           </div>

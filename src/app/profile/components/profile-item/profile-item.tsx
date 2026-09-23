@@ -40,11 +40,11 @@ export const ProfileItem = ({
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gray10 text-gray220">
         <Icon size={16} />
       </span>
-      <span className="min-w-0 flex-1 truncate text-sm font-medium text-black">
+      <span className="info-label min-w-0 flex-1 truncate">
         {label}
       </span>
       {value && (
-        <span className="max-w-[110px] truncate text-xs font-medium text-gray220">
+        <span className="max-w-[110px] truncate text-[13px] font-medium text-gray220/70">
           {value}
         </span>
       )}

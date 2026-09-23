@@ -1000,5 +1000,6 @@ Loyihada 6 ta lokal subagent bor (`.claude/agents/`, git'ga push qilinmaydi):
 - **yangi-task-item** — MAVJUD feature ichiga kichik qo'shimcha qo'shadi (yangi to'lov turi, yangi maydon, yangi menyu bandi va h.k.) — yangi sahifa yaratmaydi, loyihada mavjud narsadan foydalanadi, faqat yo'q bo'lsa loyihaga mos qilib qo'shadi. Rasm berilsa, UI'ni 1:1 chizadi.
 - **hooks-store-foydalanish** — hook/store joylashuvi bo'yicha maslahat beradi (kod yozmaydi)
 - **bug-fix** — tasvirlangan xatoni topib, minimal o'zgarish bilan tuzatadi, boshqa fayllarga tegmaydi
+- **ui-uslub** — UI uslub qoidalarini qo'llaydi: label qora (`info-label`), qiymati kulrang (`info-value`), bold yo'q, bloklar orasi 8px, `skeleton` klassi, qisqa matn, desktop oq panellar
 
 Farqlash: yangi route kerakmi → **yangi-task**. Mavjud feature'ga qo'shimcha kerakmi → **yangi-task-item**. Mos vaziyatda tegishli agent avtomatik yoki qo'lda chaqirilsin.

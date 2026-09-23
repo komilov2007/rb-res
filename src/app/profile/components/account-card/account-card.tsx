@@ -1,11 +1,11 @@
 "use client";
 
-import { Edit3 } from "lucide-react";
+import { IconPencilFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 
-// Exact class strings per placement — the desktop sidebar pads its rows,
+// Exact class strings per placement — the desktop sidebar section pads its rows,
 // the mobile page doesn't.
 const CLASSES = {
   mobile: {
@@ -14,7 +14,7 @@ const CLASSES = {
     row: "flex w-full items-center gap-4 text-left",
   },
   sidebar: {
-    card: "rounded-2xl border border-gray180 bg-white p-3",
+    card: "py-3",
     skeleton: "flex items-center gap-4 p-2",
     row: "flex w-full items-center gap-4 p-2 text-left",
   },
@@ -48,12 +48,12 @@ const AccountCard = ({
 
   const identity = (
     <>
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary10 text-sm font-bold text-primary">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray10 text-sm font-medium text-black">
         {initials || "U"}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-black">{name}</p>
-        <p className="mt-1 truncate text-xs font-normal text-gray220">
+        <p className="info-label truncate">{name}</p>
+        <p className="info-value truncate">
           {phone}
         </p>
       </div>
@@ -62,12 +62,12 @@ const AccountCard = ({
 
   return (
     <div className={classes.card}>
-      {isLoading && hasAccess ? (
+      {isLoading ? (
         <div className={classes.skeleton}>
-          <div className="h-14 w-14 rounded-full bg-gray10" />
+          <div className="skeleton h-14 w-14 shrink-0 rounded-full" />
           <div className="flex-1 space-y-2">
-            <div className="h-4 w-36 rounded-full bg-gray10" />
-            <div className="h-3 w-28 rounded-full bg-gray10" />
+            <div className="skeleton h-4 w-36 rounded-full" />
+            <div className="skeleton h-3 w-28 rounded-full" />
           </div>
         </div>
       ) : hasAccess ? (
@@ -85,7 +85,7 @@ const AccountCard = ({
             onClick={onEdit}
             className="bg-gray10 text-gray220"
           >
-            <Edit3 size={17} />
+            <IconPencilFilled size={17} />
           </Button>
         </div>
       ) : (

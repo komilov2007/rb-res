@@ -1,7 +1,8 @@
 "use client";
 
 import { type ChangeEvent, type KeyboardEvent, useRef } from "react";
-import { Loader2, Paperclip, Send, X } from "lucide-react";
+import { Loader2, Paperclip, X } from "lucide-react";
+import { IconSendFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { formatFileSize } from "@/utils/format-file";
@@ -124,7 +125,7 @@ const ChatInput = ({
           {isSending ? (
             <Loader2 size={18} className="animate-spin" />
           ) : (
-            <Send size={18} />
+            <IconSendFilled size={18} />
           )}
         </button>
       </div>

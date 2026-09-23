@@ -59,6 +59,10 @@ export const useLocationMap = (address: string) => {
       if (requestId === geocodeRequestRef.current && nextAddress) {
         setAddressName(nextAddress);
       }
+    } catch {
+      // Every Yandex key failed or the request never went out — keep the
+      // current address text; callers fire this with `void`, so a rethrow
+      // would only surface as an unhandled rejection.
     } finally {
       if (requestId === geocodeRequestRef.current) {
         setIsResolving(false);
@@ -149,6 +153,9 @@ export const useLocationMap = (address: string) => {
 
         setSearchResults(items);
       })
+      // Failed search (keys exhausted / offline): just no suggestions,
+      // instead of an unhandled rejection.
+      .catch(() => setSearchResults([]))
       .finally(() => {
         setIsSearching(false);
       });

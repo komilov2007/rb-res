@@ -28,7 +28,7 @@ export const createMobileClassNames = ({
       shouldShowActiveCategory &&
       (activeCategoryId === itemId || (!activeCategoryId && index === 0));
     const activeClassName = isActive
-      ? "!border-primary bg-primary10 font-bold text-primary"
+      ? "!border-primary bg-primary10 font-medium text-primary"
       : "";
     const mobileInteractionClassName = "cursor-pointer";
     const fixedMobileCardVariant: MobileCardVariant =

@@ -14,7 +14,12 @@ import PaymentMethodErrorBoundary from "./error-boundary";
 import PaymentMethodQuery from "./payment-method-query";
 import PaymentMethodSkeleton from "./skeleton";
 
-const PaymentMethod = () => {
+type PaymentMethodProps = {
+  // Mobile keeps the promo code here; desktop shows it in the summary panel.
+  showPromoCode: boolean;
+};
+
+const PaymentMethod = ({ showPromoCode }: PaymentMethodProps) => {
   const t = useTranslations();
   const { control } = useFormContext<OrderFormValues>();
   const deliveryType = useWatch({ control, name: "delivery_type" });
@@ -27,8 +32,8 @@ const PaymentMethod = () => {
   const isReady = hasShopId && Boolean(deliveryType);
 
   return (
-    <section className="rounded-2xl bg-white p-4">
-      <h2 className="text-sm font-bold text-black">
+    <section className="rounded-xl bg-white p-3">
+      <h2 className="text-sm font-medium text-black">
         {t("order_page_payment_title")}
       </h2>
 
@@ -39,8 +44,8 @@ const PaymentMethod = () => {
               key={deliveryType}
               onReset={reset}
               fallback={(retry) => (
-                <div className="mt-3 flex flex-col items-start gap-2">
-                  <p className="text-xs font-medium text-gray220">
+                <div className="mt-2 flex flex-col items-start gap-2">
+                  <p className="text-xs font-normal text-gray220">
                     {t("order_page_payment_load_error")}
                   </p>
                   <Button
@@ -48,7 +53,7 @@ const PaymentMethod = () => {
                     variant="plain"
                     size="none"
                     onClick={retry}
-                    className="h-9 rounded-xl bg-gray10 px-4 text-sm font-bold text-black"
+                    className="h-9 rounded-lg bg-gray10 px-4 text-sm font-medium text-black"
                   >
                     {t("common_retry")}
                   </Button>
@@ -68,7 +73,7 @@ const PaymentMethod = () => {
         <PaymentMethodSkeleton />
       )}
 
-      <PromoCode />
+      {showPromoCode && <PromoCode />}
     </section>
   );
 };

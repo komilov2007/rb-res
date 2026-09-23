@@ -17,13 +17,9 @@ import {
   handleImageFallback,
 } from "@/utils/image";
 import { useProductDetailStore } from "@/stores/product-detail";
-import {
-  ChevronRight,
-  LayoutGrid,
-  PackageSearch,
-  SearchX,
-  Tag,
-} from "lucide-react";
+import { ChevronRight, PackageSearch, SearchX } from "lucide-react";
+import { IconLayoutGridFilled, IconTagFilled } from "@tabler/icons-react";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 interface SearchModalProps {
   open: boolean;
@@ -55,7 +51,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
 
   const { data, isLoading } = useQuery({
     enabled: open && hasShopId && hasSearch,
-    queryKey: ["search-products", shopid, search],
+    queryKey: [REACT_QUERY_KEYS.SEARCH_PRODUCTS, shopid, search],
     queryFn: () => getProducts(shopid as string, { search }),
   });
 
@@ -64,7 +60,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   // here by name.
   const { data: categoriesData, isLoading: isCategoriesLoading } = useQuery({
     enabled: open && hasShopId,
-    queryKey: ["categories", shopid],
+    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
     queryFn: () => getCategories(shopid as string),
   });
 
@@ -102,10 +98,22 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
           <p className="text20 mt-1">{t("search_products_hint")}</p>
         </div>
       ) : isLoading || isCategoriesLoading ? (
-        <div className="flex h-full flex-col items-center justify-center gap-3">
-          <div className="h-9 w-9 animate-spin rounded-full border-[3px] border-gray180 border-t-primary" />
-          <p className="text10">{t("searching")}</p>
-        </div>
+        // Same padding and row shape as the product results below.
+        <ul
+          aria-label={t("searching")}
+          className="h-full overflow-hidden p-2"
+        >
+          {Array.from({ length: 4 }).map((_, index) => (
+            <li key={index} className="flex items-center gap-3 p-2">
+              <span className="skeleton h-15 w-15 shrink-0 rounded-lg" />
+              <span className="flex min-w-0 flex-1 flex-col gap-2">
+                <span className="skeleton h-4 w-3/5 rounded-full" />
+                <span className="skeleton h-3 w-2/5 rounded-full" />
+              </span>
+              <span className="skeleton h-4 w-16 shrink-0 rounded-full" />
+            </li>
+          ))}
+        </ul>
       ) : hasResults ? (
         <div className="h-full overscroll-contain overflow-y-auto p-2">
           {categories.length > 0 && (
@@ -128,14 +136,14 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <LayoutGrid size={17} />
+                          <IconLayoutGridFilled size={17} />
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="line-clamp-1 text-sm font-bold text-black">
+                        <span className="info-label line-clamp-1">
                           {category.name}
                         </span>
-                        <span className="text-xs font-medium text-gray220">
+                        <span className="info-value block">
                           {t("cart_product_count", {
                             count: category.products_count,
                           })}
@@ -175,18 +183,18 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
                         </span>
 
                         <span className="min-w-0 flex-1">
-                          <span className="line-clamp-1 text-sm font-medium text-black">
+                          <span className="info-label line-clamp-1">
                             {product.name}
                           </span>
-                          <span className="mt-1 flex items-center gap-1 text-xs font-medium text-gray220">
-                            <Tag size={13} />
+                          <span className="info-value flex items-center gap-1">
+                            <IconTagFilled size={13} />
                             <span className="line-clamp-1">
                               {product.category?.name}
                             </span>
                           </span>
                         </span>
 
-                        <span className="flex shrink-0 items-center gap-1 text-sm font-bold text-black">
+                        <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-black">
                           {formatPrice(price)} {t("sum")}
                         </span>
                       </Button>

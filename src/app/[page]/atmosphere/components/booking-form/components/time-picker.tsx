@@ -1,4 +1,5 @@
-import { Clock3 } from "lucide-react";
+import { IconClockHour3Filled } from "@tabler/icons-react";
+
 
 import {
   Popover,
@@ -22,7 +23,7 @@ const TimePicker = ({ value, placeholder, onChange }: TimePickerProps) => {
           type="button"
           className="flex h-13 w-full items-center gap-3 rounded-xl border border-gray180 bg-gray10 px-5 text-left outline-none transition-colors focus:border-black"
         >
-          <Clock3 size={20} className="shrink-0 text-gray220" />
+          <IconClockHour3Filled size={20} className="shrink-0 text-gray220" />
           <span
             className={`text-sm font-normal ${
               value ? "text-black" : "text-gray220"
