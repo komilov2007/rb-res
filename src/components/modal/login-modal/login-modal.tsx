@@ -18,6 +18,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useCartStore } from "@/stores/cart";
 import { getCartList, postCartProductList } from "@/apis/cart";
 import { normalizeCartItems } from "@/utils/cart";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const LoginModal = () => {
   const t = useTranslations();
@@ -76,13 +77,13 @@ const LoginModal = () => {
 
           const cartListResponse = await getCartList(res.data.customer);
           queryClient.setQueryData(
-            ["cart-list", res.data.customer],
+            [REACT_QUERY_KEYS.CART_LIST, res.data.customer],
             cartListResponse,
           );
           setCarts(normalizeCartItems(cartListResponse.data, carts));
         } catch {
           queryClient.invalidateQueries({
-            queryKey: ["cart-list", res.data.customer],
+            queryKey: [REACT_QUERY_KEYS.CART_LIST, res.data.customer],
           });
         }
       }
@@ -109,7 +110,7 @@ const LoginModal = () => {
     <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-black">{t("login")}</h2>
+          <h2 className="text-2xl font-medium text-black">{t("login")}</h2>
           <p className="mt-2 text-sm font-normal leading-5 text-gray220">
             {t("login_hint")}
           </p>
@@ -138,7 +139,7 @@ const LoginModal = () => {
 
   if (isDesktop) {
     return (
-      <Dialog open={loginModal} onOpenChange={() => setLoginModal(false)}>
+      <Dialog open={loginModal} onOpenChange={(open) => !open && handleClose()}>
         {/* z-[100] matches the mobile variant's ModalScreen below — both
             variants of this modal need to reliably sit above any other
             overlay (e.g. the cart drawer's Sheet), not just the shared

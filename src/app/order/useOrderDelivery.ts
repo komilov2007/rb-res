@@ -16,6 +16,7 @@ import { getAvailableServices } from "./components/delivery-type/constants";
 import { toDeliveryPrice } from "./constants";
 import type { UseFormReturn } from "react-hook-form";
 import { useBranchSelection } from "@/components/branch-selection";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 type UseOrderDeliveryProps = {
   form: UseFormReturn<OrderFormValues>;
@@ -47,7 +48,8 @@ export const useOrderDelivery = ({
   // than only to the form, so this stays the single source of truth.
   // Already null whenever home isn't actually in PICKUP mode
   // (useBranchSelection's own logic).
-  const { branchId: homeBranchId } = useBranchSelection();
+  const { branchId: homeBranchId, serviceType: homeServiceType } =
+    useBranchSelection();
   const { shopid, hasShopId } = useShopId();
   const addressId = useLocationStore((state) => state.addressId);
   const storeAddress = useLocationStore((state) => state.address);
@@ -74,7 +76,7 @@ export const useOrderDelivery = ({
   const nearestBranchQuery = useQuery({
     enabled:
       hasShopId && isDelivery && Boolean(latitude) && Boolean(longitude),
-    queryKey: ["nearest-branch", shopid, latitude, longitude],
+    queryKey: [REACT_QUERY_KEYS.NEAREST_BRANCH, shopid, latitude, longitude],
     queryFn: () =>
       getNearestBranch({
         shopid: shopid as string,
@@ -97,7 +99,7 @@ export const useOrderDelivery = ({
     // The address is part of the key, so changing it recalculates the
     // delivery price.
     queryKey: [
-      "delivery-calculation",
+      REACT_QUERY_KEYS.DELIVERY_CALCULATION,
       shopid,
       customerId,
       deliveryType,
@@ -119,16 +121,23 @@ export const useOrderDelivery = ({
       }),
   });
 
-  // Select the first offered service until the user picks one (or when the
-  // selected one isn't offered by this shop).
-  const firstServiceType = availableServices[0]?.type ?? null;
+  // Until the user picks one (or when the selected one isn't offered by
+  // this shop): the service saved in the home address/branch choice
+  // ("Olib ketish" → PICKUP), else the first offered service.
+  const defaultServiceType =
+    availableServices.find((service) => service.type === homeServiceType)
+      ?.type ??
+    availableServices[0]?.type ??
+    null;
   const isSelectedServiceAvailable = Boolean(selectedService);
 
   useEffect(() => {
-    if (isSelectedServiceAvailable || !firstServiceType) return;
+    if (isSelectedServiceAvailable || !defaultServiceType) return;
 
-    form.setValue("delivery_type", firstServiceType, { shouldValidate: true });
-  }, [firstServiceType, isSelectedServiceAvailable, form]);
+    form.setValue("delivery_type", defaultServiceType, {
+      shouldValidate: true,
+    });
+  }, [defaultServiceType, isSelectedServiceAvailable, form]);
 
   // Payment methods, the delivery price and the shipping time all depend on
   // the selected service type, so they're cleared whenever it changes. No
@@ -144,26 +153,22 @@ export const useOrderDelivery = ({
     form.clearErrors(["shipping_date", "shipping_time"]);
   }, [deliveryType, form]);
 
-  // Autofill the delivery fields from the active saved address.
+  // Only the address id comes from the active saved address. The courier
+  // comment and the entrance/floor/room inputs always start empty (never
+  // prefilled from the saved address, so nothing typed earlier comes back
+  // after leaving the page or a refresh) and are cleared when the address
+  // changes.
   useEffect(() => {
     if (!isDelivery) return;
 
     form.setValue("address", activeAddress?.id ?? null, {
       shouldValidate: true,
     });
-    form.setValue("comment", activeAddress?.comment ?? null);
-    form.setValue("floor", activeAddress?.floor ?? null);
-    form.setValue("room", activeAddress?.room ?? null);
-    form.setValue("entrance", activeAddress?.entrance ?? null);
-  }, [
-    isDelivery,
-    activeAddress?.id,
-    activeAddress?.comment,
-    activeAddress?.floor,
-    activeAddress?.room,
-    activeAddress?.entrance,
-    form,
-  ]);
+    form.setValue("comment", null);
+    form.setValue("floor", null);
+    form.setValue("room", null);
+    form.setValue("entrance", null);
+  }, [isDelivery, activeAddress?.id, form]);
 
   // Keeps the form's branch equal to the shared selection. Picking a branch
   // in this page's own picker (src/app/order/components/branches) calls

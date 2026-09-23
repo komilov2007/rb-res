@@ -1,39 +1,34 @@
-import {
-  ClipboardList,
-  Home,
-  LayoutGrid,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import { IconClipboardListFilled, IconHomeFilled, IconLayoutGridFilled, IconShoppingCartFilled, IconUserFilled } from "@tabler/icons-react";
+
 export const navItems = [
   {
     key: "menu",
     label: "menu",
-    icon: Home,
+    icon: IconHomeFilled,
     active: true,
   },
   {
     key: "category",
     label: "category",
-    icon: LayoutGrid,
+    icon: IconLayoutGridFilled,
     active: false,
   },
   {
     key: "cart",
     label: "cart",
-    icon: ShoppingCart,
+    icon: IconShoppingCartFilled,
     active: false,
   },
   {
     key: "order",
     label: "order",
-    icon: ClipboardList,
+    icon: IconClipboardListFilled,
     active: false,
   },
   {
     key: "profile",
     label: "profile",
-    icon: User,
+    icon: IconUserFilled,
     active: false,
   },
 ];

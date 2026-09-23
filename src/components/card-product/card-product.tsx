@@ -1,4 +1,4 @@
-import { Flame } from "lucide-react";
+import { IconFlameFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import type { CardProductProps } from "@/types/product";
@@ -7,9 +7,6 @@ import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
 
 import CartAction from "./cart-action";
-import UnavailableBranchList from "./unavailable-branch-list";
-import UnavailablePopover from "./unavailable-popover";
-import { useCardBranchPopover } from "./useCardBranchPopover";
 import { useCardProduct } from "./useCardProduct";
 import {
   CARD_HEIGHT_CLASS,
@@ -39,12 +36,6 @@ const CardProduct = ({
   const openProductDetail = useProductDetailStore(
     (state) => state.openProductDetail,
   );
-  const {
-    isBranchPopoverOpen,
-    handleUnavailableTap,
-    handleSelectBranch,
-    closeCardBranchPopover,
-  } = useCardBranchPopover(product);
   const isDiscountCard = shouldUseDiscountCard(variant, isDiscount);
   const saleVariantClassName = SALE_VARIANT_CLASS_NAMES[saleBadgeVariant];
   const saleLabel =
@@ -56,14 +47,10 @@ const CardProduct = ({
     <article
       data-unavailable={isUnavailable || undefined}
       onClick={() => {
-        if (isUnavailable) {
-          handleUnavailableTap();
-          return;
-        }
+        // Not sold at the selected branch: the card is inert — the muted
+        // styling and the badge are the whole feedback.
+        if (isUnavailable) return;
 
-        // A different, available card being tapped shouldn't leave some
-        // other card's popover open behind the drawer this opens.
-        closeCardBranchPopover();
         openProductDetail(product, saleBadgeVariant, "default");
       }}
       // The browser's own default tap-highlight (a harsh gray/black flash
@@ -71,7 +58,7 @@ const CardProduct = ({
       // overlay div below replaces it with a deliberately light one, so
       // that default needs turning off here or the two would show at once.
       style={{ WebkitTapHighlightColor: "transparent" }}
-      className={`group relative flex ${CARD_HEIGHT_CLASS} w-full flex-col rounded-[18px] transition-transform duration-200 ease-out active:scale-[0.98] lg:rounded-[20px] lg:border lg:border-gray180 lg:duration-300 lg:hover:-translate-y-0.5 ${
+      className={`group relative flex ${CARD_HEIGHT_CLASS} w-full cursor-pointer flex-col rounded-[18px] transition-transform duration-200 ease-out active:scale-[0.98] lg:rounded-[20px] lg:border lg:border-gray180 lg:duration-300 lg:hover:-translate-y-0.5 ${
         isDiscountCard
           ? "overflow-visible bg-white ring-1 ring-black/5 lg:ring-0"
           : `${
@@ -117,19 +104,19 @@ const CardProduct = ({
           </div>
 
           {isUnavailable && (
-            <span className="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-1 text-[10px] font-bold leading-none text-white">
+            <span className="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-1 text-[10px] font-medium leading-none text-white">
               {t("product_not_in_this_branch")}
             </span>
           )}
 
           {isDiscountCard && product.sale_amount && (
             <span
-              className={`absolute right-1 top-2 z-20 flex h-7 items-center gap-1 rounded-full py-0.5 pl-0.5 pr-2.5 text-[9px] font-extrabold leading-none text-white shadow-[0_6px_14px_rgba(17,24,39,0.16)] ring-1 ring-white/70 ${saleVariantClassName.badge}`}
+              className={`absolute right-1 top-2 z-20 flex h-7 items-center gap-1 rounded-full py-0.5 pl-0.5 pr-2.5 text-[9px] font-medium leading-none text-white shadow-[0_6px_14px_rgba(17,24,39,0.16)] ring-1 ring-white/70 ${saleVariantClassName.badge}`}
             >
               <span
-                className={`flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-xs font-extrabold leading-none text-white ${saleVariantClassName.badge}`}
+                className={`flex h-6 w-6 items-center justify-center rounded-full border border-white/70 text-xs font-medium leading-none text-white ${saleVariantClassName.badge}`}
               >
-                <Flame size={18} />
+                <IconFlameFilled size={18} />
               </span>
               {t("discount")}
             </span>
@@ -154,14 +141,14 @@ const CardProduct = ({
                   </p>
                   {isDiscountCard && product.sale_amount && (
                     <span
-                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold leading-none text-white ${saleVariantClassName.badge}`}
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium leading-none text-white ${saleVariantClassName.badge}`}
                     >
                       {saleLabel}
                     </span>
                   )}
                 </div>
               )}
-              <p className="mt-1 text-[13px] font-bold leading-[15px] text-black lg:text-[15px] lg:leading-4">
+              <p className="mt-1 text-[13px] font-medium leading-[15px] text-black lg:text-[15px] lg:leading-4">
                 {formatPrice(price)} {t("sum")}
               </p>
             </div>
@@ -194,7 +181,6 @@ const CardProduct = ({
                 if (!isUnavailable) return;
 
                 event.stopPropagation();
-                handleUnavailableTap();
               }}
               className="mt-2 flex w-full justify-end lg:mt-0 lg:translate-y-0 [&>div]:lg:max-w-none"
             >
@@ -212,14 +198,6 @@ const CardProduct = ({
         </div>
       </div>
 
-      {isUnavailable && (
-        <UnavailablePopover
-          open={isBranchPopoverOpen}
-          onClose={closeCardBranchPopover}
-        >
-          <UnavailableBranchList product={product} onSelect={handleSelectBranch} />
-        </UnavailablePopover>
-      )}
     </article>
   );
 };

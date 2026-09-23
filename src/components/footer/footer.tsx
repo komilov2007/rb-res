@@ -1,7 +1,13 @@
 "use client";
 
+import Link from "next/link";
+
 import { useGeneral } from "@/hooks/useGeneral";
-import { ExternalLink, Phone } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { IconPhoneFilled } from "@tabler/icons-react";
+
+import { ROUTER } from "@/constants/router";
+import { useShopId } from "@/hooks/useShopId";
 import {
   formatSocialName,
   getSocialIcon,
@@ -12,8 +18,16 @@ import { useTranslations } from "next-intl";
 const Footer = () => {
   const t = useTranslations();
   const { data } = useGeneral();
+  const { shopid } = useShopId();
   const general = data?.data;
   const socials = general?.socials ?? [];
+  const shopQuery = shopid ? `?shop_id=${shopid}` : "";
+  // Both point at the About page on purpose: it already renders the shop's
+  // working hours, its branch list (live, from the branches API) and its
+  // contacts — there is no separate branches route to link to. "Filiallar"
+  // jumps straight to that page's branches section.
+  const aboutHref = `${ROUTER.PROFILE_ABOUT}${shopQuery}`;
+  const branchesHref = `${aboutHref}#branches`;
 
   return (
     <footer className="hidden h-[204px] items-center justify-center rounded-t-[30px] border-t border-[#EAECF0] bg-white px-5 lg:flex">
@@ -30,18 +44,18 @@ const Footer = () => {
           )}
 
           <nav className="grid grid-cols-2 gap-x-8 gap-y-3">
-            <a
+            <Link
               className="text-sm font-normal text-gray220 transition-colors hover:text-black"
-              href="#"
+              href={aboutHref}
             >
               {t("about_us")}
-            </a>
-            <a
+            </Link>
+            <Link
               className="text-sm font-normal text-gray220 transition-colors hover:text-black"
-              href="#"
+              href={branchesHref}
             >
               {t("store_branches")}
-            </a>
+            </Link>
             <a
               className="text-sm font-normal text-gray220 transition-colors hover:text-black"
               href="#"
@@ -71,7 +85,7 @@ const Footer = () => {
               href={`tel:${general.business_phone}`}
               className="flex items-center gap-2 text-base font-medium text-black transition-opacity hover:opacity-70"
             >
-              <Phone size={17} className="text-gray220" />
+              <IconPhoneFilled size={17} className="text-gray220" />
               {general.business_phone}
             </a>
           )}

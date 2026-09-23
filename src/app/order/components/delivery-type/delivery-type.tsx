@@ -7,7 +7,7 @@ import { isPickupType } from "@/constants/delivery-type";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 import type { OrderFormValues } from "@/types/order";
-import RadioMark from "@/components/ui/radio-mark";
+import RadioMark, { getOptionClassName } from "@/components/ui/radio-mark";
 
 import Branches from "../branches";
 import { getOrderOption } from "./constants";
@@ -18,6 +18,7 @@ type DeliveryTypeProps = {
   branches?: BranchProps[];
   isBranchesLoading: boolean;
   isBranchesError: boolean;
+  isServicesLoading: boolean;
   workingTime?: GeneralProps["working_time"];
 };
 
@@ -26,6 +27,7 @@ const DeliveryType = ({
   branches,
   isBranchesLoading,
   isBranchesError,
+  isServicesLoading,
   workingTime,
 }: DeliveryTypeProps) => {
   const t = useTranslations();
@@ -38,12 +40,18 @@ const DeliveryType = ({
 
   return (
     <>
-      <section className="rounded-2xl bg-white p-4">
-        <h2 className="pb-2 text-sm font-bold text-black">
+      <section className="rounded-xl bg-white p-3">
+        <h2 className="pb-2 text-sm font-medium text-black">
           {t("order_page_delivery_type_title")}
         </h2>
-        {services.length === 0 ? (
-          <p className="text-xs font-medium text-gray220">
+        {isServicesLoading ? (
+          <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2">
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="skeleton h-16 rounded-lg" />
+            ))}
+          </div>
+        ) : services.length === 0 ? (
+          <p className="text-xs font-normal text-gray220">
             {t("order_page_delivery_type_empty")}
           </p>
         ) : (
@@ -51,7 +59,7 @@ const DeliveryType = ({
             control={control}
             name="delivery_type"
             render={({ field }) => (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2">
                 {services.map((service) => {
                   const option = getOrderOption(service.type);
                   const checked = field.value === service.type;
@@ -61,21 +69,17 @@ const DeliveryType = ({
                       key={service.id}
                       type="button"
                       onClick={() => field.onChange(service.type)}
-                      className={`flex w-full items-center justify-between gap-3 rounded-xl border px-2 py-3 text-left ${
-                        checked
-                          ? "border-green-500 bg-green-500/10"
-                          : "border-transparent bg-gray10/50"
-                      }`}
+                      className={`flex min-h-16 w-full items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-left ${getOptionClassName(checked)}`}
                     >
                       <span className="min-w-0">
-                        <span className="block text-sm font-normal text-black">
+                        <span className="info-label block">
                           {t(option.label)}
                         </span>
-                        <span className="mt-0.5 block text-xs font-medium text-gray220">
+                        <span className="info-value block">
                           {t(option.desc)}
                         </span>
                       </span>
-                      <RadioMark checked={checked} size="sm" />
+                      <RadioMark checked={checked} />
                     </button>
                   );
                 })}

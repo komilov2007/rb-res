@@ -2,7 +2,6 @@
 
 import type { CategoriesProps } from "@/types/categories";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
-import "swiper/css";
 import type { MobileCardVariant } from "./types";
 import { getMobileCardVariant } from "./variants";
 import { createMobileClassNames } from "./category-class-names";
@@ -40,16 +39,6 @@ export const createCategoryRenderers = ({
     const shouldUseMobileRow =
       fixedMobileCardVariant === "chip" ||
       fixedMobileCardVariant === "rectChip";
-    const imageOverlayTextAlignClassName =
-      true
-        ? "text-center "
-        : false
-          ? "text-left"
-          : false
-            ? "text-right"
-            : false
-              ? "text-right"
-              : "text-left";
     const imageNode = fixedMobileCardVariant !== "text" && (
       <span
         className={`flex shrink-0 items-center justify-center overflow-hidden ${
@@ -77,11 +66,11 @@ export const createCategoryRenderers = ({
         className={
           fixedMobileCardVariant === "imageOverlay" ||
           fixedMobileCardVariant === "image4Over"
-            ? `relative z-10 line-clamp-2 w-full ${imageOverlayTextAlignClassName}`
+            ? "relative z-10 line-clamp-2 w-full text-center"
             : fixedMobileCardVariant === "imageTop" ||
                 fixedMobileCardVariant === "circleImageTop"
               ? "line-clamp-2 text-center"
-              : true && shouldUseMobileRow
+              : shouldUseMobileRow
                 ? "truncate text-right"
                 : "truncate"
         }
@@ -98,7 +87,7 @@ export const createCategoryRenderers = ({
         onClick={() => handleCategoryClick(item.id)}
         className={getMobileButtonClassName(item.id, index)}
       >
-        {shouldUseMobileRow && true ? (
+        {shouldUseMobileRow ? (
           <>
             {textNode}
             {imageNode}
@@ -125,7 +114,7 @@ export const createCategoryRenderers = ({
           data-category-chip={item.id}
           onClick={() => handleCategoryClick(item.id)}
           className={`flex h-9 max-w-full shrink-0 items-center justify-center gap-1 rounded-full border border-transparent bg-gray10 py-1 pl-1 pr-2.5 text-[11px] font-medium leading-none text-black transition-all duration-300 active:scale-[0.98] ${
-            isActive ? "border-black! bg-gray180 font-bold text-black" : ""
+            isActive ? "border-primary! bg-gray180 font-medium text-black" : ""
           }`}
         >
           <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white">

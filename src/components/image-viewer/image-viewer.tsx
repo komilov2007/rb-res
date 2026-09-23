@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { IconPlayerPlayFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -161,7 +163,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                       className="h-full w-full object-cover"
                     />
                     <span className="absolute inset-0 flex items-center justify-center bg-black/30 text-white">
-                      <Play size={16} fill="currentColor" />
+                      <IconPlayerPlayFilled size={16} fill="currentColor" />
                     </span>
                   </>
                 ) : (

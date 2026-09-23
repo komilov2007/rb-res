@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelection } from "@/components/branch-selection";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Store selections, the detail query, the add-to-cart mutation and the
 // sheet/selection state behind the product detail view.
@@ -80,7 +81,7 @@ export const useProductDetailBase = () => {
 
   const { data, isLoading } = useQuery({
     enabled: isOpen && Boolean(product?.id),
-    queryKey: ["product-detail", product?.id],
+    queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, product?.id],
     queryFn: () => getProductDetail(product!.id),
   });
   const stockMutation = useMutation({

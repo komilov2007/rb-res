@@ -32,7 +32,7 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
           showCloseButton={false}
           className="max-w-[380px] rounded-3xl border border-gray180 bg-white p-6"
         >
-          <DialogTitle className="text-lg font-bold text-black">
+          <DialogTitle className="text-lg font-medium text-black">
             {t("profile_page_language_sheet_title")}
           </DialogTitle>
           <div className="mt-4 flex flex-col gap-2">

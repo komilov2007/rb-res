@@ -2,7 +2,7 @@
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/button";
 import XButton from "@/components/ui/x-button";
-import { Trash2 } from "lucide-react";
+import { IconTrashFilled } from "@tabler/icons-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useLocationModal } from "./useLocationModal";
 import ModalScreen from "@/components/modal/screen-modal";
@@ -96,7 +96,7 @@ const LocationModal = () => {
   const desktopContent = (
     <div className="flex h-full w-full flex-col bg-white p-4">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-xl font-bold text-black">
+        <h2 className="text-xl font-medium text-black">
           {t("location_delivery_address_title")}
         </h2>
         <XButton
@@ -134,7 +134,7 @@ const LocationModal = () => {
                 className="bg-red-500 text-white"
                 aria-label={t("location_delete_address")}
               >
-                <Trash2 size={17} />
+                <IconTrashFilled size={17} />
               </Button>
             </div>
           )}
@@ -148,9 +148,13 @@ const LocationModal = () => {
   if (isDesktop) {
     return (
       <>
+        {/* Dismissing (Escape / overlay) goes through handleClose like the
+            mobile X — a bare setLocationModal(false) left the screen and
+            editing id behind, so the next plain open landed on the map
+            and "Tasdiqlash" updated the previously edited address. */}
         <Dialog
           open={state.locationModal && !state.detailsModal}
-          onOpenChange={() => actions.setLocationModal(false)}
+          onOpenChange={(open) => !open && actions.handleClose()}
         >
           <DialogContent
             showCloseButton={false}
@@ -161,7 +165,7 @@ const LocationModal = () => {
         </Dialog>
         <Dialog
           open={state.locationModal && state.detailsModal}
-          onOpenChange={() => actions.setLocationModal(false)}
+          onOpenChange={(open) => !open && actions.handleClose()}
         >
           <DialogContent
             showCloseButton={false}

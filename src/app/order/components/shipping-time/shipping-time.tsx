@@ -18,16 +18,16 @@ const ShippingTime = () => {
   const [today] = useState(() => new Date().toLocaleDateString("en-CA"));
 
   return (
-    <section className="rounded-2xl bg-white p-4">
-      <h2 className="flex items-center gap-2 text-sm font-bold text-black">
+    <section className="rounded-xl bg-white p-3">
+      <h2 className="flex items-center gap-2 text-sm font-medium text-black">
         <CalendarClock size={18} className="text-gray220" />
         {t("order_page_shipping_title")}
       </h2>
-      <p className="mt-0.5 text-xs font-medium text-gray220">
+      <p className="mt-0.5 text-xs font-normal text-gray220">
         {t("order_page_shipping_hint")}
       </p>
 
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <div className="mt-2 grid grid-cols-2 gap-2">
         <Controller
           control={control}
           name="shipping_date"
@@ -38,7 +38,7 @@ const ShippingTime = () => {
                 type="date"
                 aria-label={t("order_page_shipping_date")}
                 min={today}
-                wrapperClassName="!h-11 !rounded-xl !px-3"
+                wrapperClassName="!h-11 !rounded-lg !px-3"
                 className="text-black"
                 value={field.value ?? ""}
                 onChange={(event) => field.onChange(event.target.value || null)}
@@ -61,7 +61,7 @@ const ShippingTime = () => {
               <Input
                 type="time"
                 aria-label={t("order_page_shipping_time")}
-                wrapperClassName="!h-11 !rounded-xl !px-3"
+                wrapperClassName="!h-11 !rounded-lg !px-3"
                 className="text-black"
                 value={field.value ?? ""}
                 onChange={(event) => field.onChange(event.target.value || null)}

@@ -1,12 +1,9 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import {
-  ChevronRight,
-  Footprints,
-  MapPin,
-  UtensilsCrossed,
-} from "lucide-react";
+import { ChevronRight, Footprints } from "lucide-react";
+import { IconMapPinFilled, IconToolsKitchen2Filled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import { useGeneral } from "@/hooks/useGeneral";
@@ -62,7 +59,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
 
         <section className="py-5">
           <SectionLabel
-            icon={isDelivery ? <MapPin size={13} /> : <Footprints size={13} />}
+            icon={isDelivery ? <IconMapPinFilled size={13} /> : <Footprints size={13} />}
           >
             {isDelivery
               ? t("orders_detail_delivery_address")
@@ -80,7 +77,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               className="mt-3 flex w-full items-center gap-3 text-left disabled:pointer-events-none"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray10 text-gray220">
-                <MapPin size={18} />
+                <IconMapPinFilled size={18} />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-black">
@@ -103,7 +100,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               className="mt-3 flex w-full items-start gap-3 text-left"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray10 text-gray220">
-                <MapPin size={18} />
+                <IconMapPinFilled size={18} />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-black">
@@ -125,7 +122,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
           ) : (
             <div className="mt-3 flex items-start gap-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray10 text-gray220">
-                <MapPin size={18} />
+                <IconMapPinFilled size={18} />
               </span>
               <div className="min-w-0">
                 <p className="text-sm font-medium text-black">
@@ -144,7 +141,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
         </section>
 
         <section className="py-5">
-          <SectionLabel icon={<UtensilsCrossed size={13} />}>
+          <SectionLabel icon={<IconToolsKitchen2Filled size={13} />}>
             {t("orders_detail_items_title")}
           </SectionLabel>
           <ul className="mt-3 flex flex-col gap-3">

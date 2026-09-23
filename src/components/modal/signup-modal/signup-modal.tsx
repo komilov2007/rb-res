@@ -17,6 +17,7 @@ import { setUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getLocalPhone } from "@/utils/format-number";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // First-time user name step, opened right after login (or by checkout when
 // the name is still missing) on top of the current screen. Saving the name
@@ -61,8 +62,12 @@ const SignupModal = () => {
       }
 
       closeModal();
-      void queryClient.invalidateQueries({ queryKey: ["general", shopid] });
-      void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.GENERAL, shopid],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.PROFILE],
+      });
     },
   });
 
@@ -78,7 +83,7 @@ const SignupModal = () => {
     <form className="flex w-full flex-col gap-5" onSubmit={handleSubmit}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-black">{t("signup")}</h2>
+          <h2 className="text-2xl font-medium text-black">{t("signup")}</h2>
           <p className="mt-2 text-sm font-normal leading-5 text-gray220">
             {t("signup_hint")}
           </p>

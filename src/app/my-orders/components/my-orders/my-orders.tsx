@@ -39,7 +39,7 @@ const EmptyOrders = () => {
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray10 text-gray220">
         <PackageSearch size={28} strokeWidth={1.8} />
       </div>
-      <h3 className="mt-4 text-base font-extrabold text-black">
+      <h3 className="mt-4 text-base font-medium text-black">
         {t("orders_empty_title")}
       </h3>
       <p className="mt-2 max-w-[280px] text-sm leading-6 text-gray220">
@@ -74,7 +74,7 @@ const MyOrders = () => {
           >
             <ChevronLeft size={22} />
           </Button>
-          <h1 className="text-base font-extrabold text-black">
+          <h1 className="text-base font-medium text-black">
             {t("order")}
           </h1>
         </div>
@@ -87,7 +87,7 @@ const MyOrders = () => {
               key={String(tab.key)}
               type="button"
               onClick={() => setIsActive(tab.key)}
-              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold ${
+              className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-medium ${
                 isActive === tab.key
                   ? "bg-primary text-white"
                   : "bg-white text-gray220"

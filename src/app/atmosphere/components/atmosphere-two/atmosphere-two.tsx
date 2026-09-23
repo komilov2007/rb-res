@@ -9,8 +9,7 @@ import {
   ATMOSPHERE_VIDEO_SRC,
   type AtmosphereVariantProps,
 } from "../../constants";
-
-const pad = (value: number) => String(value).padStart(2, "0");
+import { pad } from "../../utils";
 
 // Mobile variant "two": an immersive walk-through of the restaurant. Every
 // slide fills the whole screen and snaps vertically, one "room" per swipe —
@@ -74,7 +73,7 @@ const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
                   <h2 className="max-w-[300px] font-serif text-[40px] font-medium leading-[0.95]">
                     {t("booking_gallery_title")}
                   </h2>
-                  <p className="mt-3 text-sm font-medium leading-6 text-white/75">
+                  <p className="mt-3 text-sm font-normal leading-6 text-white/75">
                     {t("booking_gallery_description")}
                   </p>
                   <ChevronDown
@@ -88,7 +87,7 @@ const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
         })}
       </div>
 
-      <span className="pointer-events-none absolute right-4 top-[calc(env(safe-area-inset-top)+20px)] rounded-full bg-black/35 px-3 py-1 text-xs font-medium tabular-nums text-white backdrop-blur-md">
+      <span className="pointer-events-none absolute right-4 top-[calc(env(safe-area-inset-top)+20px)] rounded-full bg-black/35 px-3 py-1 text-xs font-normal tabular-nums text-white backdrop-blur-md">
         {pad(activeIndex + 1)} / {pad(total)}
       </span>
 

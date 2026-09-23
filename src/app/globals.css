@@ -125,6 +125,38 @@ a {
   scrollbar-width: none;
 }
 
+/* Inner scroll areas inside a panel: a thin rounded thumb on a clear track
+   that darkens a little while hovered. */
+.scroll-panel {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray180) transparent;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+.scroll-panel:hover {
+  scrollbar-color: color-mix(in oklab, var(--gray220) 35%, transparent)
+    transparent;
+}
+
+.scroll-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll-panel::-webkit-scrollbar-track {
+  margin-block: 8px;
+  background: transparent;
+}
+
+.scroll-panel::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--gray180);
+}
+
+.scroll-panel:hover::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--gray220) 35%, transparent);
+}
+
 .scroll-hidden::-webkit-scrollbar {
   display: none;
 }
@@ -188,6 +220,40 @@ a {
     animation: required-option-error 680ms ease-out;
   }
 
+  /* Label + value pairs (e.g. "Yetkazib berish manzili" / the address):
+     the label is the readable black line, the value sits under it in a
+     lighter gray. Use these everywhere a field shows a caption and data. */
+  .info-label {
+    @apply text-sm font-normal text-black;
+  }
+
+  .info-value {
+    @apply mt-0.5 text-[13px] font-medium text-gray220/70;
+  }
+
+  /* Loading placeholder: a soft light band sweeping across a gray block.
+     Visible on white surfaces (gray180 base), smoother than a pulse. */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--gray180) 0%,
+      var(--gray10) 50%,
+      var(--gray180) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 100% 0;
+    }
+
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
   @keyframes required-option-error {
     0% {
       transform: translateX(0);
@@ -212,19 +278,19 @@ a {
 
   .title {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 134%;
   }
 
   .title10 {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 134%;
   }
 
   .title20 {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 120%;
   }
 
@@ -237,13 +303,13 @@ a {
 
   .title50 {
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 108%;
   }
 
   .title60 {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 134%;
   }
 
@@ -269,7 +335,7 @@ a {
 
   .text30 {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 120%;
     color: var(--gray220);
   }
@@ -359,6 +425,14 @@ a {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Tailwind v4's preflight leaves buttons on the default arrow — every
+     clickable control shows the hand cursor, like a link. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for] {
+    cursor: pointer;
   }
 }
 
@@ -458,4 +532,21 @@ a {
 .location-yandex-map [class*="gotoymaps"],
 .location-yandex-map [class*="scale"] {
   display: none !important;
+}
+
+/*
+ * Branch balloon (the tooltip that opens above a pin in the desktop branch
+ * picker drawer). Yandex sizes the balloon to its content, and a long branch
+ * address made it wider than the 480px drawer itself. Capped here — the
+ * versioned `ymaps-2-1-xx-` class prefix is why these are substring
+ * selectors, matching the chrome rules above.
+ */
+.branch-map-picker [class*="balloon__layout"],
+.branch-map-picker [class*="balloon__content"] {
+  max-width: 260px !important;
+}
+
+.branch-map-picker [class*="balloon__content"] {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
 }

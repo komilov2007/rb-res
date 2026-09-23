@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarDays, Clock3 } from "lucide-react";
+import { CalendarDays } from "lucide-react";
+import { IconClockHour3Filled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { useGeneral } from "@/hooks/useGeneral";
 import { getDateValue } from "@/utils/format-date";
 
-import type { BookingFormValues } from "../../../schema";
-import { useDayLabel } from "../../../useDayLabel";
+import type { BookingFormValues } from "@/app/booking/schema";
+import { useDayLabel } from "@/app/booking/useDayLabel";
 import {
   getBookingDays,
   isDayOff,
@@ -17,9 +18,9 @@ import {
   maskTime,
   parseDisplayDate,
   toDisplayDate,
-} from "../../../utils";
-import TileCombo from "./tile-combo";
-import TwoField from "./two-field";
+} from "@/app/booking/utils";
+import TileCombo from "../tile-combo";
+import TwoField from "../two-field";
 
 // Date + time, checked against general.working_time. The date can be
 // typed or picked (the list marks days off, not pickable); the time is
@@ -111,7 +112,7 @@ const TwoVisit = () => {
         error={errors.date?.message}
       />
 
-      <TwoField Icon={Clock3} label={t("booking_time")} error={errors.time?.message}>
+      <TwoField Icon={IconClockHour3Filled} label={t("booking_time")} error={errors.time?.message}>
         <input
           value={timeText}
           inputMode="numeric"

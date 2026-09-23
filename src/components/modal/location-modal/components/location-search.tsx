@@ -53,10 +53,10 @@ const LocationSearch = ({
               onClick={() => onSelect(item)}
               className="flex w-full flex-col px-4 py-3 text-left"
             >
-              <span className="text-sm font-medium text-black">
+              <span className="info-label">
                 {item.name || item.address}
               </span>
-              <span className="mt-1 line-clamp-1 text-xs font-medium text-gray220">
+              <span className="info-value line-clamp-1">
                 {item.address || item.description}
               </span>
             </button>

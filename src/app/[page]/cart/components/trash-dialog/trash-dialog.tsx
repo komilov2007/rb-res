@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { useRef } from "react";
 import Button from "@/components/ui/button";
 import {
   Dialog,
@@ -15,10 +16,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { clearCartList, getCartList, removeCartItem } from "@/apis/cart";
 import { useAuthStore } from "@/stores/auth";
 import { normalizeCartItems } from "@/utils/cart";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { getCartLineKey } from "@/utils/cart-items";
 
 const RemoveCartDialog = () => {
   const t = useTranslations();
-  const removeProductId = useCartStore((state) => state.removeProductId);
+  const removeLineKey = useCartStore((state) => state.removeLineKey);
   const clearCartConfirmOpen = useCartStore(
     (state) => state.clearCartConfirmOpen,
   );
@@ -29,50 +32,93 @@ const RemoveCartDialog = () => {
   const setCarts = useCartStore((state) => state.setCarts);
   const customerId = useAuthStore((state) => state.auth?.customer);
   const queryClient = useQueryClient();
+  // The follow-up list refetch runs inside mutationFn so `isPending` keeps the
+  // delete button disabled until the whole remove → refetch cycle is done
+  // (otherwise a second tap in that window re-sends the remove/clear call).
   const removeMutation = useMutation({
     mutationFn: removeCartItem,
   });
   const clearMutation = useMutation({
-    mutationFn: clearCartList,
+    mutationFn: async (customer: number) => {
+      await clearCartList(customer);
+      setCarts([]);
+      return getCartList(customer);
+    },
+  });
+  const removeAndRefetchMutation = useMutation({
+    mutationFn: async ({ id, customer }: { id: number; customer: number }) => {
+      await removeCartItem(id);
+      return getCartList(customer);
+    },
   });
   const isClearMode = clearCartConfirmOpen;
-  const isOpen = removeProductId !== null || clearCartConfirmOpen;
+  const isOpen = removeLineKey !== null || clearCartConfirmOpen;
+  const isPending =
+    removeMutation.isPending ||
+    clearMutation.isPending ||
+    removeAndRefetchMutation.isPending;
+
+  // A ref, not isPending: two fast taps land before React re-renders, so
+  // both would still read isPending as false and send the request twice.
+  const inFlightRef = useRef(false);
 
   const handleRemove = async () => {
-    if (isClearMode) {
-      if (customerId) {
-        await clearMutation.mutateAsync(customerId);
-        setCarts([]);
+    if (inFlightRef.current || isPending) return;
 
-        const response = await getCartList(customerId);
-        const nextCarts = normalizeCartItems(response.data);
+    inFlightRef.current = true;
 
-        queryClient.setQueryData(["cart-list", customerId], response);
-        setCarts(nextCarts);
-      } else {
-        setCarts([]);
-      }
+    try {
+      if (isClearMode) {
+        if (customerId) {
+          const response = await clearMutation.mutateAsync(customerId);
 
-      closeClearCartModal();
-      return;
-    }
+          queryClient.setQueryData(
+            [REACT_QUERY_KEYS.CART_LIST, customerId],
+            response,
+          );
+          setCarts(normalizeCartItems(response.data));
+        } else {
+          setCarts([]);
+        }
 
-    const cartItem = carts.find((item) => item.product.id === removeProductId);
-
-    if (cartItem?.id) {
-      await removeMutation.mutateAsync(cartItem.id);
-      if (customerId) {
-        const response = await getCartList(customerId);
-        queryClient.setQueryData(["cart-list", customerId], response);
-        setCarts(
-          normalizeCartItems(response.data, useCartStore.getState().carts),
-        );
-        closeRemoveModal();
+        closeClearCartModal();
         return;
       }
-    }
 
-    confirmRemoveCart();
+      // The exact line the trash tap was on — the same product can be on
+      // several lines with different parameters.
+      const cartItem = carts.find(
+        (item) => getCartLineKey(item) === removeLineKey,
+      );
+
+      if (cartItem?.id) {
+        if (customerId) {
+          const response = await removeAndRefetchMutation.mutateAsync({
+            id: cartItem.id,
+            customer: customerId,
+          });
+
+          queryClient.setQueryData(
+            [REACT_QUERY_KEYS.CART_LIST, customerId],
+            response,
+          );
+          setCarts(
+            normalizeCartItems(response.data, useCartStore.getState().carts),
+          );
+          closeRemoveModal();
+          return;
+        }
+
+        await removeMutation.mutateAsync(cartItem.id);
+      }
+
+      confirmRemoveCart();
+    } catch {
+      // The global request interceptor already toasts the backend's message;
+      // the dialog stays open so the user can retry or cancel.
+    } finally {
+      inFlightRef.current = false;
+    }
   };
 
   const handleClose = () => {
@@ -114,7 +160,7 @@ const RemoveCartDialog = () => {
             variant="destructive"
             size="dialogAction"
             onClick={handleRemove}
-            disabled={removeMutation.isPending || clearMutation.isPending}
+            disabled={isPending}
           >
             {t("delete")}
           </Button>

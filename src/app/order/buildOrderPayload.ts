@@ -2,6 +2,8 @@ import type { CreateOrderPayload } from "@/apis/order";
 import type { CartItemProps } from "@/types/cart";
 import type { OrderFormValues } from "@/types/order";
 
+import { getActiveCartLines } from "@/utils/cart";
+
 import { buildShippingDatetime } from "./constants";
 
 type BuildOrderPayloadParams = {
@@ -52,22 +54,18 @@ export const buildOrderPayload = ({
       room: values.room,
       floor: values.floor,
       entrance: values.entrance,
-      comment: values.comment,
+      // The textarea keeps what was typed; a whitespace-only comment is
+      // sent as none.
+      comment: values.comment?.trim() || null,
     };
   }
 
   return payload;
 };
 
-// Only active cart lines, minus the ones reported unavailable.
-export const getOrderItems = (
-  carts: CartItemProps[],
-  unavailableItemIds: number[],
-) =>
-  carts.flatMap((item) =>
-    item.is_active &&
-    typeof item.id === "number" &&
-    !unavailableItemIds.includes(item.id)
-      ? [item.id]
-      : [],
+// Only active cart lines — the same lines every shown/charged total uses
+// (getActiveCartLines), so the charged amount always matches the items.
+export const getOrderItems = (carts: CartItemProps[]) =>
+  getActiveCartLines(carts).flatMap((item) =>
+    typeof item.id === "number" ? [item.id] : [],
   );

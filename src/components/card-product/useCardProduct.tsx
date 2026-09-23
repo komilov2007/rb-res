@@ -9,6 +9,7 @@ import { addNoParameterCart, getCartList } from "@/apis/cart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth";
 import { normalizeCartItems } from "@/utils/cart";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const useCardProduct = ({
   product,
@@ -20,7 +21,9 @@ export const useCardProduct = ({
   const counter = useBoolean();
   const carts = useCartStore((state) => state.carts);
   const addCart = useCartStore((state) => state.addCart);
-  const setCartQuantity = useCartStore((state) => state.setCartQuantity);
+  const setProductQuantity = useCartStore(
+    (state) => state.setProductQuantity,
+  );
   const openProductDetail = useProductDetailStore(
     (state) => state.openProductDetail,
   );
@@ -43,7 +46,14 @@ export const useCardProduct = ({
       data: { branch_id?: string };
     }) => addNoParameterCart(customerId, productId, quantity, data),
   });
-  const cartItem = carts.find((item) => item.product.id === product.id);
+  // The card manages the product's plain line (cards only handle products
+  // without parameters) — never a parameter line of the same product.
+  const cartItem = carts.find(
+    (item) =>
+      item.product.id === product.id &&
+      !item.parameter &&
+      !item.ad_parameter?.length,
+  );
   const quantity = cartItem?.quantity ?? 0;
   const shownQuantity = displayQuantity ?? quantity;
   const branchId = product.branches?.[0];
@@ -52,14 +62,14 @@ export const useCardProduct = ({
     if (!customerId) return;
 
     const response = await queryClient.fetchQuery({
-      queryKey: ["cart-list", customerId],
+      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
       queryFn: () => getCartList(customerId),
       staleTime: 0,
     });
 
     setCarts(normalizeCartItems(response.data, useCartStore.getState().carts));
     await queryClient.invalidateQueries({
-      queryKey: ["cart-list", customerId],
+      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
     });
   };
 
@@ -107,7 +117,7 @@ export const useCardProduct = ({
 
     const syncedQuantity = await syncStockQuantity(quantity + 1);
     addCart(product);
-    setCartQuantity(product.id, syncedQuantity);
+    setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 
@@ -123,7 +133,7 @@ export const useCardProduct = ({
     }
 
     const syncedQuantity = await syncStockQuantity(quantity + 1);
-    setCartQuantity(product.id, syncedQuantity);
+    setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 
@@ -134,7 +144,7 @@ export const useCardProduct = ({
     }
 
     if (!customerId) {
-      setCartQuantity(product.id, Math.max(quantity - 1, 0));
+      setProductQuantity(product.id, Math.max(quantity - 1, 0));
       openCounter();
       return;
     }
@@ -142,13 +152,13 @@ export const useCardProduct = ({
     const nextQuantity = Math.max(quantity - 1, 0);
     setDisplayQuantity(nextQuantity);
     if (nextQuantity === 0) {
-      setCartQuantity(product.id, 0);
+      setProductQuantity(product.id, 0);
     }
     const syncedQuantity = await syncStockQuantity(nextQuantity);
     if (nextQuantity === 0) {
       return;
     }
-    setCartQuantity(product.id, syncedQuantity);
+    setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 
@@ -168,7 +178,7 @@ export const useCardProduct = ({
     }
 
     const syncedQuantity = await syncStockQuantity(quantity);
-    setCartQuantity(product.id, syncedQuantity);
+    setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 

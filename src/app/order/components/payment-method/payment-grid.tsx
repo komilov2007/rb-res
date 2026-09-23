@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import type { OrderFormValues, PaymentTypeProps } from "@/types/order";
 import RadioMark from "@/components/ui/radio-mark";
 
-import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "./constants";
+import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "@/constants/payment-types";
 
 type PaymentGridProps = {
   visiblePaymentTypes: PaymentTypeProps[];
@@ -28,7 +28,7 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
       control={control}
       name="payment_type"
       render={({ field }) => (
-        <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
+        <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-3">
           {visiblePaymentTypes.map((type) => {
             const config = PAYMENT_CARD_CONFIG[type];
 
@@ -51,9 +51,11 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
                 type="button"
                 onClick={handleSelect}
                 disabled={isDisabled}
-                className={`flex flex-col gap-2 rounded-2xl border p-3 text-left ${
+                className={`flex flex-col gap-2 rounded-2xl border p-3 text-left transition-colors duration-200 ${
                   isDisabled ? "pointer-events-none opacity-50" : ""
                 } ${
+                  // White bordered cards (unlike the gray option rows used
+                  // elsewhere); green when selected, red on a field error.
                   checked
                     ? "border-green-500 bg-green-500/10"
                     : hasError
@@ -65,11 +67,7 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
                   <span className="flex h-8 shrink-0 items-center justify-start overflow-hidden [&_svg]:h-auto [&_svg]:max-h-8 [&_svg]:w-auto [&_svg]:max-w-30">
                     <Icon />
                   </span>
-                  <RadioMark
-                    checked={checked && !isDisabled}
-                    size="sm"
-                    hasError={hasError}
-                  />
+                  <RadioMark checked={checked && !isDisabled} />
                 </div>
                 <span className="text-sm font-normal text-black">
                   {caption}

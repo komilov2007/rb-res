@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 import { clearUser, getUser, setUser } from "@/utils/user";
 import type { AuthProps } from "@/types/auth";
@@ -6,9 +6,13 @@ import { isServer } from "@/utils/is-server";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const refreshToken = async (shopId?: string | null) => {
-  if (isServer() || !shopId) return;
+type RefreshResponse = AxiosResponse<Partial<AuthProps>> | undefined;
 
+// One in-flight refresh per shop: parallel requests that all find an expired
+// access token share it instead of each sending the same refresh token.
+const pendingRefresh = new Map<string, Promise<RefreshResponse>>();
+
+const requestRefresh = async (shopId: string): Promise<RefreshResponse> => {
   const user = getUser(shopId);
 
   if (!user?.refresh) return;
@@ -20,7 +24,7 @@ export const refreshToken = async (shopId?: string | null) => {
       { baseURL },
     );
 
-    setUser(shopId, { ...user, ...response.data });
+    setUser(shopId, { ...user.auth, ...response.data });
 
     return response;
   } catch (error) {
@@ -28,4 +32,20 @@ export const refreshToken = async (shopId?: string | null) => {
 
     return await Promise.reject(error);
   }
+};
+
+export const refreshToken = async (shopId?: string | null) => {
+  if (isServer() || !shopId) return;
+
+  const pending = pendingRefresh.get(shopId);
+
+  if (pending) return await pending;
+
+  const refresh = requestRefresh(shopId).finally(() => {
+    pendingRefresh.delete(shopId);
+  });
+
+  pendingRefresh.set(shopId, refresh);
+
+  return await refresh;
 };

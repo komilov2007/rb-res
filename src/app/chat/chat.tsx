@@ -2,16 +2,21 @@
 
 import { Suspense, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 
+import Breadcrumb from "@/components/breadcrumb";
 import ChatPanel from "@/components/chat-panel";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 
 const subscribeNoop = () => () => {};
 
 const ChatContent = () => {
+  const t = useTranslations();
   const router = useRouter();
   const { shopid } = useShopId();
   const hasAccess = useAuthStore((state) => state.hasAccess);
@@ -43,8 +48,25 @@ const ChatContent = () => {
 
   if (!isHydrated || !hasAccess) return null;
 
+  // Mobile: the panel is the whole screen. Desktop (lg+): site header/footer
+  // shell with the panel as one full-bleed, viewport-high white block (the
+  // header + breadcrumb stack is ~169px, plus the 8px gutters).
   return (
-    <ChatPanel onBack={() => router.back()} className="h-dvh" />
+    <div className="lg:flex lg:min-h-screen lg:flex-col lg:bg-gray10">
+      <div className="hidden lg:block">
+        <Header />
+      </div>
+      <Breadcrumb items={[{ label: t("chat_header_title") }]} />
+
+      <section className="lg:my-2 lg:flex-1 lg:overflow-hidden lg:rounded-[30px] lg:bg-white">
+        <ChatPanel
+          onBack={() => router.back()}
+          className="h-dvh lg:mx-auto lg:h-[calc(100dvh-156px)] lg:min-h-120 lg:w-full lg:max-w-7xl lg:bg-white lg:px-5"
+        />
+      </section>
+
+      <Footer />
+    </div>
   );
 };
 

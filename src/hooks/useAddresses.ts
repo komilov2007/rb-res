@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getAddresses } from "@/apis/address";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // The customer's saved delivery addresses, keyed by customer id. `enabled`
 // defaults to "a customer id exists"; callers that also require an active
@@ -13,6 +14,6 @@ export const useAddresses = (
 ) =>
   useQuery({
     enabled,
-    queryKey: ["user-addresses", customerId],
+    queryKey: [REACT_QUERY_KEYS.USER_ADDRESSES, customerId],
     queryFn: getAddresses,
   });

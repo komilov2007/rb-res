@@ -7,6 +7,7 @@ import { useShopId } from "@/hooks/useShopId";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useLocationStore } from "@/stores/location";
 import { useBranches } from "@/hooks/useBranches";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Home page delivery/pickup choice and the branch it resolves to — pickup
 // uses the stored branch, delivery the nearest branch to the saved address.
@@ -39,7 +40,7 @@ export const useBranchSelection = () => {
   const nearestBranchQuery = useQuery({
     enabled:
       hasShopId && isDelivery && Boolean(latitude) && Boolean(longitude),
-    queryKey: ["nearest-branch", shopid, latitude, longitude],
+    queryKey: [REACT_QUERY_KEYS.NEAREST_BRANCH, shopid, latitude, longitude],
     queryFn: () =>
       getNearestBranch({
         shopid: shopid as string,

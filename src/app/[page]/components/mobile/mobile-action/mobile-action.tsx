@@ -1,12 +1,8 @@
 ﻿"use client";
 
-import {
-  CalendarCheck,
-  Hand,
-  MessageCircle,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { CalendarCheck, Hand, X } from "lucide-react";
+import { IconMessageCircleFilled, IconSparklesFilled } from "@tabler/icons-react";
+
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -28,7 +24,7 @@ const actions = [
   {
     key: "chat",
     label: "home_mobile_action_chat",
-    Icon: MessageCircle,
+    Icon: IconMessageCircleFilled,
   },
   {
     key: "booking",
@@ -38,7 +34,7 @@ const actions = [
   {
     key: "atmosphere",
     label: "atmosphere_title",
-    Icon: Sparkles,
+    Icon: IconSparklesFilled,
   },
 ];
 

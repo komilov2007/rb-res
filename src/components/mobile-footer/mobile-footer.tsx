@@ -133,13 +133,13 @@ const MobileFooter = () => {
                     <Icon size={20} strokeWidth={isActive ? 2.2 : 2.1} />
 
                     {isCart && cartCount > 0 && (
-                      <span className="absolute -right-2 -top-2 flex h-[16px] min-w-[17px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold leading-none text-white ring-1 ring-white">
+                      <span className="absolute -right-2 -top-2 flex h-[16px] min-w-[17px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-white ring-1 ring-white">
                         {cartCount}
                       </span>
                     )}
 
                     {isOrder && activeOrdersCount > 0 && (
-                      <span className="absolute -right-2 -top-2 flex h-[16px] min-w-[17px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold leading-none text-white ring-1 ring-white">
+                      <span className="absolute -right-2 -top-2 flex h-[16px] min-w-[17px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-white ring-1 ring-white">
                         {activeOrdersCount}
                       </span>
                     )}

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 
-import type { BookingFormValues } from "../../../schema";
+import type { BookingFormValues } from "@/app/booking/schema";
 
 // Optional comment: same bordered tile look; the card title labels it.
 const TwoComment = () => {

@@ -69,7 +69,7 @@ const DatePicker = ({
       </PopoverTrigger>
       <PopoverContent align="start" className="w-[282px] rounded-xl p-4">
         <div className="mb-5 flex items-center justify-between">
-          <h3 className="text-base font-bold text-gray220">
+          <h3 className="text-base font-medium text-gray220">
             {monthLabel}
           </h3>
           <div className="flex items-center gap-2">

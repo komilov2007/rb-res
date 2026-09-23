@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { BranchMapPicker } from "@/components/branch-map-picker";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useGeneral } from "@/hooks/useGeneral";
@@ -12,6 +13,7 @@ import { useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
 
 import { useBranchSelection } from "./useBranchSelection";
+import { useNearestBranches } from "./useNearestBranches";
 import { SelectionContent } from "./selection-content";
 
 // "Manzil yoki filialni o'zgartirish" modal — mounted once in PageLayout and
@@ -32,6 +34,7 @@ const BranchSelectionModal = () => {
     (state) => state.setSelectionModal,
   );
   const setDelivery = useBranchSelectionStore((state) => state.setDelivery);
+  const setPickup = useBranchSelectionStore((state) => state.setPickup);
   const pendingSelection = useBranchSelectionStore(
     (state) => state.pendingSelection,
   );
@@ -47,6 +50,15 @@ const BranchSelectionModal = () => {
   const openLocationMap = useLocationStore((state) => state.openLocationMap);
   // Address before the map picker opened; non-null while the picker is open.
   const mapReturnRef = useRef<string | null>(null);
+  // The pickup branch picker. Rendered here rather than inside PickupTab
+  // because opening it closes this modal, which would unmount a picker that
+  // lived in the modal's own content.
+  const [branchPickerOpen, setBranchPickerOpen] = useState(false);
+  // True while the picker is standing in for this modal, so dismissing it
+  // without a pick brings the modal back (same deal as the delivery map
+  // above). A completed pick clears it, so the modal stays closed.
+  const reopenAfterPickerRef = useRef(false);
+  const { list: pickupBranches } = useNearestBranches(selection.branches);
   // Choosing requires login: a request made while logged out (home auto-open,
   // order-page redirect) waits, and shows only after login and the name step
   // are closed — never for a guest, never on top of the auth modals.
@@ -103,6 +115,30 @@ const BranchSelectionModal = () => {
     setSelectionModal(false);
   };
 
+  const handleOpenBranchPicker = () => {
+    reopenAfterPickerRef.current = true;
+    setBranchPickerOpen(true);
+    setSelectionModal(false);
+  };
+
+  const handleCloseBranchPicker = () => {
+    setBranchPickerOpen(false);
+
+    if (!reopenAfterPickerRef.current) return;
+
+    reopenAfterPickerRef.current = false;
+    setSelectionModal(true);
+  };
+
+  // Runs before the picker's own onClose, so clearing the flag here is what
+  // keeps this modal closed after a real pick.
+  const handlePickBranch = (branchId: number) => {
+    if (!shopid) return;
+
+    reopenAfterPickerRef.current = false;
+    setPickup(shopid, branchId);
+  };
+
   const handleOpenChange = (open: boolean) => {
     if (open) return;
 
@@ -118,33 +154,55 @@ const BranchSelectionModal = () => {
       canDeliver={canDeliver}
       canPickup={canPickup}
       onOpenMap={handleOpenMap}
+      onOpenPickupMap={handleOpenBranchPicker}
+      pickupBranches={pickupBranches}
       workingTime={general?.data?.working_time}
+    />
+  );
+
+  // The picker is a sibling of the modal, not a child, so the modal can
+  // close while it stays open.
+  const branchPicker = (
+    <BranchMapPicker
+      open={branchPickerOpen}
+      onClose={handleCloseBranchPicker}
+      branches={pickupBranches}
+      workingTime={general?.data?.working_time}
+      desktop="drawer"
+      value={selection.serviceType === "PICKUP" ? selection.branchId : null}
+      onSelect={handlePickBranch}
     />
   );
 
   if (isDesktop) {
     return (
-      <Dialog open={isVisible} onOpenChange={handleOpenChange}>
-        <DialogContent className="max-w-[460px] gap-0 overflow-hidden rounded-3xl border border-gray180 bg-white p-0">
-          {content}
-        </DialogContent>
-      </Dialog>
+      <>
+        <Dialog open={isVisible} onOpenChange={handleOpenChange}>
+          <DialogContent className="max-w-[460px] gap-0 overflow-hidden rounded-3xl border border-gray180 bg-white p-0">
+            {content}
+          </DialogContent>
+        </Dialog>
+        {branchPicker}
+      </>
     );
   }
 
   // Mobile: bottom drawer. Sheet is the same Radix Dialog primitive, so
   // DialogTitle inside SelectionContent still works.
   return (
-    <Sheet open={isVisible} onOpenChange={handleOpenChange}>
-      <SheetContent
-        side="bottom"
-        aria-describedby={undefined}
-        className="overflow-hidden rounded-t-3xl border-gray180 p-0"
-      >
-        <span className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray180" />
-        {content}
-      </SheetContent>
-    </Sheet>
+    <>
+      <Sheet open={isVisible} onOpenChange={handleOpenChange}>
+        <SheetContent
+          side="bottom"
+          aria-describedby={undefined}
+          className="overflow-hidden rounded-t-3xl border-gray180 p-0"
+        >
+          <span className="mx-auto mt-2 h-1 w-10 shrink-0 rounded-full bg-gray180" />
+          {content}
+        </SheetContent>
+      </Sheet>
+      {branchPicker}
+    </>
   );
 };
 

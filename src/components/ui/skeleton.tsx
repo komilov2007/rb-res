@@ -4,7 +4,7 @@ export const BannerSkeleton = () => {
   return (
     <section className="flex w-full items-center justify-center px-4 pb-4">
       <div className="w-full max-w-7xl">
-        <div className="h-[150px] animate-pulse rounded-xl bg-gray10 sm:h-[190px] lg:h-[300px]" />
+        <div className="skeleton h-[150px] rounded-xl sm:h-[190px] lg:h-[300px]" />
       </div>
     </section>
   );
@@ -20,8 +20,8 @@ export const CategoriesSkeleton = () => {
               key={index}
               className="flex min-w-max items-center lg:min-w-[112px] lg:flex-col lg:gap-2"
             >
-              <span className="hidden h-[100px] w-[112px] animate-pulse rounded-2xl bg-gray10 lg:block" />
-              <span className="h-9 w-24 animate-pulse rounded-full bg-gray10 lg:h-3 lg:w-20" />
+              <span className="skeleton hidden h-[100px] w-[112px] rounded-2xl lg:block" />
+              <span className="skeleton h-9 w-24 rounded-full lg:h-3 lg:w-20" />
             </li>
           ))}
         </ul>
@@ -30,15 +30,10 @@ export const CategoriesSkeleton = () => {
   );
 };
 
-// Same shape as a categories-page tile: square image block with the name
-// line placeholder at its bottom. White on the page's gray background (a
-// gray tile would disappear into it).
+// Same shape as a categories-page tile: one solid square block. `.skeleton`
+// has its own gray base, so it stays visible on the page's gray background.
 export const CategoryTileSkeleton = () => {
-  return (
-    <div className="relative flex aspect-square w-full animate-pulse items-end overflow-hidden rounded-xl bg-white p-2">
-      <div className="mx-auto h-3 w-2/3 rounded-full bg-gray10" />
-    </div>
-  );
+  return <div className="skeleton aspect-square w-full rounded-xl" />;
 };
 
 // Same box as CardProduct: its fixed card height, the 170/240px image block,
@@ -46,14 +41,14 @@ export const CategoryTileSkeleton = () => {
 export const ProductCardSkeleton = () => {
   return (
     <article
-      className={`flex ${CARD_HEIGHT_CLASS} w-full animate-pulse flex-col overflow-hidden rounded-[18px] bg-white ring-1 ring-black/5 lg:rounded-[20px]`}
+      className={`flex ${CARD_HEIGHT_CLASS} w-full flex-col overflow-hidden rounded-[18px] bg-white lg:rounded-[20px]`}
     >
-      <div className="h-[170px] shrink-0 rounded-[18px] bg-gray10 lg:h-[240px] lg:rounded-[20px]" />
+      <div className="skeleton h-[170px] shrink-0 rounded-[18px] lg:h-[240px] lg:rounded-[20px]" />
       <div className="flex min-h-0 flex-1 flex-col px-4 pb-4 pt-4">
-        <div className="h-4 w-20 rounded-full bg-gray10" />
-        <div className="mt-2 h-3 w-full rounded-full bg-gray10" />
-        <div className="mt-1.5 h-3 w-2/3 rounded-full bg-gray10" />
-        <div className="mt-auto h-9 w-full rounded-xl bg-gray10" />
+        <div className="skeleton h-4 w-20 rounded-full" />
+        <div className="skeleton mt-2 h-3 w-full rounded-full" />
+        <div className="skeleton mt-1.5 h-3 w-2/3 rounded-full" />
+        <div className="skeleton mt-auto h-9 w-full rounded-xl" />
       </div>
     </article>
   );
@@ -64,7 +59,7 @@ export const ProductsSkeleton = () => {
     <div className="flex w-full items-center justify-center rounded-[18px] bg-white px-4 py-3">
       <div className="flex w-full max-w-7xl flex-col gap-8">
         <div>
-          <div className="mb-5 h-7 w-56 animate-pulse rounded-full bg-gray10" />
+          <div className="skeleton mb-5 h-7 w-56 rounded-full" />
           <ul className="grid grid-cols-2 gap-3 lg:grid-cols-5 lg:gap-4">
             {Array.from({ length: 10 }).map((_, index) => (
               <li key={index}>
@@ -80,22 +75,19 @@ export const ProductsSkeleton = () => {
 
 export const ProductDetailSkeleton = () => {
   return (
-    <div className="animate-pulse">
-      <div className="h-[250px] rounded-[24px] bg-gray10" />
+    <div>
+      <div className="skeleton h-[250px] rounded-[24px]" />
       <div className="px-5 pt-4">
-        <div className="h-6 w-24 rounded-lg bg-gray10" />
+        <div className="skeleton h-6 w-24 rounded-lg" />
         <div className="mt-3 flex items-start justify-between gap-4">
-          <div className="h-12 min-w-0 flex-1 rounded-lg bg-gray10" />
-          <div className="h-8 w-16 shrink-0 rounded-full bg-gray10" />
+          <div className="skeleton h-12 min-w-0 flex-1 rounded-lg" />
+          <div className="skeleton h-8 w-16 shrink-0 rounded-full" />
         </div>
         <div className="mt-3 space-y-2">
-          <div className="h-3 w-full rounded-full bg-gray10" />
-          <div className="h-3 w-4/5 rounded-full bg-gray10" />
+          <div className="skeleton h-3 w-full rounded-full" />
+          <div className="skeleton h-3 w-4/5 rounded-full" />
         </div>
-        <div className="mt-5 flex items-center justify-between gap-4 rounded-[22px] bg-gray10 px-4 py-4">
-          <div className="h-7 w-28 rounded-lg bg-white" />
-          <div className="h-10 w-[132px] rounded-xl bg-white" />
-        </div>
+        <div className="skeleton mt-5 h-[72px] rounded-[22px]" />
       </div>
     </div>
   );

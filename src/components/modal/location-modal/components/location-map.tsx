@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { Navigation } from "lucide-react";
+import { IconNavigationFilled } from "@tabler/icons-react";
+
 import { Map, YMaps, type YMapsApi } from "react-yandex-maps";
 
 import { YANDEX_LANG } from "@/constants/yandex";
@@ -109,7 +110,7 @@ const LocationMap = ({
     <div className="location-yandex-map relative h-full min-h-0 w-full overflow-hidden bg-gray10">
       <YMaps
         query={{
-          load: "Map,Placemark",
+          load: "Map,Placemark,geoObject.addon.balloon",
           // @ts-expect-error react-yandex-maps types do not include Uzbek, but Yandex accepts it.
           lang: YANDEX_LANG,
           coordorder: "longlat",
@@ -148,7 +149,7 @@ const LocationMap = ({
         onClick={onCurrentLocation}
         className={`absolute right-4 z-[100000000] flex h-11 w-11 items-center justify-center rounded-full bg-white text-black ${locationButtonClassName}`}
       >
-        <Navigation size={20} fill="currentColor" />
+        <IconNavigationFilled size={20} fill="currentColor" />
       </button>
     </div>
   );

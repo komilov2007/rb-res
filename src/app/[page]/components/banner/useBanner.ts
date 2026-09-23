@@ -3,38 +3,31 @@
 import { getBanners } from "@/apis/banner";
 import { getProductDetail } from "@/apis/products";
 import { ROUTER } from "@/constants/router";
-import { useGeneral } from "@/hooks/useGeneral";
 import { useShopId } from "@/hooks/useShopId";
 import { openPaymentLink as openExternalLink } from "@/utils/telegram";
 import { useProductDetailStore } from "@/stores/product-detail";
 import type { BannerProps } from "@/types/banner";
-import {
-  getBannerTarget,
-  getServicesText,
-  getServicesTitle,
-  getTodayWorkTime,
-} from "@/utils/banner";
+import { getBannerTarget } from "@/utils/banner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const useBanner = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { shopid, hasShopId } = useShopId();
   const t = useTranslations();
-  const { data: general } = useGeneral();
   const openProductDetail = useProductDetailStore(
     (state) => state.openProductDetail,
   );
   const { data, isLoading } = useQuery({
     enabled: hasShopId,
-    queryKey: ["banners", shopid],
+    queryKey: [REACT_QUERY_KEYS.BANNERS, shopid],
     queryFn: () => getBanners(shopid as string),
   });
 
   const banners = data?.data ?? [];
-  const shop = general?.data;
 
   // category → category page, product → product detail sheet, url → external
   // link; a banner with none of these is static and does nothing.
@@ -55,7 +48,7 @@ export const useBanner = () => {
       // carries the id — fetch it through the sheet's own query (shared cache).
       try {
         const response = await queryClient.fetchQuery({
-          queryKey: ["product-detail", target.id],
+          queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, target.id],
           queryFn: () => getProductDetail(target.id),
         });
 
@@ -76,10 +69,5 @@ export const useBanner = () => {
     banners,
     isLoading,
     handleBannerClick,
-    shopName: shop?.name ?? "",
-    todayWorkTime: getTodayWorkTime(shop?.working_time, t),
-    servicesTitle: getServicesTitle(shop, t),
-    servicesText: getServicesText(shop, t),
-    logo: shop?.logo,
   };
 };

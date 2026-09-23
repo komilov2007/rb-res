@@ -37,7 +37,7 @@ const Language = ({ variant = "default" }: LanguageProps) => {
       <SelectTrigger
         className={
           isHero
-            ? "h-8 rounded-full bg-white/18 px-3 text-xs font-bold text-white backdrop-blur-md"
+            ? "h-8 rounded-full bg-white/18 px-3 text-xs font-medium text-white backdrop-blur-md"
             : isTopbar
               ? "h-9 rounded-full bg-transparent px-0 text-sm font-medium text-black hover:bg-transparent"
             : "h-12 rounded-2xl bg-white px-3 text-black hover:bg-gray10"

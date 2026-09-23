@@ -1,6 +1,8 @@
 "use client";
 
-import { SearchIcon, ShoppingCart, User } from "lucide-react";
+import { useRef } from "react";
+import { SearchIcon } from "lucide-react";
+import { IconShoppingCartFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Logo from "@/components/logo";
@@ -15,8 +17,8 @@ import { openBranchDirections } from "@/utils/directions";
 import { useProductDetailStore } from "@/stores/product-detail";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 
 type HeaderProps = {
@@ -50,6 +52,12 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
     handleSearch,
     handleClearSearch,
   } = useHeader(pinBottomRow);
+  // Clicks in the inline input are "outside" the results popover — they
+  // must not close it.
+  const searchAnchorRef = useRef<HTMLDivElement>(null);
+  // modal = the inline input is open. The results only open once there is
+  // something typed.
+  const isResultsOpen = modal.value && value.trim() !== "";
 
   return (
     <>
@@ -64,11 +72,11 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
         }}
       />
       <header
-        className={`relative left-0 top-0 z-50 hidden h-[93px] w-full border-b border-gray180 bg-white lg:flex ${
+        className={`relative left-0 top-0 z-50 hidden h-16 w-full rounded-b-[30px] bg-white lg:flex ${
           pinBottomRow
             ? isPinned
               ? "lg:sticky lg:shadow-[0_4px_14px_rgba(17,24,39,0.08)]"
-              : "lg:sticky lg:border-b-0"
+              : "lg:sticky"
             : ""
         }`}
       >
@@ -81,92 +89,111 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
 
           <Location className="w-48 shrink-0" />
 
-          <div className="ml-auto w-full min-w-70 max-w-lg flex-1">
-            <Popover open={modal.value} onOpenChange={modal.toggle}>
-              {/* asChild + a plain div (not the default Trigger <button>) —
-                  Input's own clear button is a real <button>, and a <button>
-                  can't nest inside another <button> without a hydration
-                  error. */}
-              <PopoverTrigger asChild>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      event.currentTarget.click();
-                    }
-                  }}
-                  className="w-full rounded-2xl outline-none"
+          <div className="ml-auto flex shrink-0 items-center">
+            {/* Collapsed search: the icon button. Clicking it swaps the
+                button in place for a wide input (autofocused, sliding open
+                from the right). The results open below it only after the
+                user types; an empty input closes on blur or Escape. */}
+            <Popover
+              open={isResultsOpen}
+              onOpenChange={(open) => {
+                if (!open) modal.setFalse();
+              }}
+            >
+              {modal.value ? (
+                <PopoverAnchor asChild>
+                  <div
+                    ref={searchAnchorRef}
+                    className="mr-3 w-[min(32rem,40vw)] animate-in fade-in slide-in-from-right-4 duration-200"
+                  >
+                    <Input
+                      autoFocus
+                      value={value}
+                      onChange={handleSearch}
+                      onBlur={() => {
+                        if (!value.trim()) modal.setFalse();
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") modal.setFalse();
+                      }}
+                      IconStart={SearchIcon}
+                      clearable
+                      onClear={handleClearSearch}
+                      placeholder={t("search_food_or_category")}
+                      className="w-full font-normal"
+                    />
+                  </div>
+                </PopoverAnchor>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  onClick={modal.setTrue}
+                  className="flex-col gap-1 px-2.5"
                 >
-                  <Input
-                    readOnly
-                    value={value}
-                    IconStart={SearchIcon}
-                    clearable
-                    onClear={handleClearSearch}
-                    placeholder={t("search_food_or_category")}
-                    className="w-full font-medium"
-                  />
-                </div>
-              </PopoverTrigger>
+                  <span className="relative">
+                    <SearchIcon size={21} />
+                    {/* An active ?search= stays visible while collapsed. */}
+                    {value && (
+                      <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary ring-2 ring-white" />
+                    )}
+                  </span>
+                  <span className="title20 font-medium text-black">
+                    {t("search")}
+                  </span>
+                </Button>
+              )}
 
               <PopoverContent
-                side="top"
+                side="bottom"
                 align="end"
-                sideOffset={-54}
-                className="flex w-[var(--radix-popover-trigger-width)] flex-col gap-2 p-0"
-                // A result opens the product-detail Dialog on top of this
-                // popover — clicks/focus inside that Dialog count as
-                // "outside" here, so dismissal is skipped while it's open
-                // and the results are still there once it closes.
+                sideOffset={8}
+                // Keep focus in the input instead of moving it into the list.
+                onOpenAutoFocus={(event) => event.preventDefault()}
+                className="w-[var(--radix-popover-trigger-width)] border-transparent bg-transparent p-0"
                 onInteractOutside={(event) => {
-                  if (useProductDetailStore.getState().isOpen) {
+                  const target = event.target as Node | null;
+
+                  // Typing/clicking in the inline input keeps it open, and
+                  // a result opens the product-detail Dialog on top of this
+                  // popover — dismissal is skipped while it's open so the
+                  // results are still there once it closes.
+                  if (
+                    (target && searchAnchorRef.current?.contains(target)) ||
+                    useProductDetailStore.getState().isOpen
+                  ) {
                     event.preventDefault();
                   }
                 }}
               >
-                <Input
-                  autoFocus
-                  value={value}
-                  onChange={handleSearch}
-                  IconStart={SearchIcon}
-                  clearable
-                  onClear={handleClearSearch}
-                  placeholder={t("search_food_or_category")}
-                  className="w-full font-medium"
-                />
-
-                <SearchModal open={modal.value} value={value} />
+                <SearchModal open={isResultsOpen} value={value} />
               </PopoverContent>
             </Popover>
-          </div>
-
-          <div className="flex shrink-0 items-center">
+            <span className="mx-1.5 h-7 w-px bg-gray180" />
             <Button
               variant="ghost"
               size="lg"
               onClick={() => openCartModal("desktop")}
-              className="flex-col gap-1 px-3"
+              className="flex-col gap-1 px-2.5"
             >
               <span className="relative">
-                <ShoppingCart size={21} />
+                <IconShoppingCartFilled size={21} />
                 {cartCount > 0 && (
-                  <span className="absolute -right-3 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+                  <span className="absolute -right-3 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-none text-white ring-2 ring-white">
                     {cartCount}
                   </span>
                 )}
               </span>
               <span className="title20 font-medium text-black">{t("cart")}</span>
             </Button>
-            <span className="mx-4 h-8 w-px bg-gray180" />
+            <span className="mx-1.5 h-7 w-px bg-gray180" />
             <Button
               variant="ghost"
               size="lg"
-              className="flex-col gap-1 px-3"
+              className="flex-col gap-1 px-2.5"
               onClick={() => router.push(`/profile${shopid ? `?shop_id=${shopid}` : ""}`)}
             >
-              <User size={21} />
+              <IconUserFilled size={21} />
               <span className="title20 font-medium text-black">{t("profile")}</span>
             </Button>
           </div>

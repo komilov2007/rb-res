@@ -1,4 +1,4 @@
-import { ShoppingCart } from "lucide-react";
+import { IconShoppingCartFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
@@ -24,14 +24,14 @@ export const EmptyCart = ({ isMobile }: CartViewProps) => {
             : "flex h-20 w-20 items-center justify-center rounded-full bg-gray10 text-gray220"
         }
       >
-        <ShoppingCart size={isMobile ? 28 : 32} strokeWidth={1.8} />
+        <IconShoppingCartFilled size={isMobile ? 28 : 32} />
       </div>
 
       <h3
         className={
           isMobile
-            ? "mt-4 text-base font-extrabold text-black"
-            : "mt-5 text-lg font-extrabold text-black"
+            ? "mt-4 text-base font-medium text-black"
+            : "mt-5 text-lg font-medium text-black"
         }
       >
         {t("empty_cart")}

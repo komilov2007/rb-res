@@ -1,11 +1,5 @@
-import {
-  Building2,
-  DoorOpen,
-  Home,
-  MapPinned,
-  MessageSquare,
-  Pencil,
-} from "lucide-react";
+import { Building2, DoorOpen, MapPinned } from "lucide-react";
+import { IconHomeFilled, IconMessage2Filled, IconPencilFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
@@ -60,7 +54,7 @@ const LocationDetails = ({
   return (
     <div className="flex h-full w-full flex-col bg-white px-5 pb-5 pt-4">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-[21px] font-bold leading-7 text-black">
+        <h2 className="text-[21px] font-medium leading-7 text-black">
           {t("location_address_details")}
         </h2>
         <XButton size="lg" onClick={onClose} className="bg-gray10" />
@@ -68,11 +62,11 @@ const LocationDetails = ({
 
       <div className="mt-5 flex items-start justify-between gap-3 border-b border-gray180 pb-4">
         <div className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-gray220">
+          <span className="info-label flex items-center gap-1.5">
             <MapPinned size={14} className="text-gray220" />
             {t("delivery_address")}
           </span>
-          <p className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-black">
+          <p className="info-value line-clamp-2">
             {addressName || t("select_address")}
           </p>
         </div>
@@ -84,7 +78,7 @@ const LocationDetails = ({
           onClick={onEdit}
           disabled={isPending}
         >
-          <Pencil size={16} />
+          <IconPencilFilled size={16} />
         </Button>
       </div>
 
@@ -108,7 +102,7 @@ const LocationDetails = ({
           className="text-xs placeholder:text-xs"
         />
         <Input
-          IconStart={Home}
+          IconStart={IconHomeFilled}
           value={room}
           onChange={(event) => setRoom(getDigits(event.target.value))}
           inputMode="numeric"
@@ -120,14 +114,14 @@ const LocationDetails = ({
 
       <div className="mt-4 grid gap-4">
         <Input
-          IconStart={MessageSquare}
+          IconStart={IconMessage2Filled}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           placeholder={t("location_courier_comment")}
           wrapperClassName={inputClassName}
         />
         <Input
-          IconStart={Home}
+          IconStart={IconHomeFilled}
           value={addressTitle}
           onChange={(event) => setAddressTitle(event.target.value)}
           placeholder={t("location_address_name")}

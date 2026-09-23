@@ -9,10 +9,12 @@ import "swiper/css";
 import Button from "@/components/ui/button";
 import ModalScreen from "@/components/modal/screen-modal";
 import { YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 
 import BranchCard from "./branch-card";
+import BranchMapPickerDrawer from "./branch-map-picker-drawer";
 import { useBranchMapPicker } from "./useBranchMapPicker";
 
 type BranchMapPickerProps = {
@@ -27,6 +29,10 @@ type BranchMapPickerProps = {
   // that just want to show where a branch is (e.g. my-orders' detail page)
   // rather than let the user choose one.
   readOnly?: boolean;
+  // "drawer" swaps the desktop layout for a right-side drawer (map on top,
+  // schedule, then the full branch list) instead of the centered ModalScreen.
+  // Same opt-in prop name and default as BranchInfoSheet's. Mobile ignores it.
+  desktop?: "screen" | "drawer";
 };
 
 // Full-screen map + swipeable branch-card picker. Controlled (open/onClose)
@@ -43,8 +49,19 @@ const BranchMapPicker = ({
   onSelect,
   title,
   readOnly = false,
+  desktop = "screen",
 }: BranchMapPickerProps) => {
   const t = useTranslations();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isDrawer = desktop === "drawer" && isDesktop;
+  const controller = useBranchMapPicker({
+    branches,
+    value,
+    onSelect,
+    open,
+    onClose,
+    balloons: isDrawer,
+  });
   const {
     list,
     swiperRef,
@@ -57,9 +74,21 @@ const BranchMapPicker = ({
     chooseBranch,
     handleMapLoad,
     handleMapInstance,
-  } = useBranchMapPicker({ branches, value, onSelect, open, onClose });
+  } = controller;
 
   if (!open) return null;
+
+  if (isDrawer) {
+    return (
+      <BranchMapPickerDrawer
+        controller={controller}
+        onClose={onClose}
+        workingTime={workingTime}
+        title={title}
+        readOnly={readOnly}
+      />
+    );
+  }
 
   return (
     <ModalScreen onClose={onClose} placement="screen" className="gap-0 !p-0">
@@ -74,7 +103,7 @@ const BranchMapPicker = ({
           >
             <ChevronLeft size={22} />
           </Button>
-          <h1 className="text-base font-extrabold text-black">
+          <h1 className="text-base font-medium text-black">
             {title ?? t("select_branch")}
           </h1>
         </div>
@@ -114,7 +143,7 @@ const BranchMapPicker = ({
               // src/app/[page]/components/header/components/branch-dialog/branch-dialog.tsx's
               // load string) — without it there's no ymaps.Placemark class
               // for useBranchMapPicker.ts's renderPlacemarks to construct.
-              load: "Map,Placemark",
+              load: "Map,Placemark,geoObject.addon.balloon",
               // @ts-expect-error react-yandex-maps types do not include Uzbek, but Yandex accepts it.
               lang: YANDEX_LANG,
               coordorder: "longlat",
@@ -141,7 +170,7 @@ const BranchMapPicker = ({
             <button
               type="button"
               onClick={openList}
-              className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_10px_24px_rgba(0,0,0,0.16)]"
+              className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-5 py-3 text-sm font-medium text-black shadow-[0_10px_24px_rgba(0,0,0,0.16)]"
             >
               {t("location_branch_picker_choose_from_list", {
                 count: activeBranches.length,

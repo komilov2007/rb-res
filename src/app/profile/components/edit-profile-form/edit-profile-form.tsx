@@ -18,6 +18,7 @@ import { getApiErrorMessage } from "@/utils/api-error";
 import { formatPhone, getLocalPhone } from "@/utils/format-number";
 
 import LoginRequired from "../login-required";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Shared by /profile/edit (its own page) and the bare /profile route's
 // desktop content pane (shown there by default instead of a placeholder) —
@@ -29,8 +30,13 @@ const EditProfileForm = () => {
   const queryClient = useQueryClient();
   const auth = useAuthStore((state) => state.auth);
   const hasAccess = useAuthStore((state) => state.hasAccess);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const setAuth = useAuthStore((state) => state.setAuth);
-  const [firstname, setFirstname] = useState(auth?.firstname ?? "");
+  // null = untouched: shows the stored name, which only arrives after
+  // AuthProvider reads the session (a plain useState(auth?.firstname) init
+  // stayed empty on a direct page load).
+  const [draftFirstname, setFirstname] = useState<string | null>(null);
+  const firstname = draftFirstname ?? auth?.firstname ?? "";
   const [error, setError] = useState<string | null>(null);
 
   const goBackToProfile = () =>
@@ -55,7 +61,7 @@ const EditProfileForm = () => {
       // store — patch it directly so the new name shows immediately instead
       // of waiting on the invalidated query's refetch to land.
       queryClient.setQueryData<{ data: UserInfo } | undefined>(
-        ["profile"],
+        [REACT_QUERY_KEYS.PROFILE, auth?.customer],
         (previous) =>
           previous && {
             ...previous,
@@ -63,8 +69,12 @@ const EditProfileForm = () => {
           },
       );
 
-      void queryClient.invalidateQueries({ queryKey: ["general", shopid] });
-      void queryClient.invalidateQueries({ queryKey: ["profile"] });
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.GENERAL, shopid],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.PROFILE],
+      });
       toast.success(t("profile_page_edit_name_saved"));
       goBackToProfile();
     },
@@ -87,6 +97,9 @@ const EditProfileForm = () => {
     update.mutate();
   };
 
+  // Session not read yet: render nothing rather than the login prompt.
+  if (!isAuthReady) return null;
+
   if (!hasAccess) {
     return <LoginRequired message={t("profile_page_edit_login_required")} />;
   }
@@ -101,7 +114,6 @@ const EditProfileForm = () => {
           {t("first_name")}
         </span>
         <Input
-          autoFocus
           value={firstname}
           onChange={(event) => {
             setFirstname(event.target.value);

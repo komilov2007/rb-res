@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import BranchInfoSheet from "@/components/branch-info-sheet";
@@ -48,33 +49,32 @@ const Branches = ({
   } = useBranches({ branches, value });
 
   return (
-    <section className="rounded-2xl bg-white p-4">
+    <section className="rounded-xl bg-white p-3">
       {isLoading ? (
         <>
-          <div className="h-4 w-28 animate-pulse rounded-full bg-gray10/50" />
-          <div className="mt-2 h-3 w-36 animate-pulse rounded-full bg-gray10/50" />
-          <div className="mt-3 h-11 w-full animate-pulse rounded-xl bg-gray10/50" />
+          <div className="h-4 w-28 skeleton rounded-full" />
+          <div className="mt-2 h-3 w-36 skeleton rounded-full" />
+          <div className="mt-2 h-11 w-full skeleton rounded-lg" />
         </>
       ) : (
         <>
-          <h2 className="text-sm font-bold text-black">
+          <h2 className="text-sm font-medium text-black">
             {t("order_page_branches_title")}
           </h2>
 
           {selectedBranch ? (
             <>
-              <hr className="my-3 border-gray180" />
               <button
                 type="button"
                 onClick={infoSheet.setTrue}
-                className="flex w-full items-start gap-3 text-left"
+                className="mt-2 flex w-full items-start gap-2 text-left"
               >
-                <MapPin size={18} className="mt-0.5 shrink-0 text-gray220" />
+                <IconMapPinFilled size={18} className="mt-0.5 shrink-0 text-gray220" />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-bold text-black">
+                  <span className="info-label block">
                     {selectedBranch.name}
                   </span>
-                  <span className="mt-0.5 block text-xs font-medium text-gray220">
+                  <span className="info-value block">
                     {getShortAddress(selectedBranch.address)}
                   </span>
                 </span>
@@ -89,14 +89,14 @@ const Branches = ({
                 variant="secondary"
                 size="md"
                 onClick={picker.setTrue}
-                className="mt-3 w-full justify-center"
+                className="mt-2 w-full justify-center"
               >
                 {t("order_page_branches_change")}
               </Button>
             </>
           ) : (
             <>
-              <p className="pt-0.5 text-xs font-medium text-gray220">
+              <p className="pt-0.5 text-xs font-normal text-gray220">
                 {t("order_page_branches_select_hint")}
               </p>
               <Button
@@ -104,7 +104,7 @@ const Branches = ({
                 variant="primary-solid"
                 size="md"
                 onClick={picker.setTrue}
-                className="mt-3 w-full justify-center"
+                className="mt-2 w-full justify-center"
               >
                 {t("order_page_branches_select")}
               </Button>

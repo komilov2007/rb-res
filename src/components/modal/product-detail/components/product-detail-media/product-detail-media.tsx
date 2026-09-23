@@ -46,7 +46,7 @@ const ProductDetailMedia = ({
         />
         {hasDiscount && (
           <span
-            className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-xs font-extrabold leading-none text-white ${saleBadgeClassName}`}
+            className={`absolute left-3 top-3 rounded-full px-3 py-1.5 text-xs font-medium leading-none text-white ${saleBadgeClassName}`}
           >
             {saleLabel}
           </span>

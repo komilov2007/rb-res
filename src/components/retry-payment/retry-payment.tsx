@@ -1,6 +1,7 @@
 "use client";
 
-import { CreditCard } from "lucide-react";
+import { IconCreditCardFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
@@ -37,7 +38,7 @@ const RetryPayment = ({
       onClick={onRetry}
       className="font-medium"
     >
-      <CreditCard size={17} />
+      <IconCreditCardFilled size={17} />
       {t("orders_pay_amount", {
         amount: `${formatPrice(amount)} ${t("sum")}`,
       })}

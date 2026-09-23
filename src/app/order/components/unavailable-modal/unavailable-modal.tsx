@@ -48,21 +48,29 @@ const UnavailableModal = ({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent>
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>{t("unavailable_products_title")}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-center font-normal leading-snug">
             {t("unavailable_products_hint")}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t("unavailable_products_title")}
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
+        <DialogFooter className="flex-row border-t-0 bg-white">
+          <Button
+            type="button"
+            variant="outline"
+            size="dialogAction"
+            onClick={onClose}
+          >
             {t("choose_another_branch")}
           </Button>
           <Button
             type="button"
             variant="primary-solid"
+            size="dialogAction"
             onClick={handleBackToCart}
           >
             {t("back_to_cart")}

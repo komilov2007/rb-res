@@ -9,6 +9,18 @@ type RadioMarkProps = {
   className?: string;
 };
 
+// The one look for every radio-style option (row or card) in the app:
+// borderless soft-gray surface, green outline + tint when selected, red
+// outline when the field has an error. Callers add their own layout.
+export const getOptionClassName = (checked: boolean, hasError = false) =>
+  `border transition-colors duration-200 ${
+    checked
+      ? "border-green-500 bg-green-500/10"
+      : hasError
+        ? "border-red bg-gray10/70"
+        : "border-transparent bg-gray10/70 hover:bg-gray10"
+  }`;
+
 // Circular selection indicator used by the app's radio-style option lists.
 const RadioMark = ({
   checked,
@@ -23,8 +35,8 @@ const RadioMark = ({
           checked
             ? "border-green-500 bg-green-500"
             : hasError
-              ? "border-red"
-              : "border-gray180"
+              ? "border-red bg-white"
+              : "border-gray180 bg-white"
         } ${className}`}
       >
         {checked && <Check size={12} strokeWidth={3} className="text-white" />}

@@ -40,6 +40,7 @@ export const useChat = () => {
   // not an effect), so nothing here ever calls setState from inside an
   // effect body.
   const previewUrlRef = useRef<string | null>(null);
+  const isLoadingMoreRef = useRef(false);
 
   const { sendText, sendFile } = useChatSocket({
     customerId,
@@ -62,6 +63,10 @@ export const useChat = () => {
         if (cancelled) return;
 
         setInitialMessages(response.data.results, response.data.count);
+      })
+      .catch(() => {
+        // The global request interceptor already toasts the backend's
+        // message; caught so it isn't an unhandled rejection.
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
@@ -104,8 +109,11 @@ export const useChat = () => {
   };
 
   const loadMore = async () => {
-    if (!customerId || !hasMore || isLoadingMore) return;
+    // The ref, not just the state: several scroll events can fire before
+    // the isLoadingMore re-render lands, and each would fetch the same page.
+    if (!customerId || !hasMore || isLoadingMoreRef.current) return;
 
+    isLoadingMoreRef.current = true;
     setIsLoadingMore(true);
 
     try {
@@ -121,6 +129,7 @@ export const useChat = () => {
     } catch {
       // The global request interceptor already toasts the backend's message.
     } finally {
+      isLoadingMoreRef.current = false;
       setIsLoadingMore(false);
     }
   };

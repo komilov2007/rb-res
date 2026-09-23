@@ -1,7 +1,8 @@
 "use client";
 
 import { createElement } from "react";
-import { AlertCircle, CheckCircle2, FileText } from "lucide-react";
+import { IconAlertCircleFilled, IconCircleCheckFilled, IconFileTextFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "@/constants/payment-types";
@@ -41,7 +42,7 @@ const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
 
   return (
     <section className="py-5">
-      <SectionLabel icon={<FileText size={13} />}>
+      <SectionLabel icon={<IconFileTextFilled size={13} />}>
         {t("orders_detail_payment_info")}
       </SectionLabel>
       <div className="mt-3 flex flex-col gap-2.5">
@@ -98,9 +99,9 @@ const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
           value={
             <span className="inline-flex items-center gap-2">
               {detail.is_paid ? (
-                <CheckCircle2 size={14} />
+                <IconCircleCheckFilled size={14} />
               ) : (
-                <AlertCircle size={14} />
+                <IconAlertCircleFilled size={14} />
               )}
               {detail.is_paid
                 ? t("orders_detail_paid")

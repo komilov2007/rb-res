@@ -1,7 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import { ChevronLeft, House, MapPinned, Store } from "lucide-react";
+import { ChevronLeft, MapPinned, Store } from "lucide-react";
+import { IconHomeFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Map, YMaps } from "react-yandex-maps";
 
@@ -113,7 +114,7 @@ const DeliveryRouteSheet = ({
 
             <li className="flex gap-3">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-primary bg-white text-primary">
-                <House size={15} strokeWidth={2.2} />
+                <IconHomeFilled size={15} />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] uppercase tracking-wide text-gray220">
@@ -150,7 +151,7 @@ const DeliveryRouteSheet = ({
                 background: #ffffff;
                 padding: 6px 10px;
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: 500;
                 color: #111111;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
                 pointer-events: none;
@@ -184,12 +185,12 @@ const DeliveryRouteSheet = ({
             `}</style>
 
             {!isMapReady && (
-              <div className="absolute inset-0 z-10 animate-pulse bg-gray10" />
+              <div className="skeleton absolute inset-0 z-10" />
             )}
 
             <YMaps
               query={{
-                load: "Map,Placemark,templateLayoutFactory",
+                load: "Map,Placemark,templateLayoutFactory,geoObject.addon.balloon",
                 // @ts-expect-error react-yandex-maps types do not include Uzbek, but Yandex accepts it.
                 lang: YANDEX_LANG,
                 coordorder: "longlat",
@@ -212,7 +213,7 @@ const DeliveryRouteSheet = ({
           <button
             type="button"
             onClick={openInMaps}
-            className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 text-sm font-bold text-white"
+            className="flex h-11 w-full items-center justify-center gap-1.5 rounded-full bg-primary px-3 text-sm font-medium text-white"
           >
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
               <MapPinned size={14} strokeWidth={2.4} />

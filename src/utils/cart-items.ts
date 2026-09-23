@@ -3,31 +3,71 @@ import type { ProductProps } from "@/types/product";
 
 // Pure local-cart transforms used by the cart store. Each returns a new
 // array; quantities are capped at 999.
+//
+// A product can sit in the cart on several lines (different parameter /
+// ad-parameter picks), so line operations are keyed by the line itself
+// (getCartLineKey), never by product id alone.
 
 const MAX_QUANTITY = 999;
 
-export const getCartCount = (carts: CartItemProps[]) => {
-  return carts.reduce((total, item) => total + item.quantity, 0);
+export type CartLineKey = string;
+
+// The server line id when the line has one; otherwise (a local line not
+// synced yet) the product id plus its parameter picks.
+export const getCartLineKey = (item: CartItemProps): CartLineKey => {
+  if (typeof item.id === "number") return `line:${item.id}`;
+
+  const parameter = item.parameter?.name ?? "";
+  const adParameters = (item.ad_parameter ?? [])
+    .map((sku) => sku.name)
+    .sort()
+    .join(",");
+
+  return `product:${item.product.id}|${parameter}|${adParameters}`;
 };
 
-export const withoutProduct = (carts: CartItemProps[], productId: number) =>
-  carts.filter((item) => item.product.id !== productId);
+const hasParameters = (item: CartItemProps) =>
+  Boolean(item.parameter) || Boolean(item.ad_parameter?.length);
 
-export const incrementProduct = (carts: CartItemProps[], productId: number) =>
-  carts.map((item) =>
-    item.product.id === productId
-      ? {
-          ...item,
-          quantity: Math.min(item.quantity + 1, MAX_QUANTITY),
-        }
-      : item,
-  );
+// The single line a product card manages: that product without any
+// parameter picks (cards only handle products without parameters).
+const isPlainProductLine = (item: CartItemProps, productId: number) =>
+  item.product.id === productId && !hasParameters(item);
 
-// Adds one more of an existing line, or appends the product as a new line.
+const withQuantity = (item: CartItemProps, quantity: number) => ({
+  ...item,
+  quantity: Math.min(quantity, MAX_QUANTITY),
+});
+
+export const withoutLine = (carts: CartItemProps[], key: CartLineKey) =>
+  carts.filter((item) => getCartLineKey(item) !== key);
+
+// 0 (or less) removes the line.
+export const setLineQuantity = (
+  carts: CartItemProps[],
+  key: CartLineKey,
+  quantity: number,
+) => {
+  const normalizedQuantity = Math.max(0, quantity);
+
+  return normalizedQuantity === 0
+    ? withoutLine(carts, key)
+    : carts.map((item) =>
+        getCartLineKey(item) === key
+          ? withQuantity(item, normalizedQuantity)
+          : item,
+      );
+};
+
+// Adds one more of the product's plain line, or appends it as a new line.
 export const addProduct = (carts: CartItemProps[], product: ProductProps) => {
-  const findProduct = carts.find((item) => item.product.id === product.id);
+  const existing = carts.find((item) => isPlainProductLine(item, product.id));
 
-  if (findProduct) return incrementProduct(carts, product.id);
+  if (existing) {
+    return carts.map((item) =>
+      item === existing ? withQuantity(item, item.quantity + 1) : item,
+    );
+  }
 
   return [
     ...carts,
@@ -38,8 +78,9 @@ export const addProduct = (carts: CartItemProps[], product: ProductProps) => {
   ];
 };
 
-// 0 (or less) removes the line.
-export const setProductQuantity = (
+// Sets the quantity of a product's plain line only — lines of the same
+// product with parameter picks are left alone. 0 removes that line.
+export const setPlainProductQuantity = (
   carts: CartItemProps[],
   productId: number,
   quantity: number,
@@ -47,28 +88,10 @@ export const setProductQuantity = (
   const normalizedQuantity = Math.max(0, quantity);
 
   return normalizedQuantity === 0
-    ? withoutProduct(carts, productId)
+    ? carts.filter((item) => !isPlainProductLine(item, productId))
     : carts.map((item) =>
-        item.product.id === productId
-          ? { ...item, quantity: normalizedQuantity }
+        isPlainProductLine(item, productId)
+          ? withQuantity(item, normalizedQuantity)
           : item,
       );
-};
-
-// One less; the last one removes the line. null when the product isn't in
-// the cart (nothing to change).
-export const decrementProduct = (carts: CartItemProps[], productId: number) => {
-  const item = carts.find((cartItem) => cartItem.product.id === productId);
-
-  if (!item) return null;
-  if (item.quantity === 1) return withoutProduct(carts, productId);
-
-  return carts.map((cartItem) =>
-    cartItem.product.id === productId
-      ? {
-          ...cartItem,
-          quantity: cartItem.quantity - 1,
-        }
-      : cartItem,
-  );
 };

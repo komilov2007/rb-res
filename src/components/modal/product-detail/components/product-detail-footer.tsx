@@ -1,4 +1,5 @@
-﻿import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
+﻿import { Loader2, Minus, Plus } from "lucide-react";
+import { IconShoppingCartFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 type ProductDetailFooterProps = {
@@ -69,11 +70,11 @@ const ProductDetailFooter = ({
           disabled={isLoading}
           className="flex h-12 min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl bg-primary px-5 text-white shadow-[0_10px_24px_rgba(107,83,230,0.28)] disabled:opacity-70 lg:h-13 lg:px-6"
         >
-          <span className="flex items-center gap-2 text-sm font-bold">
-            <ShoppingCart size={18} strokeWidth={2.5} />
+          <span className="flex items-center gap-2 text-sm font-medium">
+            <IconShoppingCartFilled size={18} />
             {t("add_to_cart")}
           </span>
-          <span className="text-sm font-bold">
+          <span className="text-sm font-medium">
             {totalPrice} {sumLabel}
           </span>
         </button>

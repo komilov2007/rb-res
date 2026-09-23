@@ -1,6 +1,8 @@
 "use client";
 
-import { ChevronRight, MapPin, Store } from "lucide-react";
+import { ChevronRight, Store } from "lucide-react";
+import { IconMapPinFilled } from "@tabler/icons-react";
+
 import { useTranslations } from "next-intl";
 
 import { useAuthStore } from "@/stores/auth";
@@ -50,7 +52,7 @@ const BranchSelectionChip = ({
   };
 
   const isPickup = serviceType === "PICKUP";
-  const Icon = isPickup ? Store : MapPin;
+  const Icon = isPickup ? Store : IconMapPinFilled;
   const label = isPickup
     ? t("pickup")
     : serviceType === "DELIVERY"

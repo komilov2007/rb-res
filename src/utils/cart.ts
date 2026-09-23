@@ -1,13 +1,34 @@
 import type { ApiCartItemProps, CartItemProps } from "@/types/cart";
 import type { CartListResponse } from "@/apis/cart";
 
+// Only active lines are ordered (createOrder's `items`), so every total and
+// count shown or charged — cart drawer, checkout, the Telegram invoice —
+// is computed from active lines only, through these helpers. A line
+// without the flag (a local line not synced yet) counts as active.
+export const isActiveCartLine = (item: CartItemProps) =>
+  item.is_active !== false;
+
+export const getActiveCartLines = (carts: CartItemProps[]) =>
+  carts.filter(isActiveCartLine);
+
+// Amount charged: each line at its discounted price.
 export const getCartTotal = (carts: CartItemProps[]) => {
-  return carts.reduce((sum, item) => {
+  return getActiveCartLines(carts).reduce((sum, item) => {
     const price = item.product.discount_price ?? item.product.price;
 
     return sum + price * item.quantity;
   }, 0);
 };
+
+// The same lines at their undiscounted price (shows the product discount).
+export const getCartOriginalTotal = (carts: CartItemProps[]) =>
+  getActiveCartLines(carts).reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0,
+  );
+
+export const getActiveCartCount = (carts: CartItemProps[]) =>
+  getActiveCartLines(carts).reduce((sum, item) => sum + item.quantity, 0);
 
 export const normalizeCartItems = (
   data: CartListResponse,

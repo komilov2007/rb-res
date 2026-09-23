@@ -2,7 +2,8 @@
 
 import { Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, BellOff } from "lucide-react";
+import { BellOff } from "lucide-react";
+import { IconBellFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { getNotifications, normalizeNotifications } from "@/apis/notification";
@@ -13,14 +14,15 @@ import { formatOrderDate } from "@/utils/format-date";
 
 import LoginRequired from "../components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const NotificationSkeleton = () => (
-  <div className="flex animate-pulse items-start gap-3 rounded-2xl border border-gray180 bg-white p-3">
-    <div className="h-9 w-9 shrink-0 rounded-full bg-gray10" />
+  <div className="flex items-start gap-3 rounded-2xl border border-transparent bg-white p-3">
+    <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
     <div className="min-w-0 flex-1 space-y-2">
-      <div className="h-4 w-32 rounded-full bg-gray10" />
-      <div className="h-3 w-full rounded-full bg-gray10" />
-      <div className="h-3 w-20 rounded-full bg-gray10" />
+      <div className="skeleton h-4 w-32 rounded-full" />
+      <div className="skeleton h-3 w-full rounded-full" />
+      <div className="skeleton h-3 w-20 rounded-full" />
     </div>
   </div>
 );
@@ -30,20 +32,22 @@ const NotificationsContent = () => {
   const { shopid, hasShopId } = useShopId();
   const customerId = useAuthStore((state) => state.auth?.customer);
   const hasAccess = useAuthStore((state) => state.hasAccess);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
 
   const { data, isLoading, isError, refetch, isFetching } = useQuery({
     enabled: hasShopId && hasAccess,
-    queryKey: ["notifications", shopid, customerId],
+    queryKey: [REACT_QUERY_KEYS.NOTIFICATIONS, shopid, customerId],
     queryFn: () => getNotifications(shopid as string),
   });
 
-  if (!hasAccess) {
+  if (isAuthReady && !hasAccess) {
     return (
       <LoginRequired message={t("profile_page_notifications_login_required")} />
     );
   }
 
-  if (isLoading) {
+  // Session not read yet counts as loading, not as a guest.
+  if (!isAuthReady || isLoading) {
     return (
       <>
         <NotificationSkeleton />
@@ -55,8 +59,8 @@ const NotificationsContent = () => {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center">
-        <p className="text-sm font-medium text-gray220">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center lg:border-0">
+        <p className="text-sm font-normal text-gray220">
           {t("profile_page_notifications_load_error")}
         </p>
         <Button
@@ -65,7 +69,7 @@ const NotificationsContent = () => {
           size="none"
           disabled={isFetching}
           onClick={() => void refetch()}
-          className="h-10 rounded-xl bg-gray10 px-4 text-sm font-bold text-black"
+          className="h-10 rounded-xl bg-gray10 px-4 text-sm font-medium text-black"
         >
           {t("common_retry")}
         </Button>
@@ -77,11 +81,11 @@ const NotificationsContent = () => {
 
   if (notifications.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-gray180 bg-white px-6 py-10 text-center lg:border-0">
         <span className="grid h-14 w-14 place-items-center rounded-full bg-gray10 text-gray220">
           <BellOff size={24} />
         </span>
-        <p className="text-base font-bold text-black">
+        <p className="text-base font-medium text-black">
           {t("profile_page_notifications_empty")}
         </p>
       </div>
@@ -97,16 +101,16 @@ const NotificationsContent = () => {
           className="flex items-start gap-3 rounded-2xl border border-gray180 bg-white p-3"
         >
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gray10 text-gray220">
-            <Bell size={16} />
+            <IconBellFilled size={16} />
           </span>
           <div className="min-w-0 flex-1">
             {notification.title && (
-              <p className="text-sm font-medium text-black">
+              <p className="info-label">
                 {notification.title}
               </p>
             )}
             {notification.body && (
-              <p className="mt-0.5 whitespace-pre-line text-sm text-gray220">
+              <p className="info-value whitespace-pre-line">
                 {notification.body}
               </p>
             )}

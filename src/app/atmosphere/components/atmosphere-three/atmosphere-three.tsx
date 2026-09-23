@@ -9,14 +9,13 @@ import {
   ATMOSPHERE_VIDEO_SRC,
   type AtmosphereVariantProps,
 } from "../../constants";
+import { pad } from "../../utils";
 
 const PHOTO_DURATION = 6000;
 const VIDEO_DURATION = 9000;
 
 const getDuration = (src: string) =>
   src === ATMOSPHERE_VIDEO_SRC ? VIDEO_DURATION : PHOTO_DURATION;
-
-const pad = (value: number) => String(value).padStart(2, "0");
 
 // Mobile variant "three": a "look around the room" auto-tour. One scene at
 // a time fills the screen; photos drift slowly (Ken Burns zoom + pan, the
@@ -129,13 +128,13 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
 
       {/* bottom-32 clears the shell's floating "Bron qilish" button. */}
       <div className="pointer-events-none absolute inset-x-5 bottom-32">
-        <span className="text-xs font-medium tabular-nums text-white/70">
+        <span className="text-xs font-normal tabular-nums text-white/70">
           {pad(activeIndex + 1)} / {pad(total)}
         </span>
         <h2 className="mt-2 max-w-[300px] font-serif text-[40px] font-medium leading-[0.95]">
           {t("booking_gallery_title")}
         </h2>
-        <p className="mt-3 text-sm font-medium leading-6 text-white/75">
+        <p className="mt-3 text-sm font-normal leading-6 text-white/75">
           {t("booking_gallery_description")}
         </p>
       </div>

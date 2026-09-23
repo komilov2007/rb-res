@@ -51,7 +51,7 @@ const CartDrawer = () => {
     carts.find((item) => item.product.id === viewingProductId) ?? null;
   const { data: cartItems } = useQuery({
     enabled: isCartOpen && Boolean(customerId),
-    queryKey: ["cart-list", customerId],
+    queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
     queryFn: () => getCartList(customerId as number),
     select: (response) => normalizeCartItems(response.data, carts),
     refetchOnMount: "always",
@@ -70,6 +70,13 @@ const CartDrawer = () => {
 
   if (!isCartOpen && calculationTotal !== null) {
     setCalculationTotal(null);
+  }
+
+  // The drawer is also closed from outside handleOpenChange (checkout from
+  // the item detail view, login/selection interrupts) — reset the detail
+  // view there too, or the next opening lands on a stale product page.
+  if (!isCartOpen && viewingProductId !== null) {
+    setViewingProductId(null);
   }
 
   const { data: deliveryCalculation } = useQuery({
@@ -107,10 +114,7 @@ const CartDrawer = () => {
   }, [cartItems, setCarts]);
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      closeCartModal();
-      setViewingProductId(null);
-    }
+    if (!open) closeCartModal();
   };
 
   return (

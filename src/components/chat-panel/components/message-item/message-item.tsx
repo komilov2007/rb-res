@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCheck, Download, FileText, ShoppingBag } from "lucide-react";
+import { CheckCheck, Download, ShoppingBag } from "lucide-react";
+import { IconFileTextFilled } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import ImageViewer from "@/components/image-viewer";
-import { ROUTER } from "@/constants/router";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { getOrderDetailUrl } from "@/utils/orders";
 import { useShopId } from "@/hooks/useShopId";
+import { useUiStore } from "@/stores/ui";
 import type { ChatFileProps, MessageProps } from "@/types/chat";
 import { formatChatTime } from "@/utils/format-date";
 import { formatFileSize } from "@/utils/format-file";
@@ -66,7 +69,7 @@ const MessageFile = ({ file }: { file: ChatFileProps }) => {
       className="flex items-center gap-2 rounded-xl bg-black/5 px-3 py-2"
     >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-gray220">
-        <FileText size={16} />
+        <IconFileTextFilled size={16} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs font-medium">
@@ -85,6 +88,8 @@ const MessageItem = ({ message }: MessageItemProps) => {
   const t = useTranslations();
   const router = useRouter();
   const { shopid } = useShopId();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const setChatModalOpen = useUiStore((state) => state.setChatModalOpen);
   const isOwn = !message.is_bot;
   const time = formatChatTime(message.created_at);
 
@@ -93,7 +98,7 @@ const MessageItem = ({ message }: MessageItemProps) => {
       <div className="flex justify-start">
         <div className="max-w-[85%] rounded-2xl bg-white px-3 py-3 shadow-[0_2px_8px_rgba(15,23,42,0.06)]">
           <div className="flex items-center justify-between gap-3">
-            <span className="flex items-center gap-1.5 text-sm font-bold text-black">
+            <span className="flex items-center gap-1.5 text-sm font-medium text-black">
               <ShoppingBag size={15} className="text-gray220" />
               {t("chat_message_order_title", { id: message.order_id ?? "" })}
             </span>
@@ -109,9 +114,9 @@ const MessageItem = ({ message }: MessageItemProps) => {
           )}
 
           {typeof message.products_count === "number" && (
-            <p className="mt-1 text-xs text-gray220">
+            <p className="info-label mt-1">
               {t("chat_message_products_count")}{" "}
-              <span className="font-medium text-black">
+              <span className="text-[13px] font-medium text-gray220/70">
                 {t("chat_message_products_count_value", {
                   count: message.products_count,
                 })}
@@ -121,12 +126,16 @@ const MessageItem = ({ message }: MessageItemProps) => {
 
           <button
             type="button"
-            onClick={() =>
+            onClick={() => {
+              // Desktop shows the chat as a modal, so navigating alone leaves
+              // it open on top of the order page; mobile's /chat is a route
+              // that unmounts on its own (the flag is already false there).
+              setChatModalOpen(false);
               router.push(
-                `${ROUTER.MY_ORDERS}/${message.order_id}${shopid ? `?shop_id=${shopid}` : ""}`,
-              )
-            }
-            className="mt-2 flex h-9 w-full items-center justify-center rounded-xl bg-gray10 text-sm font-medium text-black"
+                getOrderDetailUrl(isDesktop, shopid, message.order_id),
+              );
+            }}
+            className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center rounded-xl bg-gray10 text-sm font-medium text-black transition-colors hover:bg-gray180"
           >
             {t("chat_message_go_to_order")}
           </button>
