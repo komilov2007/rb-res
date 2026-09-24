@@ -39,7 +39,7 @@ const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
     imageRefs,
   } = useScrollScene();
   const titleWords = t("booking_gallery_title").split(" ");
-  const descriptionWords = t("booking_gallery_description").split(" ");
+  const descriptionWords = t("atmosphere_description").split(" ");
 
   return (
     <div

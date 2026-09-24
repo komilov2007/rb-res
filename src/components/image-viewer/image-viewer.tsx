@@ -73,8 +73,12 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
           </button>
         </div>
 
+        {/* Mobile: thumbnails in a row under the image. Desktop: a narrow
+            column of small thumbnails on the right, so the image keeps the
+            full height. */}
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <div
-          className="relative flex min-h-0 flex-1 items-center justify-center"
+          className="relative flex min-h-0 flex-1 items-center justify-center lg:px-6 lg:pb-6"
           onTouchStart={(event) => {
             touchStartX.current = event.touches[0]?.clientX ?? null;
           }}
@@ -135,7 +139,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
         </div>
 
         {hasMany && (
-          <div className="scroll-hidden flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 pb-[max(16px,env(safe-area-inset-bottom))]">
+          <div className="scroll-hidden flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 pb-[max(16px,env(safe-area-inset-bottom))] lg:w-28 lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pl-0 lg:pr-5 lg:pt-0 lg:pb-6">
             {images.map((image, imageIndex) => (
               <button
                 key={`${image}-${imageIndex}`}
@@ -146,8 +150,9 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                     node.scrollIntoView({ block: "nearest", inline: "center" });
                   }
                 }}
-                // Exactly 6 per row: (width − 5 gaps of 0.5rem) / 6.
-                className={`relative aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 overflow-hidden rounded-xl border-2 transition-opacity ${
+                // Mobile: exactly 6 per row, (width − 5 gaps of 0.5rem) / 6.
+                // Desktop: the full width of the thumbnail column.
+                className={`relative aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 lg:w-full overflow-hidden rounded-xl border-2 transition-opacity ${
                   imageIndex === index
                     ? "border-white opacity-100"
                     : "border-transparent opacity-50"
@@ -179,6 +184,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
             ))}
           </div>
         )}
+        </div>
       </DialogContent>
     </Dialog>
   );

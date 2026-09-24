@@ -1,9 +1,9 @@
 "use client";
+import { useShopCategories } from "@/hooks/useShopCategories";
 import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getProducts } from "@/apis/products";
-import { getCategories } from "@/apis/categories";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { hasSearchValue } from "@/utils/search";
@@ -58,11 +58,7 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   // Same queryKey as the home page's own category list — the backend has no
   // category search param, so the (already cached) full list is filtered
   // here by name.
-  const { data: categoriesData, isLoading: isCategoriesLoading } = useQuery({
-    enabled: open && hasShopId,
-    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
-    queryFn: () => getCategories(shopid as string),
-  });
+  const { data: categoriesData, isLoading: isCategoriesLoading } = useShopCategories(open);
 
   const products = data?.data.results ?? [];
   const normalizedSearch = search.trim().toLocaleLowerCase();

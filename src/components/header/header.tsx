@@ -1,20 +1,25 @@
 "use client";
 
 import { useRef } from "react";
-import { SearchIcon } from "lucide-react";
-import { IconShoppingCartFilled, IconUserFilled } from "@tabler/icons-react";
+import { ChevronRight, SearchIcon } from "lucide-react";
+import {
+  IconClipboardListFilled,
+  IconShoppingCartFilled,
+  IconUserFilled,
+} from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import Logo from "@/components/logo";
 import Input from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import SearchModal from "@/components/modal/search-modal";
-import Location from "@/app/[page]/components/location";
-import { BranchDialog, HeaderTopbar } from "./components";
+import Location from "@/components/location";
+import { HeaderTopbar } from "./components";
 import { useHeader } from "./useHeader";
 
-import { openBranchDirections } from "@/utils/directions";
 import { useProductDetailStore } from "@/stores/product-detail";
+import { useActiveOrdersCount } from "@/hooks/useActiveOrdersCount";
+import { getProfileOrdersUrl } from "@/utils/orders";
 import {
   Popover,
   PopoverAnchor,
@@ -25,7 +30,7 @@ type HeaderProps = {
   // Opt-in only — omitted everywhere except the category pages that asked
   // for it, so every other route keeps this component's exact prior
   // behavior (plain, non-sticky, bottom-bordered). Pins just the bottom
-  // logo/search/cart row; the phone/branches/language row above it still
+  // logo/search/cart row; the phone/language row above it still
   // scrolls away normally.
   pinBottomRow?: boolean;
 };
@@ -37,21 +42,15 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
     router,
     general,
     shopid,
-    branches,
     modal,
     value,
-    branchesOpen,
-    setBranchesOpen,
-    selectedBranch,
-    setSelectedBranch,
-    branchMapRef,
-    branchMapApiRef,
     cartCount,
     openCartModal,
-    renderBranchPlacemark,
     handleSearch,
     handleClearSearch,
   } = useHeader(pinBottomRow);
+  // Same active-orders badge as the mobile bottom nav's "Buyurtmalarim".
+  const activeOrdersCount = useActiveOrdersCount();
   // Clicks in the inline input are "outside" the results popover — they
   // must not close it.
   const searchAnchorRef = useRef<HTMLDivElement>(null);
@@ -61,16 +60,7 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
 
   return (
     <>
-      <HeaderTopbar
-        phone={general?.data.business_phone}
-        branches={branches?.data}
-        branchesOpen={branchesOpen}
-        onBranchesOpenChange={setBranchesOpen}
-        onSelectBranch={(branch) => {
-          setSelectedBranch(branch);
-          setBranchesOpen(false);
-        }}
-      />
+      <HeaderTopbar phone={general?.data.business_phone} />
       <header
         className={`relative left-0 top-0 z-50 hidden h-16 w-full rounded-b-[30px] bg-white lg:flex ${
           pinBottomRow
@@ -87,7 +77,46 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
             </div>
           )}
 
-          <Location className="w-48 shrink-0" />
+          {/* Address and "Buyurtmalarim" read as one group: the same
+              two-line label/value style, split by a thin divider. On the
+              left so the search opening on the right never pushes into it. */}
+          <div className="flex min-w-0 items-center gap-4">
+            <Location className="max-w-52 shrink-0" />
+            <span className="h-8 w-px shrink-0 bg-gray180" />
+            {/* Desktop "Buyurtmalarim" lives in the profile (guests get its
+                login prompt there). */}
+            <button
+              type="button"
+              onClick={() => router.push(getProfileOrdersUrl(shopid))}
+              className="group flex shrink-0 items-center gap-2.5 text-left"
+            >
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary10 text-primary transition-colors group-hover:bg-primary/15">
+                <IconClipboardListFilled size={18} />
+              </span>
+              <span className="flex flex-col items-start">
+                <span className="text-xs font-normal leading-4 text-gray220">
+                  {t("order")}
+                </span>
+                <span className="mt-0.5 flex items-center gap-0.5 text-sm font-medium leading-5">
+                  <span
+                    className={
+                      activeOrdersCount > 0
+                      ? "text-primary"
+                      : "text-black transition-colors group-hover:text-primary"
+                    }
+                  >
+                    {activeOrdersCount > 0
+                      ? t("header_orders_active", { count: activeOrdersCount })
+                      : t("header_orders_view")}
+                  </span>
+                  <ChevronRight
+                    size={15}
+                    className="shrink-0 text-gray220 transition-transform group-hover:translate-x-0.5"
+                  />
+                </span>
+              </span>
+            </button>
+          </div>
 
           <div className="ml-auto flex shrink-0 items-center">
             {/* Collapsed search: the icon button. Clicking it swaps the
@@ -184,32 +213,29 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
                   </span>
                 )}
               </span>
-              <span className="title20 font-medium text-black">{t("cart")}</span>
+              <span className="title20 font-medium text-black">
+                {t("cart")}
+              </span>
             </Button>
             <span className="mx-1.5 h-7 w-px bg-gray180" />
             <Button
               variant="ghost"
               size="lg"
               className="flex-col gap-1 px-2.5"
-              onClick={() => router.push(`/profile${shopid ? `?shop_id=${shopid}` : ""}`)}
+              onClick={() =>
+                router.push(`/profile${shopid ? `?shop_id=${shopid}` : ""}`)
+              }
             >
               <IconUserFilled size={21} />
-              <span className="title20 font-medium text-black">{t("profile")}</span>
+              <span className="title20 font-medium text-black">
+                {t("profile")}
+              </span>
             </Button>
           </div>
         </div>
       </header>
-      <BranchDialog
-        branch={selectedBranch}
-        branchMapRef={branchMapRef}
-        branchMapApiRef={branchMapApiRef}
-        onClose={() => setSelectedBranch(null)}
-        onOpenDirections={openBranchDirections}
-        renderBranchPlacemark={renderBranchPlacemark}
-      />
     </>
   );
 };
 
 export default Header;
-

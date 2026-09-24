@@ -14,6 +14,12 @@ import {
 
 type CartVariant = "desktop" | "mobile";
 type CartStoreProps = {
+  // The shop these lines belong to. The cart is one localStorage entry,
+  // while sessions are per shop (auth_<shopId>) — without this, shop A's
+  // lines showed up (and were uploaded on login) in shop B.
+  shopId: string | null;
+  // Adopts shopId for the persisted lines; a different shop starts empty.
+  bindShop: (shopId: string) => void;
   // Items on active lines only — the same count the checkout shows and
   // orders (badges, floating cart).
   cartCount: number;
@@ -54,6 +60,7 @@ type CartStoreProps = {
 export const useCartStore = create<CartStoreProps>()(
   persist(
     (set, get) => ({
+      shopId: null,
       cartCount: 0,
       carts: [],
       isCartOpen: false,
@@ -62,6 +69,20 @@ export const useCartStore = create<CartStoreProps>()(
       clearCartConfirmOpen: false,
       pendingCheckout: false,
       unavailableItemIds: [],
+
+      bindShop: (shopId) => {
+        const current = get().shopId;
+
+        if (current === shopId) return;
+
+        // null = lines saved before carts were tied to a shop: keep them for
+        // the shop they are opened in rather than dropping them.
+        if (current !== null) {
+          set({ carts: [], cartCount: 0, unavailableItemIds: [] });
+        }
+
+        set({ shopId });
+      },
 
       setPendingCheckout: (pendingCheckout) => {
         set({ pendingCheckout });
@@ -176,9 +197,15 @@ export const useCartStore = create<CartStoreProps>()(
     {
       name: "cart",
       partialize: (state) => ({
+        shopId: state.shopId,
         cartCount: state.cartCount,
         carts: state.carts,
       }),
+      // Read from localStorage after mount (CartProvider), not while the
+      // store is created: the server renders an empty cart, so reading it
+      // up front made the first client render (badges) differ from the
+      // server HTML — a hydration error whenever the cart had items.
+      skipHydration: true,
     },
   ),
 );

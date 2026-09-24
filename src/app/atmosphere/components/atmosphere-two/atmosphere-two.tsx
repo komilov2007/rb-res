@@ -74,7 +74,7 @@ const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
                     {t("booking_gallery_title")}
                   </h2>
                   <p className="mt-3 text-sm font-normal leading-6 text-white/75">
-                    {t("booking_gallery_description")}
+                    {t("atmosphere_description")}
                   </p>
                   <ChevronDown
                     size={26}

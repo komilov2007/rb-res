@@ -1,7 +1,7 @@
 "use client";
 
 import { type BaseSyntheticEvent, useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -18,6 +18,7 @@ import {
   getPaymentToken,
 } from "@/apis/order";
 import { isServiceDelivery } from "@/constants/delivery-type";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import type { OrderFormValues } from "@/types/order";
 import { getActiveCartCount } from "@/utils/cart";
 import { getApiErrorMessage } from "@/utils/api-error";
@@ -45,6 +46,7 @@ export const usePage = () => {
   const openClosedModal = useShopStatusStore((state) => state.openClosedModal);
   const { data: profile } = useProfile();
   const customerId = useAuthStore((state) => state.auth?.customer);
+  const queryClient = useQueryClient();
   const carts = useCartStore((state) => state.carts);
   // Active lines only — the same lines the totals and createOrder use.
   const cartCount = getActiveCartCount(carts);
@@ -100,8 +102,21 @@ export const usePage = () => {
     selectedService,
   });
 
+  // What an order changes on the server: the cart (consumed by createOrder,
+  // or restored when an unpaid Telegram-invoice order is cancelled), the
+  // order lists + active-orders badge, and the profile's cashback balance.
+  const invalidateOrderDomains = () => {
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.CART_LIST] });
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.MY_ORDERS] });
+    queryClient.invalidateQueries({
+      queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT],
+    });
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.PROFILE] });
+  };
+
   const createOrderMutation = useMutation({
     mutationFn: (payload: CreateOrderPayload) => createOrder(payload),
+    onSuccess: invalidateOrderDomains,
     onError: (error) => {
       setSubmitError(
         getApiErrorMessage(error, t("order_page_errors_create_failed")),
@@ -135,6 +150,9 @@ export const usePage = () => {
   // again, so no unpaid order is left behind for the restaurant.
   const cancelUnpaidOrderMutation = useMutation({
     mutationFn: (orderId: number) => cancelOrder(orderId, shopid as string),
+    // The local cart was already cleared for the consumed lines — refetch
+    // it (and the order lists) so it matches the server again.
+    onSettled: invalidateOrderDomains,
   });
 
   // Group B (CLICK / PAYME via a Telegram invoice). Order FIRST, payment

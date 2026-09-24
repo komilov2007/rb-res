@@ -12,7 +12,7 @@ import { ROUTER } from "@/constants/router";
 import { useAuthStore } from "@/stores/auth";
 import { formatPhone, getLocalPhone } from "@/utils/format-number";
 import { getOrderDetailUrl } from "@/utils/orders";
-import LoginRequired from "../components/login-required";
+import LoginRequired from "@/components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
 import OrderDetailCard from "./components/order-detail-card";
 

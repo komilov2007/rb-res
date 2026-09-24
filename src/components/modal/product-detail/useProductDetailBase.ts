@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelection } from "@/components/branch-selection";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { useRefreshCart } from "@/hooks/useRefreshCart";
 
 // Store selections, the detail query, the add-to-cart mutation and the
 // sheet/selection state behind the product detail view.
@@ -35,6 +36,7 @@ export const useProductDetailBase = () => {
     (state) => state.openProductBranchPicker,
   );
   const queryClient = useQueryClient();
+  const refreshCart = useRefreshCart();
   const [photoState, setPhotoState] = useState<{
     productId: number | null;
     index: number;
@@ -109,6 +111,7 @@ export const useProductDetailBase = () => {
     selectedBranchId,
     openProductBranchPicker,
     queryClient,
+    refreshCart,
     photoState,
     setPhotoState,
     skuState,

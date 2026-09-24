@@ -5,8 +5,10 @@ import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 
 import Button from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 import type { BookingFormValues } from "../../schema";
+import BookingDesktop from "../booking-desktop";
 import BookingHeader from "../booking-header";
 import BookingHero from "../booking-hero";
 import ContactFields from "../contact-fields";
@@ -14,12 +16,17 @@ import GuestsComment from "../guests-comment";
 import VisitTime from "../visit-time";
 
 // Variant "one": grey page, white app bar, cover photo, then one white
-// card per section; fixed white footer with the submit button.
+// card per section; fixed white footer with the submit button. Desktop has
+// its own layout (BookingDesktop) — only one of the two is mounted, so the
+// shared field components never render twice for the same form.
 const BookingOne = () => {
   const t = useTranslations();
   const {
     formState: { isSubmitting },
   } = useFormContext<BookingFormValues>();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  if (isDesktop) return <BookingDesktop />;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-gray10 lg:flex-auto">

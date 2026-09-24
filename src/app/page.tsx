@@ -5,9 +5,9 @@ import { Loader } from "@/components/ui/loader";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
-import Banner from "@/app/[page]/components/banner";
-import Products from "@/app/[page]/components/products";
-import Categories from "@/app/[page]/components/categories";
+import Banner from "@/app/components/banner";
+import Products from "@/app/components/products";
+import Categories from "@/app/components/categories";
 import PageLayout from "@/components/page-layout";
 import { useBranchSelection } from "@/components/branch-selection";
 

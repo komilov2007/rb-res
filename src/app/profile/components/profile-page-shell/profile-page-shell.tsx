@@ -37,7 +37,10 @@ const ProfilePageShell = ({
 
   return (
     <PageLayout>
-      <div className="flex min-h-screen flex-col bg-gray10 lg:min-h-0">
+      {/* No min-h-screen here: PageLayout is already min-h-screen and adds
+          the bottom-nav padding on top, so a second one made every page
+          ~82px taller than the screen — it scrolled even with one item. */}
+      <div className="flex flex-col bg-gray10">
         <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[env(safe-area-inset-top)] lg:hidden">
           <div className="flex w-full items-center gap-3 px-4 py-4">
             <Button

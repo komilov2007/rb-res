@@ -10,6 +10,7 @@ import OrderDetailSections from "@/components/order-detail-sections";
 import RetryPayment from "@/components/retry-payment";
 import Button from "@/components/ui/button";
 import type { OrderDetailState } from "@/hooks/useOrderDetail";
+import LoginRequired from "@/components/login-required";
 import { useOpenChat } from "@/hooks/useOpenChat";
 import { formatOrderDate } from "@/utils/format-date";
 
@@ -130,6 +131,7 @@ const OrderDetailView = ({
   detail,
   isLoading,
   isError,
+  mustLogin,
   cancelOrder,
   isCancelling,
   cancelError,
@@ -183,7 +185,11 @@ const OrderDetailView = ({
         </div>
       </div>
 
-      {isLoading ? (
+      {mustLogin ? (
+        <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+env(safe-area-inset-top))]">
+          <LoginRequired message={t("orders_login_required")} />
+        </div>
+      ) : isLoading ? (
         <OrderDetailSkeleton />
       ) : isError || !detail ? (
         <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+env(safe-area-inset-top))]">

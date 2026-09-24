@@ -1,10 +1,9 @@
 "use client";
 
-import { getCategories } from "@/apis/categories";
+import { useShopCategories } from "@/hooks/useShopCategories";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { normalizeCategories } from "@/utils/product";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperClass } from "swiper";
@@ -13,7 +12,6 @@ import {
   getMobileGap,
   getMobileLayoutVariant,
 } from "./variants";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Category bar state: the category list, the fixed-on-scroll modes with
 // the active section tracking, swiper navigation, and tap handling.
@@ -35,12 +33,8 @@ export const useCategories = () => {
   );
   const mobileListRef = useRef<HTMLDivElement | null>(null);
   const desktopListRef = useRef<HTMLDivElement | null>(null);
-  const { shopid, hasShopId } = useShopId();
-  const { data, isLoading } = useQuery({
-    enabled: hasShopId,
-    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
-    queryFn: () => getCategories(shopid as string),
-  });
+  const { shopid } = useShopId();
+  const { data, isLoading } = useShopCategories();
 
   const categories = normalizeCategories(data?.data);
   const resolvedMobileLayoutVariant = getMobileLayoutVariant();

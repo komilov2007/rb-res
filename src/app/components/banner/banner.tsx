@@ -4,11 +4,11 @@ import { type ChangeEvent, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import "swiper/css";
 import "swiper/css/pagination";
-import { useBanner } from "@/app/[page]/components/banner/useBanner";
+import { useBanner } from "@/app/components/banner/useBanner";
 import BannerSwiper, {
   MobileBannerHeader,
   MobileSearchScreen,
-} from "@/app/[page]/components/banner/components";
+} from "@/app/components/banner/components";
 import { useBoolean } from "@/hooks/useBoolean";
 import { useUiStore } from "@/stores/ui";
 import { getSearchUrl, hasSearchValue } from "@/utils/search";

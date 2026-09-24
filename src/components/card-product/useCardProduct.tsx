@@ -5,11 +5,13 @@ import { useCartStore } from "@/stores/cart";
 import { useBoolean } from "@/hooks/useBoolean";
 import type { CardProductProps } from "@/types/product";
 import { useProductDetailStore } from "@/stores/product-detail";
-import { addNoParameterCart, getCartList } from "@/apis/cart";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addNoParameterCart, updateCartItem } from "@/apis/cart";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth";
-import { normalizeCartItems } from "@/utils/cart";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { getCartBranchId } from "@/utils/cart";
+import { useRefreshCart } from "@/hooks/useRefreshCart";
+import { useBranchSelection } from "@/components/branch-selection";
 
 export const useCardProduct = ({
   product,
@@ -21,16 +23,12 @@ export const useCardProduct = ({
   const counter = useBoolean();
   const carts = useCartStore((state) => state.carts);
   const addCart = useCartStore((state) => state.addCart);
-  const setProductQuantity = useCartStore(
-    (state) => state.setProductQuantity,
-  );
+  const setProductQuantity = useCartStore((state) => state.setProductQuantity);
   const openProductDetail = useProductDetailStore(
     (state) => state.openProductDetail,
   );
-  const setCarts = useCartStore((state) => state.setCarts);
   const customerId = useAuthStore((state) => state.auth?.customer);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
-  const queryClient = useQueryClient();
   const [displayQuantity, setDisplayQuantity] = useState<number | null>(null);
   const [isCartSyncing, setIsCartSyncing] = useState(false);
   const stockMutation = useMutation({
@@ -46,6 +44,20 @@ export const useCardProduct = ({
       data: { branch_id?: string };
     }) => addNoParameterCart(customerId, productId, quantity, data),
   });
+  const parameterMutation = useMutation({
+    mutationFn: ({
+      id,
+      quantity,
+      data,
+    }: {
+      id: number;
+      quantity: number;
+      data: { branch_id?: string };
+    }) => updateCartItem(id, quantity, data),
+  });
+  const openCartModal = useCartStore((state) => state.openCartModal);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const { branchId: selectedBranchId } = useBranchSelection();
   // The card manages the product's plain line (cards only handle products
   // without parameters) — never a parameter line of the same product.
   const cartItem = carts.find(
@@ -54,26 +66,25 @@ export const useCardProduct = ({
       !item.parameter &&
       !item.ad_parameter?.length,
   );
-  const quantity = cartItem?.quantity ?? 0;
+  // A parameter product has no plain line — its card shows the total of all
+  // its parameter lines instead, so it gets a counter like any other card.
+  const parameterLines = product.have_parameter
+    ? carts.filter((item) => item.product.id === product.id)
+    : [];
+  const quantity = product.have_parameter
+    ? parameterLines.reduce((sum, item) => sum + item.quantity, 0)
+    : (cartItem?.quantity ?? 0);
   const shownQuantity = displayQuantity ?? quantity;
-  const branchId = product.branches?.[0];
+  const branchId = getCartBranchId(product.branches, selectedBranchId);
 
-  const refreshCartList = async () => {
-    if (!customerId) return;
+  const refreshCart = useRefreshCart();
 
-    const response = await queryClient.fetchQuery({
-      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
-      queryFn: () => getCartList(customerId),
-      staleTime: 0,
-    });
-
-    setCarts(normalizeCartItems(response.data, useCartStore.getState().carts));
-    await queryClient.invalidateQueries({
-      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
-    });
-  };
-
-  const syncStockQuantity = async (nextQuantity: number) => {
+  // The server's quantity, or null when the write failed — the global
+  // request interceptor already toasts the backend's message, and the cart
+  // is re-read so any optimistic local change is undone.
+  const syncStockQuantity = async (
+    nextQuantity: number,
+  ): Promise<number | null> => {
     if (!customerId) return nextQuantity;
 
     setIsCartSyncing(true);
@@ -88,9 +99,13 @@ export const useCardProduct = ({
         },
       });
 
-      await refreshCartList();
+      await refreshCart();
 
       return response.data.quantity;
+    } catch {
+      await refreshCart().catch(() => {});
+
+      return null;
     } finally {
       setIsCartSyncing(false);
       setDisplayQuantity(null);
@@ -98,6 +113,37 @@ export const useCardProduct = ({
   };
   const openCounter = () => {
     counter.setTrue();
+  };
+
+  // Changes a parameter product's quantity from the card. Only possible
+  // when it has exactly one line; with several the card can't know which
+  // one is meant, so the cart opens instead (where each line has its own
+  // counter). Same updateCartItem call the cart drawer's counter makes.
+  const changeParameterQuantity = async (nextQuantity: number) => {
+    const line = parameterLines.length === 1 ? parameterLines[0] : null;
+
+    if (!customerId || !line || typeof line.id !== "number") {
+      openCartModal(isDesktop ? "desktop" : "mobile");
+      return;
+    }
+
+    setDisplayQuantity(nextQuantity);
+    setIsCartSyncing(true);
+
+    try {
+      await parameterMutation.mutateAsync({
+        id: line.id,
+        quantity: nextQuantity,
+        data: { branch_id: branchId ? String(branchId) : undefined },
+      });
+      await refreshCart();
+    } catch {
+      // The interceptor already toasted it; re-read the real cart.
+      await refreshCart().catch(() => {});
+    } finally {
+      setIsCartSyncing(false);
+      setDisplayQuantity(null);
+    }
   };
 
   const handleAddCart = async () => {
@@ -116,6 +162,9 @@ export const useCardProduct = ({
     }
 
     const syncedQuantity = await syncStockQuantity(quantity + 1);
+
+    if (syncedQuantity === null) return;
+
     addCart(product);
     setProductQuantity(product.id, syncedQuantity);
     openCounter();
@@ -133,13 +182,21 @@ export const useCardProduct = ({
     }
 
     const syncedQuantity = await syncStockQuantity(quantity + 1);
+
+    if (syncedQuantity === null) return;
+
     setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 
   const handleDecrement = async () => {
-    if (product.have_parameter && !cartItem) {
-      openProductDetail(product, saleBadgeVariant, "default");
+    if (product.have_parameter) {
+      if (quantity === 0) {
+        openProductDetail(product, saleBadgeVariant, "default");
+        return;
+      }
+
+      await changeParameterQuantity(Math.max(quantity - 1, 0));
       return;
     }
 
@@ -155,7 +212,9 @@ export const useCardProduct = ({
       setProductQuantity(product.id, 0);
     }
     const syncedQuantity = await syncStockQuantity(nextQuantity);
-    if (nextQuantity === 0) {
+    // Removed (already done locally) or failed (the refreshed cart holds the
+    // real quantity).
+    if (nextQuantity === 0 || syncedQuantity === null) {
       return;
     }
     setProductQuantity(product.id, syncedQuantity);
@@ -173,11 +232,14 @@ export const useCardProduct = ({
     }
 
     if (product.have_parameter) {
-      openProductDetail(product, saleBadgeVariant, "default");
+      await changeParameterQuantity(quantity);
       return;
     }
 
     const syncedQuantity = await syncStockQuantity(quantity);
+
+    if (syncedQuantity === null) return;
+
     setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
@@ -197,4 +259,3 @@ export const useCardProduct = ({
     handleChangeQuantity,
   };
 };
-

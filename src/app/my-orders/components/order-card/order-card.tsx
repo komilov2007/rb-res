@@ -11,7 +11,7 @@ import { formatOrderDate } from "@/utils/format-date";
 import { IMAGE_PLACEHOLDER_SRC, handleImageFallback } from "@/utils/image";
 import type { MyOrderListItem } from "@/types/order";
 
-import StatusBadge from "../status-badge";
+import StatusBadge from "@/components/order-status-badge";
 
 type OrderCardProps = {
   order: MyOrderListItem;

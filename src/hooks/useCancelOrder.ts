@@ -37,6 +37,10 @@ export const useCancelOrder = (
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.MY_ORDERS],
       });
+      // The nav badge counts active orders — one fewer now.
+      queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT],
+      });
       return onSuccess?.();
     },
     onError: (error) => {

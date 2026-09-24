@@ -1,25 +1,23 @@
 "use client";
 
+import { useShopCategories } from "@/hooks/useShopCategories";
 import { Suspense } from "react";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useQuery } from "@tanstack/react-query";
 import MobileFooter from "@/components/mobile-footer";
 
 import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
 import Breadcrumb from "@/components/breadcrumb";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import { getCategories } from "@/apis/categories";
 import Button from "@/components/ui/button";
 import { CategoryTileSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { normalizeCategories } from "@/utils/product";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const GRID_CLASS_NAME =
   "grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6 lg:gap-5";
@@ -29,13 +27,9 @@ const GRID_CLASS_NAME =
 const CategoriesContent = () => {
   const t = useTranslations();
   const router = useRouter();
-  const { shopid, hasShopId } = useShopId();
+  const { shopid } = useShopId();
   // Same query as the home categories strip, so the list is shared/cached.
-  const { data, isLoading } = useQuery({
-    enabled: hasShopId,
-    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
-    queryFn: () => getCategories(shopid as string),
-  });
+  const { data, isLoading } = useShopCategories();
 
   const categories = normalizeCategories(data?.data);
   const shopQuery = shopid ? `?shop_id=${shopid}` : "";

@@ -33,7 +33,9 @@ export const buildOrderPayload = ({
     shop: shopid,
     customer: Number(customerId),
     platform: "TELEGRAM",
-    branch: values.branch,
+    // A delivery is served from near_branch; a pickup branch left in the
+    // form from before switching to delivery must not be sent with it.
+    branch: isDeliveryOrder ? null : values.branch,
     payment_type: values.payment_type as string,
     service_type: values.delivery_type as string,
     is_paid: false,

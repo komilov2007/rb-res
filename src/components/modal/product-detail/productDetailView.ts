@@ -1,5 +1,6 @@
 "use client";
 
+import { getCartBranchId } from "@/utils/cart";
 import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
 import { getOldPrice, stripHtml } from "./utils";
@@ -64,10 +65,26 @@ export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
     saleAmount: detail.sale_amount,
     saleType: detail.sale_type,
   });
-  const cartItem = carts.find((item) => item.product.id === detail.id);
+  // The line for exactly the selected combination — not just any line of
+  // this product. Matching on product alone picked up another parameter's
+  // line, so adding a new parameter sent that line's quantity + 1 (e.g. 3
+  // instead of 1). Cart lines carry sku names only (no ids), so match names.
+  const selectedAdditionalNames = selectedAdditionalSkus
+    .map((sku) => sku.name)
+    .sort()
+    .join(",");
+  const cartItem = carts.find(
+    (item) =>
+      item.product.id === detail.id &&
+      (item.parameter?.name ?? null) === (selectedParameterSku?.name ?? null) &&
+      (item.ad_parameter ?? [])
+        .map((sku) => sku.name)
+        .sort()
+        .join(",") === selectedAdditionalNames,
+  );
   const quantity = cartItem?.quantity ?? 0;
   const totalPrice = totalItemPrice * (quantity || 1);
-  const branchId = detail.branches?.[0];
+  const branchId = getCartBranchId(detail.branches, selectedBranchId);
   const isStockLoading = stockMutation.isPending;
   const showParameterError =
     parameterErrorState.productId === detail.id && parameterErrorState.show;

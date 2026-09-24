@@ -66,6 +66,13 @@ export type BranchMapInstance = {
     add: (object: unknown) => void;
     removeAll: () => void;
   };
+  setCenter: (
+    center: [number, number],
+    zoom?: number,
+    options?: { duration?: number },
+  ) => Promise<unknown>;
+  container: { getElement: () => HTMLElement };
+  destroy: () => void;
 };
 
 export type BranchYMapsApi = YMapsApi & {

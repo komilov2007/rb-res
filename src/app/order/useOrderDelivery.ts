@@ -45,9 +45,9 @@ export const useOrderDelivery = ({
   // The shared pickup branch (home selector, header chip, product
   // availability) mirrored into the form — see the sync effect below. The
   // order page's own branch picker writes back to that same store rather
-  // than only to the form, so this stays the single source of truth.
-  // Already null whenever home isn't actually in PICKUP mode
-  // (useBranchSelection's own logic).
+  // than only to the form, so this stays the single source of truth. In
+  // DELIVERY mode branchId is the nearest branch instead (useBranchSelection),
+  // hence the PICKUP gate on homePickupBranchId below.
   const { branchId: homeBranchId, serviceType: homeServiceType } =
     useBranchSelection();
   const { shopid, hasShopId } = useShopId();
@@ -67,6 +67,13 @@ export const useOrderDelivery = ({
     addresses[0] ??
     null;
 
+  // The point the order is actually delivered to: the address the form
+  // sends. The stored coordinates are only a fallback — they can belong to
+  // an address that no longer exists (deleted on another device), which
+  // would price and route the order for the wrong place.
+  const deliveryLatitude = activeAddress?.latitude ?? latitude;
+  const deliveryLongitude = activeAddress?.longitude ?? longitude;
+
   // Same query/key the address section runs — here only to block submit.
   const { isAllowed: isAddressDeliverable } = useAddressDeliverable(
     deliveryType,
@@ -75,13 +82,21 @@ export const useOrderDelivery = ({
 
   const nearestBranchQuery = useQuery({
     enabled:
-      hasShopId && isDelivery && Boolean(latitude) && Boolean(longitude),
-    queryKey: [REACT_QUERY_KEYS.NEAREST_BRANCH, shopid, latitude, longitude],
+      hasShopId &&
+      isDelivery &&
+      Boolean(deliveryLatitude) &&
+      Boolean(deliveryLongitude),
+    queryKey: [
+      REACT_QUERY_KEYS.NEAREST_BRANCH,
+      shopid,
+      deliveryLatitude,
+      deliveryLongitude,
+    ],
     queryFn: () =>
       getNearestBranch({
         shopid: shopid as string,
-        latitude: latitude as number,
-        longitude: longitude as number,
+        latitude: deliveryLatitude as number,
+        longitude: deliveryLongitude as number,
       }),
   });
 
@@ -95,7 +110,7 @@ export const useOrderDelivery = ({
       // have a current address set." — the address section already asks
       // for one, so no request (and no error toast) until it's picked.
       addressValue !== null &&
-      (!isProvider || (Boolean(latitude) && Boolean(longitude))),
+      (!isProvider || (Boolean(deliveryLatitude) && Boolean(deliveryLongitude))),
     // The address is part of the key, so changing it recalculates the
     // delivery price.
     queryKey: [
@@ -104,8 +119,8 @@ export const useOrderDelivery = ({
       customerId,
       deliveryType,
       addressValue,
-      latitude,
-      longitude,
+      deliveryLatitude,
+      deliveryLongitude,
       cartTotal,
     ],
     queryFn: () =>
@@ -114,8 +129,8 @@ export const useOrderDelivery = ({
         ...(isProvider
           ? {
               service_type: deliveryType as string,
-              latitude: latitude ?? undefined,
-              longitude: longitude ?? undefined,
+              latitude: deliveryLatitude ?? undefined,
+              longitude: deliveryLongitude ?? undefined,
             }
           : {}),
       }),
@@ -153,35 +168,50 @@ export const useOrderDelivery = ({
     form.clearErrors(["shipping_date", "shipping_time"]);
   }, [deliveryType, form]);
 
-  // Only the address id comes from the active saved address. The courier
-  // comment and the entrance/floor/room inputs always start empty (never
-  // prefilled from the saved address, so nothing typed earlier comes back
-  // after leaving the page or a refresh) and are cleared when the address
-  // changes.
+  // The address id and its details all come from the active saved address:
+  // entrance/floor/room and the courier comment are asked once, when the
+  // address is added in the location modal, so the order sends those saved
+  // values instead of asking for them again. Re-applied when the address
+  // changes or its saved details are edited.
+  const activeEntrance = activeAddress?.entrance ?? null;
+  const activeFloor = activeAddress?.floor ?? null;
+  const activeRoom = activeAddress?.room ?? null;
+  const activeComment = activeAddress?.comment || null;
+
   useEffect(() => {
     if (!isDelivery) return;
 
     form.setValue("address", activeAddress?.id ?? null, {
       shouldValidate: true,
     });
-    form.setValue("comment", null);
-    form.setValue("floor", null);
-    form.setValue("room", null);
-    form.setValue("entrance", null);
-  }, [isDelivery, activeAddress?.id, form]);
+    form.setValue("comment", activeComment);
+    form.setValue("floor", activeFloor);
+    form.setValue("room", activeRoom);
+    form.setValue("entrance", activeEntrance);
+  }, [
+    isDelivery,
+    activeAddress?.id,
+    activeEntrance,
+    activeFloor,
+    activeRoom,
+    activeComment,
+    form,
+  ]);
 
   // Keeps the form's branch equal to the shared selection. Picking a branch
   // in this page's own picker (src/app/order/components/branches) calls
   // setPickup, so homeBranchId changes and this effect re-applies the same
-  // value — one direction of sync, no fight between the two. homeBranchId is
-  // already null whenever home isn't actually in PICKUP mode
-  // (useBranchSelection's own logic), so this only needs to gate on the
-  // order's *own* delivery type being a pickup one.
+  // value — one direction of sync, no fight between the two. Only a branch
+  // home actually picked for PICKUP counts: in DELIVERY mode home's branchId
+  // is the delivery's nearest branch, which the user never chose.
+  const homePickupBranchId =
+    homeServiceType === "PICKUP" ? homeBranchId : null;
+
   useEffect(() => {
     if (!isPickupType(deliveryType)) return;
 
-    form.setValue("branch", homeBranchId, { shouldValidate: true });
-  }, [deliveryType, homeBranchId, form]);
+    form.setValue("branch", homePickupBranchId, { shouldValidate: true });
+  }, [deliveryType, homePickupBranchId, form]);
 
   // deliveryType is a dependency so a cached calculation is re-applied after
   // the reset effect above clears it on a service type change.

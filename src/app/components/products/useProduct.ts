@@ -1,6 +1,6 @@
 "use client";
 
-import { getCategories } from "@/apis/categories";
+import { useShopCategories } from "@/hooks/useShopCategories";
 import { getProducts } from "@/apis/products";
 import { useShopId } from "@/hooks/useShopId";
 import {
@@ -11,7 +11,6 @@ import {
 import {
   infiniteQueryOptions,
   useInfiniteQuery,
-  useQuery,
 } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
@@ -40,7 +39,7 @@ export const productsQueryOptions = (shopid?: string) =>
   });
 
 export const useProduct = () => {
-  const { shopid, hasShopId } = useShopId();
+  const { shopid } = useShopId();
   // A callback ref (not a plain useRef) so the observer effect below is
   // notified exactly when the sentinel div actually mounts, instead of
   // depending on fetch state to "discover" it on a later re-render.
@@ -57,11 +56,7 @@ export const useProduct = () => {
     isLoading,
     isFetching,
   } = useInfiniteQuery(productsQueryOptions(shopid));
-  const { data: categories } = useQuery({
-    enabled: hasShopId,
-    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
-    queryFn: () => getCategories(shopid as string),
-  });
+  const { data: categories } = useShopCategories();
 
   // Read via a ref inside the observer callback rather than as effect
   // dependencies below — otherwise the IntersectionObserver got torn down

@@ -73,6 +73,10 @@ request.interceptors.request.use(async (config) => {
 
       if (updatedUser?.access) {
         headers.set("Authorization", `Bearer ${updatedUser.access}`);
+        // Keep the store in step with storage, so code that writes the
+        // session back from the store (e.g. a name change) never restores
+        // the tokens this refresh just replaced.
+        useAuthStore.getState().setAuth(updatedUser.auth);
       }
     }
   }

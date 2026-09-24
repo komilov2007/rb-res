@@ -24,7 +24,8 @@ export const getDayIndex = (date: Date = new Date()) => date.getDay() || 7;
 
 // The first working window the shop opens in from `now` onward: a later
 // window today if one exists, otherwise the first window of the next day
-// that isn't a day off (scanning a full week). null when the schedule is
+// that isn't a day off (scanning a full week, up to today's weekday next
+// week — a shop open only on this weekday reopens then). null when the schedule is
 // missing or every day is closed.
 //
 // Needed because "is_closed for today" is NOT the same as "closed for the
@@ -39,7 +40,7 @@ export const getNextOpening = (
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   const todayIndex = getDayIndex(now);
 
-  for (let daysAhead = 0; daysAhead < 7; daysAhead += 1) {
+  for (let daysAhead = 0; daysAhead <= 7; daysAhead += 1) {
     const dayIndex = ((todayIndex - 1 + daysAhead) % 7) + 1;
     const entry = workingTime[String(dayIndex)];
 

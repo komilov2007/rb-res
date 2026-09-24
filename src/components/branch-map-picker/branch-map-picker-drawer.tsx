@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Store, X } from "lucide-react";
+import { ChevronDown, Store } from "lucide-react";
 import { IconClockFilled } from "@tabler/icons-react";
 import { Map, YMaps } from "react-yandex-maps";
 import { useTranslations } from "next-intl";
 
 import BranchSchedule from "@/components/branch-schedule";
 import Button from "@/components/ui/button";
+import XButton from "@/components/ui/x-button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import {
   SectionLabel,
@@ -149,20 +150,13 @@ const BranchMapPickerDrawer = ({
         </SheetTitle>
 
         <div className="flex h-full w-full flex-col overflow-hidden bg-white">
-          <div className="z-10 flex shrink-0 items-center gap-3 border-b border-gray180 bg-white px-4 py-4">
-            <Button
-              type="button"
-              variant="plain"
-              size="none"
-              onClick={onClose}
-              aria-label={t("common_close")}
-              className="text-black"
-            >
-              <X size={20} />
-            </Button>
-            <h1 className="text-base font-medium text-black">
+          {/* Title left, close on the right — same header shape as the cart
+              drawer (cart-header.tsx). */}
+          <div className="z-10 flex shrink-0 items-center justify-between gap-3 border-b border-gray180 bg-white px-4 py-4">
+            <h1 className="min-w-0 truncate text-base font-medium text-black">
               {title ?? t("select_branch")}
             </h1>
+            <XButton size="sm" onClick={onClose} />
           </div>
 
           {/* One scroll area for the whole body: the schedule, the list and

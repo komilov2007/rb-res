@@ -10,6 +10,7 @@ import type { BranchMapInstance, BranchYMapsApi } from "@/types/yandex";
 
 import {
   branchCenter,
+  buildBranchBalloonHtml,
   buildPinHref,
   getDefaultOverview,
   type MapViewState,
@@ -45,6 +46,7 @@ export const useBranchMapPicker = ({
   const swiperRef = useRef<SwiperClass | null>(null);
   const mapInstanceRef = useRef<BranchMapInstance | null>(null);
   const mapApiRef = useRef<BranchYMapsApi | null>(null);
+  const lastMapInstanceRef = useRef<BranchMapInstance | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [mapState, setMapState] = useState<MapViewState>({
     center: DEFAULT_CENTER,
@@ -77,22 +79,22 @@ export const useBranchMapPicker = ({
       branchesToRender: BranchProps[],
       currentActiveId: number | null,
       onBranchClick: (branch: BranchProps, index: number) => void,
-    ) => {
+    ): PlacemarkInstance | null => {
       const mapInstance = mapInstanceRef.current;
       const api = mapApiRef.current;
 
-      if (!mapInstance || !api) return;
+      if (!mapInstance || !api) return null;
 
       mapInstance.geoObjects.removeAll();
+
+      // Returned so highlightBranch can open the active pin's balloon.
+      let activePlacemark: PlacemarkInstance | null = null;
 
       branchesToRender.forEach((branch, index) => {
         const isActivePin = branch.id === currentActiveId;
         const placemark = new api.Placemark(
           [branch.longitude, branch.latitude],
-          {
-            balloonContentHeader: branch.name,
-            balloonContentBody: branch.address,
-          },
+          { balloonContentBody: buildBranchBalloonHtml(branch) },
           {
             iconLayout: "default#image",
             iconImageHref: buildPinHref(isActivePin),
@@ -107,6 +109,9 @@ export const useBranchMapPicker = ({
             // is the mode it would otherwise pick.
             hideIconOnBalloonOpen: false,
             balloonPanelMaxMapArea: 0,
+            // The map is already centred on the pin; auto-panning to fit the
+            // balloon would push the pin back off centre.
+            balloonAutoPan: false,
             // The balloon anchors on the geometry point, which is the pin's
             // bottom tip (see iconImageOffset), so by default it opens over
             // the pin. Lift it by the pin's own height plus a few px of gap
@@ -117,7 +122,11 @@ export const useBranchMapPicker = ({
 
         placemark.events.add("click", () => onBranchClick(branch, index));
         mapInstance.geoObjects.add(placemark);
+
+        if (isActivePin) activePlacemark = placemark;
       });
+
+      return activePlacemark;
     },
     [balloons],
   );
@@ -139,8 +148,30 @@ export const useBranchMapPicker = ({
   // opening mobile's card sheet (which desktop doesn't render).
   const highlightBranch = (branch: BranchProps) => {
     setActiveId(branch.id);
-    setMapState({ center: branchCenter(branch), zoom: 15 });
-    renderPlacemarks(activeBranches, branch.id, selectBranch);
+    const placemark = renderPlacemarks(activeBranches, branch.id, selectBranch);
+    const mapInstance = mapInstanceRef.current;
+
+    // Map not mounted yet: let the declarative state position it once it is.
+    if (!mapInstance) {
+      setMapState({ center: branchCenter(branch), zoom: 15 });
+      return;
+    }
+
+    // Moved imperatively, NOT through mapState: react-yandex-maps applies a
+    // changed `state` with its own un-animated setZoom/setCenter on the next
+    // commit, which interrupts this animation (its promise then never
+    // resolves, so the balloon below never opened), and an unchanged value —
+    // the same row tapped again after the user panned — doesn't move the map
+    // at all. mapState stays as the open-time overview.
+    const openBalloon = () => {
+      // Re-rendering the pins above drops any balloon Yandex had open on the
+      // old placemark, so the desktop drawer reopens it on the new one.
+      if (balloons && placemark) placemark.balloon.open();
+    };
+
+    mapInstance
+      .setCenter(branchCenter(branch), 15, { duration: 300 })
+      .then(openBalloon, openBalloon);
   };
 
   const selectBranch = (branch: BranchProps) => {
@@ -261,7 +292,24 @@ export const useBranchMapPicker = ({
   };
 
   const handleMapInstance = (instance: unknown) => {
-    mapInstanceRef.current = (instance as BranchMapInstance | null) ?? null;
+    const next = (instance as BranchMapInstance | null) ?? null;
+    mapInstanceRef.current = next;
+
+    // This handler is a new function every render, so react-yandex-maps
+    // re-calls it (null, then the SAME map) on every re-render. Redrawing the
+    // pins then would destroy a balloon highlightBranch just opened, so only
+    // a genuinely new map instance gets its pins drawn here.
+    if (!next || next === lastMapInstanceRef.current) return;
+
+    // Strict Mode's dev double-mount leaves the first map react-yandex-maps
+    // built still in the DOM, stacked on top of the live one — so every pan
+    // and balloon went to a map hidden under it. Destroy a previous map that
+    // is still attached; a normally unmounted one is already detached.
+    const previous = lastMapInstanceRef.current;
+
+    if (previous?.container.getElement().isConnected) previous.destroy();
+
+    lastMapInstanceRef.current = next;
     handleMapReady();
   };
 
