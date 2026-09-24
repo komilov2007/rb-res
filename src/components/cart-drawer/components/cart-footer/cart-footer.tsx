@@ -50,7 +50,9 @@ const CartFooter = ({
         variant="primary-solid"
         size="primaryWide"
         onClick={onContinue}
-        disabled={isPending}
+        // Nothing active to order (every line inactive) — disabled rather than
+        // a button that silently does nothing.
+        disabled={isPending || total <= 0}
       >
         {t("checkout")} · {formatPrice(total)} {t("sum")}
       </Button>

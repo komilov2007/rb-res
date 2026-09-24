@@ -28,9 +28,19 @@ const Banner = () => {
   const setMobileHeaderDrawerOpen = useUiStore(
     (state) => state.setMobileHeaderDrawerOpen,
   );
-  const searchModal = useBoolean({
-    defaultValue: hasSearchValue(urlSearch) && isMobileViewport(),
-  });
+  // Starts closed on both server and client (the viewport is only known in
+  // the browser — reading it here made the first render differ from the
+  // server HTML); the effect below reopens it after mount.
+  const searchModal = useBoolean();
+  const openSearchModal = searchModal.setTrue;
+  const [initialSearch] = useState(urlSearch);
+
+  useEffect(() => {
+    if (hasSearchValue(initialSearch) && isMobileViewport()) openSearchModal();
+    // Mount only: reopening on later URL changes would fight the user
+    // closing the screen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // Local state drives the input so typing stays instant; the URL is kept in
   // sync alongside it (replace, not push — one history entry per keystroke
   // would make the back button walk through every letter).

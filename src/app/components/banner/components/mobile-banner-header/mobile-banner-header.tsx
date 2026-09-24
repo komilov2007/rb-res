@@ -1,7 +1,7 @@
 import { SearchIcon } from "lucide-react";
 
 import Button from "@/components/ui/button";
-import Location from "@/app/[page]/components/location";
+import Location from "@/components/location";
 
 type MobileBannerHeaderProps = {
   searchLabel: string;
