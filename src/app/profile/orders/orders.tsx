@@ -88,7 +88,9 @@ const OrdersContent = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
+      {/* Desktop: the tabs stay pinned at the top of the orders scroller
+          (white backing + bottom padding hides cards passing under). */}
+      <div className="flex gap-2 lg:sticky lg:top-0 lg:z-10 lg:-mb-2 lg:bg-white lg:pb-2">
         {TABS.map((tab) => (
           <button
             key={String(tab.key)}
