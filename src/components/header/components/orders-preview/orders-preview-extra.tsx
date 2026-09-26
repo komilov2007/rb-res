@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { IconClipboardListFilled } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { getMyOrders } from "@/apis/order";
@@ -12,6 +12,7 @@ import StatusBadge from "@/components/order-status-badge";
 import StatusTimeline from "@/components/status-timeline";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import type { MyOrderListItem, OrderStatusValue } from "@/types/order";
@@ -51,6 +52,16 @@ const useActiveOrders = () => {
   };
 };
 
+// The orders pages themselves (desktop profile list, mobile my-orders).
+const useIsOnOrdersPage = () => {
+  const pathname = usePathname();
+
+  return (
+    pathname.startsWith(ROUTER.PROFILE_ORDERS) ||
+    pathname.startsWith(ROUTER.MY_ORDERS)
+  );
+};
+
 const STEP_BY_STATUS: Partial<Record<OrderStatusValue, number>> = {
   NEW: 0,
   PROGRESS: 1,
@@ -70,31 +81,6 @@ const getSteps = (order: MyOrderListItem) => [
 const getStep = (order: MyOrderListItem) =>
   STEP_BY_STATUS[order.status.status] ?? 0;
 
-const Thumbs = ({
-  order,
-  max = 3,
-}: {
-  order: MyOrderListItem;
-  max?: number;
-}) => (
-  <span className="flex -space-x-2">
-    {order.items.slice(0, max).map((item) => (
-      <img
-        key={item.id}
-        src={getImageSrc(item.photo)}
-        onError={handleImageFallback}
-        alt=""
-        className="h-8 w-8 rounded-full border-2 border-white bg-gray10 object-cover"
-      />
-    ))}
-    {order.items.length > max && (
-      <span className="grid h-8 w-8 place-items-center rounded-full border-2 border-white bg-gray10 text-[11px] text-gray220">
-        +{order.items.length - max}
-      </span>
-    )}
-  </span>
-);
-
 const LiveDot = ({ light = false }: { light?: boolean }) => (
   <span className="relative flex h-2 w-2 shrink-0">
     <span
@@ -111,7 +97,10 @@ const LiveDot = ({ light = false }: { light?: boolean }) => (
 );
 
 // 14 — "dynamic island" bar at the bottom centre, in the project palette:
-// white pill + gray border, primary live dot and "Kuzatish" button.
+// white pill + gray border, primary live dot and "Kuzatish" button. It
+// speaks about the latest order (its dish photo, status, number); the
+// "+N" chip and the second line count the OTHER active orders — never
+// the dishes, which read as the same number and confused the two.
 const Island = ({
   count,
   order,
@@ -121,25 +110,38 @@ const Island = ({
 }) => {
   const goToOrders = useGoToOrders();
   const steps = getSteps(order);
+  const others = count - 1;
 
   return (
     <button
       type="button"
       onClick={goToOrders}
-      className="fixed bottom-6 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-4 rounded-full border border-gray180 bg-white py-2 pl-2 pr-2 text-black shadow-[0_12px_32px_rgba(17,24,39,0.12)] transition-transform hover:-translate-y-0.5 lg:flex"
+      className="fixed bottom-6 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-3 rounded-full border border-gray180 bg-white py-2 pl-2 pr-2 text-black shadow-[0_12px_32px_rgba(17,24,39,0.12)] transition-transform hover:-translate-y-0.5 lg:flex"
     >
-      <Thumbs order={order} max={2} />
-      <span className="flex flex-col items-start">
+      <span className="relative shrink-0">
+        <img
+          src={getImageSrc(order.items[0]?.photo)}
+          onError={handleImageFallback}
+          alt=""
+          className="h-10 w-10 rounded-full bg-gray10 object-cover"
+        />
+        {others > 0 && (
+          <span className="absolute -bottom-1 -right-2 rounded-full bg-primary px-1.5 text-[11px] leading-[18px] text-white ring-2 ring-white">
+            +{others}
+          </span>
+        )}
+      </span>
+      <span className="ml-1 flex flex-col items-start">
         <span className="flex items-center gap-2 text-sm">
           <LiveDot />
           {steps[getStep(order)]}
+          <span className="text-gray220">· #{order.id}</span>
         </span>
         <span className="text-xs text-gray220">
-          #{order.id}
-          {count > 1 ? ` · yana ${count - 1} ta` : ""}
+          {others > 0 ? `Yana ${others} ta faol buyurtma` : "Faol buyurtmangiz"}
         </span>
       </span>
-      <span className="ml-2 flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm text-white">
+      <span className="ml-3 flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm text-white">
         Kuzatish <ChevronRight size={15} />
       </span>
     </button>
@@ -198,7 +200,9 @@ const EdgeOrderCard = ({
   return (
     <div
       style={{ animationDelay: `${index * 70}ms` }}
-      className="py-4 duration-500 animate-in fade-in slide-in-from-right-6 fill-mode-both"
+      // Fade + slight zoom-in: a horizontal/vertical slide would push the
+      // rows past the list for a moment and flash its scrollbar.
+      className="py-4 duration-500 animate-in fade-in zoom-in-95 fill-mode-both"
     >
       <div className="flex gap-3">
         <button
@@ -345,18 +349,12 @@ const EdgeTab = ({
           className="w-[420px] max-w-[420px] gap-0 bg-white p-0"
         >
           <div className="flex items-center gap-3 border-b border-gray180 bg-white px-5 py-4 pr-14">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gray10 text-black">
-              <IconClipboardListFilled size={20} />
-            </span>
             <SheetTitle className="info-label flex items-center gap-2">
               Faol buyurtmalar
-              <span className="rounded-full bg-gray10 px-2 text-xs leading-5 text-black">
-                {count}
-              </span>
             </SheetTitle>
           </div>
 
-          <div className="scroll-panel flex flex-1 flex-col divide-y divide-gray180 overflow-y-auto px-5">
+          <div className="scroll-panel flex flex-1 flex-col divide-y divide-gray180 overflow-y-auto overflow-x-hidden px-5">
             {orders.map((order, index) => (
               <EdgeOrderCard
                 key={order.id}
@@ -386,7 +384,11 @@ const EdgeTab = ({
 export const OrdersFloatingExtras = () => {
   const preview = useOrdersPreview();
   const { count, orders } = useActiveOrders();
+  const isOnOrdersPage = useIsOnOrdersPage();
   const latest = orders[0];
+
+  // Already looking at the orders — no need to point at them.
+  if (isOnOrdersPage) return null;
 
   if (!latest) return null;
 
@@ -403,7 +405,10 @@ export const OrdersTopStrip = () => {
   const preview = useOrdersPreview();
   const goToOrders = useGoToOrders();
   const { count, orders } = useActiveOrders();
+  const isOnOrdersPage = useIsOnOrdersPage();
   const latest = orders[0];
+
+  if (isOnOrdersPage) return null;
 
   if (!preview.showTopStrip || !latest) return null;
 
