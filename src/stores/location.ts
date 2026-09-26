@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import type { AddressProps } from "@/apis/address";
+import type { AddressProps } from "@/types/address";
 
 type LocationCoords = {
   latitude: number;

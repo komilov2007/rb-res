@@ -5,7 +5,6 @@ import { ArrowRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import AtmosphereGallery from "@/components/atmosphere-gallery";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ImageViewer from "@/components/image-viewer";
@@ -16,6 +15,8 @@ import { useOpenBooking } from "@/hooks/useOpenBooking";
 
 import Breadcrumb from "@/components/breadcrumb";
 
+// TEMPORARY — desktop layout preview; back to AtmosphereDesktop once picked.
+import AtmosphereDesktopPreview from "./components/atmosphere-desktop-preview";
 import AtmosphereFour from "./components/atmosphere-four";
 import AtmosphereOne from "./components/atmosphere-one";
 import AtmosphereThree from "./components/atmosphere-three";
@@ -47,7 +48,7 @@ const FOOTER_STYLES = {
 } satisfies Record<AtmosphereVariant, keyof typeof FOOTER_CLASS_NAMES>;
 
 type AtmosphereProps = {
-  // Mobile layout only; desktop always renders AtmosphereGallery.
+  // Mobile layout only; desktop always renders AtmosphereDesktop.
   variant?: AtmosphereVariant;
 };
 
@@ -56,7 +57,8 @@ type AtmosphereProps = {
 // footer); the shell owns the back button, the "Bron qilish" footer and
 // the shared full-screen viewer, the body is the variant the caller picked.
 // Desktop: site Header/Footer like home, breadcrumb, one full-bleed section
-// with AtmosphereGallery + the booking button — the same for every variant.
+// with AtmosphereDesktop (hero, bento gallery, booking band) — the same for
+// every variant.
 // Reached from the Hand menu and from the /booking hero.
 const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
   const MobileVariant = MOBILE_VARIANTS[variant];
@@ -106,22 +108,20 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
           and below, content aligned to the header's max-w-7xl container. */}
       <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white lg:flex lg:flex-auto lg:flex-col lg:overflow-visible lg:bg-gray10">
         {isDesktop ? (
-          <section className="my-2 flex flex-1 flex-col overflow-hidden rounded-[30px] bg-white">
-            <div className="mx-auto w-full max-w-7xl px-5 py-6">
-              <AtmosphereGallery />
-              <div className="mt-8 flex justify-end">{bookingButton}</div>
-            </div>
+          <section className="my-2 flex flex-1 flex-col overflow-clip rounded-[30px] bg-white">
+            <AtmosphereDesktopPreview
+              onOpen={setViewerIndex}
+              onBook={goToBooking}
+            />
           </section>
         ) : (
-          <>
-            <MobileVariant onOpen={setViewerIndex} />
-            <ImageViewer
-              images={ATMOSPHERE_MEDIA}
-              openIndex={viewerIndex}
-              onClose={() => setViewerIndex(null)}
-            />
-          </>
+          <MobileVariant onOpen={setViewerIndex} />
         )}
+        <ImageViewer
+          images={ATMOSPHERE_MEDIA}
+          openIndex={viewerIndex}
+          onClose={() => setViewerIndex(null)}
+        />
       </div>
 
       <div

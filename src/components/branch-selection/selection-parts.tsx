@@ -1,19 +1,17 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { type AddressProps } from "@/apis/address";
-import { getNearestBranch } from "@/apis/branches";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 
 import { type BranchSelectionState } from "./useBranchSelection";
-import { findClosestBranch, getBranchLabel } from "./utils";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { useAddressBranch } from "./useAddressBranch";
+import { getBranchLabel } from "./utils";
 import { getOptionClassName } from "@/components/ui/radio-mark";
 
 // Rows shown before the "Yana N ta ... ko'rsatish" toggle.
@@ -126,11 +124,7 @@ export const ShowMoreToggle = ({
 export const BranchPill = ({ branch }: { branch: BranchProps | null }) =>
   branch ? <Pill>{getBranchLabel(branch.name)}</Pill> : null;
 
-// The branch that will actually serve this address — the backend's own
-// nearest-branch answer (same key/fn as useBranchSelection and the order
-// page, so the selected address is a shared cache hit), not a client-side
-// distance guess: some branches share identical coordinates, and the
-// haversine tie-break then disagreed with the backend's pick.
+// The branch that will actually serve this address (see useAddressBranch).
 export const NearestBranchPill = ({
   selection,
   address,
@@ -138,27 +132,7 @@ export const NearestBranchPill = ({
   selection: BranchSelectionState;
   address: AddressProps;
 }) => {
-  const { data, isError } = useQuery({
-    enabled: Boolean(selection.shopid),
-    queryKey: [
-      REACT_QUERY_KEYS.NEAREST_BRANCH,
-      selection.shopid,
-      address.latitude,
-      address.longitude,
-    ],
-    queryFn: () =>
-      getNearestBranch({
-        shopid: selection.shopid as string,
-        latitude: address.latitude,
-        longitude: address.longitude,
-      }),
-  });
-
-  const branch = data
-    ? (selection.branches.find((item) => item.id === data.data.id) ?? null)
-    : isError
-      ? findClosestBranch(selection.branches, address)
-      : null;
+  const branch = useAddressBranch(selection.shopid, selection.branches, address);
 
   return <BranchPill branch={branch} />;
 };

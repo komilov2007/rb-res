@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
 import { useLocationStore } from "@/stores/location";
+import { useShopStatusStore } from "@/stores/shop-status";
 
 import { useBranchSelection } from "./useBranchSelection";
 import { useNearestBranches } from "./useNearestBranches";
@@ -45,6 +46,7 @@ const BranchSelectionModal = () => {
   const loginModal = useAuthStore((state) => state.loginModal);
   const signupModal = useAuthStore((state) => state.signupModal);
   const setPendingCheckout = useCartStore((state) => state.setPendingCheckout);
+  const closedModalOpen = useShopStatusStore((state) => state.closedModalOpen);
   const locationModal = useLocationStore((state) => state.locationModal);
   const storeAddress = useLocationStore((state) => state.address);
   const openLocationMap = useLocationStore((state) => state.openLocationMap);
@@ -62,7 +64,14 @@ const BranchSelectionModal = () => {
   // Choosing requires login: a request made while logged out (home auto-open,
   // order-page redirect) waits, and shows only after login and the name step
   // are closed — never for a guest, never on top of the auth modals.
-  const isVisible = selectionModal && hasAccess && !loginModal && !signupModal;
+  // The closed-shop modal goes first too: the request waits until it's
+  // dismissed instead of stacking on top of it.
+  const isVisible =
+    selectionModal &&
+    hasAccess &&
+    !loginModal &&
+    !signupModal &&
+    !closedModalOpen;
 
   // Only offer what the shop actually has; both when services are unknown.
   const activeServices =

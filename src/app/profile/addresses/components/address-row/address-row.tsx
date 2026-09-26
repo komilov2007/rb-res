@@ -4,23 +4,29 @@ import { IconMapPinFilled, IconPencilFilled, IconTrashFilled } from "@tabler/ico
 import { useTranslations } from "next-intl";
 
 import type { AddressProps } from "@/apis/address";
+import { useAddressBranch } from "@/components/branch-selection/useAddressBranch";
 import {
   getBranchLabel,
   getShortAddress,
 } from "@/components/branch-selection/utils";
+import { useShopId } from "@/hooks/useShopId";
 import type { BranchProps } from "@/types/branch";
 
 type AddressRowProps = {
   item: AddressProps;
-  // Closest branch to this address, shown as a pill.
-  branch: BranchProps | null;
+  // The shop's active branches — the one serving this address is shown as
+  // a pill.
+  branches: BranchProps[];
   onEdit: () => void;
   onDelete: () => void;
 };
 
 // One saved address with its edit/delete actions.
-const AddressRow = ({ item, branch, onEdit, onDelete }: AddressRowProps) => {
+const AddressRow = ({ item, branches, onEdit, onDelete }: AddressRowProps) => {
   const t = useTranslations();
+  const { shopid } = useShopId();
+  // The backend's own pick, same as the order page will deliver from.
+  const branch = useAddressBranch(shopid, branches, item);
 
   return (
     <div

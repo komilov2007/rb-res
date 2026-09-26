@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import Script from "next/script";
 import { Toaster } from "sonner";
 
-import CartDrawer from "@/app/[page]/cart";
+import CartDrawer from "@/components/cart-drawer";
 import { ReactQuery } from "@/provider/react-query";
 import { GeneralProvider } from "@/provider/general";
 import { AuthProvider } from "@/provider/auth";

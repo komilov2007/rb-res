@@ -4,7 +4,7 @@ import BranchSelectionModal from "@/components/branch-selection/branch-selection
 import FloatingCart from "@/components/floating-cart";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import MobileAction from "@/app/[page]/components/mobile/mobile-action";
+import MobileAction from "@/components/mobile-action";
 import MobileFooter from "@/components/mobile-footer";
 import ProductBranchPicker from "@/components/modal/product-branch-picker";
 import ProductDetailMobile from "@/components/modal/product-detail";

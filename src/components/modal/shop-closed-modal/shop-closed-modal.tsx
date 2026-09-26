@@ -86,9 +86,6 @@ const ShopClosedModal = () => {
         <h2 className="mt-1 text-lg font-medium text-black">
           {t("shared_shop_closed_title")}
         </h2>
-        <p className="mt-1 text-sm font-normal text-gray220">
-          {general?.data.message || t("shared_shop_closed_default_message")}
-        </p>
         {/* "We'll open soon" only fits a same-day reopening — saying it when
             the next window is days away would be wrong. */}
         {nextOpening?.daysAhead === 0 && (

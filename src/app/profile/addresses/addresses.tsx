@@ -8,14 +8,13 @@ import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { deleteAddress, type AddressProps } from "@/apis/address";
-import { findClosestBranch } from "@/components/branch-selection/utils";
 import Button from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth";
 import { useLocationStore } from "@/stores/location";
 import { useBranches } from "@/hooks/useBranches";
 import { useAddresses } from "@/hooks/useAddresses";
 
-import LoginRequired from "../components/login-required";
+import LoginRequired from "@/components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
 import AddressRow from "./components/address-row";
 import DeleteAddressDialog from "./components/delete-address-dialog";
@@ -131,7 +130,7 @@ const AddressesContent = () => {
         <AddressRow
           key={item.id}
           item={item}
-          branch={findClosestBranch(branches, item)}
+          branches={branches}
           onEdit={() => handleEdit(item)}
           onDelete={() => setDeleting(item)}
         />

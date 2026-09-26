@@ -10,14 +10,14 @@ import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { signUp } from "@/apis/auth";
 import { ROUTER } from "@/constants/router";
-import { setUser } from "@/utils/user";
+import { getUser, setUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import type { UserInfo } from "@/types/profile";
 import { getApiErrorMessage } from "@/utils/api-error";
 import { formatPhone, getLocalPhone } from "@/utils/format-number";
 
-import LoginRequired from "../login-required";
+import LoginRequired from "@/components/login-required";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 // Shared by /profile/edit (its own page) and the bare /profile route's
@@ -49,8 +49,12 @@ const EditProfileForm = () => {
         shopid as string,
       ),
     onSuccess: (response) => {
-      if (auth) {
-        const nextAuth = { ...auth, firstname: response.data.firstname };
+      // The stored session, not the render-time `auth`: the request may
+      // have refreshed the tokens on its way out.
+      const currentAuth = (shopid && getUser(shopid)?.auth) || auth;
+
+      if (currentAuth) {
+        const nextAuth = { ...currentAuth, firstname: response.data.firstname };
 
         setAuth(nextAuth);
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { getChatList, sendChatFile } from "@/apis/chat";
@@ -34,7 +35,8 @@ export const useChat = () => {
   const [messageText, setMessageText] = useState("");
   const [selectedFileState, setSelectedFileState] =
     useState<SelectedFileState>(null);
-  const [isSendingFile, setIsSendingFile] = useState(false);
+  const sendFileMutation = useMutation({ mutationFn: sendChatFile });
+  const isSendingFile = sendFileMutation.isPending;
   // Tracks the currently-live object URL so it can be revoked the moment
   // it's replaced or cleared — created/revoked at selection time (an event,
   // not an effect), so nothing here ever calls setState from inside an
@@ -146,10 +148,8 @@ export const useChat = () => {
     const trimmed = messageText.trim();
 
     if (selectedFileState) {
-      setIsSendingFile(true);
-
       try {
-        const response = await sendChatFile({
+        const response = await sendFileMutation.mutateAsync({
           file: selectedFileState.file,
           message: trimmed || undefined,
           platform: "TELEGRAM",
@@ -167,8 +167,6 @@ export const useChat = () => {
         setSelectedFile(null);
       } catch {
         // The global request interceptor already toasts the backend's message.
-      } finally {
-        setIsSendingFile(false);
       }
 
       return;

@@ -17,7 +17,7 @@ import { formatOrderDate } from "@/utils/format-date";
 import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
 
-import StatusBadge from "../status-badge";
+import StatusBadge from "@/components/order-status-badge";
 
 // Only used within this card's own product list — not shared elsewhere, so
 // it stays a plain local component rather than its own file.
@@ -138,8 +138,9 @@ const OrderDetailCard = ({
 
         {expanded && (
           <ul className="mt-2.75 flex flex-col gap-2.75">
-            {order.items.map((item) => (
-              <OrderItemRow key={item.id} item={item} />
+            {order.items.map((item, index) => (
+              // The same product can appear on several lines, so id alone isn't unique.
+              <OrderItemRow key={`${item.id}-${index}`} item={item} />
             ))}
           </ul>
         )}

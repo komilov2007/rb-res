@@ -10,21 +10,6 @@ export type BoundsChangeEvent = {
   get?: (key: string) => unknown;
 };
 
-export type GeocodeResponse = {
-  geoObjects?: {
-    get: (index: number) =>
-      | {
-          properties?: {
-            get: (key: string) => unknown;
-          };
-          geometry?: {
-            getCoordinates: () => Coordinates;
-          };
-        }
-      | undefined;
-  };
-};
-
 export type YandexGeocoderResponse = {
   response?: {
     GeoObjectCollection?: {
@@ -66,6 +51,13 @@ export type BranchMapInstance = {
     add: (object: unknown) => void;
     removeAll: () => void;
   };
+  setCenter: (
+    center: [number, number],
+    zoom?: number,
+    options?: { duration?: number },
+  ) => Promise<unknown>;
+  container: { getElement: () => HTMLElement };
+  destroy: () => void;
 };
 
 export type BranchYMapsApi = YMapsApi & {

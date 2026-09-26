@@ -41,7 +41,6 @@ const ContactFields = () => {
       <SectionTitle
         Icon={UserRound}
         title={t("booking_section_contact")}
-        hint={t("booking_section_contact_hint")}
       />
 
       {/* Read-only, same style profile/edit uses for its phone — changing

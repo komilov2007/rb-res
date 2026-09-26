@@ -24,7 +24,7 @@ const AtmospherePhotos = ({ onOpen }: AtmospherePhotosProps) => {
       <span className="mx-auto mb-4 block h-1 w-10 rounded-full bg-gray180" />
 
       <p className="text-sm font-normal leading-6 text-gray220">
-        {t("booking_gallery_description")}
+        {t("atmosphere_description")}
       </p>
 
       <div className="mt-6 flex items-center justify-between">

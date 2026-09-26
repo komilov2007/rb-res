@@ -1,13 +1,9 @@
 "use client";
 
-import { getCartList } from "@/apis/cart";
-import { useCartStore } from "@/stores/cart";
 import type { ProductParameterProps } from "@/types/product";
-import { normalizeCartItems } from "@/utils/cart";
 import { showProductUnavailable } from "@/utils/branch-availability";
 import type { ProductDetailViewContext } from "./createSheetActions";
 import type { createSheetActions } from "./createSheetActions";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export type ProductDetailActionContext = ProductDetailViewContext &
   ReturnType<typeof createSheetActions>;
@@ -19,7 +15,7 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     setCarts,
     customerId,
     setLoginModal,
-    queryClient,
+    refreshCart,
     setSkuState,
     setParameterErrorState,
     requiredParameterRef,
@@ -36,22 +32,8 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     closeDetail,
   } = ctx;
 
-  const refreshCartList = async () => {
-    if (!customerId) return;
-
-    const cartListResponse = await queryClient.fetchQuery({
-      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
-      queryFn: () => getCartList(customerId),
-      staleTime: 0,
-    });
-
-    setCarts(
-      normalizeCartItems(cartListResponse.data, useCartStore.getState().carts),
-    );
-    await queryClient.invalidateQueries({
-      queryKey: [REACT_QUERY_KEYS.CART_LIST, customerId],
-    });
-  };
+  // Shared re-read of the server cart (useRefreshCart).
+  const refreshCartList = refreshCart;
 
   const syncParameterCart = async (nextQuantity: number) => {
     if (!customerId) return;

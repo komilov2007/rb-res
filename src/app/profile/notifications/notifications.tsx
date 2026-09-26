@@ -12,7 +12,7 @@ import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { formatOrderDate } from "@/utils/format-date";
 
-import LoginRequired from "../components/login-required";
+import LoginRequired from "@/components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 

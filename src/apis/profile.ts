@@ -1,16 +1,10 @@
 import { request } from "@/configs/requests";
 import { getUser } from "@/utils/user";
 import type { UserInfo } from "@/types/profile";
-import { isServer } from "@/utils/is-server";
-
-const getShopId = () => {
-  if (isServer()) return;
-
-  return new URLSearchParams(window.location.search).get("shop_id");
-};
+import { getShopIdFromUrl } from "@/utils/is-server";
 
 export const getMe = async () => {
-  const user = getUser(getShopId());
+  const user = getUser(getShopIdFromUrl());
   const customer = user?.customer;
 
   if (!customer) {

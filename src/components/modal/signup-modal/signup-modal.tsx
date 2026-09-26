@@ -13,7 +13,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
 import { signUp } from "@/apis/auth";
-import { setUser } from "@/utils/user";
+import { getUser, setUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getLocalPhone } from "@/utils/format-number";
@@ -53,8 +53,12 @@ const SignupModal = () => {
         shopid as string,
       ),
     onSuccess: (response) => {
-      if (auth) {
-        const nextAuth = { ...auth, firstname: response.data.firstname };
+      // The stored session, not the render-time `auth`: the request may
+      // have refreshed the tokens on its way out.
+      const currentAuth = (shopid && getUser(shopid)?.auth) || auth;
+
+      if (currentAuth) {
+        const nextAuth = { ...currentAuth, firstname: response.data.firstname };
 
         setAuth(nextAuth);
 
@@ -93,7 +97,9 @@ const SignupModal = () => {
       </div>
 
       <label className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-black">{t("first_name")}</span>
+        <span className="text-sm font-medium text-black">
+          {t("first_name")}
+        </span>
         <Input
           autoFocus
           value={firstname}

@@ -27,6 +27,17 @@ export const getCartOriginalTotal = (carts: CartItemProps[]) =>
     0,
   );
 
+// The branch a cart write's stock is checked against: the branch the user
+// selected, when the product is sold there — otherwise the product's first
+// branch (what was always sent before a selection existed).
+export const getCartBranchId = (
+  branches: number[] | undefined,
+  selectedBranchId: number | null,
+) =>
+  selectedBranchId !== null && branches?.includes(selectedBranchId)
+    ? selectedBranchId
+    : branches?.[0];
+
 export const getActiveCartCount = (carts: CartItemProps[]) =>
   getActiveCartLines(carts).reduce((sum, item) => sum + item.quantity, 0);
 

@@ -1,4 +1,5 @@
 ﻿import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { formatPrice } from "@/utils/format-price";
 import type { ProductParameterProps } from "@/types/product";
@@ -24,6 +25,8 @@ const ProductParameter = ({
   variant = "default",
   error = false,
 }: ProductParameterPropsType) => {
+  const t = useTranslations();
+
   if (!parameter.skus?.length) return null;
 
   if (variant === "parameterChip") {
@@ -80,7 +83,7 @@ const ProductParameter = ({
                     {typeof sku.price === "number" && (
                       <span className="mt-auto pt-1 text-xs font-medium leading-4 text-gray220">
                         {pricePrefix}
-                        {formatPrice(sku.price)} UZS
+                        {formatPrice(sku.price)} {t("sum")}
                       </span>
                     )}
                   </span>
@@ -153,7 +156,7 @@ const ProductParameter = ({
               {typeof sku.price === "number" && (
                 <span className="shrink-0 text-sm font-medium leading-5 text-gray200">
                   {pricePrefix}
-                  {formatPrice(sku.price)} UZS
+                  {formatPrice(sku.price)} {t("sum")}
                 </span>
               )}
             </button>

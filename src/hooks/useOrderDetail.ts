@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOrderDetail, proceedToPayment } from "@/apis/order";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useCancelOrder } from "@/hooks/useCancelOrder";
+import { useAuthStore } from "@/stores/auth";
 
 // INFERRED, not independently confirmed against rb-restaurant's own
 // backend behavior — matches the reference's polling cadence. A one-line
@@ -20,9 +21,13 @@ export const useOrderDetail = () => {
   const params = useParams<{ order: string }>();
   const orderId = params.order;
   const queryClient = useQueryClient();
+  const hasAccess = useAuthStore((state) => state.hasAccess);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
 
+  // Guests get the login prompt instead of an unauthenticated request (a
+  // 401 toast over an endless skeleton).
   const detailQuery = useQuery({
-    enabled: Boolean(orderId),
+    enabled: Boolean(orderId) && hasAccess,
     queryKey: [REACT_QUERY_KEYS.ORDER_DETAIL, orderId],
     queryFn: () => getOrderDetail(orderId),
     refetchInterval: POLL_INTERVAL_MS,
@@ -55,7 +60,9 @@ export const useOrderDetail = () => {
   return {
     orderId,
     detail: detailQuery.data?.data,
-    isLoading: detailQuery.isLoading,
+    // Session not read yet counts as loading, not as a guest.
+    isLoading: !isAuthReady || detailQuery.isLoading,
+    mustLogin: isAuthReady && !hasAccess,
     isError: detailQuery.isError,
     cancelOrder,
     isCancelling,

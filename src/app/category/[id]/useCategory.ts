@@ -1,21 +1,20 @@
 "use client";
 
+import { useShopCategories } from "@/hooks/useShopCategories";
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { getCategories } from "@/apis/categories";
 import { useBranchSelection } from "@/components/branch-selection";
-import { productsQueryOptions } from "@/app/[page]/components/products/useProduct";
+import { productsQueryOptions } from "@/app/components/products/useProduct";
 import { useShopId } from "@/hooks/useShopId";
 import type { ProductProps } from "@/types/product";
 import { normalizeCategories } from "@/utils/product";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const useCategory = () => {
   const { id } = useParams<{ id: string }>();
   const categoryId = Number(id);
-  const { shopid, hasShopId } = useShopId();
+  const { shopid } = useShopId();
   const { branchId } = useBranchSelection();
 
   // Same query as the home product list (shared cache). No category filter
@@ -29,11 +28,7 @@ export const useCategory = () => {
     isLoading,
     isError,
   } = useInfiniteQuery(productsQueryOptions(shopid));
-  const { data: categories } = useQuery({
-    enabled: hasShopId,
-    queryKey: [REACT_QUERY_KEYS.CATEGORIES, shopid],
-    queryFn: () => getCategories(shopid as string),
-  });
+  const { data: categories } = useShopCategories();
 
   // Stops on error: hasNextPage stays true after a failed page, so without
   // the isError guard this would refetch it forever.

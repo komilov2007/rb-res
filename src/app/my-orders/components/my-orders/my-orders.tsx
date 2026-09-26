@@ -29,8 +29,7 @@ const OrderCardSkeleton = () => (
 );
 
 // Same structural pattern as cart's EmptyCart (icon-in-circle + heading +
-// hint), but hardcoded Uzbek strings per this project's established
-// order-feature convention rather than cart's i18n one.
+// hint).
 const EmptyOrders = () => {
   const t = useTranslations();
 

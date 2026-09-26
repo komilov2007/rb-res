@@ -131,11 +131,8 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
         <span className="text-xs font-normal tabular-nums text-white/70">
           {pad(activeIndex + 1)} / {pad(total)}
         </span>
-        <h2 className="mt-2 max-w-[300px] font-serif text-[40px] font-medium leading-[0.95]">
-          {t("booking_gallery_title")}
-        </h2>
-        <p className="mt-3 text-sm font-normal leading-6 text-white/75">
-          {t("booking_gallery_description")}
+        <p className="mt-2 text-sm font-normal leading-6 text-white/75">
+          {t("atmosphere_description")}
         </p>
       </div>
 

@@ -81,7 +81,7 @@ const StatusTimeline = ({ status }: StatusTimelineProps) => {
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
                   done
                     ? "bg-primary text-white"
-                    : "border border-gray180 text-gray180"
+                    : "border border-gray180 bg-white text-gray220"
                 }`}
               >
                 <StepIcon size={14} strokeWidth={done ? 2.5 : 2} />

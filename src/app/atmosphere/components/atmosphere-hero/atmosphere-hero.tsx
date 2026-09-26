@@ -40,11 +40,6 @@ const AtmosphereHero = ({ onOpen }: AtmosphereHeroProps) => {
         <Maximize2 size={18} />
       </span>
 
-      <div className="absolute inset-x-5 bottom-12 text-white">
-        <h2 className="max-w-[300px] font-serif text-[40px] font-medium leading-[0.95]">
-          {t("booking_gallery_title")}
-        </h2>
-      </div>
     </button>
   );
 };

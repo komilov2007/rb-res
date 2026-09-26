@@ -90,12 +90,23 @@ body {
   color: var(--black);
 }
 
-body:has(
-    [data-slot="dialog-overlay"],
-    [data-slot="sheet-overlay"]
-  )
+body:has([data-slot="dialog-overlay"], [data-slot="sheet-overlay"])
   [data-mobile-action-widget] {
   display: none;
+}
+
+/* scrollbar-width isn't inherited, and once scrollbar-color is set (it is,
+   on html/body, and that one IS inherited) Chrome ignores the
+   ::-webkit-scrollbar rules below — so inner scrollers in drawers/modals
+   fell back to the thick default bar with arrows. Thin for all of them;
+   :where() keeps specificity at 0 so .scroll-hidden etc. still win. */
+:where(
+    [data-slot="sheet-content"],
+    [data-slot="sheet-content"] *,
+    [data-slot="dialog-content"],
+    [data-slot="dialog-content"] *
+  ) {
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
@@ -446,7 +457,9 @@ a {
  * API-error toast below now does on every repeated failure. Sonner's own
  * vertical slide (untouched) doesn't have either problem.
  */
-[data-sonner-toaster] [data-sonner-toast][data-styled="true"] [data-close-button] {
+[data-sonner-toaster]
+  [data-sonner-toast][data-styled="true"]
+  [data-close-button] {
   top: 8px;
   right: 8px;
   left: unset;
@@ -543,10 +556,89 @@ a {
  */
 .branch-map-picker [class*="balloon__layout"],
 .branch-map-picker [class*="balloon__content"] {
-  max-width: 260px !important;
+  max-width: 280px !important;
+}
+
+/* Frame: rounded card with a soft shadow instead of Yandex's square box. */
+.branch-map-picker ymaps[class*="-balloon "] {
+  padding: 0 !important;
+  border-radius: 16px;
+  box-shadow:
+    0 12px 32px rgb(17 24 39 / 0.14),
+    0 0 0 1px rgb(17 24 39 / 0.04) !important;
+}
+
+.branch-map-picker [class*="balloon__layout"] {
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .branch-map-picker [class*="balloon__content"] {
+  margin-right: 0 !important;
+  padding: 12px 40px 12px 12px !important;
   white-space: normal !important;
   overflow-wrap: anywhere;
+  font-family: var(--font-onest), sans-serif !important;
+}
+
+.branch-map-picker [class*="balloon__tail"] {
+  box-shadow: none !important;
+}
+
+/* Close: small round gray chip, same feel as the app's XButton. */
+.branch-map-picker [class*="balloon__close-button"] {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 9999px;
+  background-color: var(--gray10) !important;
+  background-size: 10px 10px !important;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.branch-map-picker [class*="balloon__close-button"]:hover {
+  opacity: 1;
+}
+
+/* Fixed width: Yandex sizes the balloon from its content, so this is what
+   keeps long addresses wrapping inside it instead of being cut off. */
+.branch-balloon {
+  width: 216px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.branch-balloon__icon {
+  display: grid;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 9999px;
+  background-color: var(--primary10);
+  color: var(--primary);
+}
+
+.branch-balloon__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.branch-balloon__title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--black);
+}
+
+.branch-balloon__address {
+  font-size: 12px;
+  line-height: 16px;
+  color: color-mix(in oklch, var(--gray220) 70%, transparent);
 }

@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import MobileFooter from "@/components/mobile-footer";
 
 import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
+import FloatingCart from "@/components/floating-cart";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import CardProduct from "@/components/card-product";
@@ -116,6 +117,8 @@ const CategoryContent = () => {
       <DesktopView {...category} />
 
       <Footer />
+      {/* Same desktop cart shortcut as on home (PageLayout). */}
+      <FloatingCart />
       <ProductDetailMobile />
       {/* Bottom nav stays visible here too (these pages don't use PageLayout). */}
       <MobileFooter />

@@ -2,26 +2,12 @@ import en from "../../messages/en.json";
 import ru from "../../messages/ru.json";
 import tr from "../../messages/tr.json";
 import uz from "../../messages/uz.json";
-import { defaultLocale, locales, type LocaleProps } from "@/types/i18n";
+import { getLanguage } from "@/utils/is-server";
+import { defaultLocale, type LocaleProps } from "@/types/i18n";
 
 type Messages = Record<string, unknown>;
 
 const MESSAGES: Record<LocaleProps, Messages> = { uz, ru, en, tr };
-
-// Same NEXT_LOCALE cookie the server reads (src/utils/i18n.ts), so this
-// always agrees with the locale next-intl rendered the page in.
-const getClientLocale = (): LocaleProps => {
-  if (typeof document === "undefined") return defaultLocale;
-
-  const value = document.cookie
-    .split("; ")
-    .find((item) => item.startsWith("NEXT_LOCALE="))
-    ?.split("=")[1];
-
-  return value && locales.includes(value as LocaleProps)
-    ? (value as LocaleProps)
-    : defaultLocale;
-};
 
 const lookup = (messages: Messages, key: string) =>
   key
@@ -42,7 +28,9 @@ export const translate = (
   key: string,
   values?: Record<string, string | number>,
 ) => {
-  const locale = getClientLocale();
+  // Same NEXT_LOCALE cookie the server reads (src/utils/i18n.ts), so this
+  // always agrees with the locale next-intl rendered the page in.
+  const locale = getLanguage();
   const message =
     lookup(MESSAGES[locale], key) ?? lookup(MESSAGES[defaultLocale], key);
 

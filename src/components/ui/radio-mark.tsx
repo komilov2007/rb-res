@@ -12,14 +12,27 @@ type RadioMarkProps = {
 // The one look for every radio-style option (row or card) in the app:
 // borderless soft-gray surface, green outline + tint when selected, red
 // outline when the field has an error. Callers add their own layout.
-export const getOptionClassName = (checked: boolean, hasError = false) =>
-  `border transition-colors duration-200 ${
+// "outlined": white card with a gray border instead of the gray surface —
+// the order page's look (same as its payment-method cards).
+export const getOptionClassName = (
+  checked: boolean,
+  hasError = false,
+  appearance: "soft" | "outlined" = "soft",
+) => {
+  const isOutlined = appearance === "outlined";
+
+  return `border transition-colors duration-200 ${
     checked
       ? "border-green-500 bg-green-500/10"
       : hasError
-        ? "border-red bg-gray10/70"
-        : "border-transparent bg-gray10/70 hover:bg-gray10"
+        ? isOutlined
+          ? "border-red bg-white"
+          : "border-red bg-gray10/70"
+        : isOutlined
+          ? "border-gray180 bg-white"
+          : "border-transparent bg-gray10/70 hover:bg-gray10"
   }`;
+};
 
 // Circular selection indicator used by the app's radio-style option lists.
 const RadioMark = ({
