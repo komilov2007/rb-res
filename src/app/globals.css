@@ -95,6 +95,20 @@ body:has([data-slot="dialog-overlay"], [data-slot="sheet-overlay"])
   display: none;
 }
 
+/* scrollbar-width isn't inherited, and once scrollbar-color is set (it is,
+   on html/body, and that one IS inherited) Chrome ignores the
+   ::-webkit-scrollbar rules below — so inner scrollers in drawers/modals
+   fell back to the thick default bar with arrows. Thin for all of them;
+   :where() keeps specificity at 0 so .scroll-hidden etc. still win. */
+:where(
+    [data-slot="sheet-content"],
+    [data-slot="sheet-content"] *,
+    [data-slot="dialog-content"],
+    [data-slot="dialog-content"] *
+  ) {
+  scrollbar-width: thin;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

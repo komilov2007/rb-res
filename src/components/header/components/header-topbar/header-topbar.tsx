@@ -1,6 +1,7 @@
 import { IconPhoneFilled } from "@tabler/icons-react";
 
 import Language from "@/components/language";
+import { OrdersTopbarLink } from "@/components/header/components/orders-preview";
 
 type HeaderTopbarProps = {
   phone?: string | null;
@@ -24,7 +25,10 @@ const HeaderTopbar = ({ phone }: HeaderTopbarProps) => {
           <span />
         )}
 
-        <Language variant="topbar" />
+        <div className="flex items-center gap-5">
+          <OrdersTopbarLink />
+          <Language variant="topbar" />
+        </div>
       </div>
     </div>
   );

@@ -123,14 +123,14 @@ const BranchPickerSheet = ({
                     onClick={() => onSelect(branch.id)}
                     className={`flex w-full items-start gap-3 rounded-2xl p-3 text-left ${
                       !isAvailable
-                        ? "cursor-not-allowed border border-transparent bg-gray10/70 opacity-70"
-                        : getOptionClassName(checked)
+                        ? "cursor-not-allowed border border-gray180 bg-white opacity-70"
+                        : getOptionClassName(checked, false, "outlined")
                     }`}
                   >
                     <span
                       className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full ${
                         isAvailable
-                          ? "bg-white text-gray220"
+                          ? "bg-gray10 text-gray220"
                           : "bg-red/10 text-red"
                       }`}
                     >

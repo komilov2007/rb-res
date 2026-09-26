@@ -1,6 +1,10 @@
 import { DEFAULT_CENTER } from "@/constants/yandex";
 import type { BranchProps } from "@/types/branch";
-import type { Coordinates } from "@/types/yandex";
+import type {
+  BranchMapInstance,
+  BranchYMapsApi,
+  Coordinates,
+} from "@/types/yandex";
 import { getBranchLabel } from "@/utils/address";
 import { buildBranchPinHref } from "@/utils/branch-pin";
 
@@ -32,7 +36,7 @@ const STORE_ICON =
 // Balloon body for a branch pin. Yandex renders it as raw HTML, so the
 // API-supplied name/address are escaped. Styled by the `.branch-balloon`
 // rules in globals.css.
-export const buildBranchBalloonHtml = (branch: BranchProps) =>
+const buildBranchBalloonHtml = (branch: BranchProps) =>
   `<div class="branch-balloon">` +
   `<span class="branch-balloon__icon">${STORE_ICON}</span>` +
   `<span class="branch-balloon__text">` +
@@ -40,12 +44,12 @@ export const buildBranchBalloonHtml = (branch: BranchProps) =>
   `<span class="branch-balloon__address">${escapeHtml(branch.address)}</span>` +
   `</span></div>`;
 
-export const branchCenter =(branch: BranchProps): Coordinates => [
+export const branchCenter = (branch: BranchProps): Coordinates => [
   branch.longitude,
   branch.latitude,
 ];
 
-export const branchesBounds = (
+const branchesBounds = (
   list: BranchProps[],
 ): [Coordinates, Coordinates] | null => {
   if (list.length === 0) return null;
@@ -66,7 +70,7 @@ export const branchesBounds = (
 // Every branch gets the same Store glyph (matching each branch card's own
 // Store icon); the picked/active one is just drawn larger. Glyph/badge
 // building itself is shared — see its own comment.
-export const buildPinHref = (active: boolean) =>
+const buildPinHref = (active: boolean) =>
   buildBranchPinHref("store", active ? 48 : 40);
 
 // Overview of every active branch: fitted bounds for 2+, the single
@@ -85,4 +89,66 @@ export const getDefaultOverview = (
   return only
     ? { center: branchCenter(only), zoom: 13 }
     : { center: DEFAULT_CENTER, zoom: 13 };
+};
+
+type DrawBranchPlacemarksParams = {
+  mapInstance: BranchMapInstance;
+  api: BranchYMapsApi;
+  branches: BranchProps[];
+  activeId: number | null;
+  balloons: boolean;
+  onBranchClick: (branch: BranchProps, index: number) => void;
+};
+
+// Clears the map and adds one pin per branch. Returns the active branch's
+// placemark (if any) so the caller can open its balloon.
+export const drawBranchPlacemarks = ({
+  mapInstance,
+  api,
+  branches,
+  activeId,
+  balloons,
+  onBranchClick,
+}: DrawBranchPlacemarksParams): PlacemarkInstance | null => {
+  mapInstance.geoObjects.removeAll();
+
+  let activePlacemark: PlacemarkInstance | null = null;
+
+  branches.forEach((branch, index) => {
+    const isActivePin = branch.id === activeId;
+    const placemark = new api.Placemark(
+      [branch.longitude, branch.latitude],
+      { balloonContentBody: buildBranchBalloonHtml(branch) },
+      {
+        iconLayout: "default#image",
+        iconImageHref: buildPinHref(isActivePin),
+        iconImageSize: isActivePin ? [48, 48] : [40, 40],
+        iconImageOffset: isActivePin ? [-24, -48] : [-20, -40],
+        // openBalloonOnClick is Yandex's default, so this only has to
+        // turn it OFF where we don't want it.
+        openBalloonOnClick: balloons,
+        // Keep the pin drawn under its own balloon (Yandex hides it by
+        // default), and never let the balloon fall back to the panel
+        // layout that covers the whole map — at the drawer's width that
+        // is the mode it would otherwise pick.
+        hideIconOnBalloonOpen: false,
+        balloonPanelMaxMapArea: 0,
+        // The map is already centred on the pin; auto-panning to fit the
+        // balloon would push the pin back off centre.
+        balloonAutoPan: false,
+        // The balloon anchors on the geometry point, which is the pin's
+        // bottom tip (see iconImageOffset), so by default it opens over
+        // the pin. Lift it by the pin's own height plus a few px of gap
+        // to sit clear above it.
+        balloonOffset: isActivePin ? [0, -56] : [0, -48],
+      },
+    ) as PlacemarkInstance;
+
+    placemark.events.add("click", () => onBranchClick(branch, index));
+    mapInstance.geoObjects.add(placemark);
+
+    if (isActivePin) activePlacemark = placemark;
+  });
+
+  return activePlacemark;
 };

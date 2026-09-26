@@ -70,10 +70,7 @@ const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
               {isVideo && (
                 // bottom-32 clears the shell's floating "Bron qilish" button.
                 <div className="absolute inset-x-5 bottom-32 text-white">
-                  <h2 className="max-w-[300px] font-serif text-[40px] font-medium leading-[0.95]">
-                    {t("booking_gallery_title")}
-                  </h2>
-                  <p className="mt-3 text-sm font-normal leading-6 text-white/75">
+                  <p className="text-sm font-normal leading-6 text-white/75">
                     {t("atmosphere_description")}
                   </p>
                   <ChevronDown

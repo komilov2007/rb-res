@@ -5,7 +5,10 @@ import { useTranslations } from "next-intl";
 
 import { galleryImages } from "@/constants/atmosphere";
 
-import { ATMOSPHERE_VIDEO_SRC, type AtmosphereVariantProps } from "../../constants";
+import {
+  ATMOSPHERE_VIDEO_SRC,
+  type AtmosphereVariantProps,
+} from "../../constants";
 import { pad } from "../../utils";
 import { useScrollScene } from "./useScrollScene";
 
@@ -38,7 +41,6 @@ const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
     frameRefs,
     imageRefs,
   } = useScrollScene();
-  const titleWords = t("booking_gallery_title").split(" ");
   const descriptionWords = t("atmosphere_description").split(" ");
 
   return (
@@ -64,25 +66,17 @@ const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
           <source src={ATMOSPHERE_VIDEO_SRC} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/75" />
-        <div ref={heroShadeRef} className="absolute inset-0 bg-black opacity-0" />
+        <div
+          ref={heroShadeRef}
+          className="absolute inset-0 bg-black opacity-0"
+        />
 
-        <div ref={heroTitleRef} className="absolute inset-x-6 bottom-32 text-white">
-          <h2 className="font-serif text-[46px] font-medium leading-[0.95] tracking-[-0.01em]">
-            {titleWords.map((word, index) => (
-              <span key={`${word}-${index}`} className="inline-block overflow-hidden pb-1 align-bottom">
-                <span
-                  className="inline-block"
-                  style={{
-                    animation: `atmosphere-rise 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) ${150 + index * 140}ms both`,
-                  }}
-                >
-                  {word}&nbsp;
-                </span>
-              </span>
-            ))}
-          </h2>
+        <div
+          ref={heroTitleRef}
+          className="absolute inset-x-6 bottom-32 text-white"
+        >
           <span
-            className="mt-6 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-md"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-md"
             style={{ animation: "atmosphere-fade 1s ease-out 900ms both" }}
           >
             <ChevronDown size={20} className="animate-bounce" />
@@ -91,7 +85,10 @@ const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
       </button>
 
       <div className="relative z-10 -mt-8 rounded-t-[32px] bg-white/10 pb-32 pt-16 backdrop-blur-3xl backdrop-saturate-150">
-        <p ref={paragraphRef} className="px-6 font-serif text-[26px] leading-[1.3]">
+        <p
+          ref={paragraphRef}
+          className="px-6 font-serif text-[26px] leading-[1.3]"
+        >
           {descriptionWords.map((word, index) => (
             <span
               key={`${word}-${index}`}
@@ -142,7 +139,9 @@ const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
               </div>
               <p
                 className={`mt-4 text-[11px] tracking-[0.35em] text-white/60 ${
-                  FRAMES[index % FRAMES.length].startsWith("mx-10") ? "px-10" : "px-6"
+                  FRAMES[index % FRAMES.length].startsWith("mx-10")
+                    ? "px-10"
+                    : "px-6"
                 }`}
               >
                 {pad(index + 1)} / {pad(galleryImages.length)}

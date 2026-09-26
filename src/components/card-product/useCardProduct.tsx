@@ -31,29 +31,15 @@ export const useCardProduct = ({
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
   const [displayQuantity, setDisplayQuantity] = useState<number | null>(null);
   const [isCartSyncing, setIsCartSyncing] = useState(false);
+  // Argument types come straight from the API functions, so the payloads
+  // can't drift from src/apis/cart.ts.
   const stockMutation = useMutation({
-    mutationFn: ({
-      customerId,
-      productId,
-      quantity,
-      data,
-    }: {
-      customerId: number | string;
-      productId: number;
-      quantity: number;
-      data: { branch_id?: string };
-    }) => addNoParameterCart(customerId, productId, quantity, data),
+    mutationFn: (args: Parameters<typeof addNoParameterCart>) =>
+      addNoParameterCart(...args),
   });
   const parameterMutation = useMutation({
-    mutationFn: ({
-      id,
-      quantity,
-      data,
-    }: {
-      id: number;
-      quantity: number;
-      data: { branch_id?: string };
-    }) => updateCartItem(id, quantity, data),
+    mutationFn: (args: Parameters<typeof updateCartItem>) =>
+      updateCartItem(...args),
   });
   const openCartModal = useCartStore((state) => state.openCartModal);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -76,6 +62,7 @@ export const useCardProduct = ({
     : (cartItem?.quantity ?? 0);
   const shownQuantity = displayQuantity ?? quantity;
   const branchId = getCartBranchId(product.branches, selectedBranchId);
+  const branchData = { branch_id: branchId ? String(branchId) : undefined };
 
   const refreshCart = useRefreshCart();
 
@@ -90,14 +77,12 @@ export const useCardProduct = ({
     setIsCartSyncing(true);
 
     try {
-      const response = await stockMutation.mutateAsync({
+      const response = await stockMutation.mutateAsync([
         customerId,
-        productId: product.id,
-        quantity: nextQuantity,
-        data: {
-          branch_id: branchId ? String(branchId) : undefined,
-        },
-      });
+        product.id,
+        nextQuantity,
+        branchData,
+      ]);
 
       await refreshCart();
 
@@ -131,11 +116,7 @@ export const useCardProduct = ({
     setIsCartSyncing(true);
 
     try {
-      await parameterMutation.mutateAsync({
-        id: line.id,
-        quantity: nextQuantity,
-        data: { branch_id: branchId ? String(branchId) : undefined },
-      });
+      await parameterMutation.mutateAsync([line.id, nextQuantity, branchData]);
       await refreshCart();
     } catch {
       // The interceptor already toasted it; re-read the real cart.
@@ -146,11 +127,12 @@ export const useCardProduct = ({
     }
   };
 
-  const handleAddCart = async () => {
-    // Adding to the cart requires login — guests get the login modal
-    // instead, checked before the parameter-product detail so the two never
-    // stack. After login the home page opens the address/branch selection
-    // itself (app/page.tsx) when none is saved yet.
+  // Shared by the "add" button and the counter's "+": adding to the cart
+  // requires login — guests get the login modal instead, checked before the
+  // parameter-product detail so the two never stack. After login the home
+  // page opens the address/branch selection itself (app/page.tsx) when none
+  // is saved yet. Only the first add also puts the product into the store.
+  const addOne = async (isFirstAdd: boolean) => {
     if (!customerId) {
       setLoginModal(true);
       return;
@@ -165,29 +147,14 @@ export const useCardProduct = ({
 
     if (syncedQuantity === null) return;
 
-    addCart(product);
+    if (isFirstAdd) addCart(product);
     setProductQuantity(product.id, syncedQuantity);
     openCounter();
   };
 
-  const handleIncrement = async () => {
-    if (!customerId) {
-      setLoginModal(true);
-      return;
-    }
+  const handleAddCart = () => addOne(true);
 
-    if (product.have_parameter) {
-      openProductDetail(product, saleBadgeVariant, "default");
-      return;
-    }
-
-    const syncedQuantity = await syncStockQuantity(quantity + 1);
-
-    if (syncedQuantity === null) return;
-
-    setProductQuantity(product.id, syncedQuantity);
-    openCounter();
-  };
+  const handleIncrement = () => addOne(false);
 
   const handleDecrement = async () => {
     if (product.have_parameter) {
@@ -221,10 +188,6 @@ export const useCardProduct = ({
     openCounter();
   };
 
-  const handleOpenCounter = () => {
-    openCounter();
-  };
-
   const handleChangeQuantity = async (quantity: number) => {
     if (!customerId) {
       setLoginModal(true);
@@ -255,7 +218,7 @@ export const useCardProduct = ({
     handleAddCart,
     handleIncrement,
     handleDecrement,
-    handleOpenCounter,
+    handleOpenCounter: openCounter,
     handleChangeQuantity,
   };
 };

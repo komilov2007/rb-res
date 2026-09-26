@@ -1,15 +1,5 @@
 import { CARD_HEIGHT_CLASS } from "@/components/card-product/utils";
 
-export const BannerSkeleton = () => {
-  return (
-    <section className="flex w-full items-center justify-center px-4 pb-4">
-      <div className="w-full max-w-7xl">
-        <div className="skeleton h-[150px] rounded-xl sm:h-[190px] lg:h-[300px]" />
-      </div>
-    </section>
-  );
-};
-
 export const CategoriesSkeleton = () => {
   return (
     <section className="mt-3 flex w-full items-center justify-center rounded-b-[20px] bg-white px-4 pb-4 pt-3 lg:mt-0 lg:rounded-b-none lg:pt-3">

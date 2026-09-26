@@ -10,8 +10,7 @@ import type { BranchMapInstance, BranchYMapsApi } from "@/types/yandex";
 
 import {
   branchCenter,
-  buildBranchBalloonHtml,
-  buildPinHref,
+  drawBranchPlacemarks,
   getDefaultOverview,
   type MapViewState,
   type PlacemarkInstance,
@@ -85,48 +84,15 @@ export const useBranchMapPicker = ({
 
       if (!mapInstance || !api) return null;
 
-      mapInstance.geoObjects.removeAll();
-
       // Returned so highlightBranch can open the active pin's balloon.
-      let activePlacemark: PlacemarkInstance | null = null;
-
-      branchesToRender.forEach((branch, index) => {
-        const isActivePin = branch.id === currentActiveId;
-        const placemark = new api.Placemark(
-          [branch.longitude, branch.latitude],
-          { balloonContentBody: buildBranchBalloonHtml(branch) },
-          {
-            iconLayout: "default#image",
-            iconImageHref: buildPinHref(isActivePin),
-            iconImageSize: isActivePin ? [48, 48] : [40, 40],
-            iconImageOffset: isActivePin ? [-24, -48] : [-20, -40],
-            // openBalloonOnClick is Yandex's default, so this only has to
-            // turn it OFF where we don't want it.
-            openBalloonOnClick: balloons,
-            // Keep the pin drawn under its own balloon (Yandex hides it by
-            // default), and never let the balloon fall back to the panel
-            // layout that covers the whole map — at the drawer's width that
-            // is the mode it would otherwise pick.
-            hideIconOnBalloonOpen: false,
-            balloonPanelMaxMapArea: 0,
-            // The map is already centred on the pin; auto-panning to fit the
-            // balloon would push the pin back off centre.
-            balloonAutoPan: false,
-            // The balloon anchors on the geometry point, which is the pin's
-            // bottom tip (see iconImageOffset), so by default it opens over
-            // the pin. Lift it by the pin's own height plus a few px of gap
-            // to sit clear above it.
-            balloonOffset: isActivePin ? [0, -56] : [0, -48],
-          },
-        ) as PlacemarkInstance;
-
-        placemark.events.add("click", () => onBranchClick(branch, index));
-        mapInstance.geoObjects.add(placemark);
-
-        if (isActivePin) activePlacemark = placemark;
+      return drawBranchPlacemarks({
+        mapInstance,
+        api,
+        branches: branchesToRender,
+        activeId: currentActiveId,
+        balloons,
+        onBranchClick,
       });
-
-      return activePlacemark;
     },
     [balloons],
   );

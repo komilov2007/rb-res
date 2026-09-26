@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import type { OrderStatusValue } from "@/types/order";
@@ -13,12 +14,13 @@ const STATUS_LABELS: Record<OrderStatusValue, string> = {
   CANCELED_BY_CUSTOMER: "orders_status_canceled_by_customer",
 };
 
-type BadgeVariant = "success" | "warning" | "danger";
+type BadgeVariant = "success" | "warning" | "info" | "danger";
 
 const STATUS_VARIANT: Record<OrderStatusValue, BadgeVariant> = {
   NEW: "success",
   PROGRESS: "warning",
-  READY: "warning",
+  // Its own colour so "ready" doesn't read like "still preparing".
+  READY: "info",
   ON_THE_WAY: "warning",
   DELIVERED: "success",
   COMPLETED: "success",
@@ -34,6 +36,7 @@ const STATUS_VARIANT: Record<OrderStatusValue, BadgeVariant> = {
 const VARIANT_CLASS_NAMES: Record<BadgeVariant, string> = {
   success: "bg-green-500/10 text-green-500",
   warning: "bg-yellow10 text-yellow",
+  info: "bg-sky-500/10 text-sky-600",
   danger: "bg-red/10 text-red",
 };
 
@@ -41,14 +44,22 @@ type StatusBadgeProps = {
   status: OrderStatusValue;
   size?: "sm" | "md";
   showDot?: boolean;
+  // Optional trailing icon (e.g. a chevron when the badge is a toggle);
+  // takes the badge colour via currentColor.
+  endIcon?: ReactNode;
 };
 
 const SIZE_CLASS_NAMES = {
-  sm: "px-2.5 py-1 text-[11px] font-medium",
+  sm: "gap-1 px-2.5 py-1 text-[11px] font-medium",
   md: "gap-1.5 px-3 py-1.5 text-[13px] font-medium",
 };
 
-const StatusBadge = ({ status, size = "sm", showDot = false }: StatusBadgeProps) => {
+const StatusBadge = ({
+  status,
+  size = "sm",
+  showDot = false,
+  endIcon,
+}: StatusBadgeProps) => {
   const t = useTranslations();
 
   return (
@@ -57,6 +68,7 @@ const StatusBadge = ({ status, size = "sm", showDot = false }: StatusBadgeProps)
     >
       {showDot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
       {STATUS_LABELS[status] ? t(STATUS_LABELS[status]) : status}
+      {endIcon}
     </span>
   );
 };

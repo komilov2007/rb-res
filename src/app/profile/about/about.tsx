@@ -20,71 +20,12 @@ import {
 import { formatTime, getDayIndex } from "@/utils/working-time";
 
 import ProfilePageShell from "../components/profile-page-shell";
-
-const Section = ({
-  id,
-  title,
-  children,
-}: {
-  // Set only where something links straight to a section (the footer's
-  // "Filiallar" jumps to #branches); the rest stay anchorless.
-  id?: string;
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <section
-    id={id}
-    data-about-section={title}
-    className="rounded-2xl border border-gray180 bg-white p-4 lg:rounded-none lg:border-0 lg:border-b lg:px-0 lg:pb-5 lg:pt-3 lg:first-of-type:pt-0 lg:last-of-type:border-b-0 lg:last-of-type:pb-0"
-  >
-    <h2 className="text-sm font-medium text-black">{title}</h2>
-    <div className="mt-3">{children}</div>
-  </section>
-);
-
-// Loading placeholders sized like each section's real rows, so nothing
-// jumps when the data lands.
-const WorkingTimeSkeleton = () => (
-  <ul className="flex flex-col gap-1">
-    {WEEKDAYS.map((day) => (
-      <li
-        key={day}
-        className="flex h-8 items-center justify-between gap-3 px-2"
-      >
-        <span className="skeleton h-3.5 w-20 rounded-full" />
-        <span className="skeleton h-3.5 w-24 rounded-full" />
-      </li>
-    ))}
-  </ul>
-);
-
-const BranchesSkeleton = () => (
-  <ul className="flex flex-col gap-2">
-    {Array.from({ length: 2 }).map((_, index) => (
-      <li key={index} className="flex items-start gap-3 px-1 py-1.5">
-        <span className="skeleton h-9 w-9 shrink-0 rounded-full" />
-        <span className="min-w-0 flex-1">
-          <span className="skeleton block h-4 w-32 rounded-full" />
-          <span className="skeleton mt-1.5 block h-3 w-48 max-w-full rounded-full" />
-        </span>
-      </li>
-    ))}
-  </ul>
-);
-
-const ContactsSkeleton = () => (
-  <div className="flex flex-col gap-3">
-    <div className="flex items-center gap-3">
-      <span className="skeleton h-9 w-9 shrink-0 rounded-full" />
-      <span className="skeleton h-4 w-32 rounded-full" />
-    </div>
-    <div className="flex flex-wrap gap-2">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <span key={index} className="skeleton h-9 w-24 rounded-full" />
-      ))}
-    </div>
-  </div>
-);
+import AboutSection from "./components/about-section";
+import {
+  BranchesSkeleton,
+  ContactsSkeleton,
+  WorkingTimeSkeleton,
+} from "./components/about-skeletons";
 
 // Shop-wide data only — general (working_time, business_phone, socials) and
 // the branch list, both already fetched elsewhere in the app.
@@ -106,7 +47,7 @@ const AboutContent = () => {
 
   return (
     <>
-      <Section title={t("work_time")}>
+      <AboutSection title={t("work_time")}>
         {isGeneralLoading ? (
           <WorkingTimeSkeleton />
         ) : !workingTime ? (
@@ -155,9 +96,9 @@ const AboutContent = () => {
             })}
           </ul>
         )}
-      </Section>
+      </AboutSection>
 
-      <Section id="branches" title={t("profile_page_about_branches")}>
+      <AboutSection id="branches" title={t("profile_page_about_branches")}>
         {isBranchesLoading ? (
           <BranchesSkeleton />
         ) : branches.length === 0 ? (
@@ -193,7 +134,7 @@ const AboutContent = () => {
             ))}
           </ul>
         )}
-      </Section>
+      </AboutSection>
 
       <BranchInfoSheet
         desktop="drawer"
@@ -203,7 +144,7 @@ const AboutContent = () => {
         workingTime={workingTime}
       />
 
-      <Section title={t("profile_page_about_contacts")}>
+      <AboutSection title={t("profile_page_about_contacts")}>
         {isGeneralLoading ? (
           <ContactsSkeleton />
         ) : !phone && socials.length === 0 ? (
@@ -251,7 +192,7 @@ const AboutContent = () => {
             )}
           </div>
         )}
-      </Section>
+      </AboutSection>
     </>
   );
 };

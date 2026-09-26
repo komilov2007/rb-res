@@ -1,7 +1,7 @@
 "use client";
 
 import { type BaseSyntheticEvent, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -11,28 +11,20 @@ import { useShopStatusStore } from "@/stores/shop-status";
 import { useShopId } from "@/hooks/useShopId";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useProfile } from "@/hooks/useProfile";
-import {
-  cancelOrder,
-  createOrder,
-  type CreateOrderPayload,
-  getPaymentToken,
-} from "@/apis/order";
+import { createOrder, type CreateOrderPayload } from "@/apis/order";
 import { isServiceDelivery } from "@/constants/delivery-type";
-import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import type { OrderFormValues } from "@/types/order";
 import { getActiveCartCount } from "@/utils/cart";
 import { getApiErrorMessage } from "@/utils/api-error";
 import { useBranches } from "@/hooks/useBranches";
-import {
-  createTelegramInvoiceLink,
-  openTelegramInvoice,
-} from "@/utils/telegram";
-import { TelegramInvoicePaymentType, isTelegramInvoicePaymentType } from "./constants";
+import { isTelegramInvoicePaymentType } from "./constants";
 import { buildOrderPayload, getOrderItems } from "./buildOrderPayload";
+import { useInvalidateOrderDomains } from "./useInvalidateOrderDomains";
 import { useOrderDelivery } from "./useOrderDelivery";
 import { useOrderForm } from "./useOrderForm";
 import { useOrderResponse } from "./useOrderResponse";
 import { useOrderTotals } from "./useOrderTotals";
+import { useTelegramInvoice } from "./useTelegramInvoice";
 import { useUnavailableItems } from "./useUnavailableItems";
 
 export const usePage = () => {
@@ -46,7 +38,6 @@ export const usePage = () => {
   const openClosedModal = useShopStatusStore((state) => state.openClosedModal);
   const { data: profile } = useProfile();
   const customerId = useAuthStore((state) => state.auth?.customer);
-  const queryClient = useQueryClient();
   const carts = useCartStore((state) => state.carts);
   // Active lines only — the same lines the totals and createOrder use.
   const cartCount = getActiveCartCount(carts);
@@ -59,10 +50,6 @@ export const usePage = () => {
     closeUnavailableModal,
   } = useUnavailableItems();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  // Covers the token-fetch/invoice/openInvoice steps of the Telegram invoice
-  // flow (Group B), which happen before createOrder is ever called, so
-  // createOrderMutation.isPending alone doesn't cover the whole submit.
-  const [isTelegramSubmitting, setIsTelegramSubmitting] = useState(false);
   // The button only disables after a re-render, and onSubmit awaits the
   // general refetch before any mutation is pending — this blocks a second
   // submit (a duplicate order) in that window.
@@ -102,17 +89,7 @@ export const usePage = () => {
     selectedService,
   });
 
-  // What an order changes on the server: the cart (consumed by createOrder,
-  // or restored when an unpaid Telegram-invoice order is cancelled), the
-  // order lists + active-orders badge, and the profile's cashback balance.
-  const invalidateOrderDomains = () => {
-    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.CART_LIST] });
-    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.MY_ORDERS] });
-    queryClient.invalidateQueries({
-      queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT],
-    });
-    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.PROFILE] });
-  };
+  const invalidateOrderDomains = useInvalidateOrderDomains();
 
   const createOrderMutation = useMutation({
     mutationFn: (payload: CreateOrderPayload) => createOrder(payload),
@@ -133,138 +110,18 @@ export const usePage = () => {
   // createOrderMutation's onError already shows the failure (submitError),
   // so a rejected mutateAsync only has to stop the flow here — uncaught it
   // was an unhandled promise rejection.
-  const createAndHandleOrder = async (
-    payload: CreateOrderPayload,
-    values: OrderFormValues,
-  ) => {
-    const response = await createOrderMutation
-      .mutateAsync(payload)
-      .catch(() => null);
+  const createOrderSafely = (payload: CreateOrderPayload) =>
+    createOrderMutation.mutateAsync(payload).catch(() => null);
 
-    if (!response) return;
-
-    handleCreateOrderResponse(response.data, values);
-  };
-
-  // An order created for a Telegram invoice that then wasn't paid is cancelled
-  // again, so no unpaid order is left behind for the restaurant.
-  const cancelUnpaidOrderMutation = useMutation({
-    mutationFn: (orderId: number) => cancelOrder(orderId, shopid as string),
-    // The local cart was already cleared for the consumed lines — refetch
-    // it (and the order lists) so it matches the server again.
-    onSettled: invalidateOrderDomains,
-  });
-
-  // Group B (CLICK / PAYME via a Telegram invoice). Order FIRST, payment
-  // second — same order as the redirect-based online payments: if the order
-  // can't be created (error, unavailable items) the user is never charged.
-  //   createOrder -> token -> Bot API createInvoiceLink (payload = our order)
-  //   -> openInvoice -> paid: finish the order / not paid: cancel it.
-  // There is no backend endpoint to mark an order paid or to refund, so
-  // "paid" is only confirmed by Telegram's invoice status here.
-  const submitViaTelegramInvoice = async (
-    paymentType: TelegramInvoicePaymentType,
-    payload: CreateOrderPayload,
-    values: OrderFormValues,
-  ) => {
-    setIsTelegramSubmitting(true);
-
-    try {
-      // onError already shows the failure (submitError).
-      const response = await createOrderMutation
-        .mutateAsync(payload)
-        .catch(() => null);
-
-      if (!response) return;
-
-      const order = response.data;
-
-      // No order was placed (unavailable items) — nothing to pay for; the
-      // usual unavailable-items modal handles it.
-      if (order.unavailable_products?.length || !order.order) {
-        handleCreateOrderResponse(order, values);
-        return;
-      }
-
-      const cancelUnpaidOrder = async (reason: string) => {
-        try {
-          await cancelUnpaidOrderMutation.mutateAsync(order.order);
-        } catch (error) {
-          // The user wasn't charged, but an unpaid order is left behind —
-          // say so, and keep the details for support.
-          console.error("[order] unpaid Telegram-invoice order not cancelled", {
-            orderId: order.order,
-            paymentType,
-            reason,
-            error,
-          });
-          setSubmitError(
-            t("order_page_errors_unpaid_order_left", { id: order.order }),
-          );
-          return false;
-        }
-
-        return true;
-      };
-
-      let status: Awaited<ReturnType<typeof openTelegramInvoice>>;
-
-      try {
-        const tokenResponse = await getPaymentToken(
-          shopid as string,
-          paymentType,
-        );
-        const { bot_token, payment } = tokenResponse.data;
-
-        const invoice = await createTelegramInvoiceLink(bot_token, {
-          title: t("order_page_invoice_title"),
-          description: t("order_page_invoice_description", {
-            id: order.order,
-            count: cartCount,
-          }),
-          // Ties the Telegram payment to our order (1-128 bytes).
-          payload: JSON.stringify({ order_id: order.order, shop: shopid }),
-          provider_token: payment.token,
-          currency: "UZS",
-          prices: [
-            { label: t("total"), amount: Math.round(displayTotal * 100) },
-          ],
-        });
-
-        if (!invoice.ok || !invoice.result) {
-          if (await cancelUnpaidOrder("invoice link failed")) {
-            setSubmitError(t("order_page_errors_payment_link_failed"));
-          }
-          return;
-        }
-
-        status = await openTelegramInvoice(invoice.result);
-      } catch (error) {
-        if (await cancelUnpaidOrder("invoice step threw")) {
-          setSubmitError(
-            getApiErrorMessage(
-              error,
-              t("order_page_errors_payment_link_failed"),
-            ),
-          );
-        }
-        return;
-      }
-
-      // "pending": Telegram is still processing the payment — the order
-      // stays; its page shows the real status.
-      if (status === "paid" || status === "pending") {
-        handleCreateOrderResponse(order, values);
-        return;
-      }
-
-      if (await cancelUnpaidOrder(`invoice ${status ?? "unavailable"}`)) {
-        setSubmitError(t("order_page_errors_payment_failed"));
-      }
-    } finally {
-      setIsTelegramSubmitting(false);
-    }
-  };
+  // Group B (CLICK / PAYME via a Telegram invoice) — see useTelegramInvoice.
+  const { submitViaTelegramInvoice, isTelegramSubmitting } =
+    useTelegramInvoice({
+      createOrderSafely,
+      handleCreateOrderResponse,
+      setSubmitError,
+      cartCount,
+      displayTotal,
+    });
 
   const submitOrder = async (
     values: OrderFormValues,
@@ -287,13 +144,6 @@ export const usePage = () => {
     // The message itself is shown only in the address section.
     if (isDeliveryOrder && !isAddressDeliverable) return;
 
-    const nearBranch = isDeliveryOrder
-      ? (nearestBranchQuery.data?.data.id ?? null)
-      : values.branch;
-    const service = availableServices.find(
-      (item) => item.type === values.delivery_type,
-    );
-
     const orderItems = getOrderItems(carts);
 
     if (orderItems.length === 0) {
@@ -301,10 +151,15 @@ export const usePage = () => {
       return;
     }
 
+    const service = availableServices.find(
+      (item) => item.type === values.delivery_type,
+    );
     const payload = buildOrderPayload({
       values,
       isDeliveryOrder,
-      nearBranch,
+      nearBranch: isDeliveryOrder
+        ? (nearestBranchQuery.data?.data.id ?? null)
+        : values.branch,
       shopid: shopId,
       customerId: customer,
       orderItems,
@@ -316,7 +171,9 @@ export const usePage = () => {
       return;
     }
 
-    await createAndHandleOrder(payload, values);
+    const response = await createOrderSafely(payload);
+
+    if (response) handleCreateOrderResponse(response.data, values);
   };
 
   const submitValues = async (values: OrderFormValues) => {

@@ -2,7 +2,7 @@ import { refreshToken } from "@/apis/refresh-token";
 import { clearUser, getUser } from "@/utils/user";
 import { useAuthStore } from "@/stores/auth";
 import { getApiErrorMessage } from "@/utils/api-error";
-import { getLanguage, isServer } from "@/utils/is-server";
+import { getLanguage, getShopIdFromUrl, isServer } from "@/utils/is-server";
 import axios, { type AxiosError, type AxiosHeaders } from "axios";
 import { toast } from "sonner";
 
@@ -24,14 +24,8 @@ const isPublicEndpoint = (url?: string) => {
   return publicEndpoints.some((endpoint) => url.startsWith(endpoint));
 };
 
-const getShopId = () => {
-  if (isServer()) return;
-
-  return new URLSearchParams(window.location.search).get("shop_id");
-};
-
 const logoutByInvalidToken = () => {
-  const shopId = getShopId();
+  const shopId = getShopIdFromUrl();
 
   clearUser(shopId);
   useAuthStore.getState().logout();
@@ -44,7 +38,7 @@ export const request = axios.create({
 request.interceptors.request.use(async (config) => {
   if (!isServer()) {
     const headers = config.headers as AxiosHeaders;
-    const shopId = getShopId();
+    const shopId = getShopIdFromUrl();
     const user = getUser(shopId);
 
     if (!headers.has("Accept-Language")) {

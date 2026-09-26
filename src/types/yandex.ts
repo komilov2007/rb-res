@@ -10,21 +10,6 @@ export type BoundsChangeEvent = {
   get?: (key: string) => unknown;
 };
 
-export type GeocodeResponse = {
-  geoObjects?: {
-    get: (index: number) =>
-      | {
-          properties?: {
-            get: (key: string) => unknown;
-          };
-          geometry?: {
-            getCoordinates: () => Coordinates;
-          };
-        }
-      | undefined;
-  };
-};
-
 export type YandexGeocoderResponse = {
   response?: {
     GeoObjectCollection?: {

@@ -69,7 +69,7 @@ const DeliveryType = ({
                       key={service.id}
                       type="button"
                       onClick={() => field.onChange(service.type)}
-                      className={`flex min-h-16 w-full items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-left ${getOptionClassName(checked)}`}
+                      className={`flex min-h-16 w-full items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-left ${getOptionClassName(checked, false, "outlined")}`}
                     >
                       <span className="min-w-0">
                         <span className="info-label block">

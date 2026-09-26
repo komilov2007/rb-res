@@ -15,7 +15,8 @@ import { useOpenBooking } from "@/hooks/useOpenBooking";
 
 import Breadcrumb from "@/components/breadcrumb";
 
-import AtmosphereDesktop from "./components/atmosphere-desktop";
+// TEMPORARY — desktop layout preview; back to AtmosphereDesktop once picked.
+import AtmosphereDesktopPreview from "./components/atmosphere-desktop-preview";
 import AtmosphereFour from "./components/atmosphere-four";
 import AtmosphereOne from "./components/atmosphere-one";
 import AtmosphereThree from "./components/atmosphere-three";
@@ -107,8 +108,11 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
           and below, content aligned to the header's max-w-7xl container. */}
       <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white lg:flex lg:flex-auto lg:flex-col lg:overflow-visible lg:bg-gray10">
         {isDesktop ? (
-          <section className="my-2 flex flex-1 flex-col overflow-hidden rounded-[30px] bg-white">
-            <AtmosphereDesktop onOpen={setViewerIndex} onBook={goToBooking} />
+          <section className="my-2 flex flex-1 flex-col overflow-clip rounded-[30px] bg-white">
+            <AtmosphereDesktopPreview
+              onOpen={setViewerIndex}
+              onBook={goToBooking}
+            />
           </section>
         ) : (
           <MobileVariant onOpen={setViewerIndex} />
