@@ -18,3 +18,19 @@ export const galleryImages = [
     src: "https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1000&q=80",
   },
 ];
+
+// /atmosphere "Menyu" column — dish photos, shown beside the gallery.
+export const menuImages = [
+  {
+    src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=80",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1000&q=80",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1000&q=80",
+  },
+];

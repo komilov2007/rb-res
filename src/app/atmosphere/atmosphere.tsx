@@ -15,7 +15,7 @@ import { useOpenBooking } from "@/hooks/useOpenBooking";
 
 import Breadcrumb from "@/components/breadcrumb";
 
-// TEMPORARY — desktop layout preview; back to AtmosphereDesktop once picked.
+// TEMPORARY — desktop photo-count preview; back to AtmosphereDesktop once approved.
 import AtmosphereDesktopPreview from "./components/atmosphere-desktop-preview";
 import AtmosphereFour from "./components/atmosphere-four";
 import AtmosphereOne from "./components/atmosphere-one";

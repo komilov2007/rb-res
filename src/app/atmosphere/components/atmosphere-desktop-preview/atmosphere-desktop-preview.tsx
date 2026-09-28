@@ -7,27 +7,15 @@ import {
   ATMOSPHERE_PREVIEW_VARIANTS,
   useAtmospherePreviewStore,
 } from "./store";
-import {
-  Chapters,
-  CinemaHero,
-  Editorial,
-  StickySplit,
-  type DesktopVariantProps,
-} from "./variants";
 
-// TEMPORARY — renders the picked desktop layout (0 = current
-// AtmosphereDesktop) plus a bottom-centre switcher.
-// Keyed by the variant ids in ATMOSPHERE_PREVIEW_VARIANTS.
-const VARIANTS: Record<
-  number,
-  (props: DesktopVariantProps) => React.ReactNode
-> = {
-  0: AtmosphereDesktop,
-  1: StickySplit,
-  2: CinemaHero,
-  4: Editorial,
-  5: Chapters,
+import type { AtmosphereVariantProps } from "../../constants";
+
+type AtmosphereDesktopPreviewProps = AtmosphereVariantProps & {
+  onBook: () => void;
 };
+
+// TEMPORARY — renders AtmosphereDesktop with the picked photo count per
+// column, plus a bottom-centre switcher.
 
 // Bottom-centre bar (the orders preview panel already owns the left edge);
 // collapses to one small button.
@@ -45,7 +33,7 @@ const Switcher = () => {
         className="flex h-9 items-center gap-1.5 rounded-xl px-3 text-sm text-gray220 hover:bg-gray10"
       >
         <LayoutGrid size={16} />
-        {!panelOpen && `Atmosfera: ${variant}`}
+        {!panelOpen && `Rasmlar: ${variant || "hammasi"}`}
         <ChevronDown
           size={14}
           className={`transition-transform ${panelOpen ? "-rotate-90" : "rotate-90"}`}
@@ -82,13 +70,12 @@ const Switcher = () => {
   );
 };
 
-const AtmosphereDesktopPreview = (props: DesktopVariantProps) => {
+const AtmosphereDesktopPreview = (props: AtmosphereDesktopPreviewProps) => {
   const variant = useAtmospherePreviewStore((state) => state.variant);
-  const Variant = VARIANTS[variant] ?? AtmosphereDesktop;
 
   return (
     <>
-      <Variant {...props} />
+      <AtmosphereDesktop {...props} photoCount={variant || undefined} />
       <Switcher />
     </>
   );

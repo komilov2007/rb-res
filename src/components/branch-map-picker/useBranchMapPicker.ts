@@ -1,20 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Swiper as SwiperClass } from "swiper";
 
 import { useBoolean } from "@/hooks/useBoolean";
 import { DEFAULT_CENTER } from "@/constants/yandex";
 import type { BranchProps } from "@/types/branch";
-import type { BranchMapInstance, BranchYMapsApi } from "@/types/yandex";
 
-import {
-  branchCenter,
-  drawBranchPlacemarks,
-  getDefaultOverview,
-  type MapViewState,
-  type PlacemarkInstance,
-} from "./utils";
+import { useBranchMapInstance, useRedrawBranchPins } from "./useBranchMap";
+import { branchCenter, getDefaultOverview, type MapViewState } from "./utils";
 
 type UseBranchMapPickerProps = {
   branches?: BranchProps[];
@@ -43,9 +37,6 @@ export const useBranchMapPicker = ({
 }: UseBranchMapPickerProps) => {
   const list = useBoolean();
   const swiperRef = useRef<SwiperClass | null>(null);
-  const mapInstanceRef = useRef<BranchMapInstance | null>(null);
-  const mapApiRef = useRef<BranchYMapsApi | null>(null);
-  const lastMapInstanceRef = useRef<BranchMapInstance | null>(null);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [mapState, setMapState] = useState<MapViewState>({
     center: DEFAULT_CENTER,
@@ -63,39 +54,10 @@ export const useBranchMapPicker = ({
     [branches],
   );
 
-  // Placemarks are added imperatively (geoObjects.add), the same pattern
-  // src/app/[page]/components/header/header.tsx's renderBranchPlacemark
-  // already uses for the single-branch desktop dialog — not react-yandex-
-  // maps' declarative <Placemark> children, which rebuilds every marker on
-  // any unrelated re-render (the children array reference changes) and,
-  // combined with React Strict Mode's dev-mode double-invoke, can corrupt
-  // the icon. Managing add/remove explicitly here sidesteps both.
-  // Takes the click handler as a parameter (rather than closing over
-  // selectBranch directly) so this can be defined before selectBranch
-  // without a circular reference between the two.
-  const renderPlacemarks = useCallback(
-    (
-      branchesToRender: BranchProps[],
-      currentActiveId: number | null,
-      onBranchClick: (branch: BranchProps, index: number) => void,
-    ): PlacemarkInstance | null => {
-      const mapInstance = mapInstanceRef.current;
-      const api = mapApiRef.current;
-
-      if (!mapInstance || !api) return null;
-
-      // Returned so highlightBranch can open the active pin's balloon.
-      return drawBranchPlacemarks({
-        mapInstance,
-        api,
-        branches: branchesToRender,
-        activeId: currentActiveId,
-        balloons,
-        onBranchClick,
-      });
-    },
-    [balloons],
-  );
+  // Map api/instance refs, pin drawing and the <Map> handlers. Pins are
+  // drawn once the map is ready (see handleMapReady below).
+  const { mapInstanceRef, renderPlacemarks, handleMapLoad, handleMapInstance } =
+    useBranchMapInstance({ balloons, onReady: () => handleMapReady() });
 
   const openList = () => list.setTrue();
   const closeList = () => list.setFalse();
@@ -209,75 +171,18 @@ export const useBranchMapPicker = ({
     onClose();
   };
 
-  // Called from both <Map>'s onLoad (api becomes available) and
-  // instanceRef (map instance becomes available) — matching
-  // branch-dialog.tsx's exact dual-call-site pattern, since either one can
-  // resolve first.
   const handleMapReady = () => {
     renderPlacemarks(activeBranches, activeId, selectBranch);
   };
 
-  // renderPlacemarks only ever runs from the map's own onLoad/instanceRef
-  // and from an explicit pin tap / card swipe. When the branch list resolves
-  // *after* the map instance already did — the usual async order — none of
-  // those fire, so the map keeps whatever pin set existed at load time
-  // (often none). This re-runs it whenever the set itself changes.
-  // activeId is read through a ref rather than being a dependency: the
-  // highlight is already redrawn synchronously by highlightBranch and
-  // handleSlideChange, so depending on it here would rebuild every pin twice
-  // per selection on mobile.
-  const latestRef = useRef({ activeId, selectBranch });
-
-  // Written in an effect, not during render — the React Compiler lint rule
-  // forbids touching a ref while rendering. Declared before the effect below
-  // so it has committed the fresh values by the time that one runs.
-  useEffect(() => {
-    latestRef.current = { activeId, selectBranch };
+  useRedrawBranchPins({
+    open,
+    activeBranches,
+    activeId,
+    selectBranch,
+    renderPlacemarks,
+    showOverview: () => setMapState(getDefaultOverview(activeBranches)),
   });
-
-  useEffect(() => {
-    if (!open) return;
-
-    const { activeId: currentId, selectBranch: onPinClick } = latestRef.current;
-
-    // Same reason the open-transition block above fits the bounds: without
-    // this the pins appear but the view is still on DEFAULT_CENTER, leaving
-    // several branches off-screen — which reads as the very same bug.
-    // Guarded on "nothing highlighted yet" so it never yanks the view away
-    // from a branch the user already picked.
-    if (currentId === null && activeBranches.length > 0) {
-      setMapState(getDefaultOverview(activeBranches));
-    }
-
-    renderPlacemarks(activeBranches, currentId, (branch) => onPinClick(branch));
-  }, [open, activeBranches, renderPlacemarks]);
-
-  const handleMapLoad = (api: unknown) => {
-    mapApiRef.current = api as BranchYMapsApi;
-    handleMapReady();
-  };
-
-  const handleMapInstance = (instance: unknown) => {
-    const next = (instance as BranchMapInstance | null) ?? null;
-    mapInstanceRef.current = next;
-
-    // This handler is a new function every render, so react-yandex-maps
-    // re-calls it (null, then the SAME map) on every re-render. Redrawing the
-    // pins then would destroy a balloon highlightBranch just opened, so only
-    // a genuinely new map instance gets its pins drawn here.
-    if (!next || next === lastMapInstanceRef.current) return;
-
-    // Strict Mode's dev double-mount leaves the first map react-yandex-maps
-    // built still in the DOM, stacked on top of the live one — so every pan
-    // and balloon went to a map hidden under it. Destroy a previous map that
-    // is still attached; a normally unmounted one is already detached.
-    const previous = lastMapInstanceRef.current;
-
-    if (previous?.container.getElement().isConnected) previous.destroy();
-
-    lastMapInstanceRef.current = next;
-    handleMapReady();
-  };
 
   return {
     list,

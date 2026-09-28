@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useGeneral } from "@/hooks/useGeneral";
+import { useShopCategories } from "@/hooks/useShopCategories";
 import { IconClockFilled, IconPhoneFilled } from "@tabler/icons-react";
 
 import { ROUTER } from "@/constants/router";
@@ -12,6 +13,7 @@ import {
   getSocialIcon,
   getSocialStyle,
 } from "@/utils/socials";
+import { normalizeCategories } from "@/utils/product";
 import { formatTime, getDayIndex } from "@/utils/working-time";
 import { useTranslations } from "next-intl";
 
@@ -22,13 +24,20 @@ const LINK_CLASS_NAME =
 const LINK_TEXT_CLASS_NAME =
   "flex items-center gap-1 text-gray220 transition-colors group-hover:text-primary";
 
-// Desktop-only (mobile has the bottom nav instead). Two rows: brand, links
-// and contacts on top; a centred credit line under a divider — centred so
-// the fixed Hand action button in the bottom-right corner never covers it.
+// The footer shows at most this many categories, then an "all categories" link.
+const CATEGORIES_LIMIT = 8;
+
+// Desktop-only (mobile has the bottom nav instead). Two rows: brand (with
+// the about/branches links), categories and contacts on top; a centred
+// credit line under a divider — centred so the fixed Hand action button in
+// the bottom-right corner never covers it.
 const Footer = () => {
   const t = useTranslations();
   const { data } = useGeneral();
   const { shopid } = useShopId();
+  // Same shared categories query as the home strip and the catalog.
+  const { data: categoriesData } = useShopCategories();
+  const categories = normalizeCategories(categoriesData?.data);
   const general = data?.data;
   const socials = general?.socials ?? [];
   const shopQuery = shopid ? `?shop_id=${shopid}` : "";
@@ -78,19 +87,43 @@ const Footer = () => {
                   {t("location_branch_picker_schedule")}: {todayHours}
                 </p>
               )}
+              <nav className="mt-2 flex items-center gap-x-4">
+                <Link className={LINK_CLASS_NAME} href={aboutHref}>
+                  <span className={LINK_TEXT_CLASS_NAME}>{t("about_us")}</span>
+                </Link>
+                <span className="h-3 w-px bg-gray180" />
+                <Link className={LINK_CLASS_NAME} href={branchesHref}>
+                  <span className={LINK_TEXT_CLASS_NAME}>
+                    {t("store_branches")}
+                  </span>
+                </Link>
+              </nav>
             </div>
           </div>
 
-          <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2">
-            <Link className={LINK_CLASS_NAME} href={aboutHref}>
-              <span className={LINK_TEXT_CLASS_NAME}>{t("about_us")}</span>
-            </Link>
-            <Link className={LINK_CLASS_NAME} href={branchesHref}>
-              <span className={LINK_TEXT_CLASS_NAME}>
-                {t("store_branches")}
-              </span>
-            </Link>
-          </nav>
+          {categories.length > 0 && (
+            <nav className="flex min-w-0 max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {categories.slice(0, CATEGORIES_LIMIT).map((category) => (
+                <Link
+                  key={category.id}
+                  className={LINK_CLASS_NAME}
+                  href={`${ROUTER.CATEGORY}/${category.id}${shopQuery}`}
+                >
+                  <span className={LINK_TEXT_CLASS_NAME}>{category.name}</span>
+                </Link>
+              ))}
+              {categories.length > CATEGORIES_LIMIT && (
+                <Link
+                  className={LINK_CLASS_NAME}
+                  href={`${ROUTER.CATEGORIES}${shopQuery}`}
+                >
+                  <span className="text-primary transition-opacity group-hover:opacity-75">
+                    {t("catalog_all_categories")}
+                  </span>
+                </Link>
+              )}
+            </nav>
+          )}
 
           <div className="flex shrink-0 flex-col items-end gap-3">
             {general?.business_phone && (

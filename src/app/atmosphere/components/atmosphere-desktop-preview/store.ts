@@ -1,13 +1,15 @@
 import { create } from "zustand";
 
-// TEMPORARY — desktop /atmosphere layout preview. Delete this whole folder
-// (and its usage in atmosphere.tsx) once a variant is chosen.
+// TEMPORARY — desktop /atmosphere photo-count preview: how each column
+// ("Menyu", "Galereya") looks with 1, 2, 3 or 4 photos. Delete this whole
+// folder (and its usage in atmosphere.tsx) once the layouts are approved.
+// 0 = every photo the column has.
 export const ATMOSPHERE_PREVIEW_VARIANTS = [
-  { id: 0, label: "Hozirgi (bento)" },
-  { id: 1, label: "Sticky matn + lenta" },
-  { id: 2, label: "Kino hero + filmstrip" },
-  { id: 4, label: "Jurnal (zigzag)" },
-  { id: 5, label: "Boblar (Dishoom) — tavsiya" },
+  { id: 0, label: "Hammasi" },
+  { id: 1, label: "1 ta rasm" },
+  { id: 2, label: "2 ta rasm" },
+  { id: 3, label: "3 ta rasm" },
+  { id: 4, label: "4 ta rasm" },
 ] as const;
 
 type AtmospherePreviewState = {
