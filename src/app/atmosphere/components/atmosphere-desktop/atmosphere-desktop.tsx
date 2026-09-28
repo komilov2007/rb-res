@@ -13,22 +13,27 @@ import {
   type AtmosphereVariantProps,
 } from "../../constants";
 
-// A column shows at most four tiles; the fourth then carries a "+N" chip.
+// A section shows at most four tiles; the fourth then carries a "+N" chip.
 const MAX_TILES = 4;
 
-// Tile layout by how many photos the column has (the column height is
-// fixed, so "Menyu" and "Galereya" always line up side by side):
-// 1 — one full tile · 2 — two tall halves · 3 — a tall one + two stacked ·
-// 4+ — a 2×2 grid.
+// Tile layout by how many photos the section has, on a full-width 4-column
+// grid of fixed height ("Menyu" and "Galereya" are stacked one under the
+// other): 1 — one wide tile · 2 — two halves · 3 — a large tile + two wide
+// ones stacked · 4+ — a large tile + one wide + two small (bento).
 const GRID_CLASS_NAMES: Record<number, string> = {
   1: "grid-cols-1 grid-rows-1",
   2: "grid-cols-2 grid-rows-1",
-  3: "grid-cols-2 grid-rows-2",
-  4: "grid-cols-2 grid-rows-2",
+  3: "grid-cols-4 grid-rows-2",
+  4: "grid-cols-4 grid-rows-2",
+};
+
+const TILE_CLASS_NAMES: Record<number, string[]> = {
+  3: ["col-span-2 row-span-2", "col-span-2", "col-span-2"],
+  4: ["col-span-2 row-span-2", "col-span-2", "", ""],
 };
 
 const getTileClassName = (count: number, index: number) =>
-  count === 3 && index === 0 ? "row-span-2" : "";
+  TILE_CLASS_NAMES[count]?.[index] ?? "";
 
 type PhotoColumnProps = {
   title: string;
@@ -52,18 +57,18 @@ const PhotoColumn = ({
 
   return (
     <div className="min-w-0">
-      <div className="mb-4 flex items-end justify-between">
+      <div className="mb-5 flex items-center justify-between">
         <h2 className="flex items-center gap-2.5 text-2xl font-medium text-black">
           {icon}
           {title}
         </h2>
-        <span className="text-sm font-normal text-gray220">
+        <span className="rounded-full bg-gray10 px-3 py-1 text-sm font-normal text-gray220">
           {images.length}
         </span>
       </div>
 
       <div
-        className={`grid h-[460px] gap-4 ${GRID_CLASS_NAMES[tiles.length] ?? GRID_CLASS_NAMES[MAX_TILES]}`}
+        className={`grid h-[440px] gap-4 ${GRID_CLASS_NAMES[tiles.length] ?? GRID_CLASS_NAMES[MAX_TILES]}`}
       >
         {tiles.map((image, index) => {
           const isLast = index === tiles.length - 1;
@@ -82,7 +87,7 @@ const PhotoColumn = ({
               />
               <span className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/15" />
               {isLast && hidden > 0 && (
-                <span className="absolute inset-0 grid place-items-center bg-black/45 text-2xl font-medium text-white">
+                <span className="absolute inset-0 grid place-items-center bg-black/50 text-3xl font-medium text-white backdrop-blur-[2px]">
                   +{hidden}
                 </span>
               )}
@@ -151,7 +156,7 @@ const AtmosphereDesktop = ({
         </div>
       </section>
 
-      <section className="grid grid-cols-2 gap-8">
+      <section className="flex flex-col gap-12">
         <PhotoColumn
           title={t("atmosphere_menu_title")}
           icon={<IconToolsKitchen2Filled size={24} className="text-primary" />}
