@@ -179,7 +179,7 @@ const Footer = () => {
               rel="noreferrer"
               className="font-medium transition-opacity hover:opacity-75"
             >
-              <span className="text-primary">Robosell.uz</span>
+              <span className="text-robosell">Robosell.uz</span>
             </a>
             {` ${t("powered_by")}`}
           </p>

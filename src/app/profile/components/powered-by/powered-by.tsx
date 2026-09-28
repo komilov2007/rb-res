@@ -16,7 +16,7 @@ const PoweredBy = ({ className }: { className: string }) => {
             href="https://robosell.uz/"
             target="_blank"
             rel="noopener noreferrer"
-            className="!text-primary"
+            className="!text-robosell"
           >
             {chunks}
           </a>

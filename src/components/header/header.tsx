@@ -7,6 +7,7 @@ import Logo from "@/components/logo";
 import Button from "@/components/ui/button";
 import Location from "@/components/location";
 import { HeaderSearch, HeaderTopbar } from "./components";
+import ThemeSwitcher from "@/components/theme-switcher";
 import { OrdersFloatingExtras } from "./components/orders-preview";
 import { useHeader } from "./useHeader";
 
@@ -105,6 +106,7 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
         </div>
       </header>
       <OrdersFloatingExtras />
+      <ThemeSwitcher />
     </>
   );
 };

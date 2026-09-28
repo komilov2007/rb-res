@@ -14,7 +14,14 @@
 // rest, "store" for the picked one), src/components/branch-info-sheet's own
 // read-only single-branch map (always "store"), and delivery-route-sheet
 // ("store" for the branch, "customer" for the delivery address).
-const PRIMARY_PIN_COLOR = "oklch(0.56 0.196 283.44)";
+// The live --primary (it can be switched at runtime, see ThemeSync); the
+// default value is the SSR/first-paint fallback.
+const getPrimaryPinColor = () =>
+  (typeof document !== "undefined" &&
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--primary")
+      .trim()) ||
+  "oklch(0.56 0.196 283.44)";
 
 const MAP_PIN_GLYPH = `
   <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
@@ -45,8 +52,9 @@ export const buildBranchPinHref = (
   size = 40,
 ) => {
   const isCustomer = variant === "customer";
-  const fill = isCustomer ? "#ffffff" : PRIMARY_PIN_COLOR;
-  const accent = isCustomer ? PRIMARY_PIN_COLOR : "#ffffff";
+  const primary = getPrimaryPinColor();
+  const fill = isCustomer ? "#ffffff" : primary;
+  const accent = isCustomer ? primary : "#ffffff";
   // A soft drop shadow (feDropShadow, not a CSS filter — this has to survive
   // being baked into the data URI itself) is what turns a flat colored
   // circle into something that reads as sitting "above" the map instead of
