@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import Script from "next/script";
 import { Toaster } from "sonner";
@@ -27,6 +28,9 @@ type ProviderProps = ChildrenProps & {
 
 export const Provider = async ({ locale, children }: ProviderProps) => {
   const messages = await getMessages(locale);
+  // Click's superapp webview attaches this header on every request it makes;
+  // read it server-side and hand it down for ClickProvider's auto-login.
+  const clickToken = (await headers()).get("web-session");
 
   return (
     <html lang={locale} className={cn(onest.variable, onest.className)}>
@@ -38,7 +42,7 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReactQuery>
             <Suspense>
-              <GeneralProvider>
+              <GeneralProvider clickToken={clickToken}>
                 <AuthProvider>
                   <CartProvider>
                     <ProfileProvider>
