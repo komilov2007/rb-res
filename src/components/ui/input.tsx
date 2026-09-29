@@ -1,42 +1,53 @@
-import type { ComponentType, InputHTMLAttributes } from "react";
+import type { ComponentType, InputHTMLAttributes, ReactNode } from "react";
 import { X } from "lucide-react";
+import Button from "./button";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   IconStart?: ComponentType<{ size?: number; className?: string }>;
   IconEnd?: ComponentType;
+  startContent?: ReactNode;
+  endContent?: ReactNode;
   clearable?: boolean;
   onClear?: () => void;
+  wrapperClassName?: string;
 };
 
 const Input = ({
   IconStart,
   IconEnd,
+  startContent,
+  endContent,
   clearable,
   onClear,
   className = "",
+  wrapperClassName = "",
   value,
   ...props
 }: InputProps) => {
   const hasValue = String(value ?? "").length > 0;
 
   return (
-    <div className="flex h-11 w-full items-center gap-3 rounded-lg border border-gray180 bg-white px-4">
+    <div
+      className={`flex h-14 w-full items-center gap-3 rounded-2xl border border-transparent bg-[#F6F7F9] px-5 transition-colors duration-200 hover:border-gray180 focus-within:border-orange-200 focus-within:bg-white ${wrapperClassName}`}
+    >
       {IconStart && <IconStart size={20} className="shrink-0 text-gray220" />}
+      {startContent}
       <input
         value={value}
-        className={`w-full bg-transparent text-sm text-gray220 outline-none placeholder:text-gray220 ${className}`}
+        // text-base (16px), not text-sm: iOS Safari auto-zooms the whole
+        // page on focus for any text input under 16px — this is the shared
+        // Input every text field in the app renders through, so fixing it
+        // here covers phone/promo/address/search/etc. in one place.
+        className={`w-full bg-transparent text-base text-gray220 outline-none placeholder:text-gray220 ${className}`}
         {...props}
       />
       {clearable && hasValue && (
-        <button
-          type="button"
-          onClick={onClear}
-          className="grid h-[22px] w-[22px] shrink-0 place-items-center rounded-full bg-gray10 text-gray220 transition-colors duration-200 hover:bg-gray180 hover:text-black"
-        >
+        <Button variant="clear" size="clear" onClick={onClear}>
           <X size={14} strokeWidth={2.4} />
-        </button>
+        </Button>
       )}
       {IconEnd && <IconEnd />}
+      {endContent}
     </div>
   );
 };

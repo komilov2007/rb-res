@@ -1,0 +1,172 @@
+"use client";
+
+import { type FormEvent, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import { signUp } from "@/apis/auth";
+import { ROUTER } from "@/constants/router";
+import { getUser, setUser } from "@/utils/user";
+import { useShopId } from "@/hooks/useShopId";
+import { useAuthStore } from "@/stores/auth";
+import type { UserInfo } from "@/types/profile";
+import { getApiErrorMessage } from "@/utils/api-error";
+import { formatPhone, getLocalPhone } from "@/utils/format-number";
+
+import LoginRequired from "@/components/login-required";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+
+// Shared by /profile/edit (its own page) and the bare /profile route's
+// desktop content pane (shown there by default instead of a placeholder) —
+// same name/phone form and mutation logic in both places.
+const EditProfileForm = () => {
+  const t = useTranslations();
+  const router = useRouter();
+  const { shopid } = useShopId();
+  const queryClient = useQueryClient();
+  const auth = useAuthStore((state) => state.auth);
+  const hasAccess = useAuthStore((state) => state.hasAccess);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  // null = untouched: shows the stored name, which only arrives after
+  // AuthProvider reads the session (a plain useState(auth?.firstname) init
+  // stayed empty on a direct page load).
+  const [draftFirstname, setFirstname] = useState<string | null>(null);
+  const firstname = draftFirstname ?? auth?.firstname ?? "";
+  const [error, setError] = useState<string | null>(null);
+
+  const goBackToProfile = () =>
+    router.push(`${ROUTER.PROFILE}${shopid ? `?shop_id=${shopid}` : ""}`);
+
+  const update = useMutation({
+    mutationFn: () =>
+      signUp(
+        { firstname: firstname.trim(), phone: getLocalPhone(auth?.phone) },
+        shopid as string,
+      ),
+    onSuccess: (response) => {
+      // The stored session, not the render-time `auth`: the request may
+      // have refreshed the tokens on its way out.
+      const currentAuth = (shopid && getUser(shopid)?.auth) || auth;
+
+      if (currentAuth) {
+        const nextAuth = { ...currentAuth, firstname: response.data.firstname };
+
+        setAuth(nextAuth);
+
+        if (shopid) setUser(shopid, nextAuth);
+      }
+
+      // The profile page displays useProfile()'s query cache, not the auth
+      // store — patch it directly so the new name shows immediately instead
+      // of waiting on the invalidated query's refetch to land.
+      queryClient.setQueryData<{ data: UserInfo } | undefined>(
+        [REACT_QUERY_KEYS.PROFILE, auth?.customer],
+        (previous) =>
+          previous && {
+            ...previous,
+            data: { ...previous.data, firstname: response.data.firstname },
+          },
+      );
+
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.GENERAL, shopid],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.PROFILE],
+      });
+      toast.success(t("profile_page_edit_name_saved"));
+      goBackToProfile();
+    },
+    onError: (error) => {
+      setError(getApiErrorMessage(error, t("common_error")));
+    },
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!shopid || update.isPending) return;
+
+    if (!firstname.trim()) {
+      setError(t("profile_page_edit_name_required"));
+      return;
+    }
+
+    setError(null);
+    update.mutate();
+  };
+
+  // Session not read yet: render nothing rather than the login prompt.
+  if (!isAuthReady) return null;
+
+  if (!hasAccess) {
+    return <LoginRequired message={t("profile_page_edit_login_required")} />;
+  }
+
+  return (
+    <form
+      className="flex flex-col gap-5 rounded-2xl border border-gray180 bg-white p-4 lg:border-0 lg:p-0"
+      onSubmit={handleSubmit}
+    >
+      <label className="flex flex-col gap-2">
+        <span className="text-xs font-normal text-gray220">
+          {t("first_name")}
+        </span>
+        <Input
+          value={firstname}
+          onChange={(event) => {
+            setFirstname(event.target.value);
+            if (error) setError(null);
+          }}
+          className="font-normal text-black"
+          wrapperClassName={`max-h-12 ${error ? "!border-red" : ""}`}
+        />
+        {error && <span className="text-xs text-red">{error}</span>}
+      </label>
+
+      {/* Read-only — phone changes require a separate SMS-confirmation flow
+          that doesn't exist in this project yet, so it's shown for context
+          only, not editable here. */}
+      <label className="flex flex-col gap-2">
+        <span className="text-xs font-normal text-gray220">
+          {t("phone_number")}
+        </span>
+        <Input
+          disabled
+          readOnly
+          value={
+            auth?.phone ? `+998 ${formatPhone(getLocalPhone(auth.phone))}` : ""
+          }
+          className="font-medium text-[#3D3D3D]"
+          wrapperClassName="max-h-12 bg-gray10"
+        />
+      </label>
+
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          type="button"
+          variant="secondary"
+          size="primaryWide"
+          onClick={goBackToProfile}
+        >
+          {t("common_cancel")}
+        </Button>
+        <Button
+          type="submit"
+          variant="primary-solid"
+          size="primaryWide"
+          disabled={!shopid || update.isPending}
+        >
+          {t("common_save")}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+export default EditProfileForm;

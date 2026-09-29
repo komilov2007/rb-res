@@ -2,9 +2,10 @@
 
 import { useSearchParams } from "next/navigation";
 
-export const useShopid = () => {
+export const useShopId = () => {
   const searchParams = useSearchParams();
-  const shopid = searchParams.get("shop_id");
+  const shopid = searchParams.get("shop_id") ?? undefined;
+
   return {
     shopid,
     hasShopId: Boolean(shopid),

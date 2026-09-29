@@ -1,10 +1,17 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { Content, Portal, Root, Trigger } from "@radix-ui/react-popover";
+import {
+  Anchor,
+  Arrow,
+  Content,
+  Portal,
+  Root,
+  Trigger,
+} from "@radix-ui/react-popover";
 
 const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join("");
+  return classes.filter(Boolean).join(" ");
 };
 
 const Popover = (props: ComponentProps<typeof Root>) => {
@@ -37,4 +44,10 @@ const PopoverContent = ({
   );
 };
 
-export { Popover, PopoverContent, PopoverTrigger };
+export {
+  Anchor as PopoverAnchor,
+  Arrow as PopoverArrow,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+};

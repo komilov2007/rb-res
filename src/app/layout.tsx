@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import { ReactQuery } from "@/provider/react-query";
-import "./globals.css";
-import { GeneralProvider } from "@/provider/general";
 
+import { Provider } from "@/provider/provider";
+import { getLocale } from "@/utils/i18n";
+import type { ChildrenProps } from "@/types/children";
+
+import "./globals.css";
 export const metadata: Metadata = {
   title: "RB Restaurant",
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <ReactQuery>
-          <GeneralProvider>{children}</GeneralProvider>
-        </ReactQuery>
-      </body>
-    </html>
-  );
+export default async function RootLayout({
+  children,
+}: Readonly<ChildrenProps>) {
+  const locale = await getLocale();
+
+  return <Provider locale={locale}>{children}</Provider>;
 }

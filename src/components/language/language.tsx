@@ -7,34 +7,54 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
-import { useState } from "react";
-import { IconFlagUzbek } from "@/icons/flag-uzbek";
-import { IconFlagEnglish } from "@/icons/flag-english";
-import { IconFlagRussian } from "@/icons/flag-russian";
+import { languages } from "@/constants/language";
+import { useLanguage } from "./useLanguage";
 
-const languages = {
-  uz: { label: "O'zbek", short: "O'ZB", Icon: IconFlagUzbek },
-  en: { label: "English", short: "ENG", Icon: IconFlagEnglish },
-  ru: { label: "Russian", short: "RUS", Icon: IconFlagRussian },
+type LanguageProps = {
+  variant?: "default" | "hero" | "topbar";
 };
 
-type LanguageValue = keyof typeof languages;
-
-const Language = () => {
-  const [value, setValue] = useState<LanguageValue>("uz");
-  const ActiveIcon = languages[value].Icon;
+const Language = ({ variant = "default" }: LanguageProps) => {
+  const {
+    open,
+    value,
+    setOpen,
+    safeValue,
+    availableLanguages,
+    handleChangeLanguage,
+  } = useLanguage();
+  const ActiveIcon = languages[safeValue].Icon;
+  const isHero = variant === "hero";
+  const isTopbar = variant === "topbar";
 
   return (
     <Select
       value={value}
-      onValueChange={(language) => setValue(language as LanguageValue)}
+      open={open}
+      onOpenChange={setOpen}
+      onValueChange={handleChangeLanguage}
     >
-      <SelectTrigger>
+      <SelectTrigger
+        className={
+          isHero
+            ? "h-8 rounded-full bg-white/18 px-3 text-xs font-medium text-white backdrop-blur-md"
+            : isTopbar
+              ? "h-9 rounded-full bg-transparent px-0 text-sm font-medium text-black hover:bg-transparent"
+            : "h-12 rounded-2xl bg-white px-3 text-black hover:bg-gray10"
+        }
+      >
         <ActiveIcon />
-        <SelectValue>{languages[value].short}</SelectValue>
+        <SelectValue>
+          {isHero
+            ? safeValue.toUpperCase()
+            : isTopbar
+              ? languages[safeValue].label
+              : languages[safeValue].short}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {Object.entries(languages).map(([key, language]) => {
+        {availableLanguages.map((key) => {
+          const language = languages[key];
           const Icon = language.Icon;
 
           return (
@@ -54,4 +74,3 @@ const Language = () => {
 };
 
 export default Language;
-

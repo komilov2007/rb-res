@@ -1,18 +1,22 @@
 "use client";
 
-import { LogoSkeleton } from "@/components/ui/skleton";
+import { ROUTER } from "@/constants/router";
 import { useGeneral } from "@/hooks/useGeneral";
+import { useShopId } from "@/hooks/useShopId";
 
 const Logo = () => {
   const { data, isLoading } = useGeneral();
+  const { shopid } = useShopId();
   const logo = data?.data.logo;
-  if (isLoading) return <LogoSkeleton />;
+  const href = `${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`;
+
+  if (isLoading) return null;
   if (!logo) return null;
 
   return (
-    <div className="flex h-10 w-[120px] shrink-0 items-center">
+    <a href={href} className="flex h-10 w-[120px] shrink-0 items-center">
       <img className="h-full w-full object-contain" src={logo} alt={logo} />
-    </div>
+    </a>
   );
 };
 
