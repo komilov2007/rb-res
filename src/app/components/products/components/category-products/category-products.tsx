@@ -1,6 +1,10 @@
-﻿import type { ProductProps } from "@/types/product";
+"use client";
 
-import ProductSwiper from "../product-swiper";
+import type { ProductProps } from "@/types/product";
+import { ROUTER } from "@/constants/router";
+import { useShopId } from "@/hooks/useShopId";
+
+import ProductGrid from "../product-grid";
 import CategoryBanner from "../category-banner";
 import CategoryBanner2 from "../category-banner-2";
 
@@ -21,6 +25,9 @@ const CategoryProducts = ({
   mobileBannerSizeVariant = "sm",
   branchId = null,
 }: CategoryProductsProps) => {
+  const { shopid } = useShopId();
+  const categoryHref = `${ROUTER.CATEGORY}/${group.id}${shopid ? `?shop_id=${shopid}` : ""}`;
+
   return (
     <div
       id={`category-${group.id}`}
@@ -28,10 +35,18 @@ const CategoryProducts = ({
       className="flex scroll-mt-32 flex-col"
     >
       <div className="hidden lg:block">
-        <CategoryBanner2 title={group.name} videoSrc={videoSrc} />
+        <CategoryBanner2
+          title={group.name}
+          videoSrc={videoSrc}
+          href={categoryHref}
+        />
       </div>
       <div className="relative z-10 hidden lg:block">
-        <ProductSwiper products={group.products} branchId={branchId} />
+        <ProductGrid
+          products={group.products}
+          branchId={branchId}
+          moreHref={categoryHref}
+        />
       </div>
       <div className="lg:hidden">
         <CategoryBanner
@@ -41,10 +56,9 @@ const CategoryProducts = ({
         />
       </div>
       <div className="relative z-10 -mt-[62px] lg:hidden">
-        <ProductSwiper products={group.products} branchId={branchId} />
+        <ProductGrid products={group.products} branchId={branchId} />
       </div>
     </div>
   );
 };
 export default CategoryProducts;
-

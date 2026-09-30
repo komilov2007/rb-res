@@ -1,12 +1,21 @@
-﻿import { getImageSrc, handleImageFallback } from "@/utils/image";
+﻿import Link from "next/link";
+
+import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type CategoryBanner2Props = {
   title: string;
   imageSrc?: string;
   videoSrc?: string;
+  // When set, the title links to the category page.
+  href?: string;
 };
 
-const CategoryBanner2 = ({ title, imageSrc, videoSrc }: CategoryBanner2Props) => {
+const CategoryBanner2 = ({
+  title,
+  imageSrc,
+  videoSrc,
+  href,
+}: CategoryBanner2Props) => {
   const bannerImage = getImageSrc(imageSrc);
 
   return (
@@ -34,7 +43,18 @@ const CategoryBanner2 = ({ title, imageSrc, videoSrc }: CategoryBanner2Props) =>
           )}
         </div>
       </div>
-      <h2 className="title50 mb-4 text-black lg:text-2xl">{title}</h2>
+      <h2 className="title50 mb-4 text-black lg:text-2xl">
+        {href ? (
+          <Link
+            href={href}
+            className="transition-colors hover:text-primary!"
+          >
+            {title}
+          </Link>
+        ) : (
+          title
+        )}
+      </h2>
     </div>
   );
 };

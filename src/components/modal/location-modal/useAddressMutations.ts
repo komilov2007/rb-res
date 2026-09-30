@@ -19,6 +19,9 @@ import { useAuthStore } from "@/stores/auth";
 import type { useAddressForm } from "./useAddressForm";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
+// Saving an 11th address silently deletes the oldest one.
+const MAX_SAVED_ADDRESSES = 10;
+
 type UseAddressMutationsProps = {
   addresses: AddressProps[] | undefined;
   // The modal's close — runs after every successful save/select/delete.
@@ -63,6 +66,7 @@ export const useAddressMutations = ({
     onSuccess: async (response, variables) => {
       const createdId = response.data?.[0]?.id ?? null;
       let created: AddressProps | undefined;
+      let staleIds: number[] = [];
 
       try {
         const fresh = await queryClient.fetchQuery({
@@ -79,6 +83,14 @@ export const useAddressMutations = ({
               item.longitude === variables.longitude,
           ) ??
           list.find((item) => item.is_current);
+
+        // Keep only the newest MAX_SAVED_ADDRESSES — the oldest (lowest id,
+        // there's no created date) are dropped, never the one just saved.
+        staleIds = list
+          .filter((item) => item.id !== created?.id)
+          .sort((a, b) => a.id - b.id)
+          .slice(0, Math.max(0, list.length - MAX_SAVED_ADDRESSES))
+          .map((item) => item.id);
       } catch {
         // Fall back to what the create call itself gave us.
       }
@@ -88,14 +100,37 @@ export const useAddressMutations = ({
         latitude: variables.latitude,
         longitude: variables.longitude,
       });
+
+      if (staleIds.length > 0) {
+        const results = await Promise.allSettled(staleIds.map(deleteAddress));
+        const deletedIds = staleIds.filter(
+          (_, index) => results[index].status === "fulfilled",
+        );
+
+        queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
+          [REACT_QUERY_KEYS.USER_ADDRESSES, variables.customer],
+          (old) =>
+            old && {
+              ...old,
+              data: old.data.filter((item) => !deletedIds.includes(item.id)),
+            },
+        );
+        deletedIds.forEach(clearAddressById);
+      }
+
       invalidateAddresses(variables.customer);
       onDone();
     },
   });
 
   const updateAddressMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof updateAddress>[1] }) =>
-      updateAddress(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Parameters<typeof updateAddress>[1];
+    }) => updateAddress(id, data),
     onSuccess: (response, variables) => {
       const nextAddress = response.data.address || variables.data.address;
 

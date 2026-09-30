@@ -1,120 +1,71 @@
 "use client";
 
-import { useState } from "react";
-import { A11y, FreeMode } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useTranslations } from "next-intl";
-import type { Swiper as SwiperClass } from "swiper";
-
 import CardProduct from "@/components/card-product";
-import Button from "@/components/ui/button";
 import type { ProductProps } from "@/types/product";
 import type { DiscountProductVariant, SaleBadgeVariant } from "../../types";
 
-import { PRODUCT_SWIPER_BREAKPOINTS } from "../../constants";
+import CategoryMoreCard from "../category-more-card";
 
-type ProductSwiperProps = {
+// Desktop: 2 rows of 5. Past this, the last cell becomes a "see all" card.
+const DESKTOP_MAX_CARDS = 10;
+
+type ProductGridProps = {
   products: ProductProps[];
   variant?: DiscountProductVariant;
   saleBadgeVariant?: SaleBadgeVariant;
   // Selected home branch — products not sold there are shown muted.
   branchId?: number | null;
+  // Category page link. When set, desktop shows at most DESKTOP_MAX_CARDS
+  // cells, the last one linking here.
+  moreHref?: string;
 };
 
-const ProductSwiper = ({
+const ProductGrid = ({
   products,
   variant,
   saleBadgeVariant = "red",
   branchId = null,
-}: ProductSwiperProps) => {
-  const t = useTranslations();
-  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  moreHref,
+}: ProductGridProps) => {
   const isUnavailable = (product: ProductProps) =>
     branchId !== null && !product.branches?.includes(branchId);
-  const [isBeginning, setIsBeginning] = useState(true);
-  const [isEnd, setIsEnd] = useState(false);
   const bottomPaddingClassName = variant ? "pb-0" : "pb-8";
+  const hasMore = Boolean(moreHref) && products.length > DESKTOP_MAX_CARDS;
+  const desktopProducts = hasMore
+    ? products.slice(0, DESKTOP_MAX_CARDS - 1)
+    : products;
 
-  const updateNavigation = (currentSwiper: SwiperClass) => {
-    setIsBeginning(currentSwiper.isBeginning);
-    setIsEnd(currentSwiper.isEnd);
-  };
+  const renderCard = (product: ProductProps) => (
+    <CardProduct
+      key={product.id}
+      product={product}
+      variant={variant}
+      saleBadgeVariant={saleBadgeVariant}
+      isUnavailable={isUnavailable(product)}
+    />
+  );
 
   return (
-    <div className="scroll-hidden relative overflow-visible">
+    <>
       <div
         className={`grid grid-cols-2 gap-1.75 lg:hidden ${bottomPaddingClassName}`}
       >
-        {products.map((product) => (
-          <CardProduct
-            key={product.id}
-            product={product}
-            variant={variant}
-            saleBadgeVariant={saleBadgeVariant}
-            isUnavailable={isUnavailable(product)}
+        {products.map(renderCard)}
+      </div>
+
+      <div
+        className={`hidden grid-cols-5 gap-5 pt-1 lg:grid ${bottomPaddingClassName}`}
+      >
+        {desktopProducts.map(renderCard)}
+        {hasMore && moreHref && (
+          <CategoryMoreCard
+            href={moreHref}
+            count={products.length - desktopProducts.length}
           />
-        ))}
+        )}
       </div>
-
-      {!isBeginning && (
-        <Button
-          variant="swiperNav"
-          size="swiperNav"
-          aria-label={t("home_prev_products")}
-          onClick={() => swiper?.slidePrev()}
-          className="absolute -left-12 top-[36%] z-20 hidden -translate-y-1/2 lg:flex"
-        >
-          <ChevronLeft size={18} strokeWidth={2.4} />
-        </Button>
-      )}
-
-      <div className="-mx-4 hidden overflow-hidden px-4 lg:block">
-        <Swiper
-          modules={[A11y, FreeMode]}
-          slidesPerView={2}
-          spaceBetween={18}
-          freeMode={{ enabled: true }}
-          centeredSlides={false}
-          onSwiper={(currentSwiper) => {
-            setSwiper(currentSwiper);
-            updateNavigation(currentSwiper);
-          }}
-          onSlideChange={updateNavigation}
-          onReachBeginning={updateNavigation}
-          onReachEnd={updateNavigation}
-          onFromEdge={updateNavigation}
-          breakpoints={PRODUCT_SWIPER_BREAKPOINTS}
-          className={`scroll-hidden px-1 pt-3 lg:px-2 ${bottomPaddingClassName}`}
-        >
-          {products.map((product) => (
-            <SwiperSlide key={product.id}>
-              <div className="w-full py-1">
-                <CardProduct
-                  product={product}
-                  variant={variant}
-                  saleBadgeVariant={saleBadgeVariant}
-                  isUnavailable={isUnavailable(product)}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-
-      {!isEnd && (
-        <Button
-          variant="swiperNav"
-          size="swiperNav"
-          aria-label={t("home_next_products")}
-          onClick={() => swiper?.slideNext()}
-          className="absolute -right-12 top-[36%] z-20 hidden -translate-y-1/2 lg:flex"
-        >
-          <ChevronRight size={18} strokeWidth={2.4} />
-        </Button>
-      )}
-    </div>
+    </>
   );
 };
 
-export default ProductSwiper;
+export default ProductGrid;

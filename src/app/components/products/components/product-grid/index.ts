@@ -1,1 +1,1 @@
-﻿export { default } from './product-swiper';
+export { default } from "./product-grid";

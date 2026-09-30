@@ -4,7 +4,7 @@ import { BadgePercent } from "lucide-react";
 import type { ProductProps } from "@/types/product";
 import type { DiscountProductVariant, SaleBadgeVariant } from "../../types";
 
-import ProductSwiper from "../product-swiper";
+import ProductGrid from "../product-grid";
 
 type DiscountProductsProps = {
   products: ProductProps[];
@@ -35,7 +35,7 @@ const DiscountProducts = ({
         {t("discount_products")}
       </h2>
       <div className="relative z-10">
-        <ProductSwiper
+        <ProductGrid
           products={products}
           variant={variant}
           saleBadgeVariant={saleBadgeVariant}

@@ -8,6 +8,7 @@ import { ProductCardSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
 
 import type { useCategory } from "../../useCategory";
+import EmptyCategory from "../empty-category";
 
 // 5 per row with a 20px gap — the same density as the home product rows.
 const GRID_CLASS_NAME = "grid grid-cols-4 gap-5 xl:grid-cols-5";
@@ -21,8 +22,6 @@ const DesktopView = ({
   categoryName,
   products,
   isUnavailable,
-  hasBranch,
-  availableCount,
   isLoading,
 }: DesktopViewProps) => {
   const t = useTranslations();
@@ -42,12 +41,6 @@ const DesktopView = ({
             {categoryName}
           </h1>
 
-          {!isLoading && hasBranch && availableCount === 0 && (
-            <p className="rounded-2xl bg-gray10 px-4 py-3 text-center text-sm font-normal text-gray220">
-              {t("catalog_empty_at_branch")}
-            </p>
-          )}
-
           {isLoading ? (
             <div className={GRID_CLASS_NAME}>
               {Array.from({ length: 10 }).map((_, index) => (
@@ -55,9 +48,7 @@ const DesktopView = ({
               ))}
             </div>
           ) : products.length === 0 ? (
-            <p className="py-10 text-center text-sm font-normal text-gray220">
-              {t("catalog_empty_category")}
-            </p>
+            <EmptyCategory />
           ) : (
             <div className={GRID_CLASS_NAME}>
               {products.map((product) => (

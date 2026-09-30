@@ -53,9 +53,6 @@ export const useCategory = () => {
     categories: allCategories,
     products,
     isUnavailable,
-    hasBranch: branchId !== null,
-    availableCount: products.filter((product) => !isUnavailable(product))
-      .length,
     // Wait for all pages, so the empty state never flashes mid-load.
     isLoading: isLoading || (!isError && Boolean(hasNextPage)),
   };

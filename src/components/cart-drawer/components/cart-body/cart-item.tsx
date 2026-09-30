@@ -33,13 +33,9 @@ export const CartItem = ({
   const t = useTranslations();
   const setCartQuantity = useCartStore((state) => state.setCartQuantity);
   const openRemoveModal = useCartStore((state) => state.openRemoveModal);
-  const unavailableItemIds = useCartStore((state) => state.unavailableItemIds);
   const customerId = useAuthStore((state) => state.auth?.customer);
   const refreshCart = useRefreshCart();
   const { branchId: selectedBranchId } = useBranchSelection();
-  // Reported unavailable by the order page's createOrder call.
-  const isUnavailable =
-    typeof item.id === "number" && unavailableItemIds.includes(item.id);
   // Inactive lines aren't ordered or counted (see isActiveCartLine) — shown
   // faded with a label so that's visible; trash still works.
   const isInactive = item.is_active === false;
@@ -153,16 +149,10 @@ export const CartItem = ({
                 {item.product.name}
               </h3>
 
-              {isInactive ? (
+              {isInactive && (
                 <p className="mt-0.5 text-xs font-medium text-red-500">
                   {t("cart_drawer_inactive")}
                 </p>
-              ) : (
-                isUnavailable && (
-                  <p className="mt-0.5 text-xs font-medium text-red-500">
-                    {t("cart_drawer_unavailable_at_branch")}
-                  </p>
-                )
               )}
 
               {parameterNames.length > 0 && (

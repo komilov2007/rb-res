@@ -18,6 +18,7 @@ import { ProductCardSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
 
 import DesktopView from "./components/desktop-view";
+import EmptyCategory from "./components/empty-category";
 import { useCategory } from "./useCategory";
 
 // Same card skeleton as the home product grid, in this page's 2-column grid.
@@ -35,15 +36,7 @@ const CategoryContent = () => {
   const t = useTranslations();
   const router = useRouter();
   const category = useCategory();
-  const {
-    shopid,
-    categoryName,
-    products,
-    isUnavailable,
-    hasBranch,
-    availableCount,
-    isLoading,
-  } = category;
+  const { shopid, categoryName, products, isUnavailable, isLoading } = category;
 
   const handleBack = () => {
     router.push(`${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`);
@@ -87,27 +80,20 @@ const CategoryContent = () => {
         {isLoading ? (
           <CategorySkeleton />
         ) : products.length === 0 ? (
-          <p className="py-10 text-center text-sm font-normal text-gray220">
-            {t("catalog_empty_category")}
-          </p>
+          <div className="rounded-3xl bg-white">
+            <EmptyCategory />
+          </div>
         ) : (
-          <>
-            {hasBranch && availableCount === 0 && (
-              <p className="mb-4 rounded-2xl bg-white px-4 py-3 text-center text-sm font-normal text-gray220">
-                {t("catalog_empty_at_branch")}
-              </p>
-            )}
-            <div className="grid grid-cols-2 gap-1.75">
-              {products.map((product) => (
-                <CardProduct
-                  key={product.id}
-                  product={product}
-                  isUnavailable={isUnavailable(product)}
-                  whiteSurface
-                />
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-2 gap-1.75">
+            {products.map((product) => (
+              <CardProduct
+                key={product.id}
+                product={product}
+                isUnavailable={isUnavailable(product)}
+                whiteSurface
+              />
+            ))}
+          </div>
         )}
       </div>
 
