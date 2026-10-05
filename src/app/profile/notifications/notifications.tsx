@@ -46,7 +46,6 @@ const NotificationsContent = () => {
     );
   }
 
-  // Session not read yet counts as loading, not as a guest.
   if (!isAuthReady || isLoading) {
     return (
       <>
@@ -131,7 +130,6 @@ const Notifications = () => {
 
   return (
     <ProfilePageShell title={t("profile_page_menu_notifications")}>
-      {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <NotificationsContent />
       </Suspense>

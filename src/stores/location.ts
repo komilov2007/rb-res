@@ -19,8 +19,6 @@ type LocationStoreProps = {
   latitude: number | null;
   longitude: number | null;
   locationModal: boolean;
-  // Set by openLocationMap: the location modal opens straight on its map
-  // screen (new address) instead of the saved-addresses list.
   locationMapRequest: boolean;
   setAddress: (address: string, meta?: LocationAddressMeta) => void;
   setEditingAddress: (address: AddressProps | null) => void;
@@ -28,9 +26,6 @@ type LocationStoreProps = {
   openLocationMap: () => void;
   clearLocationMapRequest: () => void;
   clearLocation: () => void;
-  // Drops the selected delivery address only if it's the one with this id
-  // — called after a saved address is deleted, so the persisted selection
-  // doesn't keep pointing at an address that no longer exists.
   clearAddressById: (id: number) => void;
 };
 

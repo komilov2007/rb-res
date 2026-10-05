@@ -17,12 +17,6 @@ const VIDEO_DURATION = 9000;
 const getDuration = (src: string) =>
   src === ATMOSPHERE_VIDEO_SRC ? VIDEO_DURATION : PHOTO_DURATION;
 
-// Mobile variant "three": a "look around the room" auto-tour. One scene at
-// a time fills the screen; photos drift slowly (Ken Burns zoom + pan, the
-// direction alternating per scene) so it feels like turning your head
-// inside the hall, and scenes cross-fade on their own like stories.
-// Tap right = next, tap left = previous, the corner button opens the
-// shared full-screen viewer on the current scene.
 const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
   const t = useTranslations();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,7 +25,6 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
 
   const goTo = (next: number) => setActiveIndex((next + total) % total);
 
-  // Auto-advance; restarts whenever the scene changes (tap or timer).
   useEffect(() => {
     const timer = window.setTimeout(
       () => setActiveIndex((index) => (index + 1) % total),
@@ -67,7 +60,6 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
               </video>
             ) : (
               <img
-                // Re-keyed per visit so the drift restarts from the start.
                 key={isActive ? `${src}-active` : src}
                 src={src}
                 alt={t("booking_gallery_image_alt")}
@@ -87,7 +79,6 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
 
-      {/* Tap zones: left third goes back, the rest goes forward. */}
       <button
         type="button"
         onClick={() => goTo(activeIndex - 1)}
@@ -126,7 +117,6 @@ const AtmosphereThree = ({ onOpen }: AtmosphereVariantProps) => {
         <Maximize2 size={18} />
       </button>
 
-      {/* bottom-32 clears the shell's floating "Bron qilish" button. */}
       <div className="pointer-events-none absolute inset-x-5 bottom-32">
         <span className="text-xs font-normal tabular-nums text-white/70">
           {pad(activeIndex + 1)} / {pad(total)}

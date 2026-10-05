@@ -27,15 +27,11 @@ import {
   WorkingTimeSkeleton,
 } from "./components/about-skeletons";
 
-// Shop-wide data only — general (working_time, business_phone, socials) and
-// the branch list, both already fetched elsewhere in the app.
 const AboutContent = () => {
   const t = useTranslations();
   const { data: general, isLoading: isGeneralLoading } = useGeneral();
   const { data: branchesData, isLoading: isBranchesLoading } = useBranches();
-  // working_time keys are Monday=1 … Sunday=7.
   const [todayKey] = useState(() => String(getDayIndex()));
-  // Same read-only branch info + map sheet the order detail page opens.
   const [infoBranch, setInfoBranch] = useState<BranchProps | null>(null);
 
   const shop = general?.data;
@@ -202,7 +198,6 @@ const About = () => {
 
   return (
     <ProfilePageShell title={t("about_us")}>
-      {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <AboutContent />
       </Suspense>

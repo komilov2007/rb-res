@@ -15,8 +15,6 @@ const TABS = [
   { key: false, label: "orders_tabs_all" },
 ] as const;
 
-// Matches this project's established skeleton style (animate-pulse +
-// bg-gray10 blocks) from payment-method/branches' own skeletons.
 const OrderCardSkeleton = () => (
   <div className="flex items-start gap-3 rounded-2xl bg-white p-4">
     <div className="h-14 w-14 shrink-0 animate-pulse rounded-xl bg-gray10" />
@@ -28,8 +26,6 @@ const OrderCardSkeleton = () => (
   </div>
 );
 
-// Same structural pattern as cart's EmptyCart (icon-in-circle + heading +
-// hint).
 const EmptyOrders = () => {
   const t = useTranslations();
 
@@ -118,7 +114,6 @@ const MyOrders = () => {
           <div ref={bottomRef} className="h-1" />
         </div>
       </div>
-      {/* Bottom nav stays visible here too (these pages don't use PageLayout). */}
       <MobileFooter />
     </div>
   );

@@ -22,14 +22,6 @@ type BranchesProps = {
   error?: string;
 };
 
-// Pickup branch field. The branch still defaults to whatever the home page
-// selected (usePage.ts mirrors it into the form), but it is no longer
-// read-only here: "Filialni o'zgartirish" opens a picker that checks every
-// branch against the current cart, so a branch that can't fulfil the order
-// is disabled instead of failing at createOrder. Picking one writes back to
-// the shared branch-selection store, so home/header/product availability
-// all follow (see useBranches.ts). Tapping the selected branch row still
-// opens its read-only info/map (BranchInfoSheet).
 const Branches = ({
   branches,
   isLoading,

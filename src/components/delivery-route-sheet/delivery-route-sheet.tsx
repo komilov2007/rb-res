@@ -24,19 +24,10 @@ import { useDeliveryRouteMap } from "./useDeliveryRouteMap";
 type DeliveryRouteSheetProps = {
   open: boolean;
   onClose: () => void;
-  // The fulfilling branch — always known (OrderDetail.branch). The delivery
-  // address has no coordinates of its own in OrderDetail, only its text, so
-  // it's geocoded below rather than plotted directly.
   branch: BranchProps | null;
   address: string | null;
 };
 
-// Delivery orders' equivalent of branch-info-sheet's pickup view: instead of
-// one pin (the branch you'd walk into), this shows two — where the order
-// ships from and where it's going. No route line between them: Yandex's
-// routing (multiRouter) is a separately limited/paid API, and the
-// "open in maps" button below hands real navigation to Yandex Maps. Mounted
-// from order-detail-sections.tsx only when service_type is a delivery type.
 const DeliveryRouteSheet = ({
   open,
   onClose,
@@ -87,10 +78,6 @@ const DeliveryRouteSheet = ({
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col">
-          {/* From → to route card. Each stop's icon badge matches its map
-              pin exactly (src/utils/branch-pin.ts: filled primary store for
-              the branch, white + primary ring house for the customer), so
-              the card doubles as the map's legend. */}
           <ol className="mx-4 mt-3 mb-3 shrink-0 rounded-2xl border border-gray180 bg-white p-3">
             <li className="flex gap-3">
               <div className="flex flex-col items-center">
@@ -120,9 +107,6 @@ const DeliveryRouteSheet = ({
                 <p className="text-[11px] uppercase tracking-wide text-gray220">
                   {t("orders_route_to")}
                 </p>
-                {/* One line only: the short form (country/city dropped),
-                    ellipsized if it's still too long — the full geocoded
-                    text wrapped to 2-3 lines here. */}
                 <p className="truncate text-sm text-gray220">
                   {address ? getShortAddress(address) : t("orders_route_address_missing")}
                 </p>
@@ -130,15 +114,6 @@ const DeliveryRouteSheet = ({
             </li>
           </ol>
 
-          {/* flex-1 (not a fixed dvh height like branch-info-sheet's own
-              map) — this screen's info block above is much shorter than
-              branch-info-sheet's (no working-hours table), so a fixed
-              height left a large empty gap before the footer; filling the
-              remaining space instead makes the map as large as branch-info-
-              sheet's regardless of how tall the text above ends up being.
-              Same hidden-chrome technique (and the same ToS caveat) as
-              src/components/branch-info-sheet, src/components/branch-map-picker,
-              and src/components/modal/location-modal/components/location-map.tsx. */}
           <div className="delivery-route-map relative mx-4 mb-3 min-h-0 flex-1 overflow-hidden rounded-2xl bg-white">
             <style jsx global>{`
               .delivery-route-chip {

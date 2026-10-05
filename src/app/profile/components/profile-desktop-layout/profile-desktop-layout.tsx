@@ -10,21 +10,11 @@ import ProfileSidebar from "../profile-sidebar";
 
 type ProfileDesktopLayoutProps = {
   title: string;
-  // The current sub-page's breadcrumb label; omitted on the bare /profile
-  // route, where "Profil" itself is the current page.
   current?: string;
   children: ReactNode;
-  // Pinned under the scrolling content (e.g. "add address").
   footer?: ReactNode;
 };
 
-// Desktop-only shell shared by /profile and every profile sub-page:
-// breadcrumb under the header, then two full-bleed white panels with an 8px
-// gray gap — the persistent sidebar left, this route's content right. Each
-// panel pads its outer side by max(20px, 50% - 620px) so the content lines
-// up with the header's max-w-7xl container (same as the order page).
-// The panels are capped to the viewport (min 520px): long content (e.g. many
-// orders) scrolls inside the right panel instead of growing the page.
 const ProfileDesktopLayout = ({
   title,
   current,
@@ -46,8 +36,6 @@ const ProfileDesktopLayout = ({
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col rounded-l-[30px] bg-white py-5 pl-6 pr-[max(20px,calc(50%-620px))]">
-          {/* No back arrow on desktop: every profile page is one click
-              away in the persistent sidebar. */}
           <h1 className="shrink-0 truncate pb-4 text-xl font-medium text-black">
             {title}
           </h1>

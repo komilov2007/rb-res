@@ -17,7 +17,6 @@ type PaymentSectionProps = {
   isDelivery: boolean;
 };
 
-// Order detail's payment/price breakdown section.
 const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
   const t = useTranslations();
   const amount = Number(detail.amount);
@@ -33,8 +32,6 @@ const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
     typeof detail.promo_code.percent === "number"
       ? detail.promo_code.percent
       : null;
-  // `item.amount` is treated as the line total (same reading my-orders'
-  // own summary uses for the products subtotal).
   const itemsSubtotal = detail.items.reduce(
     (sum, item) => sum + (typeof item.amount === "number" ? item.amount : 0),
     0,

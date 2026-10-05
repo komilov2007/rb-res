@@ -90,11 +90,6 @@ export const useLocationModal = () => {
     getAddressPayload,
   });
 
-  // Opening the modal for an existing address (set elsewhere through the
-  // location store) loads it into the form once, then clears the request.
-  // This has to be an effect: it clears the request in another store and
-  // moves the Yandex map through a ref, neither of which may run during
-  // render — so the synchronous setState rule is suppressed on purpose.
   useEffect(() => {
     if (!locationModal || !editingAddress) return;
 
@@ -121,9 +116,6 @@ export const useLocationModal = () => {
     void setAddressByCoords(DEFAULT_CENTER);
   };
 
-  // openLocationMap(): start directly on the map screen for a new address.
-  // Reacts to the store change in a subscription callback rather than an
-  // effect body, so no state is set synchronously during an effect.
   useEffect(
     () =>
       useLocationStore.subscribe((state, previousState) => {
@@ -134,7 +126,6 @@ export const useLocationModal = () => {
         state.clearLocationMapRequest();
         handleAddAddress();
       }),
-    // Subscribed once; handleAddAddress only calls stable state setters.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
@@ -153,7 +144,6 @@ export const useLocationModal = () => {
   const handleBackToMap = () => {
     setScreen("map");
   };
-
 
   return {
     state: {
@@ -207,4 +197,3 @@ export const useLocationModal = () => {
     },
   };
 };
-

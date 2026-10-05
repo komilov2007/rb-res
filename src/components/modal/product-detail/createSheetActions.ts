@@ -6,7 +6,6 @@ import type { getProductDetailView } from "./productDetailView";
 export type ProductDetailViewContext = ProductDetailBaseContext &
   ReturnType<typeof getProductDetailView>;
 
-// Closing, branch switching, bottom-sheet dragging and selection reset.
 export const createSheetActions = (ctx: ProductDetailViewContext) => {
   const {
     closeProductDetail,
@@ -47,9 +46,6 @@ export const createSheetActions = (ctx: ProductDetailViewContext) => {
     if (!open) closeDetail();
   };
 
-  // Closes this detail view first — the branch picker is a full-screen
-  // overlay of its own (same as the header's "Xaritadan tanlash"), so
-  // stacking it on top of this one too is just visual clutter, not useful.
   const handleChooseAnotherBranch = () => {
     openProductBranchPicker(detail);
     closeDetail();
@@ -82,7 +78,6 @@ export const createSheetActions = (ctx: ProductDetailViewContext) => {
     if (diffY > 36 && canExpandRef.current) {
       setIsExpanded(true);
     } else if (diffY < -36) {
-      // Collapsing / closing is always allowed.
       if (isExpanded) {
         setIsExpanded(false);
       } else {

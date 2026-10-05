@@ -13,9 +13,6 @@ import { getProfileOrdersUrl } from "@/utils/orders";
 
 import { EdgeOrderCard } from "./edge-order-card";
 
-// 15 — vertical tab on the right edge that opens a side panel. z-[55]: above
-// the home sections and the fixed categories row (z-50), hidden while open
-// and while any other modal/drawer (cart, product...) locks the page scroll.
 export const EdgeTab = ({
   count,
   orders,
@@ -28,7 +25,6 @@ export const EdgeTab = ({
   const { shopid } = useShopId();
   const [open, setOpen] = useState(false);
 
-  // An order card opens that order expanded in the profile list.
   const goToOrder = (orderId?: number) => {
     setOpen(false);
     router.push(getProfileOrdersUrl(shopid, orderId));

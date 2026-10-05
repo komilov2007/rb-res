@@ -8,9 +8,6 @@ import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
 
-// Opens support chat the right way for the screen: the ChatModal on
-// desktop, the /chat page on mobile. Logged-out users get the login modal
-// first, same as the floating Hand menu's chat action.
 export const useOpenChat = () => {
   const router = useRouter();
   const { shopid } = useShopId();

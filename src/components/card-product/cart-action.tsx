@@ -87,7 +87,6 @@ const CartAction = ({
           onChange={handleChangeQuantity}
           onBlur={handleBlurQuantity}
           inputMode="numeric"
-          // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
           className="h-8 w-10 shrink-0 bg-transparent text-center text-base font-medium text-black outline-none"
           maxLength={3}
           pattern="[0-9]*"

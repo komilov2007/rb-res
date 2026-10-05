@@ -6,13 +6,9 @@ import { useLanguage } from "@/components/language/useLanguage";
 import { languages } from "@/constants/language";
 
 type LanguageOptionsProps = {
-  // Called after the language has been switched (e.g. to close a sheet).
   onSelect?: () => void;
 };
 
-// The language list itself — shared by the mobile LanguageSheet and the
-// desktop /profile/language page. Same switching logic as the header's
-// language select (useLanguage): cookie + localStorage, then refresh.
 const LanguageOptions = ({ onSelect }: LanguageOptionsProps) => {
   const { safeValue, availableLanguages, handleChangeLanguage } = useLanguage();
 

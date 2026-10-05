@@ -20,13 +20,6 @@ import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/utils";
 import { getSaleLabel } from "./utils";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
-// Read-only view — the cart item's parameter is already fixed once it's in
-// the cart, so unlike the full ProductDetailMobile (which owns its own
-// Sheet/Dialog and an add-to-cart mutation flow) this only needs to reuse
-// the media gallery + text formatting, not the whole parameter-selection or
-// footer/mutation machinery. The back control lives in CartHeader's own
-// header slot (swapped in by the parent), not here, so there's only ever
-// one header shown at a time.
 export const CartItemDetail = ({ item }: { item: CartItemProps }) => {
   const t = useTranslations();
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
@@ -51,15 +44,8 @@ export const CartItemDetail = ({ item }: { item: CartItemProps }) => {
     saleAmount: detail.sale_amount,
     saleType: detail.sale_type,
   });
-  // Same discount-source fix as the row: use the fetched product detail,
-  // not item.product (which the cart-list response never populates with
-  // sale_type/sale_amount for an authenticated cart item).
   const isOnSale = Boolean(data?.data && hasDiscount(data.data));
   const saleLabel = data?.data ? getSaleLabel(data.data, t("sum")) : "";
-  // The cart item only ever carries the selected sku's *name* (STEP 15),
-  // never its id, so the read-only ProductParameter reuse below has to
-  // match by name against the fetched product's real parameter/
-  // additional_parameter definitions to know which option to highlight.
   const selectedMainSkuIds = data?.data.parameter?.skus
     ? data.data.parameter.skus
         .filter((sku) => sku.name === item.parameter?.name)

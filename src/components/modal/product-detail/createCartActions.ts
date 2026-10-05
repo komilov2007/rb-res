@@ -8,7 +8,6 @@ import type { createSheetActions } from "./createSheetActions";
 export type ProductDetailActionContext = ProductDetailViewContext &
   ReturnType<typeof createSheetActions>;
 
-// Parameter selection and every cart change made from the detail view.
 export const createCartActions = (ctx: ProductDetailActionContext) => {
   const {
     carts,
@@ -32,7 +31,6 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     closeDetail,
   } = ctx;
 
-  // Shared re-read of the server cart (useRefreshCart).
   const refreshCartList = refreshCart;
 
   const syncParameterCart = async (nextQuantity: number) => {
@@ -121,8 +119,6 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
   };
 
   const handleAdd = async () => {
-    // Adding to the cart requires login. The drawer is closed first — the
-    // login modal stacked on top of this open Sheet wasn't usable.
     if (!customerId) {
       closeDetail();
       setLoginModal(true);

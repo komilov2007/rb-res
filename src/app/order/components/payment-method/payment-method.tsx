@@ -15,7 +15,6 @@ import PaymentMethodQuery from "./payment-method-query";
 import PaymentMethodSkeleton from "./skeleton";
 
 type PaymentMethodProps = {
-  // Mobile keeps the promo code here; desktop shows it in the summary panel.
   showPromoCode: boolean;
 };
 
@@ -25,10 +24,6 @@ const PaymentMethod = ({ showPromoCode }: PaymentMethodProps) => {
   const deliveryType = useWatch({ control, name: "delivery_type" });
   const { shopid, hasShopId } = useShopId();
 
-  // useSuspenseQuery always fetches on mount — unlike useQuery there's no
-  // `enabled` escape hatch, so the query-owning subtree below is only ever
-  // mounted once its dependencies are real (delivery_type is set once
-  // general.services is available).
   const isReady = hasShopId && Boolean(deliveryType);
 
   return (

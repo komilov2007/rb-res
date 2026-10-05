@@ -8,13 +8,9 @@ import { useTranslations } from "next-intl";
 import Input from "@/components/ui/input";
 import type { OrderFormValues } from "@/types/order";
 
-// Rendered only for services with shipping_time: true. Optional, but date and
-// time must be picked together (schema.ts); usePage joins them into
-// shipping_datetime.
 const ShippingTime = () => {
   const t = useTranslations();
   const { control } = useFormContext<OrderFormValues>();
-  // Local YYYY-MM-DD, used as the earliest selectable date.
   const [today] = useState(() => new Date().toLocaleDateString("en-CA"));
 
   return (

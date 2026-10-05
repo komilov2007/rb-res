@@ -41,7 +41,6 @@ const VisitTime = () => {
     formState: { errors },
   } = useFormContext<BookingFormValues>();
   const [days] = useState(getBookingDays);
-  // useWatch (not getValues) so the time list re-renders on a date change.
   const selectedDate = useWatch({ control, name: "date" });
 
   return (
@@ -63,12 +62,9 @@ const VisitTime = () => {
                   field.onChange(value);
                   const time = getValues("time");
 
-                  // A slot that's fine on another day may already be over
-                  // today — drop it rather than keep a past time.
                   if (isPastSlot(value, time)) {
                     setValue("time", "", { shouldValidate: true });
                   } else if (time) {
-                    // "Within working hours" depends on the day too.
                     void trigger("time");
                   }
                 }}
@@ -102,9 +98,6 @@ const VisitTime = () => {
           name="time"
           render={({ field }) => (
             <div className="min-w-0">
-              {/* "" (not undefined) shows the placeholder: undefined makes
-                  Radix uncontrolled and it keeps showing the last picked
-                  slot after the time is cleared. */}
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger
                   aria-label={t("booking_time")}

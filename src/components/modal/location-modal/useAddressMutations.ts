@@ -19,12 +19,10 @@ import { useAuthStore } from "@/stores/auth";
 import type { useAddressForm } from "./useAddressForm";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
-// Saving an 11th address silently deletes the oldest one.
 const MAX_SAVED_ADDRESSES = 10;
 
 type UseAddressMutationsProps = {
   addresses: AddressProps[] | undefined;
-  // The modal's close — runs after every successful save/select/delete.
   onDone: () => void;
   addressName: string;
   editingAddressId: number | null;
@@ -32,9 +30,6 @@ type UseAddressMutationsProps = {
   getAddressPayload: ReturnType<typeof useAddressForm>["getAddressPayload"];
 };
 
-// Saving, selecting and deleting saved addresses. Every mutation updates the
-// selected address in the location store, refreshes the saved list and then
-// calls `onDone`.
 export const useAddressMutations = ({
   addresses,
   onDone,
@@ -57,12 +52,6 @@ export const useAddressMutations = ({
 
   const createAddressMutation = useMutation({
     mutationFn: createAddress,
-    // Selects the new address by the id the saved list actually holds — the
-    // create response's own `[0].id` isn't reliably there, and a null id
-    // left the new address unticked in the saved-addresses list. The list
-    // is refetched (not just invalidated) so the lookup sees the new row;
-    // match order: response id, then the exact coordinates just saved, then
-    // the backend's current address (is_current: true was sent).
     onSuccess: async (response, variables) => {
       const createdId = response.data?.[0]?.id ?? null;
       let created: AddressProps | undefined;
@@ -84,15 +73,12 @@ export const useAddressMutations = ({
           ) ??
           list.find((item) => item.is_current);
 
-        // Keep only the newest MAX_SAVED_ADDRESSES — the oldest (lowest id,
-        // there's no created date) are dropped, never the one just saved.
         staleIds = list
           .filter((item) => item.id !== created?.id)
           .sort((a, b) => a.id - b.id)
           .slice(0, Math.max(0, list.length - MAX_SAVED_ADDRESSES))
           .map((item) => item.id);
       } catch {
-        // Fall back to what the create call itself gave us.
       }
 
       setAddress(created?.address ?? variables.address, {
@@ -166,9 +152,6 @@ export const useAddressMutations = ({
   const deleteAddressMutation = useMutation({
     mutationFn: deleteAddress,
     onSuccess: (_, id) => {
-      // Same order as profile/addresses: drop it from the cached list before
-      // clearing the store, so Location's "fall back to the current saved
-      // address" effect can't re-select the deleted one from a stale list.
       queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
         [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
         (old) =>

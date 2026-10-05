@@ -10,7 +10,6 @@ type LoginRequiredProps = {
   message: string;
 };
 
-// Shown on profile sub-pages whose data needs a logged-in customer.
 const LoginRequired = ({ message }: LoginRequiredProps) => {
   const t = useTranslations();
   const setLoginModal = useAuthStore((state) => state.setLoginModal);

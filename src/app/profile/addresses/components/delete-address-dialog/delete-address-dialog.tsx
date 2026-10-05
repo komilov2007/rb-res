@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 
 type DeleteAddressDialogProps = {
-  // The address awaiting confirmation; null = closed.
   address: AddressProps | null;
   isDeleting: boolean;
   onCancel: () => void;

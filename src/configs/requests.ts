@@ -67,9 +67,6 @@ request.interceptors.request.use(async (config) => {
 
       if (updatedUser?.access) {
         headers.set("Authorization", `Bearer ${updatedUser.access}`);
-        // Keep the store in step with storage, so code that writes the
-        // session back from the store (e.g. a name change) never restores
-        // the tokens this refresh just replaced.
         useAuthStore.getState().setAuth(updatedUser.auth);
       }
     }
@@ -92,13 +89,6 @@ request.interceptors.response.use(
         logoutByInvalidToken();
       }
 
-      // Single place every failed request (any status, any domain — payment,
-      // order, login, ...) surfaces to the user, so individual callers don't
-      // each need their own .catch()/toast. A fixed id means a repeated or
-      // retried failure updates the same toast in place instead of stacking
-      // duplicates.
-      // skipErrorToast: for requests whose error is already shown inline by
-      // the caller (e.g. the promo code field).
       if (!axios.isCancel(error) && !error.config?.skipErrorToast) {
         toast.error(getApiErrorMessage(error), { id: "global-api-error" });
       }
@@ -107,4 +97,3 @@ request.interceptors.response.use(
     return await Promise.reject(error);
   },
 );
-

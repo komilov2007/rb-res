@@ -1,4 +1,3 @@
-
 import "swiper/css";
 import type { MobileCardVariant, MobileSizeVariant } from "./types";
 import {
@@ -13,8 +12,6 @@ type MobileClassNamesContext = {
   shouldShowActiveCategory: boolean;
 };
 
-// Class-name builders for the mobile category tiles, for the current
-// fixed/active state.
 export const createMobileClassNames = ({
   isMobileFixed,
   activeCategoryId,

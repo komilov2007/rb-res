@@ -19,11 +19,7 @@ import {
 } from "./selection-parts";
 
 type PickupTabProps = TabProps & {
-  // Nearest first, computed by BranchSelectionModal (useNearestBranches) so
-  // these rows and the map picker show the same branches in the same order.
   branches: BranchProps[];
-  // Opens the map picker. Owned by BranchSelectionModal, not here: it closes
-  // this modal as it opens, which would unmount a picker rendered from here.
   onOpenMap: () => void;
 };
 
@@ -58,8 +54,6 @@ export const PickupTab = ({
         </button>
       </div>
 
-      {/* Branches still loading: row-sized skeletons instead of the
-          "not found" note. */}
       {!selection.isReady &&
         Array.from({ length: COLLAPSED_COUNT }).map((_, index) => (
           <div key={index} className="skeleton h-16 w-full rounded-2xl" />
@@ -84,7 +78,6 @@ export const PickupTab = ({
               if (!selection.shopid) return;
 
               setPickup(selection.shopid, branch.id);
-              // A pick is final — close right away.
               setSelectionModal(false);
             }}
             className={getRowClassName(checked)}

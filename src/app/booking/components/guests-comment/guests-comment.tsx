@@ -12,7 +12,6 @@ import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "../../constants";
 import type { BookingFormValues } from "../../schema";
 import SectionTitle from "../section-title";
 
-
 const GuestsComment = () => {
   const t = useTranslations();
   const { control } = useFormContext<BookingFormValues>();
@@ -25,8 +24,6 @@ const GuestsComment = () => {
           title={t("booking_guests")}
         />
 
-        {/* Same pill counter as the cart's (cart-counter / cart-plus), in
-            black, with a typeable count in the middle. */}
         <Controller
           control={control}
           name="guests"
@@ -48,8 +45,6 @@ const GuestsComment = () => {
                 <input
                   inputMode="numeric"
                   aria-label={t("booking_guests")}
-                  // Empty while typing is allowed (0 in the form); blur puts
-                  // it back to the minimum.
                   value={field.value || ""}
                   onChange={(event) =>
                     field.onChange(Number(getDigits(event.target.value, 3)))
@@ -59,7 +54,6 @@ const GuestsComment = () => {
                     field.onBlur();
                   }}
                   onFocus={(event) => event.target.select()}
-                  // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
                   className="w-10 bg-transparent text-center text-base font-normal text-black outline-none"
                 />
                 <Button
@@ -97,7 +91,6 @@ const GuestsComment = () => {
               onBlur={field.onBlur}
               rows={3}
               placeholder={t("booking_comment_placeholder")}
-              // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
               className="w-full resize-none rounded-xl border border-transparent bg-[#F6F7F9] px-4 py-3 text-base font-normal text-black outline-none transition-colors placeholder:text-gray220 hover:border-gray180 focus:border-orange-200 focus:bg-white"
             />
           )}

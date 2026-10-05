@@ -23,10 +23,6 @@ const hasTelegramWebApp = () =>
   typeof window !== "undefined" &&
   Boolean((window as { Telegram?: { WebApp?: unknown } }).Telegram?.WebApp);
 
-// @twa-dev/sdk reads `window.Telegram.WebApp` as a side effect at import
-// time, which throws both during SSR and in any browser tab opened outside
-// a real Telegram client. Always import it lazily, client-side, and only
-// after confirming the WebApp global actually exists.
 const loadWebApp = async () => {
   if (!hasTelegramWebApp()) return null;
 
@@ -50,10 +46,6 @@ const openLinkInBrowser = (url: string) => {
   anchor.click();
 };
 
-// Deliberately synchronous (reuses hasTelegramWebApp's plain global check
-// rather than loadWebApp's dynamic import) so window.open/the anchor click
-// below stay tied to the same tick as the caller's user gesture instead of
-// risking a popup-blocker after an await.
 export const openExternalLink = (url: string) => {
   const telegram = getTelegramWebApp();
 
@@ -70,12 +62,6 @@ export const openExternalLink = (url: string) => {
   }
 };
 
-// Payment hand-offs only. Inside the Click superapp there is no browser
-// chrome to come back from, so the provider page has to replace the
-// current view instead of opening beside it — rb-shop passes target
-// "_self" for exactly these links under Click. Plain external links
-// (banners) keep using openExternalLink: those have no callback back into
-// the mini-app, so replacing the view would strand the user.
 export const openPaymentLink = (url: string) => {
   if (isClick()) {
     window.open(url, "_self");
@@ -107,8 +93,6 @@ export const openTelegramInvoice = async (
   });
 };
 
-// Telegram's own Bot API, not our backend — called directly from the
-// client with the bot token our backend hands back, per the STEP 7 spec.
 export const createTelegramInvoiceLink = async (
   botToken: string,
   params: CreateInvoiceLinkParams,

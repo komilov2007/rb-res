@@ -8,9 +8,6 @@ import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useAuthStore } from "@/stores/auth";
 
 const ORDERS_LIMIT = 16;
-// INFERRED, not independently confirmed against rb-restaurant's own
-// backend behavior — matches the reference's polling cadence. A one-line
-// change later if 30s feels wrong once tested live.
 const POLL_INTERVAL_MS = 30000;
 
 export const useMyOrders = () => {
@@ -43,8 +40,6 @@ export const useMyOrders = () => {
 
   const orders = data?.pages.flatMap((page) => page.data.results) ?? [];
 
-  // Same IntersectionObserver + sentinel pattern as the product list's own
-  // useProduct.ts — established convention for infinite scroll here.
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [entry] = entries;

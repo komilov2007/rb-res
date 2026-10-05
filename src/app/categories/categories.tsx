@@ -22,13 +22,10 @@ import { normalizeCategories } from "@/utils/product";
 const GRID_CLASS_NAME =
   "grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6 lg:gap-5";
 
-// Every category as a tile in the home categories' style (photo with a
-// darkened overlay and the name on top). Tapping one opens its product page.
 const CategoriesContent = () => {
   const t = useTranslations();
   const router = useRouter();
   const { shopid } = useShopId();
-  // Same query as the home categories strip, so the list is shared/cached.
   const { data, isLoading } = useShopCategories();
 
   const categories = normalizeCategories(data?.data);
@@ -36,13 +33,8 @@ const CategoriesContent = () => {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray10 pb-[74px] lg:pb-0">
-      {/* Desktop-only by itself (every Header row is `hidden lg:*`). Not
-          wrapped in an extra div: a wrapper would become the sticky
-          containing block and stop pinBottomRow from pinning. */}
       <Header pinBottomRow />
 
-      {/* Same header as the category and "Buyurtmalarim" pages — mobile only,
-          desktop gets the breadcrumb bar below instead. */}
       <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[env(safe-area-inset-top)] lg:hidden">
         <div className="mx-auto flex w-full max-w-xl items-center gap-3 px-4 py-4">
           <Button
@@ -63,8 +55,6 @@ const CategoriesContent = () => {
 
       <Breadcrumb items={[{ label: t("catalog_all_categories") }]} />
 
-      {/* Desktop: its own white section like home's, with an 8px gray gap
-          (lg:my-2) to the breadcrumb above and the footer below. Mobile stays plain. */}
       <div className="flex w-full flex-1 flex-col bg-gray10 lg:my-2 lg:rounded-[30px] lg:bg-white">
         <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-4 pt-4 lg:max-w-7xl lg:px-5 lg:py-6">
           <h2 className="mb-6 hidden text-xl font-medium text-black lg:block">
@@ -106,16 +96,12 @@ const CategoriesContent = () => {
       </div>
 
       <Footer />
-      {/* Bottom nav stays visible here too (these pages don't use PageLayout). */}
       <MobileFooter />
-      {/* Opened from the desktop header's delivery/pickup chip — PageLayout
-          mounts it on other pages, this page has its own shell. */}
       <BranchSelectionModal />
     </div>
   );
 };
 
-// useSearchParams (shop_id) needs a Suspense boundary.
 const Categories = () => (
   <Suspense>
     <CategoriesContent />

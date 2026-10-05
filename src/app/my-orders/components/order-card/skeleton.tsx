@@ -1,5 +1,3 @@
-// Same box, padding and line heights as OrderCard (id + badge, date,
-// location, count + price) so nothing jumps on load.
 const OrderCardSkeleton = () => (
   <div className="flex items-start gap-3 rounded-2xl bg-white p-4 lg:border lg:border-gray180">
     <div className="skeleton h-14 w-14 shrink-0 rounded-xl" />

@@ -8,9 +8,6 @@ import { useCartStore } from "@/stores/cart";
 import { getCartTotal } from "@/utils/cart";
 import { formatPrice } from "@/utils/format-price";
 
-// Desktop-only cart shortcut in the bottom-right corner, under the Hand
-// action button (MobileAction moves up to make room while the cart has
-// items). Mobile opens the cart from the bottom nav instead.
 const FloatingCart = () => {
   const t = useTranslations();
   const carts = useCartStore((state) => state.carts);

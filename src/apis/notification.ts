@@ -10,8 +10,6 @@ export const getNotifications = async (shopId: string) => {
   );
 };
 
-// Reads the unverified response shape defensively (plain array or paginated
-// `results`, several possible field names).
 export const normalizeNotifications = (
   data?: NotificationsResponseProps,
 ): NotificationItem[] => {

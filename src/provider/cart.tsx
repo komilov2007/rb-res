@@ -17,8 +17,6 @@ export const CartProvider = ({ children }: ChildrenProps) => {
   const setCarts = useCartStore((state) => state.setCarts);
   const bindShop = useCartStore((state) => state.bindShop);
 
-  // The persisted cart is loaded here (see the store's skipHydration). A
-  // layout effect, so it lands before any child's regular effect reads it.
   useLayoutEffect(() => {
     void useCartStore.persist.rehydrate();
   }, []);

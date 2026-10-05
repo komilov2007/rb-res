@@ -14,8 +14,6 @@ type CategoryRenderersContext = {
   handleCategoryClick: (categoryId: number) => void;
 };
 
-// Mobile tile and desktop chip renderers for one category, for the
-// current fixed/active state.
 export const createCategoryRenderers = ({
   isMobileFixed,
   isDesktopFixed,

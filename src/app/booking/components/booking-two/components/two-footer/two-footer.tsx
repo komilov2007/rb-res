@@ -9,17 +9,13 @@ import Button from "@/components/ui/button";
 
 import type { BookingFormValues } from "@/app/booking/schema";
 
-// "2026-09-22" -> "22.09"
 const toShortDate = (value: string) =>
   value ? value.split("-").reverse().slice(0, 2).join(".") : "—";
 
-// Live summary of the picks ("22.09 · 19:00 · 2") above the submit button.
 type TwoFooterProps = {
   className?: string;
 };
 
-// Mobile: pinned under the scroller. Desktop: part of the sticky right
-// panel, under the photo (booking-two renders one instance per layout).
 const TwoFooter = ({ className = "" }: TwoFooterProps) => {
   const t = useTranslations();
   const {

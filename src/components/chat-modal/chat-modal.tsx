@@ -8,9 +8,6 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
 
-// Desktop support chat as a modal (opened via useOpenChat). Mounted once
-// in the app provider; the ChatPanel — and with it the history fetch and
-// the socket — only mounts while the modal is open. Mobile uses /chat.
 const ChatModal = () => {
   const t = useTranslations();
   const isDesktop = useMediaQuery("(min-width: 1024px)");

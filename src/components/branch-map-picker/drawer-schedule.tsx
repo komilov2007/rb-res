@@ -14,15 +14,10 @@ type DrawerScheduleProps = {
   workingTime?: GeneralProps["working_time"];
 };
 
-// The desktop drawer's collapsible weekly schedule. working_time is
-// shop-level, so every branch has the same hours — shown once here rather
-// than repeated on each row.
 const DrawerSchedule = ({ workingTime }: DrawerScheduleProps) => {
   const t = useTranslations();
   const schedule = useBoolean();
 
-  // Collapsed, the row still answers the only question most people have —
-  // "is it open right now" — instead of being an empty label with a chevron.
   const todayEntry = workingTime?.[String(getDayIndex())];
   const todayHours =
     !todayEntry || todayEntry.is_closed || todayEntry.hours.length === 0
@@ -54,11 +49,6 @@ const DrawerSchedule = ({ workingTime }: DrawerScheduleProps) => {
         />
       </button>
 
-      {/* Animated open/close instead of mounting and unmounting, which
-          snapped. The grid-rows 0fr -> 1fr trick is the CSS-only way to
-          transition to a content-driven height (plain `height: auto`
-          cannot be transitioned); the inner div owns the overflow so
-          the rows clip while collapsing. */}
       <div
         className={`grid transition-all duration-300 ease-out ${
           schedule.value

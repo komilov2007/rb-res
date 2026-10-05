@@ -15,10 +15,6 @@ import { useShopId } from "@/hooks/useShopId";
 
 const MobileFooter = () => {
   const t = useTranslations();
-  // The Click superapp's webview keeps a system bar along the bottom edge,
-  // which would sit over this floating pill at its usual 16px offset — the
-  // same inset rb-shop compensates for with extra bottom padding on its own
-  // navigation bar under Click.
   const isClickApp = useIsClick();
   const router = useRouter();
   const pathname = usePathname();
@@ -65,8 +61,6 @@ const MobileFooter = () => {
     }
   };
 
-  // Active tab follows the current route (including nested pages, e.g.
-  // /profile/about keeps "Profil" active).
   const isRouteActive = (route: string) =>
     pathname === route || pathname.startsWith(`${route}/`);
 
@@ -93,13 +87,6 @@ const MobileFooter = () => {
         isClickApp ? "bottom-9" : "bottom-4"
       }`}
     >
-      {/* The frosted-glass look (translucent white + blur) and the actual
-          content sit in separate layers on purpose: putting bg-white/75 +
-          backdrop-blur directly on the container that also holds the cart
-          badge let the badge's solid primary color bleed/smear into the
-          translucent background around it. This layer only paints the
-          glass effect; content renders in the opaque layer above it, so
-          nothing behind the badge is ever translucent or blurred. */}
       <div className="relative rounded-[20px] shadow-[0_10px_40px_rgba(15,23,42,0.16)]">
         <div className="absolute inset-0 rounded-[20px] border border-white/60 bg-white/75 backdrop-blur-2xl" />
         <ul className="relative grid grid-cols-5 items-center p-2">
@@ -173,4 +160,3 @@ const MobileFooter = () => {
 };
 
 export default MobileFooter;
-

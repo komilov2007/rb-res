@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
 
-// Darker than the page's usual muted gray (text-gray220) but deliberately
-// kept at font-normal — a touch more contrast without turning these into a
-// second layer of bold headings competing with the value/price text.
 export const SectionLabel = ({
   icon,
   children,

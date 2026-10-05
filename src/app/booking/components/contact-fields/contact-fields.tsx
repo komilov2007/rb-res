@@ -17,8 +17,6 @@ import SectionTitle from "../section-title";
 const inputWrapper = (hasError: boolean) =>
   `!h-12 !rounded-xl ${hasError ? "!border-red" : ""}`;
 
-// Name + phone come from the user's profile and can't be edited here;
-// the extra phone is optional and hidden until asked for.
 const ContactFields = () => {
   const t = useTranslations();
   const {
@@ -26,8 +24,6 @@ const ContactFields = () => {
     setValue,
     formState: { errors },
   } = useFormContext<BookingFormValues>();
-  // Shown straight from the form values, so what's displayed is exactly
-  // what gets submitted.
   const [name, phone] = useWatch({ control, name: ["name", "phone"] });
   const [showExtraPhone, setShowExtraPhone] = useState(false);
 
@@ -43,8 +39,6 @@ const ContactFields = () => {
         title={t("booking_section_contact")}
       />
 
-      {/* Read-only, same style profile/edit uses for its phone — changing
-          either belongs to the profile, not to a single booking. */}
       <Input
         IconStart={IconUserFilled}
         disabled

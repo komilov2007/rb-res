@@ -20,7 +20,6 @@ type MessageItemProps = {
   message: MessageProps;
 };
 
-// Tapping an image opens it fullscreen.
 const MessageImage = ({ file }: { file: ChatFileProps }) => {
   const [viewerOpen, setViewerOpen] = useState(false);
 
@@ -42,8 +41,6 @@ const MessageImage = ({ file }: { file: ChatFileProps }) => {
   );
 };
 
-// Inline preview for image and video attachments; any other file type
-// renders as a generic file link.
 const MessageFile = ({ file }: { file: ChatFileProps }) => {
   if (file.type === "video") {
     return (
@@ -127,9 +124,6 @@ const MessageItem = ({ message }: MessageItemProps) => {
           <button
             type="button"
             onClick={() => {
-              // Desktop shows the chat as a modal, so navigating alone leaves
-              // it open on top of the order page; mobile's /chat is a route
-              // that unmounts on its own (the flag is already false there).
               setChatModalOpen(false);
               router.push(
                 getOrderDetailUrl(isDesktop, shopid, message.order_id),

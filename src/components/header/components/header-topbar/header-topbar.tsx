@@ -3,11 +3,7 @@
 import Language from "@/components/language";
 import { useIsClick } from "@/hooks/useIsClick";
 
-// Desktop-only thin row above the header: the language switcher.
 const HeaderTopbar = () => {
-  // Inside the Click superapp the shell owns the language choice (see
-  // profile.tsx), and the switcher is this row's only content — so the row
-  // goes away with it rather than rendering empty.
   const isClickApp = useIsClick();
 
   if (isClickApp) return null;

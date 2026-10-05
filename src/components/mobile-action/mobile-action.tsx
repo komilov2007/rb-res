@@ -23,7 +23,6 @@ import { useLocationStore } from "@/stores/location";
 import { useUiStore } from "@/stores/ui";
 import { useProductDetailStore } from "@/stores/product-detail";
 
-// `label` holds a translation key, resolved with t() at render.
 const actions = [
   {
     key: "chat",
@@ -45,9 +44,6 @@ const actions = [
 const MobileAction = () => {
   const t = useTranslations();
   const action = useBoolean();
-  // The Click superapp's webview keeps a system bar along the bottom edge;
-  // everything anchored there moves up by the same amount (CLICK_BOTTOM_LIFT)
-  // so it stays reachable — the floating nav does this too.
   const isClickApp = useIsClick();
   const router = useRouter();
   const pathname = usePathname();
@@ -97,7 +93,6 @@ const MobileAction = () => {
     isMobileHeaderDrawerOpen ||
     isProductDetailOpen ||
     locationModal ||
-    // Same visibility rule as BranchSelectionModal (shown only when logged in).
     (selectionModal && hasAccess)
   )
     return null;
@@ -174,4 +169,3 @@ const MobileAction = () => {
 };
 
 export default MobileAction;
-

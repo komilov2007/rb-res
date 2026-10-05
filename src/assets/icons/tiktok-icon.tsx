@@ -1,5 +1,3 @@
-// Full-color brand mark (black circle + cyan/red note), same style as the
-// youtube/whatsapp icons.
 export const IconTiktok = ({ size = 24 }) => {
   return (
     <svg

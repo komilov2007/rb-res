@@ -13,7 +13,6 @@ import Branches from "../branches";
 import { getOrderOption } from "./constants";
 
 type DeliveryTypeProps = {
-  // Already filtered to active services known to ORDER_OPTIONS.
   services: NonNullable<GeneralProps["services"]>;
   branches?: BranchProps[];
   isBranchesLoading: boolean;

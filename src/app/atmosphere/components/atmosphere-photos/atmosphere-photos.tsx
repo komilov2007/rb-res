@@ -6,16 +6,11 @@ import { useTranslations } from "next-intl";
 import { galleryImages } from "@/constants/atmosphere";
 
 type AtmospherePhotosProps = {
-  // Grid index of the tapped photo.
   onOpen: (index: number) => void;
 };
 
-// Alternating tile heights so the two columns stagger into a masonry
-// grid instead of lining up as a plain table of equal squares.
 const TILE_HEIGHTS = ["h-52", "h-36", "h-40", "h-56", "h-44", "h-36"];
 
-// Mobile-only body: description + tappable photo grid. The full-screen
-// viewer itself lives in atmosphere.tsx, shared with the hero video.
 const AtmospherePhotos = ({ onOpen }: AtmospherePhotosProps) => {
   const t = useTranslations();
 

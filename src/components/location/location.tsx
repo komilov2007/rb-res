@@ -10,9 +10,6 @@ type LocationProps = {
   labelClassName?: string;
 };
 
-// Header indicator of the current delivery/pickup choice (chip). Also keeps
-// its original job of defaulting the location store to the user's current
-// saved address.
 const Location = ({ className, labelClassName }: LocationProps) => {
   const address = useLocationStore((state) => state.address);
   const setAddress = useLocationStore((state) => state.setAddress);

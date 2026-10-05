@@ -11,11 +11,6 @@ import {
 } from "../../constants";
 import { pad } from "../../utils";
 
-// Mobile variant "two": an immersive walk-through of the restaurant. Every
-// slide fills the whole screen and snaps vertically, one "room" per swipe —
-// the video first (with the title), then each interior photo. A counter and
-// side progress dots show where you are; tapping a slide opens the shared
-// full-screen viewer (uncropped photo + thumbnails).
 const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
   const t = useTranslations();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -68,7 +63,6 @@ const AtmosphereTwo = ({ onOpen }: AtmosphereVariantProps) => {
               <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" />
 
               {isVideo && (
-                // bottom-32 clears the shell's floating "Bron qilish" button.
                 <div className="absolute inset-x-5 bottom-32 text-white">
                   <p className="text-sm font-normal leading-6 text-white/75">
                     {t("atmosphere_description")}

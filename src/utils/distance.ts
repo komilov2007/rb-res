@@ -7,9 +7,6 @@ const EARTH_RADIUS_KM = 6371;
 
 const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
-// Straight-line (haversine) distance in km — for display and sorting only.
-// The branch that actually serves a delivery address still comes from the
-// backend's nearest-branch API.
 export const getDistanceKm = (from: Coordinates, to: Coordinates) => {
   const latitudeDelta = toRadians(to.latitude - from.latitude);
   const longitudeDelta = toRadians(to.longitude - from.longitude);

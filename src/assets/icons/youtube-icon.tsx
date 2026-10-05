@@ -1,7 +1,3 @@
-// Full-color brand mark (red circle + white play badge), unlike the
-// currentColor instagram/telegram/facebook glyphs. The original design
-// export wrapped it in a clipPath the full-bleed circle never needs — left
-// out, so repeated instances on one page don't share a duplicate SVG id.
 export const IconYoutube = ({ size = 24 }) => {
   return (
     <svg

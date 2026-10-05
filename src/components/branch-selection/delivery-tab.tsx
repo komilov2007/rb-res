@@ -44,7 +44,6 @@ export const DeliveryTab = ({
   const [expanded, setExpanded] = useState(false);
 
   const { data: addresses } = useAddresses(auth?.customer, hasAccess && Boolean(auth?.customer));
-  // Same "make it the current address" call the location modal makes.
   const currentMutation = useMutation({
     mutationFn: updateAddressStatus,
     onSuccess: () => {
@@ -59,8 +58,6 @@ export const DeliveryTab = ({
     ? savedAddresses
     : savedAddresses.slice(0, COLLAPSED_COUNT);
   const isDeliverySelected = selection.serviceType === "DELIVERY";
-  // A selected delivery address that isn't a saved one (a guest's map pick)
-  // still shows as the selected entry.
   const hasUnsavedSelection =
     isDeliverySelected &&
     Boolean(address) &&
@@ -76,7 +73,6 @@ export const DeliveryTab = ({
     });
     setDelivery(selection.shopid);
     currentMutation.mutate(item.id);
-    // A pick is final — close right away.
     setSelectionModal(false);
   };
 
@@ -94,9 +90,6 @@ export const DeliveryTab = ({
         <Pill tone="primary">{t("home_branch_selection_map_pill")}</Pill>
       </button>
 
-      {/* No saved addresses (and nothing picked): the "Yangi manzil
-          kiriting" row above is the whole tab — no empty section header
-          or "none saved" note under it. */}
       {!(
         hasAccess &&
         addresses &&
@@ -126,7 +119,6 @@ export const DeliveryTab = ({
               {t("home_branch_selection_login_for_saved")}
             </p>
           ) : !addresses ? (
-            // Row-sized skeletons, same box as a saved-address row.
             <div
               aria-label={t("home_branch_selection_addresses_loading")}
               className="flex flex-col gap-2"

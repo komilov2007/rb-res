@@ -17,10 +17,6 @@ export type AddressProps = CreateAddressPayload & {
   id: number;
 };
 
-// Confirmed live: POST webapp/check/delivery/{shop} with {lat, long} returns
-// {is_allow} — the backend checks the point against the shop's DELIVERY
-// service cities (Tashkent/Andijan allowed, Samarkand/Khiva rejected for a
-// shop configured with two cities).
 export type DeliveryCheckProps = {
   is_allow: boolean;
 };

@@ -13,8 +13,6 @@ export type MessageProps = {
   created_at: string;
   message_type: ChatMessageTypeProps;
   text: string;
-  // Documented as required, but confirmed to arrive null/absent — always
-  // guard with `message.file &&` before rendering.
   file?: ChatFileProps | null;
   order_id?: number;
   products_count?: number;
@@ -27,8 +25,6 @@ export type ChatListResponse = {
   results: MessageProps[];
 };
 
-// Incoming WebSocket frame — both a bot reply and the echo of a message the
-// current customer just sent arrive through this same shape.
 export type ChatSocketIncoming = {
   type: "CHAT";
   status_code: number;
@@ -53,8 +49,6 @@ export type ChatSocketTextPayload = {
   };
 };
 
-// `chat_created` isn't part of the incoming/outgoing text shape above, but
-// the socket expects it on a file announcement.
 export type ChatSocketFilePayload = {
   type: "CHAT";
   data: {

@@ -16,9 +16,6 @@ type ClickProviderProps = {
   clickToken: string | null;
 };
 
-// Mirrors rb-shop's provider/click.tsx: exchanges the `web-session` header
-// Click's superapp webview attaches for a real access/refresh pair, once the
-// shop's general data (and therefore its id) is known.
 export const ClickProvider = ({ clickToken }: ClickProviderProps) => {
   const locale = useLocale();
   const { data: general } = useGeneral();
@@ -37,11 +34,6 @@ export const ClickProvider = ({ clickToken }: ClickProviderProps) => {
     setAuth(data.data);
   }, [data?.data, shopId, setAuth]);
 
-  // getLocale() derives the locale from Click's Accept-Language, but
-  // src/i18n/request.ts (server components) and the shared request client's
-  // Accept-Language both read the NEXT_LOCALE cookie. Writing the detected
-  // locale back keeps all three in agreement — rb-shop does the same in its
-  // general provider.
   useEffect(() => {
     setCookie("NEXT_LOCALE", locale);
   }, [locale]);

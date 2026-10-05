@@ -19,8 +19,6 @@ import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
 
 import StatusBadge from "@/components/order-status-badge";
 
-// Only used within this card's own product list — not shared elsewhere, so
-// it stays a plain local component rather than its own file.
 const OrderItemRow = ({ item }: { item: MyOrderListItemProduct }) => {
   const t = useTranslations();
 
@@ -47,20 +45,12 @@ const OrderItemRow = ({ item }: { item: MyOrderListItemProduct }) => {
 
 type OrderDetailCardProps = {
   order: MyOrderListItem;
-  // The list endpoint has no per-order customer name/phone field — these
-  // come from the logged-in account instead (accurate here since this is
-  // always "my own" orders), not fabricated per-order data.
   customerName?: string;
   customerPhone?: string;
-  // Controlled by the parent (keyed by order.id there) rather than owned
-  // locally here, so there's no ambiguity about whether this card's own
-  // expand state could ever be shared with another card's.
   expanded: boolean;
   onToggleExpand: () => void;
 };
 
-// Desktop's "Buyurtmalarim" shows this full card directly in the list
-// instead of linking out to a separate detail page — see orders.tsx.
 const OrderDetailCard = ({
   order,
   customerName,
@@ -77,9 +67,6 @@ const OrderDetailCard = ({
     ? t("orders_card_shop_address")
     : t("delivery_address");
   const locationValue = isPickup ? order.branch : order.address;
-  // Matches the confirmed rule on the order detail page (my-order-summary.tsx:
-  // isCancellable = status === "NEW") — that's the verified backend
-  // constraint, not every "not yet delivered" status.
   const isCancellable = order.status.status === "NEW";
 
   const { cancelOrder, isCancelling } = useCancelOrder(order.id, {
@@ -122,8 +109,6 @@ const OrderDetailCard = ({
       )}
 
       <div className="border-t border-gray180/60 pt-3">
-        {/* No product shows until this is clicked — including the first
-            one — then all of them appear together. */}
         <button
           type="button"
           onClick={onToggleExpand}
@@ -139,7 +124,6 @@ const OrderDetailCard = ({
         {expanded && (
           <ul className="mt-2.75 flex flex-col gap-2.75">
             {order.items.map((item, index) => (
-              // The same product can appear on several lines, so id alone isn't unique.
               <OrderItemRow key={`${item.id}-${index}`} item={item} />
             ))}
           </ul>

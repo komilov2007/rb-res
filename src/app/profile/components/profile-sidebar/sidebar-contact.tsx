@@ -11,9 +11,6 @@ type SidebarContactProps = {
   socials: NonNullable<GeneralProps["socials"]>;
 };
 
-// The desktop sidebar's bottom section: shop phone, social links and the
-// "Robosell.uz tomonidan taqdim etilgan" line. Renders nothing when the
-// shop has neither a phone nor socials.
 const SidebarContact = ({ businessPhone, socials }: SidebarContactProps) => {
   const t = useTranslations();
 

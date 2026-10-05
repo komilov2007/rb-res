@@ -1,9 +1,5 @@
 import { create } from "zustand";
 
-// TEMPORARY — desktop /atmosphere photo-count preview: how each column
-// ("Menyu", "Galereya") looks with 1, 2, 3 or 4 photos. Delete this whole
-// folder (and its usage in atmosphere.tsx) once the layouts are approved.
-// 0 = every photo the column has.
 export const ATMOSPHERE_PREVIEW_VARIANTS = [
   { id: 0, label: "Hammasi" },
   { id: 1, label: "1 ta rasm" },

@@ -6,17 +6,13 @@ import type { DiscountProductVariant, SaleBadgeVariant } from "../../types";
 
 import CategoryMoreCard from "../category-more-card";
 
-// Desktop: 2 rows of 5. Past this, the last cell becomes a "see all" card.
 const DESKTOP_MAX_CARDS = 10;
 
 type ProductGridProps = {
   products: ProductProps[];
   variant?: DiscountProductVariant;
   saleBadgeVariant?: SaleBadgeVariant;
-  // Selected home branch — products not sold there are shown muted.
   branchId?: number | null;
-  // Category page link. When set, desktop shows at most DESKTOP_MAX_CARDS
-  // cells, the last one linking here.
   moreHref?: string;
 };
 

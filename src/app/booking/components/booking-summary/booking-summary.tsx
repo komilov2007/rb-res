@@ -25,8 +25,6 @@ import { getBookingDays } from "../../utils";
 
 type IconType = ComponentType<{ size?: number; className?: string }>;
 
-// One picked value: a big value over a small caption. Tinted once filled,
-// so the card shows at a glance what's still missing.
 const SummaryTile = ({
   Icon,
   value,
@@ -73,10 +71,6 @@ const InfoRow = ({ Icon, children }: { Icon: IconType; children: string }) => (
   </span>
 );
 
-// Desktop-only side card, stretched to the form column's height (the
-// photo takes up the extra space): the atmosphere photo (links to
-// /atmosphere, like the mobile hero), the picks read live from the form
-// as three tiles, the submit button and the shop's hours/phone.
 const BookingSummary = () => {
   const t = useTranslations();
   const router = useRouter();
@@ -94,13 +88,10 @@ const BookingSummary = () => {
     name: ["date", "time", "guests"],
   });
 
-  // getDayLabel gives "Bugun, 24.09" — the tile shows "24.09" big and the
-  // weekday as its caption, since the full label doesn't fit a third.
   const dayIndex = days.findIndex((day) => getDateValue(day) === date);
   const [weekday, shortDate] =
     dayIndex >= 0 ? getDayLabel(days[dayIndex], dayIndex).split(", ") : [];
 
-  // Today's hours, same derivation as the footer.
   const todayEntry = general?.working_time?.[String(getDayIndex())];
   const todayHours =
     !todayEntry || todayEntry.is_closed || todayEntry.hours.length === 0

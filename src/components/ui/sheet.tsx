@@ -60,8 +60,6 @@ function SheetContent({
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
-  // Mobile keeps the sheet; from lg up it becomes a centered modal (the
-  // side's position/slide classes are overridden, hence the "!").
   desktopModal?: boolean;
 }) {
   return (
@@ -74,70 +72,46 @@ function SheetContent({
         className={cn(
           "fixed z-50 flex flex-col bg-white text-black shadow-lg outline-none",
 
-          /*
-           * RIGHT
-           */
           "data-[side=right]:inset-y-0",
           "data-[side=right]:right-0",
           "data-[side=right]:h-full",
           "data-[side=right]:border-l",
           "data-[side=right]:border-gray180",
 
-          /*
-           * LEFT
-           */
           "data-[side=left]:inset-y-0",
           "data-[side=left]:left-0",
           "data-[side=left]:h-full",
           "data-[side=left]:border-r",
           "data-[side=left]:border-gray180",
 
-          /*
-           * TOP
-           */
           "data-[side=top]:inset-x-0",
           "data-[side=top]:top-0",
           "data-[side=top]:h-auto",
           "data-[side=top]:border-b",
           "data-[side=top]:border-gray180",
 
-          /*
-           * BOTTOM
-           */
           "data-[side=bottom]:inset-x-0",
           "data-[side=bottom]:bottom-0",
           "data-[side=bottom]:h-auto",
           "data-[side=bottom]:border-t",
           "data-[side=bottom]:border-gray180",
 
-          /*
-           * COMMON ANIMATION
-           */
           "data-[state=open]:animate-in",
           "data-[state=closed]:animate-out",
 
           "data-[state=open]:duration-200",
           "data-[state=closed]:duration-200",
 
-          /*
-           * OPEN
-           */
           "data-[side=right]:data-[state=open]:slide-in-from-right-full",
           "data-[side=left]:data-[state=open]:slide-in-from-left-full",
           "data-[side=top]:data-[state=open]:slide-in-from-top-full",
           "data-[side=bottom]:data-[state=open]:slide-in-from-bottom-full",
 
-          /*
-           * CLOSE
-           */
           "data-[side=right]:data-[state=closed]:slide-out-to-right-full",
           "data-[side=left]:data-[state=closed]:slide-out-to-left-full",
           "data-[side=top]:data-[state=closed]:slide-out-to-top-full",
           "data-[side=bottom]:data-[state=closed]:slide-out-to-bottom-full",
 
-          /*
-           * DESKTOP MODAL (opt-in)
-           */
           desktopModal &&
             cn(
               "lg:inset-auto! lg:top-1/2! lg:left-1/2! lg:h-auto! lg:max-h-[85vh]!",

@@ -12,11 +12,6 @@ type PaymentMethodErrorBoundaryState = {
   hasError: boolean;
 };
 
-// Suspense only covers the loading state — a useSuspenseQuery error still
-// throws during render, and React has no hook equivalent for catching that,
-// only a class component. Only payment types the backend actually returned
-// may be offered, so an error renders a retry state (no hardcoded list);
-// `onReset` lets the caller reset the failed query before re-rendering.
 class PaymentMethodErrorBoundary extends Component<
   PaymentMethodErrorBoundaryProps,
   PaymentMethodErrorBoundaryState

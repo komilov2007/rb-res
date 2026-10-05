@@ -31,8 +31,6 @@ export const useCardProduct = ({
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
   const [displayQuantity, setDisplayQuantity] = useState<number | null>(null);
   const [isCartSyncing, setIsCartSyncing] = useState(false);
-  // Argument types come straight from the API functions, so the payloads
-  // can't drift from src/apis/cart.ts.
   const stockMutation = useMutation({
     mutationFn: (args: Parameters<typeof addNoParameterCart>) =>
       addNoParameterCart(...args),
@@ -44,16 +42,12 @@ export const useCardProduct = ({
   const openCartModal = useCartStore((state) => state.openCartModal);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const { branchId: selectedBranchId } = useBranchSelection();
-  // The card manages the product's plain line (cards only handle products
-  // without parameters) — never a parameter line of the same product.
   const cartItem = carts.find(
     (item) =>
       item.product.id === product.id &&
       !item.parameter &&
       !item.ad_parameter?.length,
   );
-  // A parameter product has no plain line — its card shows the total of all
-  // its parameter lines instead, so it gets a counter like any other card.
   const parameterLines = product.have_parameter
     ? carts.filter((item) => item.product.id === product.id)
     : [];
@@ -66,9 +60,6 @@ export const useCardProduct = ({
 
   const refreshCart = useRefreshCart();
 
-  // The server's quantity, or null when the write failed — the global
-  // request interceptor already toasts the backend's message, and the cart
-  // is re-read so any optimistic local change is undone.
   const syncStockQuantity = async (
     nextQuantity: number,
   ): Promise<number | null> => {
@@ -100,10 +91,6 @@ export const useCardProduct = ({
     counter.setTrue();
   };
 
-  // Changes a parameter product's quantity from the card. Only possible
-  // when it has exactly one line; with several the card can't know which
-  // one is meant, so the cart opens instead (where each line has its own
-  // counter). Same updateCartItem call the cart drawer's counter makes.
   const changeParameterQuantity = async (nextQuantity: number) => {
     const line = parameterLines.length === 1 ? parameterLines[0] : null;
 
@@ -119,7 +106,6 @@ export const useCardProduct = ({
       await parameterMutation.mutateAsync([line.id, nextQuantity, branchData]);
       await refreshCart();
     } catch {
-      // The interceptor already toasted it; re-read the real cart.
       await refreshCart().catch(() => {});
     } finally {
       setIsCartSyncing(false);
@@ -127,11 +113,6 @@ export const useCardProduct = ({
     }
   };
 
-  // Shared by the "add" button and the counter's "+": adding to the cart
-  // requires login — guests get the login modal instead, checked before the
-  // parameter-product detail so the two never stack. After login the home
-  // page opens the address/branch selection itself (app/page.tsx) when none
-  // is saved yet. Only the first add also puts the product into the store.
   const addOne = async (isFirstAdd: boolean) => {
     if (!customerId) {
       setLoginModal(true);
@@ -179,8 +160,6 @@ export const useCardProduct = ({
       setProductQuantity(product.id, 0);
     }
     const syncedQuantity = await syncStockQuantity(nextQuantity);
-    // Removed (already done locally) or failed (the refreshed cart holds the
-    // real quantity).
     if (nextQuantity === 0 || syncedQuantity === null) {
       return;
     }

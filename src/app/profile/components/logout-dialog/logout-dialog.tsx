@@ -16,8 +16,6 @@ type LogoutDialogProps = {
   onConfirm: () => void;
 };
 
-// "Chiqasizmi?" confirmation — shared by the mobile profile page and the
-// desktop profile sidebar.
 const LogoutDialog = ({ open, onOpenChange, onConfirm }: LogoutDialogProps) => {
   const t = useTranslations();
 

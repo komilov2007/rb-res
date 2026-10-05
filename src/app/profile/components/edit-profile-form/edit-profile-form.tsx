@@ -20,9 +20,6 @@ import { formatPhone, getLocalPhone } from "@/utils/format-number";
 import LoginRequired from "@/components/login-required";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
-// Shared by /profile/edit (its own page) and the bare /profile route's
-// desktop content pane (shown there by default instead of a placeholder) —
-// same name/phone form and mutation logic in both places.
 const EditProfileForm = () => {
   const t = useTranslations();
   const router = useRouter();
@@ -32,9 +29,6 @@ const EditProfileForm = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const setAuth = useAuthStore((state) => state.setAuth);
-  // null = untouched: shows the stored name, which only arrives after
-  // AuthProvider reads the session (a plain useState(auth?.firstname) init
-  // stayed empty on a direct page load).
   const [draftFirstname, setFirstname] = useState<string | null>(null);
   const firstname = draftFirstname ?? auth?.firstname ?? "";
   const [error, setError] = useState<string | null>(null);
@@ -49,8 +43,6 @@ const EditProfileForm = () => {
         shopid as string,
       ),
     onSuccess: (response) => {
-      // The stored session, not the render-time `auth`: the request may
-      // have refreshed the tokens on its way out.
       const currentAuth = (shopid && getUser(shopid)?.auth) || auth;
 
       if (currentAuth) {
@@ -61,9 +53,6 @@ const EditProfileForm = () => {
         if (shopid) setUser(shopid, nextAuth);
       }
 
-      // The profile page displays useProfile()'s query cache, not the auth
-      // store — patch it directly so the new name shows immediately instead
-      // of waiting on the invalidated query's refetch to land.
       queryClient.setQueryData<{ data: UserInfo } | undefined>(
         [REACT_QUERY_KEYS.PROFILE, auth?.customer],
         (previous) =>
@@ -101,7 +90,6 @@ const EditProfileForm = () => {
     update.mutate();
   };
 
-  // Session not read yet: render nothing rather than the login prompt.
   if (!isAuthReady) return null;
 
   if (!hasAccess) {
@@ -129,9 +117,6 @@ const EditProfileForm = () => {
         {error && <span className="text-xs text-red">{error}</span>}
       </label>
 
-      {/* Read-only — phone changes require a separate SMS-confirmation flow
-          that doesn't exist in this project yet, so it's shown for context
-          only, not editable here. */}
       <label className="flex flex-col gap-2">
         <span className="text-xs font-normal text-gray220">
           {t("phone_number")}

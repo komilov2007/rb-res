@@ -8,8 +8,6 @@ import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { galleryImages } from "@/constants/atmosphere";
 
-// Cover is one of /atmosphere's own gallery photos, so the hero previews
-// exactly what tapping it opens (/atmosphere, the restaurant's gallery).
 const BookingHero = () => {
   const t = useTranslations();
   const router = useRouter();

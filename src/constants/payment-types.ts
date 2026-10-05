@@ -11,18 +11,10 @@ import { IconClick } from "@/assets/icons/click";
 import { IconCardGlobal } from "@/assets/icons/cards-global";
 import { IconUzumSolid } from "@/assets/icons/uzum-solid";
 import { IconAlif } from "@/assets/icons/alif";
-// File on disk is misspelled "bank-trasfer.tsx" — importing the real path.
 import { IconBankTransfer } from "@/assets/icons/bank-trasfer";
 
 import type { PaymentTypeProps } from "@/types/order";
 
-// Originally lived inside order/components/payment-method (checkout-only),
-// moved here (STEP 32.2) once the read-only order-detail view
-// (src/components/order-detail-sections) also needed the same icon+label
-// mapping to display a placed order's payment_type — now genuinely shared
-// across two unrelated features, per this project's own component-ownership
-// convention (AGENTS.md Section 3). ROBO_PAY intentionally excluded — it's
-// a generic/catch-all status, not an icon-bearing payment method.
 export const PAYMENT_TYPE_ICON_MAP: Partial<
   Record<PaymentTypeProps, ComponentType>
 > = {
@@ -42,9 +34,6 @@ export const PAYMENT_TYPE_ICON_MAP: Partial<
   ROBO_UZUM: IconUzum,
 };
 
-// Label per payment type — shown on checkout's payment-method cards and in
-// the order-detail view. `label` is a getter so it always reads the current
-// locale (messages: payment_types.*), without every consumer calling t().
 const PAYMENT_LABEL_TYPES: PaymentTypeProps[] = [
   "CASH",
   "CARD",
@@ -69,8 +58,6 @@ export const PAYMENT_CARD_CONFIG: Partial<
     type,
     {
       get label() {
-        // Message keys are lower-case (payment_types_cash); the payment
-        // type enum is upper-case (CASH).
         return translate(`payment_types_${type.toLowerCase()}`);
       },
     },

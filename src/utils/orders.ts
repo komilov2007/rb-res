@@ -12,8 +12,6 @@ const withQuery = (path: string, params: Record<string, string | null>) => {
   return `${path}${search ? `?${search}` : ""}`;
 };
 
-// Desktop "Buyurtmalarim" lives in the profile; `order` opens that order's
-// card expanded in the list.
 export const getProfileOrdersUrl = (
   shopid?: string | null,
   orderId?: number | string | null,
@@ -26,8 +24,6 @@ export const getProfileOrdersUrl = (
         : null,
   });
 
-// Mobile keeps its own order pages (detail, just-placed order); desktop
-// sends these to the profile's orders instead.
 export const getOrderDetailUrl = (
   isDesktop: boolean,
   shopid: string | null | undefined,

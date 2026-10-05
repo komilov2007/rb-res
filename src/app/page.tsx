@@ -19,8 +19,6 @@ const Page = () => {
   );
   const hasAccess = useAuthStore((state) => state.hasAccess);
 
-  // Ask once on home load while no delivery/pickup choice is saved yet.
-  // Choosing requires login, so guests aren't asked until they log in.
   useEffect(() => {
     if (isReady && hasAccess && !serviceType) setSelectionModal(true);
   }, [isReady, hasAccess, serviceType, setSelectionModal]);
@@ -37,8 +35,6 @@ const Page = () => {
           </div>
         ) : (
           <>
-            {/* Desktop: slides 30px under the header (z-50) so the white fills its
-                rounded bottom corners — the two read as one block. */}
             <section className="rounded-bl-[30px] rounded-br-[30px] bg-white py-0 lg:-mt-[30px] lg:pt-[50px] lg:pb-5">
               <Banner />
               <Categories />

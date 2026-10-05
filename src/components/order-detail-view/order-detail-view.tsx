@@ -14,7 +14,6 @@ import LoginRequired from "@/components/login-required";
 import { useOpenChat } from "@/hooks/useOpenChat";
 import { formatOrderDate } from "@/utils/format-date";
 
-// A section's small icon + caption line (SectionLabel).
 const LabelSkeleton = ({ width }: { width: string }) => (
   <div className="flex h-4 items-center gap-2">
     <div className="skeleton h-3.25 w-3.25 rounded" />
@@ -22,7 +21,6 @@ const LabelSkeleton = ({ width }: { width: string }) => (
   </div>
 );
 
-// One InfoRow: label left, value right, text-sm line height.
 const RowSkeleton = ({ label, value }: { label: string; value: string }) => (
   <div className="flex h-5 items-center justify-between">
     <div className={`skeleton h-3 rounded-full ${label}`} />
@@ -30,21 +28,15 @@ const RowSkeleton = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-// Mirrors the loaded page block for block — same wrapper, the same four
-// divider-separated sections (status timeline, address, items, payment)
-// with their real paddings and line heights, and the two action buttons —
-// so nothing jumps when the order arrives.
 const OrderDetailSkeleton = () => (
   <div className="mx-auto flex w-full max-w-xl flex-1 flex-col pt-[calc(68px+env(safe-area-inset-top))] pb-6">
     <div className="flex flex-col divide-y divide-gray180 px-4">
-      {/* Status timeline: 4 steps (28px dot + 2-line caption), lines between. */}
       <section className="py-5">
         <div className="flex items-start">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="flex flex-1 items-start last:flex-none">
               <div className="flex w-16 flex-col items-center gap-2">
                 <div className="skeleton h-7 w-7 rounded-full" />
-                {/* Captions wrap to two 11px lines (e.g. "Qabul / qilindi"). */}
                 <div className="flex h-7 flex-col items-center justify-center gap-1.5">
                   <div className="skeleton h-2.5 w-12 rounded-full" />
                   <div className="skeleton h-2.5 w-8 rounded-full" />
@@ -56,7 +48,6 @@ const OrderDetailSkeleton = () => (
         </div>
       </section>
 
-      {/* Address: caption, then the icon + name/address row. */}
       <section className="py-5">
         <LabelSkeleton width="w-28" />
         <div className="mt-3 flex items-start gap-3">
@@ -72,7 +63,6 @@ const OrderDetailSkeleton = () => (
         </div>
       </section>
 
-      {/* Items: 48px photo, name + count, price. */}
       <section className="py-5">
         <LabelSkeleton width="w-24" />
         <div className="mt-3 flex flex-col gap-3">
@@ -93,8 +83,6 @@ const OrderDetailSkeleton = () => (
         </div>
       </section>
 
-      {/* Payment: caption, the 4 always-shown rows (delivery price and
-          discount only appear when they apply), divider, total. */}
       <section className="py-5">
         <LabelSkeleton width="w-28" />
         <div className="mt-3 flex flex-col gap-2.5">
@@ -110,7 +98,6 @@ const OrderDetailSkeleton = () => (
       </section>
     </div>
 
-    {/* Pay / cancel buttons. */}
     <div className="mt-4 flex flex-col gap-2.5 px-4">
       <div className="skeleton h-12 w-full rounded-xl" />
       <div className="skeleton h-12 w-full rounded-xl" />
@@ -122,10 +109,6 @@ type OrderDetailViewProps = OrderDetailState & {
   onBack: () => void;
 };
 
-// The order detail page shared by my-orders/[order] and order-placing/[order]
-// — header, OrderDetailSections, RetryPayment, CancelOrder — so an order
-// opened from "Buyurtmalarim" looks identical to one just placed. The two
-// routes differ only in where "back" goes.
 const OrderDetailView = ({
   orderId,
   detail,

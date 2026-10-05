@@ -44,7 +44,6 @@ const AddressesContent = () => {
   const clearAddressById = useLocationStore((state) => state.clearAddressById);
   const [deleting, setDeleting] = useState<AddressProps | null>(null);
 
-  // Same saved-addresses query as the address/branch selection modal.
   const addressesQuery = useAddresses(
     auth?.customer,
     hasAccess && Boolean(auth?.customer),
@@ -54,10 +53,6 @@ const AddressesContent = () => {
     mutationFn: deleteAddress,
     onSuccess: (_, id) => {
       setDeleting(null);
-      // Drop it from the cached list first, then from the selected-address
-      // store: home's Location falls back to the list's current address
-      // whenever the store is empty, and with the stale list still holding
-      // the deleted address it would immediately re-select it.
       queryClient.setQueryData<AxiosResponse<AddressProps[]>>(
         [REACT_QUERY_KEYS.USER_ADDRESSES, auth?.customer],
         (old) =>
@@ -74,8 +69,6 @@ const AddressesContent = () => {
   const branches =
     branchesData?.data.filter((branch) => branch.is_active) ?? [];
 
-  // Edit/add reuse the location modal's own flows: editing opens it on the
-  // map with the address filled in, adding opens it straight on the map.
   const handleEdit = (item: AddressProps) => {
     setEditingAddress(item);
     setLocationModal(true);
@@ -87,7 +80,6 @@ const AddressesContent = () => {
     );
   }
 
-  // Session not read yet counts as loading, not as a guest.
   if (!isAuthReady || addressesQuery.isLoading) {
     return (
       <>
@@ -146,9 +138,6 @@ const AddressesContent = () => {
   );
 };
 
-// "Add address", shown once the list has addresses (the empty state has its
-// own button). Rendered as the shell's footer so on desktop it stays pinned
-// under the scrolling list. Same cached addresses query as the list.
 const AddAddressFooter = () => {
   const t = useTranslations();
   const auth = useAuthStore((state) => state.auth);
@@ -181,7 +170,6 @@ const Addresses = () => {
       title={t("profile_page_menu_addresses")}
       footer={<AddAddressFooter />}
     >
-      {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <AddressesContent />
       </Suspense>

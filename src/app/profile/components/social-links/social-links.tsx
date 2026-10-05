@@ -7,12 +7,9 @@ import {
 
 type SocialLinksProps = {
   socials: NonNullable<GeneralProps["socials"]>;
-  // Each link's own classes — the icon circle is sized differently on the
-  // mobile page and the desktop sidebar.
   itemClassName: string;
 };
 
-// The shop's social profiles as brand-coloured icon links.
 const SocialLinks = ({ socials, itemClassName }: SocialLinksProps) => (
   <div className="mt-2 flex flex-wrap gap-2">
     {socials.map((social) => {

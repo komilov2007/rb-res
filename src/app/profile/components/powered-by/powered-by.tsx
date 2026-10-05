@@ -2,9 +2,6 @@
 
 import { useTranslations } from "next-intl";
 
-// "<Robosell.uz> tomonidan taqdim etilgan" line. The paragraph's own classes
-// differ between the mobile page and the desktop sidebar, so they're passed
-// in unchanged.
 const PoweredBy = ({ className }: { className: string }) => {
   const t = useTranslations();
 

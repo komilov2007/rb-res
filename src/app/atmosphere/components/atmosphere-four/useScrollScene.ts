@@ -5,12 +5,6 @@ import { useEffect, useRef } from "react";
 const clamp = (value: number, min = 0, max = 1) =>
   Math.min(max, Math.max(min, value));
 
-// Drives every scroll-linked effect of AtmosphereFour by writing styles
-// straight to the DOM inside requestAnimationFrame — no React state, so
-// nothing re-renders while scrolling:
-//   hero  — video zooms in + softens, title lifts away (the "curtain")
-//   words — description words light up one by one as it scrolls through
-//   frames — each photo drifts inside its frame (parallax)
 export const useScrollScene = () => {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const heroMediaRef = useRef<HTMLVideoElement | null>(null);

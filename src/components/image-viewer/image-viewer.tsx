@@ -11,28 +11,20 @@ import { getImageSrc, handleImageFallback } from "@/utils/image";
 
 type ImageViewerProps = {
   images: string[];
-  // Index of the image to show; null = closed.
   openIndex: number | null;
   onClose: () => void;
 };
 
 const SWIPE_THRESHOLD = 50;
 
-// Items are image URLs by default; a video file URL (e.g. the atmosphere
-// page's hero clip) is played in place of an <img>.
 const isVideoSrc = (src: string) => /\.(mp4|webm|mov)(\?|#|$)/i.test(src);
 
-// Fullscreen image viewer (black backdrop, "n/total" counter, close button,
-// swipe/arrows between images). Built on the Radix Dialog so it stacks
-// correctly above other Radix Sheets/Dialogs (e.g. the product detail
-// drawer) without closing them.
 const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
   const t = useTranslations();
   const [index, setIndex] = useState(0);
   const [prevOpenIndex, setPrevOpenIndex] = useState(openIndex);
   const touchStartX = useRef<number | null>(null);
 
-  // Sync the shown image with each new open (adjust-state-during-render).
   if (openIndex !== prevOpenIndex) {
     setPrevOpenIndex(openIndex);
     if (openIndex !== null) setIndex(openIndex);
@@ -75,9 +67,6 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
           </button>
         </div>
 
-        {/* Mobile: thumbnails in a row under the image. Desktop: a narrow
-            column of small thumbnails on the right, so the image keeps the
-            full height. */}
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
           <div
             className="relative flex min-h-0 flex-1 items-center justify-center lg:px-6 lg:pb-6"
@@ -155,8 +144,6 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
                       });
                     }
                   }}
-                  // Mobile: exactly 6 per row, (width − 5 gaps of 0.5rem) / 6.
-                  // Desktop: the full width of the thumbnail column.
                   className={`relative aspect-square w-[calc((100%-2.5rem)/6)] shrink-0 lg:w-full overflow-hidden rounded-xl border-2 transition-opacity ${
                     imageIndex === index
                       ? "border-white opacity-100"

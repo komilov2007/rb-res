@@ -7,10 +7,6 @@ type AtmosphereHeroProps = {
   onOpen: () => void;
 };
 
-// Mobile-only cover: the ambience video edge to edge, playing silently in
-// a loop like a live photo, with just the title laid over it. Tapping it
-// opens the video full-screen (with sound/controls) in the same viewer as
-// the gallery photos. The content sheet below overlaps its bottom edge.
 const AtmosphereHero = ({ onOpen }: AtmosphereHeroProps) => {
   const t = useTranslations();
 
@@ -21,8 +17,6 @@ const AtmosphereHero = ({ onOpen }: AtmosphereHeroProps) => {
       aria-label={t("atmosphere_title")}
       className="relative block h-[62dvh] min-h-[380px] w-full overflow-hidden bg-black text-left"
     >
-      {/* No poster: the old stock poster showed a different interior than
-          this video, so the black background is shown until it starts. */}
       <video
         autoPlay
         muted

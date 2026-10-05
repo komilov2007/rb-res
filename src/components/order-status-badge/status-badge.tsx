@@ -19,7 +19,6 @@ type BadgeVariant = "success" | "warning" | "info" | "danger";
 const STATUS_VARIANT: Record<OrderStatusValue, BadgeVariant> = {
   NEW: "success",
   PROGRESS: "warning",
-  // Its own colour so "ready" doesn't read like "still preparing".
   READY: "info",
   ON_THE_WAY: "warning",
   DELIVERED: "success",
@@ -28,11 +27,6 @@ const STATUS_VARIANT: Record<OrderStatusValue, BadgeVariant> = {
   CANCELED_BY_CUSTOMER: "danger",
 };
 
-// Reuses this project's existing color tokens rather than inventing new
-// ones: green-500 already means "success" (order.tsx's selection state,
-// your-order.tsx's discount line), --red already means "danger" (every
-// inline error message across the order feature), --yellow/--yellow10 are
-// this project's own real custom tokens (used for the sale-ribbon accent).
 const VARIANT_CLASS_NAMES: Record<BadgeVariant, string> = {
   success: "bg-green-500/10 text-green-500",
   warning: "bg-yellow10 text-yellow",
@@ -44,8 +38,6 @@ type StatusBadgeProps = {
   status: OrderStatusValue;
   size?: "sm" | "md";
   showDot?: boolean;
-  // Optional trailing icon (e.g. a chevron when the badge is a toggle);
-  // takes the badge colour via currentColor.
   endIcon?: ReactNode;
 };
 

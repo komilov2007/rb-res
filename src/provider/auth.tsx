@@ -11,8 +11,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const setAuth = useAuthStore((state) => state.setAuth);
 
   useEffect(() => {
-    // No shop_id → no stored session to read; keep the current auth and
-    // just mark it as known.
     if (!shopid) {
       useAuthStore.setState({ isAuthReady: true });
       return;
@@ -23,4 +21,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return children;
 };
-

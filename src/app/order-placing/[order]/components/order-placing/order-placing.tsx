@@ -16,8 +16,6 @@ const OrderPlacing = () => {
   return (
     <OrderDetailView
       {...orderDetail}
-      // Back always lands on the orders list — router.back() would return
-      // to the already-submitted checkout page.
       onBack={() =>
         router.replace(
           `${ROUTER.MY_ORDERS}${shopid ? `?shop_id=${shopid}` : ""}`,

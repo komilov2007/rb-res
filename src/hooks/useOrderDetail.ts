@@ -10,15 +10,8 @@ import { openPaymentLink } from "@/utils/telegram";
 import { useCancelOrder } from "@/hooks/useCancelOrder";
 import { useAuthStore } from "@/stores/auth";
 
-// INFERRED, not independently confirmed against rb-restaurant's own
-// backend behavior — matches the reference's polling cadence. A one-line
-// change later if 30s feels wrong once tested live.
 const POLL_INTERVAL_MS = 30000;
 
-// Detail query + cancel + retry-payment for one order, read from the route's
-// [order] param. Shared by my-orders/[order] and order-placing/[order]: both
-// routes render the same detail view, and sharing the exact same query key
-// keeps either route's cache warm for the other.
 export const useOrderDetail = () => {
   const params = useParams<{ order: string }>();
   const orderId = params.order;
@@ -26,8 +19,6 @@ export const useOrderDetail = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
 
-  // Guests get the login prompt instead of an unauthenticated request (a
-  // 401 toast over an endless skeleton).
   const detailQuery = useQuery({
     enabled: Boolean(orderId) && hasAccess,
     queryKey: [REACT_QUERY_KEYS.ORDER_DETAIL, orderId],
@@ -45,9 +36,6 @@ export const useOrderDetail = () => {
   const paymentMutation = useMutation({
     mutationFn: () => proceedToPayment(orderId),
     onSuccess: (response) => {
-      // Inside the Click superapp this has to replace the current view
-      // (openPaymentLink), not open beside it — see rb-shop, which passes
-      // target "_self" for the same retry-payment hand-off under Click.
       if (isClick()) {
         openPaymentLink(response.data.url);
         return;
@@ -55,11 +43,6 @@ export const useOrderDetail = () => {
 
       window.open(response.data.url, "_blank", "noopener,noreferrer");
     },
-    // The global request interceptor already toasts the backend's message
-    // (e.g. "Zakaz allaqachon to'langan"). That specific rejection means the
-    // locally cached detail is stale (the detail query only refetches every
-    // POLL_INTERVAL_MS) — refetch so the pay button reflects the real status
-    // immediately instead of staying clickable until the next poll.
     onError: () => {
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.ORDER_DETAIL, orderId],
@@ -70,7 +53,6 @@ export const useOrderDetail = () => {
   return {
     orderId,
     detail: detailQuery.data?.data,
-    // Session not read yet counts as loading, not as a guest.
     isLoading: !isAuthReady || detailQuery.isLoading,
     mustLogin: isAuthReady && !hasAccess,
     isError: detailQuery.isError,

@@ -12,8 +12,6 @@ export type GeneralProps = {
     url: string;
   }[];
   is_open?: boolean;
-  // Present when is_open is false (confirmed live) — the shop's own
-  // closed-message, e.g. "Do'kon ish vaqti tugagan!".
   message?: string | null;
   is_free?: boolean;
   services?: {
@@ -24,14 +22,11 @@ export type GeneralProps = {
     min_price: number | null;
   }[];
   delivery?: {
-    // Delivery price type ("FIXED" confirmed live) — not a delivery provider.
     delivery_type: string;
     min_price: number | null;
     price: number | null;
     text: string | null;
   };
-  // Confirmed live against webapp/general/{shop}: cashback_amount is null
-  // while cashback is disabled.
   cashback_enabled?: boolean;
   cashback_amount?: number | null;
   currency?: {

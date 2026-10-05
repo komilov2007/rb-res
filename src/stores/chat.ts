@@ -5,12 +5,8 @@ type ChatStoreProps = {
   count: number;
   messages: MessageProps[];
   hasMore: boolean;
-  // Page 1 (fresh open / reload) replaces the list outright.
   setInitialMessages: (messages: MessageProps[], count: number) => void;
-  // `messages` is newest-first (index 0 = most recent), so an older page
-  // (loaded when the user scrolls up to history) is appended at the end.
   appendOlderMessages: (messages: MessageProps[], count: number) => void;
-  // A brand-new message (sent or incoming over the socket) goes to the front.
   addMessage: (message: MessageProps) => void;
   reset: () => void;
 };
@@ -30,7 +26,6 @@ export const useChatStore = create<ChatStoreProps>()((set) => ({
 
   appendOlderMessages: (older, count) => {
     set((state) => {
-      // Never show the same message twice, whatever the offset returned.
       const seen = new Set(state.messages.map((message) => message.id));
       const messages = [
         ...state.messages,

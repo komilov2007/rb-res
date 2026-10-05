@@ -9,8 +9,6 @@ import { useGeneral } from "@/hooks/useGeneral";
 import { useShopId } from "@/hooks/useShopId";
 import { getSearchUrl } from "@/utils/search";
 
-// Header state: search input synced to ?search= and the opt-in pinned-row
-// scroll flag.
 export const useHeader = (pinBottomRow: boolean) => {
   const [isPinned, setIsPinned] = useState(false);
   const router = useRouter();
@@ -24,10 +22,6 @@ export const useHeader = (pinBottomRow: boolean) => {
   const cartCount = useCartStore((state) => state.cartCount);
   const openCartModal = useCartStore((state) => state.openCartModal);
 
-  // Only listens when actually pinned (pages that don't opt in never pay for
-  // this). Once scrolled, the seam against the breadcrumb/topbar it left
-  // behind needs a border back so it doesn't look glued to whatever's now
-  // sitting right below it.
   useEffect(() => {
     if (!pinBottomRow) return;
 

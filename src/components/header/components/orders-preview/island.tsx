@@ -33,13 +33,6 @@ const LiveDot = () => (
   </span>
 );
 
-// 14 — "dynamic island" bar at the bottom centre, in the project palette:
-// white pill + gray border, primary live dot and "Kuzatish" button. It
-// speaks about the latest order (its dish photo, status, number); the
-// "+N" chip and the second line count the OTHER active orders — never
-// the dishes, which read as the same number and confused the two.
-// Not rendered anywhere for now — kept for later use (exported only so it
-// isn't flagged as unused).
 export const Island = ({
   count,
   order,

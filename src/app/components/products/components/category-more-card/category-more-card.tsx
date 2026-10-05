@@ -6,12 +6,9 @@ import { useTranslations } from "next-intl";
 
 type CategoryMoreCardProps = {
   href: string;
-  // Products of this category not shown in the grid.
   count: number;
 };
 
-// Last grid cell on desktop when a category has more products than fit —
-// same frame as a product card, opens the category page.
 const CategoryMoreCard = ({ href, count }: CategoryMoreCardProps) => {
   const t = useTranslations();
 

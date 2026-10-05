@@ -10,9 +10,6 @@ import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "@/app/booking/constants"
 import type { BookingFormValues } from "@/app/booking/schema";
 import TwoField from "../two-field";
 
-
-// Guest count as a tile: the count is the (typeable) value, the stepper
-// sits in the tile's trailing slot.
 const TwoGuests = () => {
   const t = useTranslations();
   const { control } = useFormContext<BookingFormValues>();
@@ -64,7 +61,6 @@ const TwoGuests = () => {
               field.onBlur();
             }}
             onFocus={(event) => event.target.select()}
-            // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
             className="w-full bg-transparent text-base font-normal leading-5 text-black outline-none"
           />
         </TwoField>

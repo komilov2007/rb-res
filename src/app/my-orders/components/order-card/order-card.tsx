@@ -24,9 +24,6 @@ const OrderCard = ({ order }: OrderCardProps) => {
 
   const itemCount = order.items.reduce((sum, item) => sum + item.count, 0);
   const firstPhoto = order.items[0]?.photo;
-  // service_type === PICKUP/BTS_PICKUP -> `address` is empty, show the
-  // branch instead. Same isDelivery-style rule as the confirmed detail-view
-  // logic, applied here for the list card's one-line summary.
   const isPickup =
     order.service_type === "PICKUP" || order.service_type === "BTS_PICKUP";
   const locationText = isPickup ? order.branch : order.address;

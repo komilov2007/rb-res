@@ -6,7 +6,6 @@ import { useCartStore } from "@/stores/cart";
 import { getCartOriginalTotal } from "@/utils/cart";
 import { formatPrice } from "@/utils/format-price";
 
-// Summary rows: muted caption on the left, black amount on the right.
 const LABEL_CLASS_NAME = "text-sm font-normal text-gray220";
 
 type YourOrderProps = {
@@ -30,8 +29,6 @@ const YourOrder = ({
 }: YourOrderProps) => {
   const t = useTranslations();
   const carts = useCartStore((state) => state.carts);
-  // cartTotal already uses each product's discount_price; showing the
-  // undiscounted sum plus a separate discount line makes the saving visible.
   const originalTotal = getCartOriginalTotal(carts);
   const productDiscount = Math.max(0, originalTotal - cartTotal);
 

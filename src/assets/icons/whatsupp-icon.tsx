@@ -1,5 +1,3 @@
-// Full-color brand mark (green circle + white glyph), unlike the
-// currentColor instagram/telegram/facebook glyphs.
 export const IconWhatsapp = ({ size = 24 }) => {
   return (
     <svg

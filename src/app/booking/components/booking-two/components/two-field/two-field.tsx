@@ -30,9 +30,6 @@ type TwoFieldProps = {
   error?: string;
 };
 
-// Variant two's form tile: primary icon badge, small label, value under
-// it, optional trailing slot. Every field on the page uses this shape
-// (selects build the same shape inside their trigger).
 const TwoField = ({ Icon, label, children, end, error }: TwoFieldProps) => (
   <div>
     <div className={tileClassName(Boolean(error))}>

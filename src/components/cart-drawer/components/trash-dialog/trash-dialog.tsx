@@ -32,9 +32,6 @@ const RemoveCartDialog = () => {
   const setCarts = useCartStore((state) => state.setCarts);
   const customerId = useAuthStore((state) => state.auth?.customer);
   const queryClient = useQueryClient();
-  // The follow-up list refetch runs inside mutationFn so `isPending` keeps the
-  // delete button disabled until the whole remove → refetch cycle is done
-  // (otherwise a second tap in that window re-sends the remove/clear call).
   const removeMutation = useMutation({
     mutationFn: removeCartItem,
   });
@@ -58,8 +55,6 @@ const RemoveCartDialog = () => {
     clearMutation.isPending ||
     removeAndRefetchMutation.isPending;
 
-  // A ref, not isPending: two fast taps land before React re-renders, so
-  // both would still read isPending as false and send the request twice.
   const inFlightRef = useRef(false);
 
   const handleRemove = async () => {
@@ -85,8 +80,6 @@ const RemoveCartDialog = () => {
         return;
       }
 
-      // The exact line the trash tap was on — the same product can be on
-      // several lines with different parameters.
       const cartItem = carts.find(
         (item) => getCartLineKey(item) === removeLineKey,
       );
@@ -114,8 +107,6 @@ const RemoveCartDialog = () => {
 
       confirmRemoveCart();
     } catch {
-      // The global request interceptor already toasts the backend's message;
-      // the dialog stays open so the user can retry or cancel.
     } finally {
       inFlightRef.current = false;
     }
@@ -171,4 +162,3 @@ const RemoveCartDialog = () => {
 };
 
 export default RemoveCartDialog;
-

@@ -22,10 +22,6 @@ const TABS = [
   { key: false, label: "orders_tabs_all" },
 ] as const;
 
-// Desktop "Buyurtmalarim" (mobile is redirected — see MobileOrdersRedirect
-// below). Each order is a full card shown inline — there is no
-// separate order detail page. ?order=<id> (set after checkout, a paid order
-// or a chat link) opens that order's card expanded.
 const OrdersContent = () => {
   const t = useTranslations();
   const hasAccess = useAuthStore((state) => state.hasAccess);
@@ -41,9 +37,6 @@ const OrdersContent = () => {
     bottomRef,
   } = useMyOrders();
   const focusedOrderId = Number(searchParams.get("order"));
-  // Keyed by order id so each card's expand/collapse is independent —
-  // owned here rather than inside OrderDetailCard so there's no ambiguity
-  // about whether that state could ever be shared between cards.
   const [expandedIds, setExpandedIds] = useState<Record<number, boolean>>(() =>
     focusedOrderId ? { [focusedOrderId]: true } : {},
   );
@@ -61,14 +54,6 @@ const OrdersContent = () => {
       [orderId]: !previous[orderId],
     }));
 
-  // A CSS grid still ties both columns to a shared row height per pair, so
-  // expanding a right-column card was leaving a gap under its (unchanged)
-  // left-column neighbor once the next row started lower. Splitting into two
-  // genuinely independent flex columns by alternating index removes that
-  // coupling entirely — each column's own cards determine its own height,
-  // with newest-first order preserved down each column (0,2,4… left,
-  // 1,3,5… right) rather than reordered the way CSS multi-column would.
-  // Mobile: one column.
   const columns = isDesktop
     ? [
         orders.filter((_, index) => index % 2 === 0),
@@ -88,8 +73,6 @@ const OrdersContent = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Desktop: the tabs stay pinned at the top of the orders scroller
-          (white backing + bottom padding hides cards passing under). */}
       <div className="flex gap-2 lg:sticky lg:top-0 lg:z-10 lg:-mb-2 lg:bg-white lg:pb-2">
         {TABS.map((tab) => (
           <button
@@ -119,11 +102,6 @@ const OrdersContent = () => {
       ) : orders.length === 0 ? (
         <EmptyOrders />
       ) : (
-        // min-w-0 on each column: flex-1's automatic minimum width is its
-        // content's own min-content size, not 0 — without this, a long
-        // product name (revealed by "Yana N ta mahsulot") could force that
-        // column past its fair 50% share instead of actually truncating,
-        // widening it relative to the other column.
         <div className="flex gap-2">
           {columns.map((columnOrders, column) => (
             <div key={column} className="flex min-w-0 flex-1 flex-col gap-2">
@@ -140,9 +118,6 @@ const OrdersContent = () => {
 
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
-// This page is the desktop "Buyurtmalarim" only. Mobile has its own order
-// pages, so a phone that lands here (an old link, ?order=<id> from a
-// desktop-shared URL) is sent to /my-orders or that order's detail page.
 const MobileOrdersRedirect = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -150,8 +125,6 @@ const MobileOrdersRedirect = () => {
   const orderId = searchParams.get("order");
 
   useEffect(() => {
-    // Checked directly: useMediaQuery reports false during hydration, which
-    // would send desktop visitors away too.
     if (window.matchMedia(DESKTOP_QUERY).matches) return;
 
     router.replace(
@@ -168,7 +141,6 @@ const ProfileOrders = () => {
   const t = useTranslations();
   const isDesktop = useMediaQuery(DESKTOP_QUERY);
 
-  // Never render the desktop list on a phone — not even for a frame.
   if (!isDesktop) {
     return (
       <Suspense>
@@ -179,7 +151,6 @@ const ProfileOrders = () => {
 
   return (
     <ProfilePageShell title={t("order")}>
-      {/* useSearchParams (shop_id) needs a Suspense boundary. */}
       <Suspense>
         <OrdersContent />
       </Suspense>

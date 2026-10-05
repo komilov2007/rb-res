@@ -11,10 +11,6 @@ import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { clearUser } from "@/utils/user";
 
-// Account summary + logout/login/language state shared by the mobile profile
-// page (profile.tsx) and the desktop ProfileSidebar. Each caller gets its
-// own instance (own dialogs, own isLeaving), exactly as when this lived
-// inline in both.
 export const useProfileAccount = () => {
   const router = useRouter();
   const { shopid } = useShopId();
@@ -25,14 +21,10 @@ export const useProfileAccount = () => {
   const [languageOpen, setLanguageOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
-  // After confirming logout the page keeps its logged-in look until the home
-  // page replaces it — otherwise the guest view flashes during navigation.
   const hasAccess = useAuthStore((state) => state.hasAccess) || isLeaving;
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const logout = useAuthStore((state) => state.logout);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
-  // Skeleton while the session is still unknown (before AuthProvider reads
-  // it) or the logged-in profile is loading — never the guest view.
   const isLoading = !isAuthReady || (hasAccess && isProfileLoading);
 
   const languageLabel =
@@ -59,10 +51,8 @@ export const useProfileAccount = () => {
 
   const openLogin = () => setLoginModal(true, "/profile");
 
-  // The logout/login card's action.
   const handleAccountAction = hasAccess
     ? () => {
-        // Warm up home so leaving after "Chiqish" is quick.
         router.prefetch(homeHref);
         setLogoutOpen(true);
       }

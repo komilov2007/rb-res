@@ -9,10 +9,6 @@ type SidebarRowProps = {
   onClick: () => void;
 };
 
-// One menu row of the desktop profile sidebar: an inset rounded row
-// inside its group card (see SIDEBAR_GROUP_CLASS_NAME). Hover lifts it on
-// grey and nudges the chevron; the current route's row gets a gray fill
-// only — icon and text stay as they are.
 const SidebarRow = ({
   icon: Icon,
   label,
@@ -54,8 +50,6 @@ const SidebarRow = ({
   </button>
 );
 
-// The section SidebarRows sit in (the sidebar divides its sections with
-// lines instead of nesting cards).
 export const SIDEBAR_GROUP_CLASS_NAME =
   "flex flex-col gap-0.5 py-3";
 

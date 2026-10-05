@@ -6,7 +6,6 @@ type SectionTitleProps = {
   hint?: string;
 };
 
-// Same section heading the order page's cards use (shipping-time etc.).
 const SectionTitle = ({ Icon, title, hint }: SectionTitleProps) => {
   return (
     <div>

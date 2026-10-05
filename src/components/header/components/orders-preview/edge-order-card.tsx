@@ -24,8 +24,6 @@ const OrderItemRow = ({ item }: { item: MyOrderListItem["items"][number] }) => {
       />
       <span className="min-w-0 flex-1 truncate text-black">{item.name}</span>
       <span className="shrink-0 text-gray220">× {item.count}</span>
-      {/* Line amount — confirmed live: the items' amounts sum to the
-          order's amount. */}
       <span className="w-24 shrink-0 text-right text-black">
         {formatPrice(item.amount)} {t("sum")}
       </span>
@@ -33,12 +31,6 @@ const OrderItemRow = ({ item }: { item: MyOrderListItem["items"][number] }) => {
   );
 };
 
-// One order in the edge-tab drawer, laid out like a delivery-app order
-// row: the first dish's photo (with a "+N" chip) is the visual anchor,
-// then two aligned lines — number / total on top, contents · time /
-// status below. The photo + number open the order; the contents line
-// unfolds the products and the status unfolds the shared 4-step
-// StatusTimeline (both animated via grid-rows).
 export const EdgeOrderCard = ({
   order,
   index,
@@ -63,8 +55,6 @@ export const EdgeOrderCard = ({
   return (
     <div
       style={{ animationDelay: `${index * 70}ms` }}
-      // Fade + slight zoom-in: a horizontal/vertical slide would push the
-      // rows past the list for a moment and flash its scrollbar.
       className="py-4 duration-500 animate-in fade-in zoom-in-95 fill-mode-both"
     >
       <div className="flex gap-3">

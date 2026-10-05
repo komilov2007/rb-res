@@ -25,13 +25,6 @@ type OrderDetailSectionsProps = {
   detail: OrderDetail;
 };
 
-// The read-only sections of an order's detail view (status, pickup/delivery
-// address, items, payment/price breakdown) — shared by order-placing (the
-// post-checkout flow) and my-orders' own order detail route, so the two look
-// identical. Padding lives once on the outer wrapper (`divide-y` draws the
-// section dividers inside it) so every section — and its divider — sits at
-// the exact same distance from the screen edge, instead of each `<section>`
-// repeating its own px-4.
 const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
   const t = useTranslations();
   const [mapOpen, setMapOpen] = useState(false);
@@ -40,12 +33,6 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
   const isDelivery = DELIVERY_TYPES.includes(detail.service_type);
   const displayAddress = isDelivery ? detail.address : detail.branch.address;
 
-  // Same queryKey as src/app/[page]/components/branch-selection's
-  // useBranchSelection — the full branch list (with lat/lng), so this shares
-  // its cache instead of refetching. detail.branch only carries
-  // id/name/address, not coordinates — needed for both cases now: the
-  // pickup branch-info sheet, and the delivery route sheet's "ships from"
-  // point.
   const { data: branches } = useBranches();
   const mapBranch =
     branches?.data.find((item) => item.id === detail.branch.id) ?? null;
@@ -66,10 +53,6 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
               : t("orders_detail_pickup_address")}
           </SectionLabel>
           {isDelivery ? (
-            // Delivery: one compact row for the customer's own delivery
-            // address — the fulfilling branch isn't shown here at all
-            // anymore, only inside the route sheet this opens (below), so
-            // it's not repeated twice for the same order.
             <button
               type="button"
               disabled={!mapBranch}

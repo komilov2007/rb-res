@@ -29,8 +29,6 @@ type ProviderProps = ChildrenProps & {
 
 export const Provider = async ({ locale, children }: ProviderProps) => {
   const messages = await getMessages(locale);
-  // Click's superapp webview attaches this header on every request it makes;
-  // read it server-side and hand it down for ClickProvider's auto-login.
   const clickToken = (await headers()).get("web-session");
 
   return (
@@ -57,19 +55,9 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
                           <LocationModal />
                         </Suspense>
                         <ShopClosedModal />
-                        {/* Desktop support chat; useChat reads shop_id via
-                            useSearchParams, hence the Suspense boundary. */}
                         <Suspense fallback={null}>
                           <ChatModal />
                         </Suspense>
-                        {/* richColors: gives toast.success/toast.error their
-                            green/red backgrounds — without it every toast
-                            renders in sonner's plain default style regardless
-                            of variant. offset: guarantees real breathing room
-                            from the viewport edge (16-24px) instead of
-                            whatever sonner's own default margin resolves to,
-                            which is what was letting toasts render partly
-                            off-screen. */}
                         <Toaster
                           position="top-right"
                           closeButton
@@ -88,4 +76,3 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
     </html>
   );
 };
-

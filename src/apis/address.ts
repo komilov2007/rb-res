@@ -8,7 +8,6 @@ import type {
   DeliveryCheckProps,
 } from "@/types/address";
 
-// Domain types live in types/address.ts; re-exported for existing importers.
 export type {
   AddressFormPayload,
   AddressProps,
@@ -71,4 +70,3 @@ export const getAddresses = async () => {
     uzHeaders,
   );
 };
-

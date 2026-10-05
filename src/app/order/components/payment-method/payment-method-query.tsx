@@ -15,9 +15,6 @@ const ALL_ICON_MAPPED_TYPES = Object.keys(
   PAYMENT_TYPE_ICON_MAP,
 ) as PaymentTypeProps[];
 
-// A card shows if its exact state is present in the API response, or if the
-// response contains ROBO_PAY (which silently expands to the three ROBO_*
-// cards). ROBO_PAY itself is a signal, never rendered as its own card.
 const getVisiblePaymentTypes = (data: PaymentListItem[]): PaymentTypeProps[] => {
   const hasRoboPay = data.some((item) => item.state === "ROBO_PAY");
 
@@ -34,8 +31,6 @@ const getVisiblePaymentTypes = (data: PaymentListItem[]): PaymentTypeProps[] => 
   }, []);
 };
 
-// ROBO_* cards don't carry their own availability flag — they follow the
-// ROBO_PAY entry's is_available instead.
 const isPaymentTypeDisabled = (
   type: PaymentTypeProps,
   data: PaymentListItem[],

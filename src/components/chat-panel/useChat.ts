@@ -37,10 +37,6 @@ export const useChat = () => {
     useState<SelectedFileState>(null);
   const sendFileMutation = useMutation({ mutationFn: sendChatFile });
   const isSendingFile = sendFileMutation.isPending;
-  // Tracks the currently-live object URL so it can be revoked the moment
-  // it's replaced or cleared — created/revoked at selection time (an event,
-  // not an effect), so nothing here ever calls setState from inside an
-  // effect body.
   const previewUrlRef = useRef<string | null>(null);
   const isLoadingMoreRef = useRef(false);
 
@@ -50,11 +46,6 @@ export const useChat = () => {
     onMessage: addMessage,
   });
 
-  // Fresh history every time chat is opened. isLoading starts `true` (its
-  // useState default) precisely for this first run; customerId isn't
-  // expected to change again while this page stays mounted (a login/logout
-  // both unmount it via the access guard), so there's no case that needs
-  // resetting the flag back to true mid-session.
   useEffect(() => {
     if (!customerId) return;
 
@@ -67,8 +58,6 @@ export const useChat = () => {
         setInitialMessages(response.data.results, response.data.count);
       })
       .catch(() => {
-        // The global request interceptor already toasts the backend's
-        // message; caught so it isn't an unhandled rejection.
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
@@ -78,13 +67,9 @@ export const useChat = () => {
       cancelled = true;
       reset();
     };
-    // setInitialMessages/reset are stable zustand actions; only customerId
-    // should re-trigger the fetch.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerId]);
 
-  // Revoke a still-pending attachment's object URL if the chat page closes
-  // before it's sent. Pure cleanup — no state is set here.
   useEffect(() => {
     return () => {
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -111,8 +96,6 @@ export const useChat = () => {
   };
 
   const loadMore = async () => {
-    // The ref, not just the state: several scroll events can fire before
-    // the isLoadingMore re-render lands, and each would fetch the same page.
     if (!customerId || !hasMore || isLoadingMoreRef.current) return;
 
     isLoadingMoreRef.current = true;
@@ -121,15 +104,11 @@ export const useChat = () => {
     try {
       const response = await getChatList(customerId, {
         limit: PAGE_SIZE,
-        // Everything already on screen, not page × size: messages that
-        // arrived over the socket shift the server list, so a page-based
-        // offset would re-fetch rows already shown (duplicate keys).
         offset: messages.length,
       });
 
       appendOlderMessages(response.data.results, response.data.count);
     } catch {
-      // The global request interceptor already toasts the backend's message.
     } finally {
       isLoadingMoreRef.current = false;
       setIsLoadingMore(false);
@@ -166,7 +145,6 @@ export const useChat = () => {
         setMessageText("");
         setSelectedFile(null);
       } catch {
-        // The global request interceptor already toasts the backend's message.
       }
 
       return;

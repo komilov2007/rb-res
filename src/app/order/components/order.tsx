@@ -69,29 +69,19 @@ const Order = () => {
     retryWaiting,
     orderUrl,
   } = useOrderStatus();
-  // The desktop shell (home's Header/Footer) is mounted only on desktop, so
-  // its effects (location autofill, branch queries) never run on mobile,
-  // where this page keeps its own top bar.
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const { shopid, hasSelection } = useBranchSelection();
   const setSelectionModal = useBranchSelectionStore(
     (state) => state.setSelectionModal,
   );
   const setPendingCheckout = useCartStore((state) => state.setPendingCheckout);
-  // During hydration zustand serves the stores' initial (empty) state, not
-  // the persisted selection — only decide once hydration is done.
   const isHydrated = useSyncExternalStore(
     subscribeNoop,
     () => true,
     () => false,
   );
-  // Payment callbacks (?orderId=...) belong to an already created order and
-  // are never blocked.
   const mustSelect = isHydrated && !orderId && !hasSelection;
 
-  // Entering checkout without a delivery address or pickup branch (e.g. by
-  // URL): go back home with the selection modal open; the cart's pending
-  // checkout brings the user back here once a choice is made.
   useEffect(() => {
     if (!mustSelect) return;
 
@@ -118,7 +108,6 @@ const Order = () => {
         {isDesktop && (
           <>
             <Footer />
-            {/* Same reason as below: the Header's branch chip needs it. */}
             <BranchSelectionModal />
           </>
         )}
@@ -131,7 +120,6 @@ const Order = () => {
       {isDesktop && <Header />}
       <Breadcrumb items={[{ label: t("order_page_title") }]} />
 
-      {/* Mobile-only app bar — desktop has the header + breadcrumb. */}
       <div className="fixed inset-x-0 top-0 z-10 rounded-b-xl border-b border-gray180 bg-white lg:hidden">
         <div className="mx-auto flex w-full max-w-xl items-center gap-2 px-4 py-4">
           <Button
@@ -150,18 +138,11 @@ const Order = () => {
       </div>
 
       <FormProvider {...form}>
-        {/* Mobile: one column (the panel wrappers are display: contents).
-            Desktop: two full-bleed white panels with a thin gray gap — form
-            sections left (divided by lines instead of separate cards),
-            summary + submit right. Each panel pads its outer side by
-            max(20px, 50% - 620px) so its content lines up with the header's
-            max-w-7xl container. */}
         <form
           onSubmit={onSubmit}
           className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 pt-[calc(60px+env(safe-area-inset-top))] pb-[calc(72px+env(safe-area-inset-bottom))] lg:max-w-none lg:flex-row lg:gap-2 lg:py-2"
         >
           <div className="contents lg:flex lg:min-w-0 lg:flex-1 lg:flex-col lg:rounded-r-[30px] lg:bg-white lg:py-2 lg:pl-[max(20px,calc(50%-620px))] lg:pr-6 lg:[&_section]:rounded-none lg:[&_section]:border-b lg:[&_section]:border-gray180 lg:[&_section]:px-0 lg:[&_section]:py-7 lg:[&_section:last-of-type]:border-b-0">
-            {/* 1. Order type: service type, address/branch, time, comment */}
             <DeliveryType
               services={availableServices}
               isServicesLoading={isServicesLoading}
@@ -175,10 +156,8 @@ const Order = () => {
 
             {hasShippingTime && <ShippingTime />}
 
-            {/* 2. Bonus / cashback */}
             {cashbackEnabled && <BonusPoint />}
 
-            {/* 3. Payment type (includes the promo code) */}
             <PaymentMethod showPromoCode={!isDesktop} />
           </div>
 
@@ -212,8 +191,6 @@ const Order = () => {
       {isDesktop && (
         <>
           <Footer />
-          {/* Opened by the desktop Header's branch chip — PageLayout mounts
-              it on the other pages. */}
           <BranchSelectionModal />
         </>
       )}

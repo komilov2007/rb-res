@@ -106,9 +106,6 @@ const ProductDetailMobile = () => {
           isDesktop
             ? undefined
             : {
-                // Collapsed height is content-fitted (auto, capped at 80dvh via
-                // className); an explicit height is only set while expanded or
-                // while being dragged upward.
                 height: isExpanded
                   ? "100dvh"
                   : dragExpandOffset
@@ -173,4 +170,3 @@ const ProductDetailMobile = () => {
 };
 
 export default ProductDetailMobile;
-

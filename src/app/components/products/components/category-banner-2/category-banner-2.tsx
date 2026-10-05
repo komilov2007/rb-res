@@ -6,7 +6,6 @@ type CategoryBanner2Props = {
   title: string;
   imageSrc?: string;
   videoSrc?: string;
-  // When set, the title links to the category page.
   href?: string;
 };
 
@@ -60,4 +59,3 @@ const CategoryBanner2 = ({
 };
 
 export default CategoryBanner2;
-

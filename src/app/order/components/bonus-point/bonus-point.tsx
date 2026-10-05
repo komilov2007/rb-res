@@ -9,8 +9,6 @@ import { useProfile } from "@/hooks/useProfile";
 import { formatPrice } from "@/utils/format-price";
 import type { OrderFormValues } from "@/types/order";
 
-// Rendered by order.tsx only when general.cashback_enabled is true. Only the
-// spend_cashback flag is submitted — the backend deducts the balance itself.
 const BonusPoint = () => {
   const t = useTranslations();
   const { control } = useFormContext<OrderFormValues>();

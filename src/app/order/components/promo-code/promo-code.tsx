@@ -23,12 +23,6 @@ import { getPromoCode } from "@/apis/order";
 import { getApiErrorMessage } from "@/utils/api-error";
 import type { OrderFormValues } from "@/types/order";
 
-// Owns its own mutation (Section 22.7: promo-code has no local hook) and
-// writes the result straight into the order form: promocode_id (sent with
-// the order), promocode and total (the backend's discounted cart total, used
-// by the price calculation). Mobile: inline expand under the trigger.
-// Desktop: the same form in a centered dialog. An applied code shows as a
-// green row with a remove button.
 const PromoCode = () => {
   const t = useTranslations();
   const { control, setValue } = useFormContext<OrderFormValues>();
@@ -54,10 +48,6 @@ const PromoCode = () => {
         t("order_page_promo_applied", { code: response.data.promo_code }),
       );
     },
-    // The backend's own message (e.g. "Promo-kod topilmadi", "Eng kam
-    // miqdor ... dan katta bo'lishi kerak", "Siz allaqachon birinchi
-    // buyurtmangizni berdingiz") — not a single hardcoded string, since
-    // which of those it is changes what the user should actually do next.
     onError: (error) => {
       setPromoError(getApiErrorMessage(error, t("order_page_promo_error")));
     },
@@ -86,7 +76,6 @@ const PromoCode = () => {
     setPromoError(null);
   };
 
-  // Enter applies the code instead of submitting the whole order form.
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== "Enter") return;
 

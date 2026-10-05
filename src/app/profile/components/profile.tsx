@@ -23,10 +23,6 @@ import SocialLinks from "./social-links";
 const Profile = () => {
   const t = useTranslations();
   const openChat = useOpenChat();
-  // Inside the Click superapp the shell owns the language choice and the
-  // session (ClickProvider signs the user in from the web-session header),
-  // so neither the language row nor a logout button belongs here — the
-  // same two omissions rb-shop makes in its profile under Click.
   const isClickApp = useIsClick();
   const {
     router,
@@ -97,10 +93,6 @@ const Profile = () => {
     </div>
   );
 
-  // Its own card (matching the reference layout's isolated "Chiqish" card)
-  // instead of a bare button floating between the menu groups and the
-  // contact card. h-11 with no padding around it — same as a plain
-  // ProfileItem row — so this card isn't taller than the menu group cards.
   const logoutButton = isClickApp && hasAccess ? null : (
     <div className="mt-2 overflow-hidden rounded-2xl border border-gray180 bg-white">
       <Button
@@ -120,9 +112,6 @@ const Profile = () => {
 
   return (
     <PageLayout>
-      {/* Mobile: single stacked card, own white bg via the section itself.
-          Natural height (no h-full) — the cards keep their full size and
-          the section scrolls on short screens instead of squeezing them. */}
       <section
         className={`fixed inset-0 overflow-y-auto bg-white px-4 pt-7 lg:hidden ${
           isClickApp ? "pb-29" : "pb-24"
@@ -131,7 +120,6 @@ const Profile = () => {
         <div className="flex w-full flex-col">
           {accountCard}
 
-          {/* Personal actions. */}
           <ProfileGroup>
             {hasAccess && (
               <ProfileItem
@@ -156,7 +144,6 @@ const Profile = () => {
             />
           </ProfileGroup>
 
-          {/* Info. */}
           <ProfileGroup>
             <ProfileItem
               icon={IconBellFilled}
@@ -178,8 +165,6 @@ const Profile = () => {
               label={t("about_us")}
               onClick={() => router.push(`${ROUTER.PROFILE_ABOUT}${shopQuery}`)}
             />
-            {/* Routes to the existing live chat feature — a real contact
-                channel already in this app, not a new one. */}
             <ProfileItem
               icon={IconMessageCircleFilled}
               label={t("profile_page_menu_contact_us")}
@@ -193,11 +178,6 @@ const Profile = () => {
 
       </section>
 
-      {/* Desktop: the persistent sidebar owns the account summary, logout
-          and contact/social info. The bare /profile route's content pane
-          shows the edit-profile form by default — "Profilni tahrirlash" is
-          effectively this route's default selected section, matching the
-          sidebar's own active-row highlighting for it. */}
       <ProfileDesktopLayout title={t("profile_page_menu_edit_profile")}>
         <EditProfileForm />
       </ProfileDesktopLayout>

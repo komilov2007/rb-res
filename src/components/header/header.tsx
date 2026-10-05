@@ -12,11 +12,6 @@ import { OrdersFloatingExtras } from "./components/orders-preview";
 import { useHeader } from "./useHeader";
 
 type HeaderProps = {
-  // Opt-in only — omitted everywhere except the category pages that asked
-  // for it, so every other route keeps this component's exact prior
-  // behavior (plain, non-sticky, bottom-bordered). Pins just the bottom
-  // logo/search/cart row; the phone/language row above it still
-  // scrolls away normally.
   pinBottomRow?: boolean;
 };
 
@@ -56,8 +51,6 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
             </div>
           )}
 
-          {/* On the left so the search opening on the right never pushes
-              into it. */}
           <div className="flex min-w-0 items-center gap-4">
             <Location className="max-w-52 shrink-0" />
           </div>

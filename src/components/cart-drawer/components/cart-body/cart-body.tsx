@@ -1,4 +1,3 @@
-
 import { useCartStore } from "@/stores/cart";
 import type { CartItemProps, CartViewProps } from "@/types/cart";
 import { EmptyCart } from "./empty-cart";
@@ -29,9 +28,6 @@ const CartBody = ({ isMobile, viewingItem, onView }: CartBodyProps) => {
         <ul>
           {carts.map((item, index) => (
             <CartItem
-              // The same product can be in the cart more than once (e.g.
-              // different parameters) — the cart line id is the unique one;
-              // guest items have none, so fall back to product id + index.
               key={item.id ?? `${item.product.id}-${index}`}
               item={item}
               isMobile={isMobile}

@@ -17,20 +17,14 @@ import {
   getPaymentIcon,
 } from "@/constants/payment-types";
 
-// Both states (waiting and timed out) share one shell. Desktop puts the
-// content on its own white section with an 8px gray gutter to the header and
-// footer, like the catalog and chat pages; mobile stays plain gray. flex-1
-// (not min-h-screen) so the footer below stays on screen.
 const SHELL_CLASS_NAME =
   "flex flex-1 flex-col items-center justify-center gap-6 bg-gray10 px-4 py-10 text-center lg:my-2 lg:rounded-[30px] lg:bg-white";
 
 type PaymentWaitingProps = {
   paymentUrl: string | null;
   paymentType: string | null;
-  // Undefined when the status can't be checked (no externalId).
   onCheck?: () => void;
   isChecking: boolean;
-  // No externalId and no answer in time: stop "waiting" and offer ways out.
   isTimedOut: boolean;
   onRetry: () => void;
   orderUrl: string | null;

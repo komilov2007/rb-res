@@ -1,9 +1,3 @@
-// Mirrors OrderDetailCard's own section-by-section layout (id+badge,
-// address, date, name, phone, item row, price row, button) rather than the
-// old simple thumbnail+lines shape, so the loading state doesn't visibly
-// jump in structure once real cards replace it. Each bar sits in a box of
-// the real text's line height, and the card keeps the real card's padding
-// and border width (border transparent — no borders on skeletons).
 const SkeletonField = ({
   labelWidth,
   valueWidth,

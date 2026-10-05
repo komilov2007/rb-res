@@ -10,8 +10,6 @@ import { useAuthStore } from "@/stores/auth";
 
 const LIST_LIMIT = 5;
 
-// Same is_active list useActiveOrdersCount polls, but with rows — the
-// trackers need the latest order's status and photos.
 export const useActiveOrders = () => {
   const customerId = useAuthStore((state) => state.auth?.customer);
 
@@ -33,7 +31,6 @@ export const useActiveOrders = () => {
   };
 };
 
-// The orders pages themselves (desktop profile list, mobile my-orders).
 export const useIsOnOrdersPage = () => {
   const pathname = usePathname();
 

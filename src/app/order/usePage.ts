@@ -39,7 +39,6 @@ export const usePage = () => {
   const { data: profile } = useProfile();
   const customerId = useAuthStore((state) => state.auth?.customer);
   const carts = useCartStore((state) => state.carts);
-  // Active lines only — the same lines the totals and createOrder use.
   const cartCount = getActiveCartCount(carts);
 
   const {
@@ -50,9 +49,6 @@ export const usePage = () => {
     closeUnavailableModal,
   } = useUnavailableItems();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  // The button only disables after a re-render, and onSubmit awaits the
-  // general refetch before any mutation is pending — this blocks a second
-  // submit (a duplicate order) in that window.
   const isSubmittingRef = useRef(false);
 
   const {
@@ -107,13 +103,9 @@ export const usePage = () => {
     openUnavailableModal,
   });
 
-  // createOrderMutation's onError already shows the failure (submitError),
-  // so a rejected mutateAsync only has to stop the flow here — uncaught it
-  // was an unhandled promise rejection.
   const createOrderSafely = (payload: CreateOrderPayload) =>
     createOrderMutation.mutateAsync(payload).catch(() => null);
 
-  // Group B (CLICK / PAYME via a Telegram invoice) — see useTelegramInvoice.
   const { submitViaTelegramInvoice, isTelegramSubmitting } =
     useTelegramInvoice({
       createOrderSafely,
@@ -130,8 +122,6 @@ export const usePage = () => {
   ) => {
     setSubmitError(null);
 
-    // Fresh is_open, not the cached one — the shop may have closed since
-    // this page loaded. Same closed-shop modal the cart's checkout opens.
     const { data: freshGeneral } = await refetchGeneral();
 
     if (freshGeneral?.data.is_open === false) {
@@ -141,7 +131,6 @@ export const usePage = () => {
 
     const isDeliveryOrder = isServiceDelivery(values.delivery_type);
 
-    // The message itself is shown only in the address section.
     if (isDeliveryOrder && !isAddressDeliverable) return;
 
     const orderItems = getOrderItems(carts);
@@ -188,8 +177,6 @@ export const usePage = () => {
     }
   };
 
-  // handleSubmit is called inside the handler (not during render) so the
-  // ref above is only ever read in an event.
   const onSubmit = (event?: BaseSyntheticEvent) =>
     form.handleSubmit(submitValues)(event);
 
@@ -198,17 +185,12 @@ export const usePage = () => {
     branches: branchesQuery.data?.data,
     isBranchesLoading: branchesQuery.isLoading,
     isBranchesError: branchesQuery.isError,
-    // Branch working hours aren't per-branch — they come from the shop-wide
-    // schedule already fetched here (same field src/utils/banner.ts already
-    // reads for the "today's hours" banner text).
     workingTime: general?.data?.working_time,
     availableServices,
     isServicesLoading: isGeneralLoading,
     hasShippingTime: Boolean(selectedService?.shipping_time),
     cashbackEnabled: general?.data?.cashback_enabled === true,
     onSubmit,
-    // formState.isSubmitting also covers the fresh-general refetch that runs
-    // before the mutation is pending.
     isSubmitting:
       form.formState.isSubmitting ||
       createOrderMutation.isPending ||

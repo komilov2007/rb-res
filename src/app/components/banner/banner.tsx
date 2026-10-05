@@ -13,9 +13,6 @@ import { useBoolean } from "@/hooks/useBoolean";
 import { useUiStore } from "@/stores/ui";
 import { getSearchUrl, hasSearchValue } from "@/utils/search";
 
-// Reopens the mobile search screen on reload when the URL still carries a
-// search. Mobile only — on desktop the header popover owns ?search= and this
-// (lg:hidden) screen must stay closed.
 const isMobileViewport = () =>
   typeof window !== "undefined" &&
   !window.matchMedia("(min-width: 1024px)").matches;
@@ -28,28 +25,18 @@ const Banner = () => {
   const setMobileHeaderDrawerOpen = useUiStore(
     (state) => state.setMobileHeaderDrawerOpen,
   );
-  // Starts closed on both server and client (the viewport is only known in
-  // the browser — reading it here made the first render differ from the
-  // server HTML); the effect below reopens it after mount.
   const searchModal = useBoolean();
   const openSearchModal = searchModal.setTrue;
   const [initialSearch] = useState(urlSearch);
 
   useEffect(() => {
     if (hasSearchValue(initialSearch) && isMobileViewport()) openSearchModal();
-    // Mount only: reopening on later URL changes would fight the user
-    // closing the screen.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  // Local state drives the input so typing stays instant; the URL is kept in
-  // sync alongside it (replace, not push — one history entry per keystroke
-  // would make the back button walk through every letter).
   const [searchValue, setSearchValue] = useState(urlSearch);
   const { t, banners, isLoading, handleBannerClick } = useBanner();
 
   useEffect(() => {
-    // The search screen no longer sits above MobileAction's z-[70] widget
-    // (see MobileSearchScreen), so that widget is hidden while it's open.
     setMobileHeaderDrawerOpen(searchModal.value);
 
     return () => setMobileHeaderDrawerOpen(false);

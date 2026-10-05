@@ -13,8 +13,6 @@ import { useBranchSelection } from "@/components/branch-selection";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useRefreshCart } from "@/hooks/useRefreshCart";
 
-// Store selections, the detail query, the add-to-cart mutation and the
-// sheet/selection state behind the product detail view.
 export const useProductDetailBase = () => {
   const t = useTranslations();
   const product = useProductDetailStore((state) => state.product);
@@ -62,8 +60,6 @@ export const useProductDetailBase = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartYRef = useRef<number | null>(null);
-  // Expanding to full screen is only allowed when content overflows the
-  // content-fitted sheet; otherwise it would just add empty space.
   const canExpandRef = useRef(false);
   const contentScrollRef = useRef<HTMLDivElement | null>(null);
   const requiredParameterRef = useRef<HTMLDivElement | null>(null);

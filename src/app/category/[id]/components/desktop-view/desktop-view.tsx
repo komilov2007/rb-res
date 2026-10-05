@@ -10,14 +10,10 @@ import { ROUTER } from "@/constants/router";
 import type { useCategory } from "../../useCategory";
 import EmptyCategory from "../empty-category";
 
-// 5 per row with a 20px gap — the same density as the home product rows.
 const GRID_CLASS_NAME = "grid grid-cols-4 gap-5 xl:grid-cols-5";
 
 type DesktopViewProps = ReturnType<typeof useCategory>;
 
-// Desktop-only: breadcrumb under the header, then the product list as its own
-// white section (like home's) with a gray gap above and below it. The mobile
-// shell in category.tsx stays untouched.
 const DesktopView = ({
   categoryName,
   products,

@@ -12,8 +12,6 @@ import {
 import { pad } from "../../utils";
 import { useScrollScene } from "./useScrollScene";
 
-// Alternating frames: full-bleed tall, then inset — the rhythm of a
-// printed lookbook.
 const FRAMES = [
   "aspect-[4/5]",
   "mx-10 aspect-square",
@@ -23,12 +21,6 @@ const FRAMES = [
   "mx-10 aspect-square",
 ];
 
-// Mobile variant "four": cinematic, luxury-brand feel. The video fills
-// the screen and stays put while a frosted-glass sheet slides up over it
-// like a curtain (the live video stays visible, blurred, behind the whole
-// page; it zooms + softens and the title lifts away); the description's
-// words light up as you read down; photos drift inside their frames.
-// All motion is scroll-driven in useScrollScene; no solid black/white bg.
 const AtmosphereFour = ({ onOpen }: AtmosphereVariantProps) => {
   const t = useTranslations();
   const {

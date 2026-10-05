@@ -5,8 +5,6 @@ export type BannerTarget =
   | { type: "product"; id: number }
   | { type: "url"; url: string };
 
-// Where a banner tap leads, checked in order: category → product → url.
-// null means a static, non-clickable banner.
 export const getBannerTarget = (banner: BannerProps): BannerTarget | null => {
   if (typeof banner.category === "number") {
     return { type: "category", id: banner.category };

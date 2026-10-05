@@ -1,5 +1,3 @@
-// Half-hour booking slots offered by the atmosphere page's time picker and
-// the /booking "one" variant's time select.
 export const BOOKING_TIMES = [
   "10:00",
   "10:30",

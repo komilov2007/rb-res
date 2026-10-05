@@ -36,8 +36,6 @@ export const CartItem = ({
   const customerId = useAuthStore((state) => state.auth?.customer);
   const refreshCart = useRefreshCart();
   const { branchId: selectedBranchId } = useBranchSelection();
-  // Inactive lines aren't ordered or counted (see isActiveCartLine) — shown
-  // faded with a label so that's visible; trash still works.
   const isInactive = item.is_active === false;
   const stockMutation = useMutation({
     mutationFn: ({
@@ -51,14 +49,6 @@ export const CartItem = ({
     }) => updateCartItem(id, quantity, data),
   });
 
-  // The cart-list response's `product` sub-object (ApiCartItemProps) only
-  // ever carries {id, name, photo, status, amount} — confirmed live, same
-  // investigation as STEP 14/15 — so sale_type/sale_amount/discount_price
-  // are never actually present on `item.product` for an authenticated cart.
-  // Reuse the same getProductDetail call/query-key the embedded detail view
-  // already uses (React Query dedupes it if that item's detail was already
-  // viewed) instead of adding a new API call, just to source the discount
-  // fields the list endpoint doesn't provide.
   const { data: productDetailData } = useQuery({
     enabled: Boolean(item.product.id),
     queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, item.product.id],
@@ -100,7 +90,6 @@ export const CartItem = ({
 
       await refreshCart();
     } catch {
-      // The global request interceptor already toasts the backend's message.
     }
   };
 

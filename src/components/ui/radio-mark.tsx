@@ -2,18 +2,11 @@ import { Check } from "lucide-react";
 
 type RadioMarkProps = {
   checked: boolean;
-  // md: branch/address lists; sm: order-page option cards.
   size?: "sm" | "md";
-  // sm only: red ring on an unselected option when the field has an error.
   hasError?: boolean;
   className?: string;
 };
 
-// The one look for every radio-style option (row or card) in the app:
-// borderless soft-gray surface, green outline + tint when selected, red
-// outline when the field has an error. Callers add their own layout.
-// "outlined": white card with a gray border instead of the gray surface —
-// the order page's look (same as its payment-method cards).
 export const getOptionClassName = (
   checked: boolean,
   hasError = false,
@@ -34,7 +27,6 @@ export const getOptionClassName = (
   }`;
 };
 
-// Circular selection indicator used by the app's radio-style option lists.
 const RadioMark = ({
   checked,
   size = "md",

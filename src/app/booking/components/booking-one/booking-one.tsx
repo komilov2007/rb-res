@@ -15,10 +15,6 @@ import ContactFields from "../contact-fields";
 import GuestsComment from "../guests-comment";
 import VisitTime from "../visit-time";
 
-// Variant "one": grey page, white app bar, cover photo, then one white
-// card per section; fixed white footer with the submit button. Desktop has
-// its own layout (BookingDesktop) — only one of the two is mounted, so the
-// shared field components never render twice for the same form.
 const BookingOne = () => {
   const t = useTranslations();
   const {
@@ -32,13 +28,6 @@ const BookingOne = () => {
     <div className="flex min-h-0 flex-1 flex-col bg-gray10 lg:flex-auto">
       <BookingHeader />
 
-      {/* Mobile: one column of white cards (the panel wrappers are
-          display: contents). Desktop: the window scrolls (no inner
-          scroller) and, like the order page, two full-bleed white panels
-          with an 8px gray gap — sections left (divided by lines instead of
-          separate cards), sticky cover + submit right. Each panel pads its
-          outer side by max(20px, 50% - 620px) so its content lines up with
-          the header's max-w-7xl container. */}
       <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto lg:flex lg:flex-auto lg:flex-col lg:overflow-visible">
         <div className="mx-auto flex w-full max-w-xl flex-col gap-2 px-4 py-2 lg:max-w-none lg:flex-1 lg:flex-row lg:px-0">
           <div className="contents lg:order-last lg:block lg:w-[calc(max(20px,50%-620px)+420px)] lg:shrink-0 lg:rounded-l-[30px] lg:bg-white lg:pl-6 lg:pr-[max(20px,calc(50%-620px))]">

@@ -1,21 +1,3 @@
-// Circular badge + glyph, built as an inline SVG data URI — there's no
-// pre-made marker *image* asset in this project to reuse as a file, but the
-// glyphs themselves are lucide-react's own path data (not hand-drawn):
-// node_modules/lucide-react/dist/esm/icons/map-pin.mjs for a plain
-// location, node_modules/lucide-react/dist/esm/icons/store.mjs for a branch,
-// node_modules/lucide-react/dist/esm/icons/house.mjs for a customer address
-// — this just fills the badge solid instead of tinted, since a map pin needs
-// to read against terrain rather than a white card. "store"/"location" use
-// --primary (branch pins); "customer" inverts it — white badge, --primary
-// ring and glyph — so a delivery order's two-point route
-// (src/components/delivery-route-sheet) reads as two distinct places at a
-// glance, not "the same pin twice". Shared by
-// src/components/branch-map-picker (multiple branches — "location" for the
-// rest, "store" for the picked one), src/components/branch-info-sheet's own
-// read-only single-branch map (always "store"), and delivery-route-sheet
-// ("store" for the branch, "customer" for the delivery address).
-// The live --primary (it can be switched at runtime, see ThemeSync); the
-// default value is the SSR/first-paint fallback.
 const getPrimaryPinColor = () =>
   (typeof document !== "undefined" &&
     getComputedStyle(document.documentElement)
@@ -55,10 +37,6 @@ export const buildBranchPinHref = (
   const primary = getPrimaryPinColor();
   const fill = isCustomer ? "#ffffff" : primary;
   const accent = isCustomer ? primary : "#ffffff";
-  // A soft drop shadow (feDropShadow, not a CSS filter — this has to survive
-  // being baked into the data URI itself) is what turns a flat colored
-  // circle into something that reads as sitting "above" the map instead of
-  // printed onto it flush.
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 40 40">
       <defs>

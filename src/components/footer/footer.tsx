@@ -17,39 +17,26 @@ import { normalizeCategories } from "@/utils/product";
 import { formatTime, getDayIndex } from "@/utils/working-time";
 import { useTranslations } from "next-intl";
 
-// Colour lives on an inner span: globals.css sets `a { color: inherit }`
-// outside any layer, which overrides Tailwind text-* utilities on <a> itself.
 const LINK_CLASS_NAME =
   "group flex items-center gap-1 whitespace-nowrap text-sm font-normal";
 const LINK_TEXT_CLASS_NAME =
   "flex items-center gap-1 text-gray220 transition-colors group-hover:text-primary";
 
-// The footer shows at most this many categories, then an "all categories" link.
 const CATEGORIES_LIMIT = 8;
 
-// Desktop-only (mobile has the bottom nav instead). Two rows: brand (with
-// the about/branches links), categories and contacts on top; a centred
-// credit line under a divider — centred so the fixed Hand action button in
-// the bottom-right corner never covers it.
 const Footer = () => {
   const t = useTranslations();
   const { data } = useGeneral();
   const { shopid } = useShopId();
-  // Same shared categories query as the home strip and the catalog.
   const { data: categoriesData } = useShopCategories();
   const categories = normalizeCategories(categoriesData?.data);
   const general = data?.data;
   const socials = general?.socials ?? [];
   const shopQuery = shopid ? `?shop_id=${shopid}` : "";
-  // Both point at the About page on purpose: it already renders the shop's
-  // working hours, its branch list (live, from the branches API) and its
-  // contacts — there is no separate branches route to link to. "Filiallar"
-  // jumps straight to that page's branches section.
   const aboutHref = `${ROUTER.PROFILE_ABOUT}${shopQuery}`;
   const branchesHref = `${aboutHref}#branches`;
   const homeHref = `${ROUTER.HOME}${shopQuery}`;
 
-  // Today's hours, same derivation as the branch picker drawer's schedule row.
   const todayEntry = general?.working_time?.[String(getDayIndex())];
   const todayHours =
     !todayEntry || todayEntry.is_closed || todayEntry.hours.length === 0
@@ -63,7 +50,6 @@ const Footer = () => {
       <div className="mx-auto w-full max-w-7xl px-5">
         <div className="flex items-center justify-between gap-8 py-8">
           <div className="flex min-w-0 items-center gap-4">
-            {/* Logo + name go home, like the header logo. */}
             <Link
               href={homeHref}
               aria-label={general?.name}

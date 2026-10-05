@@ -33,12 +33,6 @@ const SectionTitle = ({ children }: { children: string }) => (
   </p>
 );
 
-// Tapping a product opens the exact same product-detail drawer the catalog's
-// own card-product uses (src/components/modal/product-detail via
-// useProductDetailStore) — not a separate page/view. Mounted once, globally,
-// by PageLayout, so it's already reachable from wherever this renders. The
-// host stays open underneath, so closing the drawer returns to the results.
-// Tapping a category navigates to its own route instead.
 const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
   const t = useTranslations();
   const router = useRouter();
@@ -55,9 +49,6 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
     queryFn: () => getProducts(shopid as string, { search }),
   });
 
-  // Same queryKey as the home page's own category list — the backend has no
-  // category search param, so the (already cached) full list is filtered
-  // here by name.
   const { data: categoriesData, isLoading: isCategoriesLoading } = useShopCategories(open);
 
   const products = data?.data.results ?? [];
@@ -94,7 +85,6 @@ const SearchModal = ({ open, value, fullscreen }: SearchModalProps) => {
           <p className="text20 mt-1">{t("search_products_hint")}</p>
         </div>
       ) : isLoading || isCategoriesLoading ? (
-        // Same padding and row shape as the product results below.
         <ul
           aria-label={t("searching")}
           className="h-full overflow-hidden p-2"

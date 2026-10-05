@@ -10,12 +10,6 @@ const CANCELLED_STATUSES: OrderStatusValue[] = [
   "CANCELED_BY_CUSTOMER",
 ];
 
-// INFERRED — the real step-by-step kitchen/pickup progression was never
-// confirmed against the backend, only the final OrderStatusValue enum
-// itself (see AGENTS.md Section 37/39: don't guess API contracts). This is
-// a best-effort visual mapping layered on top of that enum, not a
-// confirmed backend contract. READY and ON_THE_WAY both map to step 3
-// (the design's 4-step stepper has no separate "out for delivery" step).
 const STEP_FOR_STATUS: Partial<Record<OrderStatusValue, number>> = {
   NEW: 1,
   PROGRESS: 2,
@@ -38,23 +32,15 @@ type StatusTimelineProps = {
   status: OrderStatusValue;
 };
 
-// Always-visible 4-step horizontal stepper (per the order-placing design
-// spec) — replaces the earlier collapsible badge+list version. Only two
-// visual states exist here (done vs upcoming): a step is "done" once its
-// number is <= the current step, matching the filled/blue-check vs
-// gray-outline distinction the design calls for.
 const StatusTimeline = ({ status }: StatusTimelineProps) => {
   const t = useTranslations();
   const isCancelled = CANCELLED_STATUSES.includes(status);
 
   if (isCancelled) {
-    // Deliberately low-key: one plain line, red dot + label, no box/badge —
-    // reads as cancelled at a glance without dominating the detail page.
     return (
       <p className="flex items-center gap-2 text-sm">
         <span className="h-2 w-2 shrink-0 rounded-full bg-red" />
         <span className="font-medium text-red">{t("orders_timeline_cancelled")}</span>
-        {/* Plain CANCEL doesn't say who cancelled — no guessed reason. */}
         {status === "CANCELED_BY_CUSTOMER" && (
           <span className="min-w-0 truncate text-gray220">
             · {t("orders_timeline_by_customer")}

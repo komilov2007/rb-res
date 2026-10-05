@@ -22,13 +22,6 @@ const ChatContent = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
 
-  // AuthProvider populates the auth store from localStorage in its own
-  // effect; since it's an ancestor, that effect fires *after* this
-  // component's on a fresh page load (React runs child effects before
-  // parent effects on mount) — checking hasAccess immediately would bounce
-  // an already-logged-in user before it's even been read. Same
-  // isHydrated-gated pattern the order page's own access guard uses to wait
-  // out that first commit before trusting the store.
   const isHydrated = useSyncExternalStore(
     subscribeNoop,
     () => true,
@@ -36,9 +29,6 @@ const ChatContent = () => {
   );
   const mustLogin = isHydrated && !hasAccess;
 
-  // Direct navigation to /chat while logged out (the floating-action button
-  // itself already guards its own click): send the user home and open the
-  // login modal there.
   useEffect(() => {
     if (!mustLogin) return;
 
@@ -48,9 +38,6 @@ const ChatContent = () => {
 
   if (!isHydrated || !hasAccess) return null;
 
-  // Mobile: the panel is the whole screen. Desktop (lg+): site header/footer
-  // shell with the panel as one full-bleed, viewport-high white block (the
-  // header + breadcrumb stack is ~169px, plus the 8px gutters).
   return (
     <div className="lg:flex lg:min-h-screen lg:flex-col lg:bg-gray10">
       <div className="hidden lg:block">
@@ -70,7 +57,6 @@ const ChatContent = () => {
   );
 };
 
-// useSearchParams (shop_id) needs a Suspense boundary.
 const Chat = () => (
   <Suspense>
     <ChatContent />

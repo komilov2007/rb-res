@@ -8,9 +8,6 @@ import ContactFields from "../contact-fields";
 import GuestsComment from "../guests-comment";
 import VisitTime from "../visit-time";
 
-// One numbered step: a badge on a vertical rail, the section beside it.
-// The shared sections are cards on mobile, so their own padding/background
-// is dropped here — the white page panel is the card on desktop.
 const Step = ({
   number,
   isLast = false,
@@ -35,10 +32,6 @@ const Step = ({
   </div>
 );
 
-// Desktop /booking: a heading and the form as three numbered steps on the
-// left, the summary card (photo, live picks, submit) on the right, the
-// same height as the form column.
-// Uses the same field components (and form) as the mobile layout.
 const BookingDesktop = () => {
   const t = useTranslations();
 

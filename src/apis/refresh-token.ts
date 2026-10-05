@@ -8,8 +8,6 @@ const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 type RefreshResponse = AxiosResponse<Partial<AuthProps>> | undefined;
 
-// One in-flight refresh per shop: parallel requests that all find an expired
-// access token share it instead of each sending the same refresh token.
 const pendingRefresh = new Map<string, Promise<RefreshResponse>>();
 
 const requestRefresh = async (shopId: string): Promise<RefreshResponse> => {

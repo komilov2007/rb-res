@@ -11,15 +11,9 @@ import { useShopId } from "@/hooks/useShopId";
 import { getApiErrorMessage } from "@/utils/api-error";
 
 type UseCancelOrderOptions = {
-  // Extra work after the shared MY_ORDERS invalidation. Returning a promise
-  // keeps isCancelling true until it settles — the detail pages use this to
-  // wait for the refetched "cancelled" status, so the button doesn't flip
-  // back to enabled between the API response and the refetch.
   onSuccess?: () => unknown;
 };
 
-// The one cancel-order mutation, shared by the order detail pages and the
-// profile orders card.
 export const useCancelOrder = (
   orderId: number | string,
   { onSuccess }: UseCancelOrderOptions = {},
@@ -37,7 +31,6 @@ export const useCancelOrder = (
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.MY_ORDERS],
       });
-      // The nav badge counts active orders — one fewer now.
       queryClient.invalidateQueries({
         queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT],
       });

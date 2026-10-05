@@ -47,16 +47,10 @@ const CardProduct = ({
     <article
       data-unavailable={isUnavailable || undefined}
       onClick={() => {
-        // Not sold at the selected branch: the card is inert — the muted
-        // styling and the badge are the whole feedback.
         if (isUnavailable) return;
 
         openProductDetail(product, saleBadgeVariant, "default");
       }}
-      // The browser's own default tap-highlight (a harsh gray/black flash
-      // on mobile) is what made pressing this look bad — the group-active
-      // overlay div below replaces it with a deliberately light one, so
-      // that default needs turning off here or the two would show at once.
       style={{ WebkitTapHighlightColor: "transparent" }}
       className={`group relative flex ${CARD_HEIGHT_CLASS} w-full cursor-pointer flex-col rounded-[18px] transition-transform duration-200 ease-out active:scale-[0.98] lg:rounded-[20px] lg:border lg:border-gray180 lg:duration-300 lg:hover:-translate-y-0.5 ${
         isDiscountCard
@@ -66,22 +60,8 @@ const CardProduct = ({
             } ring-1 ring-black/5 lg:shadow-none lg:ring-0`
       }`}
     >
-      {/* Soft, uniform press feedback (a light tint over the whole card,
-          image included) instead of the browser's own harsh default —
-          pointer-events-none so it never intercepts the tap it's reacting
-          to. z-[15]: above the image/content (z-10) so it actually tints
-          them, but below the unavailable popover (z-20) below — without
-          that, pressing a branch row inside the open popover would also
-          tint the popover itself, since :active on this <article> is also
-          true while a descendant inside it is being pressed. */}
       <div className="pointer-events-none absolute inset-0 z-15 rounded-[18px] bg-black/5 opacity-0 transition-opacity duration-150 group-active:opacity-100 lg:rounded-[20px]" />
 
-      {/* Dims/desaturates the photo + price/name block only — the popover
-          above sits outside this wrapper specifically so it isn't also
-          grayscaled: a CSS filter applies to an element's whole rendered
-          subtree, so putting it on the <article> itself (as before) was
-          desaturating "Olmazorda bor" along with everything else, when the
-          point of that row is to read as the opposite of dimmed. */}
       <div
         className={`flex min-h-0 flex-1 flex-col ${
           isUnavailable ? "opacity-80 grayscale" : ""
@@ -175,8 +155,6 @@ const CardProduct = ({
           >
             <div
               onClick={(event) => event.stopPropagation()}
-              // Blocks the add/+/- buttons before they run when the product
-              // isn't sold at the selected branch.
               onClickCapture={(event) => {
                 if (!isUnavailable) return;
 

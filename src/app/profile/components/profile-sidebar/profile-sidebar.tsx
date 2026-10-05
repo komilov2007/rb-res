@@ -16,19 +16,11 @@ import LogoutDialog from "../logout-dialog";
 import SidebarContact from "./sidebar-contact";
 import SidebarRow, { SIDEBAR_GROUP_CLASS_NAME } from "./sidebar-row";
 
-// Desktop-only persistent left panel for the whole profile family of routes
-// (profile itself, addresses, notifications, about) — rendered by both
-// profile.tsx and ProfilePageShell so it stays put while navigating between
-// them. Fully self-contained (own data fetching, own modals) since it
-// appears identically on every one of those pages. Mobile keeps its own
-// inline account card + ProfileGroup/ProfileItem rows in profile.tsx
-// instead of this component.
 const ProfileSidebar = () => {
   const pathname = usePathname();
   const t = useTranslations();
   const openChat = useOpenChat();
   const isChatModalOpen = useUiStore((state) => state.isChatModalOpen);
-  // See profile.tsx: no language row and no logout under Click.
   const isClickApp = useIsClick();
   const {
     router,
@@ -51,7 +43,6 @@ const ProfileSidebar = () => {
   return (
     <>
       <div className="flex w-96 shrink-0 flex-col divide-y divide-gray180">
-        {/* Account card. */}
         <AccountCard
           variant="sidebar"
           isLoading={isLoading}
@@ -63,15 +54,11 @@ const ProfileSidebar = () => {
           onLogin={openLogin}
         />
 
-        {/* Personal actions. */}
         <div className={SIDEBAR_GROUP_CLASS_NAME}>
           {hasAccess && (
             <SidebarRow
               icon={IconPencilFilled}
               label={t("profile_page_menu_edit_profile")}
-              // Bare /profile shows this same form by default in the content
-              // pane, so it reads as active there too, not just on
-              // /profile/edit itself.
               active={
                 pathname === ROUTER.PROFILE || pathname === ROUTER.PROFILE_EDIT
               }
@@ -94,7 +81,6 @@ const ProfileSidebar = () => {
           />
         </div>
 
-        {/* Info. */}
         <div className={SIDEBAR_GROUP_CLASS_NAME}>
           <SidebarRow
             icon={IconBellFilled}
@@ -104,7 +90,6 @@ const ProfileSidebar = () => {
               router.push(`${ROUTER.PROFILE_NOTIFICATIONS}${shopQuery}`)
             }
           />
-          {/* Desktop opens its own page (mobile keeps the sheet). */}
           {!isClickApp && (
             <SidebarRow
               icon={Globe2}
@@ -122,8 +107,6 @@ const ProfileSidebar = () => {
             active={pathname?.startsWith(ROUTER.PROFILE_ABOUT)}
             onClick={() => router.push(`${ROUTER.PROFILE_ABOUT}${shopQuery}`)}
           />
-          {/* Routes to the existing live chat feature — a real contact
-              channel already in this app, not a new one. */}
           <SidebarRow
             icon={IconMessageCircleFilled}
             label={t("profile_page_menu_contact_us")}
@@ -132,8 +115,6 @@ const ProfileSidebar = () => {
           />
         </div>
 
-        {/* Logout section — same padded group as the menus above, with
-            its own tinted hover (red for logout, primary for login). */}
         {!(isClickApp && hasAccess) && (
           <div className={SIDEBAR_GROUP_CLASS_NAME}>
             <button

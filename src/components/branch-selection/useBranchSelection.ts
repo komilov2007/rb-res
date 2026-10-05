@@ -9,8 +9,6 @@ import { useLocationStore } from "@/stores/location";
 import { useBranches } from "@/hooks/useBranches";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
-// Home page delivery/pickup choice and the branch it resolves to — pickup
-// uses the stored branch, delivery the nearest branch to the saved address.
 export const useBranchSelection = () => {
   const { shopid, hasShopId } = useShopId();
   const storedShopId = useBranchSelectionStore((state) => state.shopId);
@@ -27,7 +25,6 @@ export const useBranchSelection = () => {
     branchesQuery.data?.data.filter((branch) => branch.is_active) ?? [];
 
   const isCurrentShop = Boolean(shopid) && storedShopId === shopid;
-  // A stored pickup branch that's no longer offered counts as no selection.
   const isPickupBranchGone =
     storedServiceType === "PICKUP" &&
     branchesQuery.isSuccess &&
@@ -36,7 +33,6 @@ export const useBranchSelection = () => {
     isCurrentShop && !isPickupBranchGone ? storedServiceType : null;
   const isDelivery = serviceType === "DELIVERY";
 
-  // Same key/fn as the order page's nearest-branch query, so they share cache.
   const nearestBranchQuery = useQuery({
     enabled:
       hasShopId && isDelivery && Boolean(latitude) && Boolean(longitude),
@@ -55,12 +51,8 @@ export const useBranchSelection = () => {
       : isDelivery
         ? (nearestBranchQuery.data?.data.id ?? null)
         : null;
-  // The nearest-branch response carries no branch name (confirmed live), so
-  // the name comes from the branch list.
   const branch = branches.find((item) => item.id === branchId) ?? null;
 
-  // A usable choice for checkout: pickup needs its branch, delivery needs an
-  // address.
   const hasSelection =
     serviceType === "PICKUP"
       ? storedBranchId !== null

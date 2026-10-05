@@ -11,7 +11,6 @@ import { useProduct } from "./useProduct";
 const Products = () => {
   const { products, bottomRef, isLoading, productGroups, isFetchingNextPage } =
     useProduct();
-  // Selected branch drives the live "Bu filialda yo'q" muting below.
   const { branchId } = useBranchSelection();
 
   if (isLoading) return <ProductsSkeleton />;

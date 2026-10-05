@@ -14,10 +14,8 @@ import { useAddressBranch } from "./useAddressBranch";
 import { getBranchLabel } from "./utils";
 import { getOptionClassName } from "@/components/ui/radio-mark";
 
-// Rows shown before the "Yana N ta ... ko'rsatish" toggle.
 export const COLLAPSED_COUNT = 3;
 
-// Same option look as every radio row in the app (see RadioMark).
 export const getRowClassName = (checked: boolean) =>
   `flex min-h-16 w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left ${getOptionClassName(checked)}`;
 
@@ -27,10 +25,6 @@ export const SectionLabel = ({ children }: { children: ReactNode }) => (
   </p>
 );
 
-// tone="primary" (the default) is only for the standalone "Yangi manzil
-// kiriting..." row above the saved-addresses list — every row *inside*
-// that list uses tone="gray" so a plain list item doesn't read as visually
-// "special" the way that one dedicated action row is meant to.
 export const RowIcon = ({ tone = "primary" }: { tone?: "primary" | "gray" }) => (
   <span
     className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${
@@ -59,8 +53,6 @@ export const Pill = ({
   </span>
 );
 
-// line-clamp (not `truncate`) keeps normal wrapping, so the ellipsis lands
-// after the last whole word that fits instead of cutting a word in half.
 export const RowText = ({
   title,
   pill,
@@ -124,7 +116,6 @@ export const ShowMoreToggle = ({
 export const BranchPill = ({ branch }: { branch: BranchProps | null }) =>
   branch ? <Pill>{getBranchLabel(branch.name)}</Pill> : null;
 
-// The branch that will actually serve this address (see useAddressBranch).
 export const NearestBranchPill = ({
   selection,
   address,

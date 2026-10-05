@@ -57,7 +57,6 @@ export const orderSchema = yup.object().shape(
     promocode_id: yup.number().nullable().default(null),
     promocode: yup.string().nullable().default(null),
     total: yup.number().nullable().default(null),
-    // Optional, but once one of them is filled the other is required too.
     shipping_date: yup
       .string()
       .nullable()

@@ -19,9 +19,6 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getLocalPhone } from "@/utils/format-number";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
-// First-time user name step, opened right after login (or by checkout when
-// the name is still missing) on top of the current screen. Saving the name
-// updates auth, which is what lets a pending checkout continue.
 const SignupModal = () => {
   const t = useTranslations();
   const { shopid } = useShopId();
@@ -39,8 +36,6 @@ const SignupModal = () => {
     setSignupModal(false);
   };
 
-  // Dismissed without a name: the user stays where they are and any pending
-  // checkout is dropped instead of continuing to the order page.
   const handleDismiss = () => {
     setPendingCheckout(false);
     closeModal();
@@ -53,8 +48,6 @@ const SignupModal = () => {
         shopid as string,
       ),
     onSuccess: (response) => {
-      // The stored session, not the render-time `auth`: the request may
-      // have refreshed the tokens on its way out.
       const currentAuth = (shopid && getUser(shopid)?.auth) || auth;
 
       if (currentAuth) {

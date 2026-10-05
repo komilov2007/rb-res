@@ -17,12 +17,6 @@ import { useBranchSelection } from "./useBranchSelection";
 import { useNearestBranches } from "./useNearestBranches";
 import { SelectionContent } from "./selection-content";
 
-// "Manzil yoki filialni o'zgartirish" modal — mounted once in PageLayout and
-// opened through the branch-selection store (header selector, home
-// auto-open). Tapping a row writes the pick straight to the stores and closes
-// the modal, so the header selector and product filter are already updated
-// when it disappears. Closing this way (not a dismissal) keeps a pending
-// checkout, which then continues.
 const BranchSelectionModal = () => {
   const selection = useBranchSelection();
   const { shopid } = selection;
@@ -50,22 +44,10 @@ const BranchSelectionModal = () => {
   const locationModal = useLocationStore((state) => state.locationModal);
   const storeAddress = useLocationStore((state) => state.address);
   const openLocationMap = useLocationStore((state) => state.openLocationMap);
-  // Address before the map picker opened; non-null while the picker is open.
   const mapReturnRef = useRef<string | null>(null);
-  // The pickup branch picker. Rendered here rather than inside PickupTab
-  // because opening it closes this modal, which would unmount a picker that
-  // lived in the modal's own content.
   const [branchPickerOpen, setBranchPickerOpen] = useState(false);
-  // True while the picker is standing in for this modal, so dismissing it
-  // without a pick brings the modal back (same deal as the delivery map
-  // above). A completed pick clears it, so the modal stays closed.
   const reopenAfterPickerRef = useRef(false);
   const { list: pickupBranches } = useNearestBranches(selection.branches);
-  // Choosing requires login: a request made while logged out (home auto-open,
-  // order-page redirect) waits, and shows only after login and the name step
-  // are closed — never for a guest, never on top of the auth modals.
-  // The closed-shop modal goes first too: the request waits until it's
-  // dismissed instead of stacking on top of it.
   const isVisible =
     selectionModal &&
     hasAccess &&
@@ -73,7 +55,6 @@ const BranchSelectionModal = () => {
     !signupModal &&
     !closedModalOpen;
 
-  // Only offer what the shop actually has; both when services are unknown.
   const activeServices =
     general?.data?.services
       ?.filter((service) => service.is_active)
@@ -83,9 +64,6 @@ const BranchSelectionModal = () => {
   const canPickup =
     activeServices.length === 0 || activeServices.includes("PICKUP");
 
-  // Back from the map picker: a newly picked point is a selection like any
-  // row tap — it becomes the delivery choice and the modal stays closed.
-  // Leaving the map without picking brings the modal back.
   useEffect(() => {
     if (locationModal || mapReturnRef.current === null) return;
 
@@ -101,9 +79,6 @@ const BranchSelectionModal = () => {
     setSelectionModal(true);
   }, [locationModal, storeAddress, shopid, setDelivery, setSelectionModal]);
 
-  // A guest's "choose address" tap opened login first (header chip). Once
-  // the login and name steps are closed: logged in → open the selection;
-  // login dismissed → drop the request.
   useEffect(() => {
     if (!pendingSelection || loginModal || signupModal) return;
 
@@ -139,8 +114,6 @@ const BranchSelectionModal = () => {
     setSelectionModal(true);
   };
 
-  // Runs before the picker's own onClose, so clearing the flag here is what
-  // keeps this modal closed after a real pick.
   const handlePickBranch = (branchId: number) => {
     if (!shopid) return;
 
@@ -152,8 +125,6 @@ const BranchSelectionModal = () => {
     if (open) return;
 
     setSelectionModal(false);
-    // Dismissed without choosing: drop a checkout that was waiting on
-    // this choice, so a later pick doesn't jump to the order page.
     if (!selection.hasSelection) setPendingCheckout(false);
   };
 
@@ -169,8 +140,6 @@ const BranchSelectionModal = () => {
     />
   );
 
-  // The picker is a sibling of the modal, not a child, so the modal can
-  // close while it stays open.
   const branchPicker = (
     <BranchMapPicker
       open={branchPickerOpen}
@@ -196,8 +165,6 @@ const BranchSelectionModal = () => {
     );
   }
 
-  // Mobile: bottom drawer. Sheet is the same Radix Dialog primitive, so
-  // DialogTitle inside SelectionContent still works.
   return (
     <>
       <Sheet open={isVisible} onOpenChange={handleOpenChange}>

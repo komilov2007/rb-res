@@ -9,12 +9,9 @@ import { useGeneral } from "@/hooks/useGeneral";
 
 type ChatHeaderProps = {
   onBack: () => void;
-  // "close" (X) inside the desktop modal, "back" (‹) on the /chat page.
   backIcon?: "back" | "close";
 };
 
-// Support online status is presentational copy matching the design, not
-// backend data — no presence/typing API is documented for chat.
 const ChatHeader = ({ onBack, backIcon = "back" }: ChatHeaderProps) => {
   const t = useTranslations();
   const { data: general } = useGeneral();
@@ -54,8 +51,6 @@ const ChatHeader = ({ onBack, backIcon = "back" }: ChatHeaderProps) => {
             aria-label={t("chat_header_call_aria")}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray10"
           >
-            {/* Color on the icon: globals.css's `a { color: inherit }` beats
-                a text-* utility on the <a> itself. */}
             <IconPhoneFilled size={17} className="text-gray220" />
           </a>
         )}

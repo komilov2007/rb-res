@@ -13,8 +13,6 @@ import {
   getMobileLayoutVariant,
 } from "./variants";
 
-// Category bar state: the category list, the fixed-on-scroll modes with
-// the active section tracking, swiper navigation, and tap handling.
 export const useCategories = () => {
   const router = useRouter();
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
@@ -26,8 +24,6 @@ export const useCategories = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const desktopFixedTopRef = useRef<number | null>(null);
-  // Height the section had while still in document flow — the mobile
-  // spacer below reserves exactly that much once the section turns fixed.
   const [mobileFixedHeight, setMobileFixedHeight] = useState<number | null>(
     null,
   );
@@ -70,10 +66,6 @@ export const useCategories = () => {
         desktopFixedTopRef.current = sectionRef.current.offsetTop;
       }
 
-      // Measured only while the section is still in document flow: once it
-      // is `fixed` it renders compact chips, so its height shrinks, and the
-      // spacer must keep the in-flow height — otherwise the page's total
-      // height changes on the fixed/relative toggle and the content jumps.
       if (
         !isDesktop &&
         sectionRef.current &&
@@ -120,14 +112,6 @@ export const useCategories = () => {
       });
   }, [activeCategoryId, isMobileFixed, isDesktopFixed]);
 
-  // Once the bar is pinned (mobile or desktop), the homepage's own category
-  // sections (data-category-section, tracked above) are already on screen,
-  // so a tap should just smooth-scroll to that section instead of
-  // navigating away. Before it's pinned, there's no section list to jump to
-  // yet, so it opens that category's own page as before. Checking the
-  // target element's actual presence (not just the pinned flag) is what
-  // keeps this from trying to jump to a category section that hasn't
-  // rendered/loaded yet — it falls back to navigating instead.
   const handleCategoryClick = (categoryId: number) => {
     if (isDesktopFixed || isMobileFixed) {
       const target = document.getElementById(`category-${categoryId}`);

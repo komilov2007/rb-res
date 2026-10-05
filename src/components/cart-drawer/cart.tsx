@@ -37,12 +37,6 @@ const CartDrawer = () => {
   const usesProviderDelivery =
     shopDeliveryService === "YANDEX_DELIVERY" ||
     shopDeliveryService === "NOOR_DELIVERY";
-  // Lifted up from CartFooter: the cart Sheet's content (and anything
-  // inside it) unmounts whenever isCartOpen goes false — including right
-  // when handleContinue's !hasAccess branch closes the drawer to show the
-  // login modal. useCartFooter's own effect resumes checkout once login
-  // succeeds, so it has to live somewhere that survives the drawer being
-  // closed — CartDrawer itself, which is always mounted globally.
   const { handleContinue, isPending } = useCartFooter(total);
   const [viewingProductId, setViewingProductId] = useState<number | null>(
     null,
@@ -57,9 +51,6 @@ const CartDrawer = () => {
     refetchOnMount: "always",
     staleTime: 0,
   });
-  // Delivery price is calculated once per cart opening, not on every
-  // counter tap: the total is snapshotted when the drawer opens (or when
-  // the first non-empty total shows up) and cleared when it closes.
   const [calculationTotal, setCalculationTotal] = useState<number | null>(
     null,
   );
@@ -72,9 +63,6 @@ const CartDrawer = () => {
     setCalculationTotal(null);
   }
 
-  // The drawer is also closed from outside handleOpenChange (checkout from
-  // the item detail view, login/selection interrupts) — reset the detail
-  // view there too, or the next opening lands on a stale product page.
   if (!isCartOpen && viewingProductId !== null) {
     setViewingProductId(null);
   }
@@ -153,13 +141,9 @@ const CartDrawer = () => {
 };
 
 const getSheetClassName = (isMobile: boolean) => {
-  // h-fit sizes the sheet to its actual content (short carts stay compact);
-  // max-h-[80dvh]+overflow-hidden is only a cap for long carts, at which
-  // point CartBody's own overflow-y-auto scrolls the item list internally.
   return isMobile
     ? "flex h-fit max-h-[80dvh] w-full flex-col gap-0 overflow-hidden rounded-t-[28px] border-t border-gray180 bg-white p-0"
     : "flex h-full w-[560px] max-w-[560px] flex-col gap-0 border-l border-gray180 bg-white p-0";
 };
 
 export default CartDrawer;
-

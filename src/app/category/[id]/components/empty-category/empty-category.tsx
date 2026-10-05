@@ -8,7 +8,6 @@ import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 
-// Empty category: icon + title + hint, with a way back to all categories.
 const EmptyCategory = () => {
   const t = useTranslations();
   const { shopid } = useShopId();

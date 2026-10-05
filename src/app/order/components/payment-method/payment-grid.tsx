@@ -13,8 +13,6 @@ type PaymentGridProps = {
   getIsDisabled: (type: PaymentTypeProps) => boolean;
 };
 
-// Renders the payment types returned by the payment-list query, with each
-// card's disabled state from that same response.
 const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) => {
   const t = useTranslations();
   const {
@@ -54,8 +52,6 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
                 className={`flex flex-col gap-2 rounded-2xl border p-3 text-left transition-colors duration-200 ${
                   isDisabled ? "pointer-events-none opacity-50" : ""
                 } ${
-                  // White bordered cards (unlike the gray option rows used
-                  // elsewhere); green when selected, red on a field error.
                   checked
                     ? "border-green-500 bg-green-500/10"
                     : hasError

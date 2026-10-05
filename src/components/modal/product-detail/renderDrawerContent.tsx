@@ -16,7 +16,6 @@ export type ProductDetailRenderContext = ProductDetailActionContext &
     isRightDrawerDesktop: boolean;
   };
 
-// The desktop right-drawer body.
 export const renderDrawerContent = (ctx: ProductDetailRenderContext) => {
   const {
     t,

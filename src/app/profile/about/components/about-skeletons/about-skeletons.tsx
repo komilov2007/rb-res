@@ -1,7 +1,5 @@
 import { WEEKDAYS } from "@/constants/weekdays";
 
-// Loading placeholders sized like each section's real rows, so nothing
-// jumps when the data lands.
 export const WorkingTimeSkeleton = () => (
   <ul className="flex flex-col gap-1">
     {WEEKDAYS.map((day) => (

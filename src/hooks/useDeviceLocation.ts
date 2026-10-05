@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 
 type DeviceCoords = { latitude: number; longitude: number };
 
-// Reads the device position once whenever `enabled` turns true. Stays null
-// if geolocation is unavailable or denied (silently — callers treat it as
-// "no origin known").
 export const useDeviceLocation = (enabled: boolean) => {
   const [coords, setCoords] = useState<DeviceCoords | null>(null);
 

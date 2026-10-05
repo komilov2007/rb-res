@@ -1,7 +1,3 @@
-// webapp/notification/list/{shop} needs a logged-in token, so this shape has
-// NOT been verified against a live response yet. Every field is optional and
-// read defensively through normalizeNotifications — confirm and narrow this
-// type once a real response is available.
 export type NotificationProps = {
   id?: number | string;
   title?: string | null;

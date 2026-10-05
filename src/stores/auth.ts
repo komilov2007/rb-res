@@ -7,9 +7,6 @@ import { useLocationStore } from "@/stores/location";
 type AuthStoreProps = {
   auth?: AuthProps;
   hasAccess: boolean;
-  // False until AuthProvider has read the stored session (on mount, after
-  // hydration) — lets pages show a loading state instead of the guest view
-  // while the real session is still unknown.
   isAuthReady: boolean;
   loginModal: boolean;
   signupModal: boolean;
@@ -53,8 +50,6 @@ export const useAuthStore = create<AuthStoreProps>()((set) => ({
   logout: () => {
     useCartStore.getState().clearCart();
     useLocationStore.getState().clearLocation();
-    // The header chip reads the delivery/pickup choice from here, so a
-    // logged-out user starts without the previous user's selection.
     useBranchSelectionStore.getState().clearSelection();
 
     set({
@@ -67,4 +62,3 @@ export const useAuthStore = create<AuthStoreProps>()((set) => ({
     });
   },
 }));
-

@@ -8,11 +8,6 @@ import { useAuthStore } from "@/stores/auth";
 import { useCartStore } from "@/stores/cart";
 import { normalizeCartItems } from "@/utils/cart";
 
-// Re-reads the server cart after a cart write and puts it in the store.
-// fetchQuery (staleTime 0) refetches once and writes the fresh list into the
-// CART_LIST cache, so CartProvider's observer gets it too — no second
-// invalidate/refetch. One copy for the product card, the product detail and
-// the cart drawer rows.
 export const useRefreshCart = () => {
   const queryClient = useQueryClient();
   const customerId = useAuthStore((state) => state.auth?.customer);

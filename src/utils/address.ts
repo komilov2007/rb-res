@@ -1,13 +1,5 @@
-// Moved out of src/app/[page]/components/branch-selection/utils.ts — these
-// two were already imported by several unrelated features (profile/about,
-// profile/addresses, card-product/unavailable-branch-list) despite living
-// under one route's folder; order-detail-sections and delivery-route-sheet
-// are two more. findClosestBranch stays behind — it's branch-selection's
-// own concern, nothing else needs it.
-
 import { translate } from "@/utils/translate";
 
-// "Chilonzor" -> "Chilonzor filiali"; names that already say "filial" stay.
 export const getBranchLabel = (name?: string | null) => {
   if (!name) return translate("common_branch");
   return /filial/i.test(name)
@@ -15,8 +7,6 @@ export const getBranchLabel = (name?: string | null) => {
     : translate("location_branch_label", { name });
 };
 
-// Country/city parts geocoded addresses start with — they carry no
-// information inside a single shop's delivery area.
 const GENERIC_ADDRESS_PARTS = [
   "uzbekistan",
   "o'zbekiston",
@@ -27,8 +17,6 @@ const GENERIC_ADDRESS_PARTS = [
   "ташкент",
 ];
 
-// "Uzbekistan, Tashkent, Chilonzor 9-mavze, 24-uy, 15-xonadon"
-// -> "Chilonzor 9-mavze, 24-uy"
 export const getShortAddress = (address: string) => {
   const parts = address
     .split(",")

@@ -10,7 +10,6 @@ import { TileError, TileIcon, TileLabel, tileClassName } from "../two-field";
 export type ComboOption = {
   value: string;
   label: string;
-  // Shown under the label, e.g. "Dam olish kuni".
   hint?: string;
   disabled?: boolean;
 };
@@ -29,8 +28,6 @@ type TileComboProps = {
   error?: string;
 };
 
-// A tile that is both typeable (masked input) and pickable (the chevron
-// opens a list). Typing and picking write through the same form field.
 const TileCombo = ({
   Icon,
   label,
@@ -59,7 +56,6 @@ const TileCombo = ({
               maxLength={maxLength}
               placeholder={placeholder}
               onChange={(event) => onTextChange(event.target.value)}
-              // text-base (16px) avoids iOS Safari's auto-zoom-on-focus.
               className="w-full bg-transparent text-base font-normal leading-5 text-black outline-none placeholder:text-gray220/70"
             />
           </label>

@@ -28,8 +28,6 @@ type AddressFormMap = Pick<
   | "setMapRenderKey"
 >;
 
-// The address details form (title, entrance/floor/room, comment) plus
-// loading an existing address into it and building the save payload.
 export const useAddressForm = ({
   mapInstanceRef,
   addressName,
@@ -46,8 +44,6 @@ export const useAddressForm = ({
   const [comment, setComment] = useState("");
   const [addressTitle, setAddressTitle] = useState("");
 
-  // Only state setters and a ref inside (all stable), so it can sit in the
-  // edit-address effect's deps without re-triggering it.
   const fillAddressForm = useCallback((item?: AddressProps | null) => {
     setEditingAddressId(item?.id ?? null);
     setAddressName(item?.address ?? "");

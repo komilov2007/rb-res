@@ -37,8 +37,6 @@ const UnavailableModal = ({
     (state) => state.setUnavailableItemIds,
   );
 
-  // The cart drawer is mounted globally (provider.tsx), so it stays open
-  // across the navigation home and can mark the unavailable items.
   const handleBackToCart = () => {
     onClose();
     setUnavailableItemIds(unavailableItemIds);

@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 
-// Mobile profile page's grouped menu card and its rows.
 export const ProfileGroup = ({
   children,
   className = "",

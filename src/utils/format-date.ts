@@ -2,13 +2,9 @@ import { translate } from "@/utils/translate";
 
 const pad = (value: number) => String(value).padStart(2, "0");
 
-// Local calendar day as "YYYY-MM-DD" (no UTC shift, unlike toISOString).
 export const getDateValue = (date: Date) =>
   `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
-// Manual DD.MM.YYYY HH:mm formatting instead of Intl.DateTimeFormat — this
-// project doesn't rely on locale data anywhere else, so a fixed format
-// avoids environment-dependent surprises.
 export const formatOrderDate = (isoDate: string) => {
   const date = new Date(isoDate);
 
@@ -17,7 +13,6 @@ export const formatOrderDate = (isoDate: string) => {
   return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
 
-// HH:mm timestamp under a chat bubble.
 export const formatChatTime = (isoDate: string) => {
   const date = new Date(isoDate);
 
@@ -31,8 +26,6 @@ const isSameDay = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-// "Bugun" / "Kecha" / DD.MM.YYYY date-separator pill label for a chat
-// message list.
 export const getChatDateLabel = (isoDate: string) => {
   const date = new Date(isoDate);
 

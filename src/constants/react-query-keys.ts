@@ -1,6 +1,3 @@
-// Centralized query keys (CLAUDE.md Section 9). Keys are
-// [REACT_QUERY_KEYS.DOMAIN, ...dependencies]. The string values are what the
-// cache is keyed by — changing one splits the cache between its users.
 export const REACT_QUERY_KEYS = {
   GENERAL: "general",
   PROFILE: "profile",

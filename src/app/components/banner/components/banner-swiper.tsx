@@ -24,8 +24,6 @@ const BannerSwiper = ({
   const isDesktop = variant === "desktop";
   const isNavigationLayout = banners.length > 2;
 
-  // Only banners with a category/product/url target are tappable; Swiper's
-  // default preventClicks keeps a swipe from counting as a tap.
   const getSlideClickProps = (banner: BannerProps) =>
     getBannerTarget(banner) && onBannerClick
       ? {

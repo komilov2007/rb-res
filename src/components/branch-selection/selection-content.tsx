@@ -19,25 +19,17 @@ export const TABS = [
 ] as const satisfies readonly {
   value: BranchSelectionServiceType;
   label: string;
-  // Tabler and lucide icon components have incompatible prop types (`stroke`
-  // differs), and these two tabs come one from each, so the annotation covers
-  // only what the render below actually passes.
   Icon: ComponentType<{ size?: number }>;
 }[];
 
 export type SelectionContentProps = TabProps & {
   canDeliver: boolean;
   canPickup: boolean;
-  // Delivery's own map (the address picker).
   onOpenMap: () => void;
-  // Pickup's branch map picker, and the branches it and the pickup rows
-  // share — both owned by BranchSelectionModal, see PickupTab's props.
   onOpenPickupMap: () => void;
   pickupBranches: BranchProps[];
 };
 
-// Mounted fresh on every open (Dialog unmounts closed content), so the tab
-// starts on the current selection.
 export const SelectionContent = ({
   selection,
   canDeliver,
@@ -56,8 +48,6 @@ export const SelectionContent = ({
   );
 
   return (
-    // w-full/min-w-0: DialogContent is a grid, whose items otherwise grow to
-    // fit the longest unwrapped line.
     <div className="flex max-h-[85dvh] w-full min-w-0 flex-col">
       <div className="shrink-0 px-5 pb-1 pr-14 pt-5">
         <DialogTitle className="text-lg font-medium text-black">

@@ -29,17 +29,6 @@ type BranchPickerSheetProps = {
   onSelect: (branchId: number) => void;
 };
 
-// The order page's own pickup-branch picker: unlike the home page's
-// selector (src/app/[page]/components/branch-selection), every row here is
-// checked against what's actually in the cart — a branch that doesn't stock
-// all of it can't be picked, because createOrder would just come back with
-// unavailable_products. The missing item names are spelled out on the row
-// so the reason is visible without trial and error.
-//
-// "Xaritadan tanlash" opens the very same BranchMapPicker the home
-// selector's own map link opens, so both entry points look and behave
-// identically — just narrowed to the branches that can actually fulfil this
-// cart, for the same reason the rows are.
 const BranchPickerSheet = ({
   open,
   onClose,
@@ -75,8 +64,6 @@ const BranchPickerSheet = ({
         </SheetHeader>
 
         <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 pb-[max(20px,env(safe-area-inset-bottom))]">
-          {/* Same section-label + map-link row as the home selector's pickup
-              tab, so the two pickers read as the same control. */}
           <div className="flex items-center justify-between gap-2">
             <p className="text-[11px] font-normal tracking-wider text-gray220">
               {t("home_branch_selection_available_branches")}

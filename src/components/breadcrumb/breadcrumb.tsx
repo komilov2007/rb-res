@@ -11,7 +11,6 @@ import { useShopId } from "@/hooks/useShopId";
 
 export type BreadcrumbItem = {
   label: string;
-  // Route without the query — shop_id is appended here.
   href?: string;
 };
 
@@ -19,10 +18,6 @@ type BreadcrumbProps = {
   items: BreadcrumbItem[];
 };
 
-// Desktop-only breadcrumb joined to the site Header: it slides 30px under the
-// header (which sits above it, z-50) so its white fills the header's rounded
-// corners, and it carries the rounded bottom itself. "Home" always comes
-// first; the last item is the current page, not a link.
 const Breadcrumb = ({ items }: BreadcrumbProps) => {
   const t = useTranslations();
   const { shopid } = useShopId();

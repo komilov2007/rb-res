@@ -20,14 +20,10 @@ export const CategoriesSkeleton = () => {
   );
 };
 
-// Same shape as a categories-page tile: one solid square block. `.skeleton`
-// has its own gray base, so it stays visible on the page's gray background.
 export const CategoryTileSkeleton = () => {
   return <div className="skeleton aspect-square w-full rounded-xl" />;
 };
 
-// Same box as CardProduct: its fixed card height, the 170/240px image block,
-// price + name lines, and the full-width "Savatga" button at the bottom.
 export const ProductCardSkeleton = () => {
   return (
     <article

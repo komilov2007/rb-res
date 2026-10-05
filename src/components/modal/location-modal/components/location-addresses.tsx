@@ -43,7 +43,6 @@ const LocationAddresses = ({
 
       <div className="scroll-hidden max-h-[52dvh] min-h-0 overflow-y-auto">
         {!addresses && (
-          // Same row shape as a loaded address: radio, two text lines, edit button.
           <div aria-label={t("location_addresses_loading")}>
             {Array.from({ length: 3 }).map((_, index) => (
               <div
@@ -128,10 +127,3 @@ const LocationAddresses = ({
 };
 
 export default LocationAddresses;
-
-
-
-
-
-
-

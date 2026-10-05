@@ -17,9 +17,6 @@ export const useCategory = () => {
   const { shopid } = useShopId();
   const { branchId } = useBranchSelection();
 
-  // Same query as the home product list (shared cache). No category filter
-  // param is confirmed for the product-list endpoint, so every page is
-  // loaded and the category is filtered client-side.
   const {
     data,
     hasNextPage,
@@ -30,8 +27,6 @@ export const useCategory = () => {
   } = useInfiniteQuery(productsQueryOptions(shopid));
   const { data: categories } = useShopCategories();
 
-  // Stops on error: hasNextPage stays true after a failed page, so without
-  // the isError guard this would refetch it forever.
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage && !isError) void fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, isError, fetchNextPage]);
@@ -42,7 +37,6 @@ export const useCategory = () => {
       .filter((product) => product.category?.id === categoryId) ?? [];
   const allCategories = normalizeCategories(categories?.data);
   const category = allCategories.find((item) => item.id === categoryId);
-  // Same availability rule as the home product list.
   const isUnavailable = (product: ProductProps) =>
     branchId !== null && !product.branches?.includes(branchId);
 
@@ -53,7 +47,6 @@ export const useCategory = () => {
     categories: allCategories,
     products,
     isUnavailable,
-    // Wait for all pages, so the empty state never flashes mid-load.
     isLoading: isLoading || (!isError && Boolean(hasNextPage)),
   };
 };

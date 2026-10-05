@@ -22,8 +22,6 @@ import type { TelegramInvoicePaymentType } from "./constants";
 import { useInvalidateOrderDomains } from "./useInvalidateOrderDomains";
 
 type UseTelegramInvoiceProps = {
-  // usePage's createOrder mutation; resolves null when it failed (its
-  // onError already set submitError).
   createOrderSafely: (
     payload: CreateOrderPayload,
   ) => Promise<Awaited<ReturnType<typeof createOrder>> | null>;
@@ -36,13 +34,6 @@ type UseTelegramInvoiceProps = {
   displayTotal: number;
 };
 
-// Group B (CLICK / PAYME via a Telegram invoice). Order FIRST, payment
-// second — same order as the redirect-based online payments: if the order
-// can't be created (error, unavailable items) the user is never charged.
-//   createOrder -> token -> Bot API createInvoiceLink (payload = our order)
-//   -> openInvoice -> paid: finish the order / not paid: cancel it.
-// There is no backend endpoint to mark an order paid or to refund, so
-// "paid" is only confirmed by Telegram's invoice status here.
 export const useTelegramInvoice = ({
   createOrderSafely,
   handleCreateOrderResponse,
@@ -53,17 +44,10 @@ export const useTelegramInvoice = ({
   const t = useTranslations();
   const { shopid } = useShopId();
   const invalidateOrderDomains = useInvalidateOrderDomains();
-  // Covers the token-fetch/invoice/openInvoice steps, which happen before
-  // createOrder is ever called, so the mutation's isPending alone doesn't
-  // cover the whole submit.
   const [isTelegramSubmitting, setIsTelegramSubmitting] = useState(false);
 
-  // An order created for a Telegram invoice that then wasn't paid is cancelled
-  // again, so no unpaid order is left behind for the restaurant.
   const cancelUnpaidOrderMutation = useMutation({
     mutationFn: (orderId: number) => cancelOrder(orderId, shopid as string),
-    // The local cart was already cleared for the consumed lines — refetch
-    // it (and the order lists) so it matches the server again.
     onSettled: invalidateOrderDomains,
   });
 
@@ -81,8 +65,6 @@ export const useTelegramInvoice = ({
 
       const order = response.data;
 
-      // No order was placed (unavailable items) — nothing to pay for; the
-      // usual unavailable-items modal handles it.
       if (order.unavailable_products?.length || !order.order) {
         handleCreateOrderResponse(order, values);
         return;
@@ -92,8 +74,6 @@ export const useTelegramInvoice = ({
         try {
           await cancelUnpaidOrderMutation.mutateAsync(order.order);
         } catch (error) {
-          // The user wasn't charged, but an unpaid order is left behind —
-          // say so, and keep the details for support.
           console.error("[order] unpaid Telegram-invoice order not cancelled", {
             orderId: order.order,
             paymentType,
@@ -124,7 +104,6 @@ export const useTelegramInvoice = ({
             id: order.order,
             count: cartCount,
           }),
-          // Ties the Telegram payment to our order (1-128 bytes).
           payload: JSON.stringify({ order_id: order.order, shop: shopid }),
           provider_token: payment.token,
           currency: "UZS",
@@ -153,8 +132,6 @@ export const useTelegramInvoice = ({
         return;
       }
 
-      // "pending": Telegram is still processing the payment — the order
-      // stays; its page shows the real status.
       if (status === "paid" || status === "pending") {
         handleCreateOrderResponse(order, values);
         return;

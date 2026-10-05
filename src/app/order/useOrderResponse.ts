@@ -25,9 +25,6 @@ type UseOrderResponseProps = {
   openUnavailableModal: () => void;
 };
 
-// What happens after createOrder answers: unavailable lines reopen the
-// page with them excluded, online payments hand off to the provider, and
-// everything else lands on the order-placing page.
 export const useOrderResponse = ({
   unavailableItemIds,
   setUnavailable,
@@ -39,10 +36,6 @@ export const useOrderResponse = ({
   const clearCart = useCartStore((state) => state.clearCart);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
-  // Group A (direct payment types) and Group B (after a paid Telegram
-  // invoice) both land here once the order is actually created. Mobile:
-  // the order-placing page (as before). Desktop: the profile's
-  // "Buyurtmalarim" with the new order's card opened.
   const finishOrder = (order: number) => {
     router.push(getPlacedOrderUrl(isDesktop, shopid, order));
   };
@@ -56,8 +49,6 @@ export const useOrderResponse = ({
     values: OrderFormValues,
   ) => {
     if (data.unavailable_products && data.unavailable_products.length > 0) {
-      // The order doesn't proceed: the user either changes the branch or
-      // goes back to the cart; the lines stay marked until either changes.
       setUnavailable({
         ids: [...unavailableItemIds, ...data.unavailable_products],
         deliveryType: values.delivery_type,
@@ -67,9 +58,6 @@ export const useOrderResponse = ({
       return;
     }
 
-    // The backend consumes the cart the moment createOrder succeeds,
-    // regardless of payment type — clearing the local store keeps the home
-    // page's cart badge correct immediately.
     clearCart();
 
     const paymentType = values.payment_type;
@@ -93,10 +81,6 @@ export const useOrderResponse = ({
         query.set("externalId", data.url.external_id);
       }
 
-      // Without this, the /order page useOrderStatus lands on next loses
-      // shop_id the instant this redirect happens (useShopId() re-reads
-      // useSearchParams() fresh every render) — which then also makes its
-      // own later router.push to ORDER_PLACING carry an empty shopid.
       if (shopid) {
         query.set("shop_id", shopid);
       }

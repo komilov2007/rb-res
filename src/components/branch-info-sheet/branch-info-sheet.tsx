@@ -23,28 +23,9 @@ type BranchInfoSheetProps = {
   onClose: () => void;
   branch: BranchProps | null;
   workingTime?: GeneralProps["working_time"];
-  // Desktop presentation. "screen" (default): the same full-screen modal as
-  // mobile. "drawer": a panel sliding in from the right (profile "Biz
-  // haqimizda" branches). Mobile is always the full-screen modal.
   desktop?: "screen" | "drawer";
 };
 
-// Read-only branch info + map, shared by the order page's own "Filialni
-// ko'rish" (src/app/order/components/branches) and the order-detail
-// sections' branch row (src/components/order-detail-sections) — both just
-// want to show where a branch is with a "open in maps" action, not the
-// map+card *picker* (BranchMapPicker), which has other branches to choose
-// from and a "Bu yerdan olaman" pick action neither of these apply here.
-//
-// memo + useCallback below: a form-heavy parent (the order page's own
-// re-renders fairly often — react-hook-form's useWatch, several queries),
-// and without these, every one of those re-renders was handing the Yandex
-// <Map> brand-new onLoad/instanceRef closures — React calls the old ref with
-// null and the new one with the instance on every such change, which re-ran
-// renderPlacemark (a geoObjects.removeAll()+add() pair) each time. On a
-// large, already-loaded map that repeated work is what read as "stuck".
-// Stable callbacks + skipping re-renders when this sheet's own props
-// haven't actually changed removes that churn entirely.
 const BranchInfoSheet = ({
   open,
   onClose,
@@ -80,9 +61,6 @@ const BranchInfoSheet = ({
         </h1>
       </div>
 
-      {/* No scrolling here: the info block keeps its natural height and
-          the map takes whatever is left, so the whole sheet always fits
-          one screen — a longer info block just makes the map shorter. */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
         <div className="shrink-0 bg-white px-4 pb-4 pt-3">
           <div className="flex items-start gap-2">
@@ -107,16 +85,8 @@ const BranchInfoSheet = ({
           <BranchSchedule workingTime={workingTime} />
         </div>
 
-        {/* Same hidden-chrome technique (and the same ToS caveat) as
-            src/app/[page]/components/banner/banner.tsx's own branch
-            dialog, src/components/modal/location-modal/components/
-            location-map.tsx, and
-            src/components/branch-map-picker/branch-map-picker.tsx. */}
         <div className="branch-info-map relative mx-4 mb-2.5 mt-3 min-h-0 flex-1 overflow-hidden rounded-2xl bg-white">
 
-          {/* Shimmer skeleton until the Yandex script has actually loaded
-              and constructed the map (onLoad), which can take a beat on a
-              slow connection. */}
           {!isMapReady && (
             <div className="skeleton absolute inset-0 z-10" />
           )}

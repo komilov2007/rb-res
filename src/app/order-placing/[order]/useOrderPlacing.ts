@@ -12,14 +12,6 @@ export const useOrderPlacing = () => {
   const { shopid } = useShopId();
   const orderDetail = useOrderDetail();
 
-  // Explicit user action, per the bug-fix decision: finishOrder (usePage.ts)
-  // now always navigates in-app to this page rather than trying to close
-  // the Mini App itself — sendData only fires from here, when the user is
-  // actually done looking at their order. sendTelegramData resolves `true`
-  // whenever the Telegram WebApp SDK object exists at all (it's loaded
-  // unconditionally on every page, even outside real Telegram — see
-  // usePage.ts's finishOrder comment), so outside a real Telegram client
-  // this falls back to a normal in-app navigation home instead of a no-op.
   const handleDone = async () => {
     const sent = await sendTelegramData({ id: Number(orderDetail.orderId) });
 

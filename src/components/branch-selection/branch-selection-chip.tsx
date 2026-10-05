@@ -13,17 +13,9 @@ import { getBranchLabel, getShortAddress } from "./utils";
 
 type BranchSelectionChipProps = {
   className?: string;
-  // Mobile's banner header wants this label (delivery/pickup mode + its
-  // icon) in the primary color to stand out; desktop's topbar keeps it
-  // neutral gray like the rest of that row. Same component either way —
-  // only this one accent differs per caller.
   labelClassName?: string;
 };
 
-// Header selector for the current delivery/pickup choice: a small mode label
-// over the selected address/branch. Tapping it opens the selection modal
-// (changing the choice happens there). Reads the stores directly, so a pick
-// in the modal shows up immediately.
 const BranchSelectionChip = ({
   className = "",
   labelClassName = "text-gray220",
@@ -39,8 +31,6 @@ const BranchSelectionChip = ({
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
 
-  // Choosing an address requires login; BranchSelectionModal reopens the
-  // selection once the guest has logged in.
   const handleClick = () => {
     if (!hasAccess) {
       setPendingSelection(true);
@@ -75,9 +65,6 @@ const BranchSelectionChip = ({
         {label}
       </span>
       <span className="mt-0.5 flex w-full min-w-0 items-center gap-0.5">
-        {/* `truncate` sizes the text box to the visible text, so the chevron
-            sits right after the ellipsis (line-clamp keeps the full width and
-            leaves a gap before it). */}
         <span
           className={`min-w-0 truncate text-sm leading-5 ${
             value ? "font-medium text-black" : "font-normal text-gray220"

@@ -6,9 +6,6 @@ type OrderOptionProps = {
   desc: string;
 };
 
-// Translation keys (messages: order.delivery_type.options.*) for the
-// label/description per service type, keyed by the lowercase service type.
-// Rendered via t(). Only service types present in general.services are rendered.
 export const ORDER_OPTIONS: Record<Lowercase<DeliveryType>, OrderOptionProps> = {
   pickup: {
     label: "order_page_delivery_type_options_pickup_label",
@@ -35,8 +32,6 @@ export const ORDER_OPTIONS: Record<Lowercase<DeliveryType>, OrderOptionProps> = 
 export const getOrderOption = (type: DeliveryType) =>
   ORDER_OPTIONS[type.toLowerCase() as Lowercase<DeliveryType>];
 
-// Services the order page can offer: active in general.services and known to
-// ORDER_OPTIONS.
 export const getAvailableServices = (services: GeneralProps["services"]) =>
   services?.filter(
     (service) =>

@@ -19,7 +19,6 @@ export const galleryImages = [
   },
 ];
 
-// /atmosphere "Menyu" column — dish photos, shown beside the gallery.
 export const menuImages = [
   {
     src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80",

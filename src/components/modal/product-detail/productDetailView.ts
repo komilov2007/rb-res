@@ -10,8 +10,6 @@ export type ProductDetailBaseContext = Omit<ReturnType<typeof useProductDetailBa
   product: NonNullable<ReturnType<typeof useProductDetailBase>["product"]>;
 };
 
-// Everything derived from the loaded detail + current selection: photos,
-// prices, the cart line, availability and badges.
 export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
   const {
     t,
@@ -65,10 +63,6 @@ export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
     saleAmount: detail.sale_amount,
     saleType: detail.sale_type,
   });
-  // The line for exactly the selected combination — not just any line of
-  // this product. Matching on product alone picked up another parameter's
-  // line, so adding a new parameter sent that line's quantity + 1 (e.g. 3
-  // instead of 1). Cart lines carry sku names only (no ids), so match names.
   const selectedAdditionalNames = selectedAdditionalSkus
     .map((sku) => sku.name)
     .sort()
@@ -89,7 +83,6 @@ export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
   const showParameterError =
     parameterErrorState.productId === detail.id && parameterErrorState.show;
   const hasDiscount = Boolean(detail.discount_price || detail.sale_amount);
-  // Not sold at the branch selected on home — adding is blocked.
   const isUnavailableInBranch =
     selectedBranchId !== null && !detail.branches?.includes(selectedBranchId);
   const hasParameters = Boolean(

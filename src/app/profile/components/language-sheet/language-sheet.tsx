@@ -18,9 +18,6 @@ type LanguageSheetProps = {
   onClose: () => void;
 };
 
-// Mobile profile "Til" row picker (the desktop sidebar goes to the
-// /profile/language page instead). Mobile keeps the bottom sheet; the
-// Dialog branch only covers the mobile row being used at desktop width.
 const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
   const t = useTranslations();
   const isDesktop = useMediaQuery("(min-width: 1024px)");

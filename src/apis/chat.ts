@@ -28,8 +28,6 @@ export type SendChatFileResponse = {
   file: ChatFileProps;
 };
 
-// Step 1 of sending a file: upload it over REST. Step 2 (announcing it to
-// the conversation) happens separately over the socket once this resolves.
 export const sendChatFile = async (data: SendChatFilePayload) => {
   const formData = new FormData();
 

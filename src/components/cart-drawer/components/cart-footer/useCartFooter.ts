@@ -13,9 +13,6 @@ import { ROUTER } from "@/constants/router";
 import { useBranchSelection } from "@/components/branch-selection";
 import { showProductUnavailable } from "@/utils/branch-availability";
 
-// rb-restaurant currently only operates as RESTAURANT. The SHOP branch is kept
-// so the flow matches rb-shop's architecture; wire the real business-type
-// source here once rb-restaurant exposes one (STEP 2).
 const isShopBusiness = false;
 
 export const useCartFooter = (total: number) => {
@@ -46,18 +43,12 @@ export const useCartFooter = (total: number) => {
   });
 
   const goToOrder = () => {
-    // The cart drawer is mounted globally (not scoped to this page), so
-    // without this it stays open on top of /order — same close-then-navigate
-    // order used elsewhere (e.g. unavailable-modal.tsx's handleBackToCart).
     closeCartModal();
     setSelectionModal(false);
     router.push(`${ROUTER.ORDER}${shopid ? `?shop_id=${shopid}` : ""}`);
   };
 
   const handleContinue = async () => {
-    // Checked first, before login/name/selection — placing an order is
-    // pointless while the shop itself is closed, whatever else is missing.
-    // Refetched so a shop that closed after the page loaded is caught too.
     const freshGeneral = shopid ? (await refetchGeneral()).data : undefined;
 
     if ((freshGeneral ?? general)?.data.is_open === false) {
@@ -67,17 +58,12 @@ export const useCartFooter = (total: number) => {
     }
 
     if (!hasAccess) {
-      // The cart drawer is mounted globally, same as goToOrder's own issue
-      // above — without closing it first, the login modal opens stacked on
-      // top of a still-open drawer instead of being the only overlay.
       closeCartModal();
       setPendingCheckout(true);
       setLoginModal(true);
       return;
     }
 
-    // Logged in but no name yet (e.g. the name step was dismissed): ask for
-    // it on the current screen; checkout resumes once it's saved.
     if (!hasFirstname) {
       closeCartModal();
       setPendingCheckout(true);
@@ -85,9 +71,6 @@ export const useCartFooter = (total: number) => {
       return;
     }
 
-    // Checkout needs a delivery address or pickup branch — checked on every
-    // attempt (also after the header chip's X cleared it). Opens the same
-    // selection modal; checkout resumes once a choice is made.
     if (!hasSelection) {
       closeCartModal();
       setPendingCheckout(true);
@@ -95,8 +78,6 @@ export const useCartFooter = (total: number) => {
       return;
     }
 
-    // Cart items not sold at the selected branch can't be ordered there.
-    // Items whose branch list is unknown (empty) aren't blocked.
     const unavailableItems =
       branchId === null
         ? []
@@ -115,8 +96,6 @@ export const useCartFooter = (total: number) => {
     }
 
     if (total <= 0) return;
-
-    // TODO (STEP 2): minimum order amount and address/distance restriction checks.
 
     if (!isShopBusiness) {
       goToOrder();
@@ -139,14 +118,6 @@ export const useCartFooter = (total: number) => {
     }
   };
 
-  // Resumes checkout once login succeeds and the user has a name — so a
-  // first-time user finishes the name step on the current screen before
-  // anything navigates. pendingCheckout is only ever set true by this hook's
-  // own branches above, so this can't fire for a login triggered from an
-  // unrelated part of the app (e.g. the profile page). Re-running
-  // handleContinue (rather than jumping straight to goToOrder) means a
-  // still-missing address, an empty cart, etc. get handled the same way a
-  // second real tap of "continue" would.
   useEffect(() => {
     if (!hasAccess || !hasFirstname || !hasSelection || !pendingCheckout) {
       return;
@@ -154,9 +125,6 @@ export const useCartFooter = (total: number) => {
 
     setPendingCheckout(false);
     void handleContinue();
-    // handleContinue is intentionally omitted: it's recreated every render,
-    // and this should only re-run when the gating values actually change,
-    // always using whichever handleContinue is current.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasAccess, hasFirstname, hasSelection, pendingCheckout]);
 

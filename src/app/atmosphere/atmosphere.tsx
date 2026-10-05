@@ -15,7 +15,6 @@ import { useOpenBooking } from "@/hooks/useOpenBooking";
 
 import Breadcrumb from "@/components/breadcrumb";
 
-// TEMPORARY — desktop photo-count preview; back to AtmosphereDesktop once approved.
 import AtmosphereDesktopPreview from "./components/atmosphere-desktop-preview";
 import AtmosphereFour from "./components/atmosphere-four";
 import AtmosphereOne from "./components/atmosphere-one";
@@ -30,9 +29,6 @@ const MOBILE_VARIANTS = {
   four: AtmosphereFour,
 } satisfies Record<AtmosphereVariant, unknown>;
 
-// Mobile "Bron qilish" footer, per variant: a plain bar (one), a dark fade
-// over full-screen scenes (two/three), or borderless frosted glass over
-// the blurred video (four). Desktop puts the button inside the page section.
 const FOOTER_CLASS_NAMES = {
   bar: "shrink-0 border-t border-gray180 bg-white pb-[max(16px,env(safe-area-inset-bottom))] pt-3",
   fade: "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent pb-[max(16px,env(safe-area-inset-bottom))] pt-10",
@@ -48,27 +44,15 @@ const FOOTER_STYLES = {
 } satisfies Record<AtmosphereVariant, keyof typeof FOOTER_CLASS_NAMES>;
 
 type AtmosphereProps = {
-  // Mobile layout only; desktop always renders AtmosphereDesktop.
   variant?: AtmosphereVariant;
 };
 
-// Mobile: standalone full-screen page (same shell as /booking and /chat,
-// no PageLayout — so the floating Hand button doesn't sit over the
-// footer); the shell owns the back button, the "Bron qilish" footer and
-// the shared full-screen viewer, the body is the variant the caller picked.
-// Desktop: site Header/Footer like home, breadcrumb, one full-bleed section
-// with AtmosphereDesktop (hero, bento gallery, booking band) — the same for
-// every variant.
-// Reached from the Hand menu and from the /booking hero.
 const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
   const MobileVariant = MOBILE_VARIANTS[variant];
   const t = useTranslations();
   const router = useRouter();
   const goToBooking = useOpenBooking();
-  // Only one layout is mounted, so the hidden one's video never loads.
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  // One full-screen viewer for the hero video + gallery photos, so they
-  // page through together (index 0 = video).
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const bookingButton = (
@@ -86,7 +70,6 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
 
   return (
     <div className="relative flex h-dvh flex-col bg-gray10 lg:h-auto lg:min-h-screen">
-      {/* Mobile: floats over the video instead of a solid app-bar. */}
       <Button
         type="button"
         variant="plain"
@@ -103,9 +86,6 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
       </div>
       <Breadcrumb items={[{ label: t("atmosphere_title") }]} />
 
-      {/* Desktop: the window scrolls (no inner scroller); one full-bleed
-          white section (like the category page) with an 8px gray gap above
-          and below, content aligned to the header's max-w-7xl container. */}
       <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white lg:flex lg:flex-auto lg:flex-col lg:overflow-visible lg:bg-gray10">
         {isDesktop ? (
           <section className="my-2 flex flex-1 flex-col overflow-clip rounded-[30px] bg-white">
@@ -131,13 +111,11 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
       </div>
 
       <Footer />
-      {/* Header search results open the product detail modal. */}
       <ProductDetailMobile />
     </div>
   );
 };
 
-// useSearchParams (shop_id) needs a Suspense boundary.
 const Atmosphere = ({ variant }: AtmosphereProps) => (
   <Suspense>
     <AtmosphereContent variant={variant} />

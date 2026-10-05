@@ -27,8 +27,6 @@ type LocationMapProps = {
 
 type MapEvent = { get: (key: string) => unknown };
 
-// The slice of the ymaps API used to keep a default placemark on the map
-// centre (react-yandex-maps doesn't type these).
 type CenterPin = {
   geometry: { setCoordinates: (coordinates: Coordinates) => void };
 };
@@ -64,12 +62,6 @@ const LocationMap = ({
   const mapRef = useRef<PinMap | null>(null);
   const pinnedMapRef = useRef<PinMap | null>(null);
 
-  // The picked point is always the map centre (dragging the map moves the
-  // point, reverse-geocoded on action end). The marker is Yandex's own
-  // default placemark, kept on that centre: during the drag/zoom animation
-  // (actiontick, from the in-flight tick's pixel centre) and after any view
-  // change (boundschange). Transparent to pointer events, so dragging on it
-  // still drags the map. Re-attached whenever the <Map> is re-keyed.
   const attachCenterPin = () => {
     const api = apiRef.current;
     const map = mapRef.current;

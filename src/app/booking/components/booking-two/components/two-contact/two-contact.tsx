@@ -12,8 +12,6 @@ import { formatPhone } from "@/utils/format-number";
 import type { BookingFormValues } from "@/app/booking/schema";
 import TwoField from "../two-field";
 
-// Name + phone from the profile (read-only), plus the optional extra
-// phone which stays a dashed "add" button until asked for.
 const TwoContact = () => {
   const t = useTranslations();
   const {

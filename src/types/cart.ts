@@ -1,12 +1,5 @@
 import type { ProductProps, ProductSkuProps } from "./product";
 
-// Confirmed live against GET webapp/card/list/{customer}: the server only
-// ever echoes back the resolved name/status/amount for a selected sku —
-// no id, unit, or price. Guest/local cart items, by contrast, store the
-// full ProductSkuProps object (built client-side from the product's own
-// parameter definitions at add-time, before any server round-trip). A cart
-// item's parameter/ad_parameter can be either shape depending on how it
-// got there.
 export type CartSelectedSkuProps = Pick<ProductSkuProps, "name" | "status" | "amount">;
 
 export type CartItemProps = {

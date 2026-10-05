@@ -24,16 +24,11 @@ const ProductDetailMedia = ({
   saleBadgeClassName,
   onSelectPhoto,
 }: ProductDetailMediaProps) => {
-  // Tapping the main photo opens it fullscreen (all photos, swipeable).
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   const viewerImages = photos.length > 0 ? photos : [image];
 
   return (
     <>
-      {/* Fixed height + object-cover (not object-contain sized to the
-          image's own aspect ratio) so a narrow/tall product photo fills the
-          frame edge to edge instead of leaving visible white bars down the
-          sides — a slight crop is preferred over that empty margin. */}
       <div className="relative h-[45dvh] overflow-hidden rounded-[24px] bg-white lg:h-105 lg:rounded-none">
         <img
           src={getImageSrc(image)}
@@ -86,6 +81,3 @@ const ProductDetailMedia = ({
 };
 
 export default ProductDetailMedia;
-
-
-

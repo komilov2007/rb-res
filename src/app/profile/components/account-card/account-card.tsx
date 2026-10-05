@@ -5,8 +5,6 @@ import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 
-// Exact class strings per placement — the desktop sidebar section pads its rows,
-// the mobile page doesn't.
 const CLASSES = {
   mobile: {
     card: "rounded-2xl border border-gray180 bg-white p-2",
@@ -31,8 +29,6 @@ type AccountCardProps = {
   onLogin: () => void;
 };
 
-// Avatar initials + name + phone. Logged in: an edit button; guest: the whole
-// card opens login.
 const AccountCard = ({
   variant,
   isLoading,
@@ -71,10 +67,6 @@ const AccountCard = ({
           </div>
         </div>
       ) : hasAccess ? (
-        // A plain div, not a button: the edit icon below is the only
-        // interactive control in this state, and a <button> wrapping
-        // another <button> is invalid HTML (React 19 flags it as a
-        // hydration error).
         <div className={classes.row}>
           {identity}
           <Button

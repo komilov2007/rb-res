@@ -14,11 +14,6 @@ type AtmosphereDesktopPreviewProps = AtmosphereVariantProps & {
   onBook: () => void;
 };
 
-// TEMPORARY — renders AtmosphereDesktop with the picked photo count per
-// column, plus a bottom-centre switcher.
-
-// Bottom-centre bar (the orders preview panel already owns the left edge);
-// collapses to one small button.
 const Switcher = () => {
   const variant = useAtmospherePreviewStore((state) => state.variant);
   const setVariant = useAtmospherePreviewStore((state) => state.setVariant);
@@ -39,8 +34,6 @@ const Switcher = () => {
           className={`transition-transform ${panelOpen ? "-rotate-90" : "rotate-90"}`}
         />
       </button>
-      {/* Numbers only so the bar fits any desktop width; the picked
-          variant's name is spelled out after them. */}
       {panelOpen && (
         <>
           {ATMOSPHERE_PREVIEW_VARIANTS.map((item) => (

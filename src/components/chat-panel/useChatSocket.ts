@@ -18,19 +18,12 @@ type UseChatSocketProps = {
   onMessage: (message: MessageProps) => void;
 };
 
-// One connection per chat session, kept for as long as the page is mounted.
-// shouldReconnect: false — a dropped connection is not retried here; if
-// reconnect UX is wanted later, that's a follow-up, not part of this pass.
 export const useChatSocket = ({
   customerId,
   shopId,
   onMessage,
 }: UseChatSocketProps) => {
   const socketRef = useRef<WebSocket | null>(null);
-  // The callback closes over store state that changes every message; a ref
-  // keeps the connection effect below from tearing the socket down and
-  // reconnecting just because a new message arrived. Kept current via its
-  // own effect rather than a render-time assignment.
   const onMessageRef = useRef(onMessage);
 
   useEffect(() => {
@@ -54,8 +47,6 @@ export const useChatSocket = ({
 
       if (parsed.type !== "CHAT" || !parsed.data) return;
 
-      // REST list uses `text`; the socket uses `message` — normalized here
-      // so every message in the store has the same shape.
       onMessageRef.current({
         id: Date.now(),
         is_bot: parsed.data.is_bot,

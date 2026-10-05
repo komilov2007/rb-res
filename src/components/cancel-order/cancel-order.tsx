@@ -24,10 +24,6 @@ type CancelOrderProps = {
   cancelError: string | null;
 };
 
-// Only NEW orders can actually be cancelled (confirmed). PROGRESS orders
-// are already being prepared, so the reference offers a "call the shop"
-// affordance instead — reuses the same business_phone field/tel: link
-// pattern already established in profile.tsx, no new field invented.
 const CancelOrder = ({
   status,
   onCancel,
@@ -42,9 +38,6 @@ const CancelOrder = ({
   if (status === "NEW") {
     return (
       <div>
-        {/* Stays disabled with a spinner for the whole cancel round-trip —
-            the hooks' onSuccess awaits the detail refetch, so isCancelling
-            only drops once this block is replaced by the cancelled state. */}
         <Button
           type="button"
           variant="destructive"

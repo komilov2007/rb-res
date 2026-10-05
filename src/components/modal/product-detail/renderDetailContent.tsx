@@ -13,7 +13,6 @@ export type ProductDetailRenderContext = ProductDetailActionContext &
     isRightDrawerDesktop: boolean;
   };
 
-// The mobile sheet / centered dialog body: media, info, parameters.
 export const renderDetailContent = (ctx: ProductDetailRenderContext) => {
   const {
     t,

@@ -5,8 +5,6 @@ const AboutSection = ({
   title,
   children,
 }: {
-  // Set only where something links straight to a section (the footer's
-  // "Filiallar" jumps to #branches); the rest stay anchorless.
   id?: string;
   title: string;
   children: ReactNode;

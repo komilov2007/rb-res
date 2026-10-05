@@ -51,11 +51,6 @@ const LoginModal = () => {
       }
 
       if (carts.length > 0) {
-        // These are pre-login guest-cart items, which are always built
-        // locally from the product's own parameter definitions (see
-        // product-detail.tsx's handleAdd) — so they carry the full sku
-        // object with an id, unlike the thinner {name, status, amount}
-        // shape the authenticated card-list endpoint echoes back later.
         const syncPayload = carts.map((item) => ({
           product: item.product.id,
           parameter:
@@ -88,10 +83,6 @@ const LoginModal = () => {
         }
       }
 
-      // Auth is published only now, in the same tick as the name step opens,
-      // so nothing reacting to hasAccess (e.g. the cart's resume-checkout
-      // effect) runs while this modal or the cart sync above is still pending.
-      // The cart sync itself authenticates via setUser's stored token.
       handleClose();
       setSignupModal(!(res.data.firstname && res.data.firstname.length > 0));
       setAuth(res.data);
@@ -140,12 +131,6 @@ const LoginModal = () => {
   if (isDesktop) {
     return (
       <Dialog open={loginModal} onOpenChange={(open) => !open && handleClose()}>
-        {/* z-[100] matches the mobile variant's ModalScreen below — both
-            variants of this modal need to reliably sit above any other
-            overlay (e.g. the cart drawer's Sheet), not just the shared
-            Dialog primitive's default z-50, which the cart Sheet also
-            uses. This was the actual cause of the login modal rendering
-            untappable behind a still-open cart drawer. */}
         <DialogContent
           showCloseButton={false}
           className="z-[100] max-w-[420px] rounded-3xl border border-gray180 bg-white p-6"
@@ -166,4 +151,3 @@ const LoginModal = () => {
 };
 
 export default LoginModal;
-

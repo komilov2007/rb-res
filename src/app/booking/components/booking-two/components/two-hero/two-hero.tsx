@@ -8,8 +8,6 @@ import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { galleryImages } from "@/constants/atmosphere";
 
-// A photo from /atmosphere, nothing written over it — only two frosted
-// buttons: back, and "Atmosfera" (which, like the photo, opens /atmosphere).
 const TwoHero = () => {
   const t = useTranslations();
   const router = useRouter();

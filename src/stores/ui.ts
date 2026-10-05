@@ -3,7 +3,6 @@ import { create } from "zustand";
 type UiStoreProps = {
   isDiscountDrawerOpen: boolean;
   isMobileHeaderDrawerOpen: boolean;
-  // Desktop chat modal (ChatModal, mounted once in the app provider).
   isChatModalOpen: boolean;
   setDiscountDrawerOpen: (open: boolean) => void;
   setMobileHeaderDrawerOpen: (open: boolean) => void;

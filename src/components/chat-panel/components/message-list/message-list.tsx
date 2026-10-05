@@ -20,9 +20,6 @@ type MessageListProps = {
 const NEAR_TOP_PX = 60;
 const NEAR_BOTTOM_PX = 80;
 
-// A small centered loader over the (still-visible, softened) skeleton
-// bubbles — reads as "loading" immediately on open, with the skeleton
-// giving a sense of the chat layout underneath instead of a bare spinner.
 const MessageListSkeleton = () => (
   <div className="relative flex flex-1 flex-col justify-end gap-3 overflow-hidden px-4 py-4">
     {Array.from({ length: 4 }).map((_, index) => (
@@ -39,8 +36,6 @@ const MessageListSkeleton = () => (
   </div>
 );
 
-// `messages` from the store is newest-first; scroll/pagination bookkeeping
-// below is built around that order (older pages land at the end).
 const MessageList = ({
   messages,
   isLoading,
@@ -75,10 +70,6 @@ const MessageList = ({
     }
   };
 
-  // Single effect covers all three scroll-position cases: jump to the
-  // newest message on first load, keep history in place when older
-  // messages are appended above the fold, and auto-scroll to new arrivals
-  // only while the user is already at (or near) the bottom.
   useLayoutEffect(() => {
     const el = containerRef.current;
 
@@ -101,8 +92,6 @@ const MessageList = ({
 
     previousCountRef.current = messages.length;
 
-    // A message the user just sent always scrolls into view, even when they
-    // were reading history further up; incoming ones only while at the bottom.
     const isOwnNewest = messages[0] ? !messages[0].is_bot : false;
 
     if (grew && (isNearBottomRef.current || isOwnNewest)) {

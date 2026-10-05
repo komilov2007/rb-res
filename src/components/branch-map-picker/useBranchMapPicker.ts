@@ -14,16 +14,8 @@ type UseBranchMapPickerProps = {
   branches?: BranchProps[];
   value: number | null;
   onSelect: (branchId: number) => void;
-  // Controlled like the app's Dialog/Sheet primitives — the trigger (a card
-  // button on the order page, a list row in the header's branch selector)
-  // lives outside this hook/component, so open state is owned by the caller.
   open: boolean;
   onClose: () => void;
-  // Desktop drawer only: tapping a pin also opens Yandex's balloon above it
-  // with the branch name and address. Off on mobile, where the map is the
-  // whole screen and the tapped branch's card already slides in underneath —
-  // a balloon there would just cover the map (the same call
-  // useDeliveryRouteMap documents for its own pins).
   balloons?: boolean;
 };
 
@@ -42,58 +34,30 @@ export const useBranchMapPicker = ({
     center: DEFAULT_CENTER,
     zoom: 13,
   });
-  // Tracks the previous `open` so the block below can tell "just became
-  // visible"/"just closed" apart from every other render.
   const [prevOpen, setPrevOpen] = useState(open);
 
-  // Inactive branches get no pin and no card — computed once so the pin
-  // array and the card array stay the same list in the same order, which is
-  // what keeps pin-tap <-> card-swipe index sync correct.
   const activeBranches = useMemo(
     () => branches?.filter((branch) => branch.is_active) ?? [],
     [branches],
   );
 
-  // Map api/instance refs, pin drawing and the <Map> handlers. Pins are
-  // drawn once the map is ready (see handleMapReady below).
   const { mapInstanceRef, renderPlacemarks, handleMapLoad, handleMapInstance } =
     useBranchMapInstance({ balloons, onReady: () => handleMapReady() });
 
   const openList = () => list.setTrue();
   const closeList = () => list.setFalse();
 
-  // Shared by both the map-pin tap and the card-swipe selection, so either
-  // interaction keeps the other in sync (pointer taps a pin -> matching card
-  // slides into view; swiping a card -> its pin becomes the active one).
-  // The actual scroll-into-view happens in the effect below, not here —
-  // a pin tapped while the drawer is closed calls this before the Swiper
-  // has even mounted (list.setTrue() below only takes effect on the next
-  // render), so swiperRef.current would still be null at this point and
-  // slideTo() would silently no-op.
-  // Moves the highlight and the map view, nothing else. Split out of
-  // selectBranch so the desktop drawer's list rows can reuse it: a row click
-  // must leave the map in exactly the state a pin click would, without
-  // opening mobile's card sheet (which desktop doesn't render).
   const highlightBranch = (branch: BranchProps) => {
     setActiveId(branch.id);
     const placemark = renderPlacemarks(activeBranches, branch.id, selectBranch);
     const mapInstance = mapInstanceRef.current;
 
-    // Map not mounted yet: let the declarative state position it once it is.
     if (!mapInstance) {
       setMapState({ center: branchCenter(branch), zoom: 15 });
       return;
     }
 
-    // Moved imperatively, NOT through mapState: react-yandex-maps applies a
-    // changed `state` with its own un-animated setZoom/setCenter on the next
-    // commit, which interrupts this animation (its promise then never
-    // resolves, so the balloon below never opened), and an unchanged value —
-    // the same row tapped again after the user panned — doesn't move the map
-    // at all. mapState stays as the open-time overview.
     const openBalloon = () => {
-      // Re-rendering the pins above drops any balloon Yandex had open on the
-      // old placemark, so the desktop drawer reopens it on the new one.
       if (balloons && placemark) placemark.balloon.open();
     };
 
@@ -110,19 +74,6 @@ export const useBranchMapPicker = ({
     }
   };
 
-  // Initializes the map view whenever this becomes visible, and resets the
-  // list to collapsed whenever it closes — mirrors what a synchronous
-  // "open" click handler used to do (the trigger now lives outside this
-  // hook), using React's "adjust state while rendering" pattern (comparing
-  // against a previous-value snapshot) instead of a useEffect, since a
-  // plain effect that calls setState causes an extra, avoidable commit.
-  // Placemarks are NOT rendered here — that stays purely imperative (via
-  // handleMapReady, below), matching this codebase's established lesson
-  // (see renderPlacemarks' own comment) that mutating the Yandex map from
-  // render-time code risks corruption under Strict Mode's double-invoke.
-  // Only reacts to `open` transitions — a re-select while already open
-  // shouldn't reset the map view, so `value` is intentionally read fresh
-  // here rather than captured as a dependency anywhere.
   if (open !== prevOpen) {
     setPrevOpen(open);
 
@@ -130,9 +81,6 @@ export const useBranchMapPicker = ({
       const initialBranch =
         activeBranches.find((branch) => branch.id === value) ?? null;
 
-      // Always opens on the overview of every branch — the selected one is
-      // still highlighted (larger pin), but zooming straight into it hid
-      // all the others.
       setActiveId(initialBranch ? initialBranch.id : null);
       setMapState(getDefaultOverview(activeBranches));
     } else {
@@ -150,12 +98,6 @@ export const useBranchMapPicker = ({
     renderPlacemarks(activeBranches, branch.id, selectBranch);
   };
 
-  // The single place that actually moves the Swiper to match activeId —
-  // covers both a pin tapped while the drawer was already open (swiperRef
-  // exists immediately) and one tapped while it was closed (this only runs
-  // once the drawer's re-render mounts the Swiper and list.value/swiperRef
-  // are both ready). handleSlideChange updating activeId re-triggers this
-  // too, but slideTo-ing to the slide that's already active is a no-op.
   useEffect(() => {
     if (!list.value || activeId === null) return;
 
@@ -200,7 +142,4 @@ export const useBranchMapPicker = ({
   };
 };
 
-// Lets the desktop drawer take the controller as a prop, so the hook is
-// still called exactly once (in branch-map-picker.tsx) and the map logic
-// isn't duplicated per layout.
 export type BranchMapPickerController = ReturnType<typeof useBranchMapPicker>;

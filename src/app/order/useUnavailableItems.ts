@@ -4,8 +4,6 @@ import { useState } from "react";
 
 import type { UnavailableState } from "./constants";
 
-// Cart lines createOrder reported unavailable for a service/branch, and the
-// modal that explains it.
 export const useUnavailableItems = () => {
   const [unavailable, setUnavailable] = useState<UnavailableState | null>(
     null,

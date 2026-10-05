@@ -11,9 +11,6 @@ type ChatPanelProps = {
   className?: string;
 };
 
-// The whole chat UI (header, history, composer) and its data (useChat) —
-// shared by the /chat page and the desktop ChatModal. Callers own the
-// access guard and the outer size.
 const ChatPanel = ({ onBack, backIcon, className = "" }: ChatPanelProps) => {
   const {
     messages,

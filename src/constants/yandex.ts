@@ -24,11 +24,4 @@ export const YANDEX_KEYS = [
 
 export const YANDEX_LANG = "uz_UZ";
 
-// Language of address *text* picked on the map (reverse geocode + address
-// search in the location modal). Kept separate from YANDEX_LANG, which
-// only drives the map tiles' own labels: the picked address is what gets
-// saved to the backend and shown back everywhere. Russian — the backend
-// returns saved addresses in Russian regardless of what was sent, so the
-// picker matches it end to end.
 export const YANDEX_ADDRESS_LANG = "ru_RU";
-

@@ -29,8 +29,6 @@ export const useBanner = () => {
 
   const banners = data?.data ?? [];
 
-  // category → category page, product → product detail sheet, url → external
-  // link; a banner with none of these is static and does nothing.
   const handleBannerClick = async (banner: BannerProps) => {
     const target = getBannerTarget(banner);
 
@@ -44,8 +42,6 @@ export const useBanner = () => {
     }
 
     if (target.type === "product") {
-      // The detail sheet opens from a product object, but a banner only
-      // carries the id — fetch it through the sheet's own query (shared cache).
       try {
         const response = await queryClient.fetchQuery({
           queryKey: [REACT_QUERY_KEYS.PRODUCT_DETAIL, target.id],
@@ -54,13 +50,10 @@ export const useBanner = () => {
 
         openProductDetail(response.data);
       } catch {
-        // The global request interceptor already toasts the backend's message.
       }
       return;
     }
 
-    // Opened synchronously within the tap (Telegram-aware, same opener the
-    // order page uses), so it isn't blocked as a popup.
     openExternalLink(target.url);
   };
 

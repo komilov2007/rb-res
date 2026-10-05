@@ -18,8 +18,6 @@ type BranchCardProps = {
   onChoose: () => void;
 };
 
-// One swipeable branch card in the map picker's bottom sheet: name,
-// address, phone, the whole week's hours and the pick action.
 const BranchCard = ({
   branch,
   isActive,
@@ -61,8 +59,6 @@ const BranchCard = ({
         </a>
       )}
 
-      {/* Always fully expanded — the whole week is shown
-          at once, no show-more toggle. */}
       <div className="flex flex-col gap-1.5">
         <p className="text-xs font-medium text-black">
           {t("location_branch_picker_schedule")}

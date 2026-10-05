@@ -29,8 +29,6 @@ type BookingProps = {
 
 const subscribeNoop = () => () => {};
 
-// One form for every variant: usePage owns useForm + submit, the variant
-// only renders the UI (fields read/write through useFormContext).
 const BookingForm = ({ variant = "one" }: BookingProps) => {
   const { form, onSubmit } = usePage();
   const Variant = VARIANTS[variant];
@@ -55,8 +53,6 @@ const BookingContent = ({ variant }: BookingProps) => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
 
-  // Same access guard as chat.tsx: AuthProvider fills the auth store in its
-  // own (parent) effect, so wait out the first commit before trusting it.
   const isHydrated = useSyncExternalStore(
     subscribeNoop,
     () => true,
@@ -64,8 +60,6 @@ const BookingContent = ({ variant }: BookingProps) => {
   );
   const mustLogin = isHydrated && !hasAccess;
 
-  // Direct navigation to /booking while logged out (the floating-action
-  // button already guards its own click): back home, login modal there.
   useEffect(() => {
     if (!mustLogin) return;
 
@@ -75,9 +69,6 @@ const BookingContent = ({ variant }: BookingProps) => {
 
   if (!isHydrated || !hasAccess) return null;
 
-  // Mobile: full-screen app shell (h-dvh, the variant scrolls inside).
-  // Desktop: the window scrolls between the site Header and Footer, like
-  // home (no PageLayout — its Hand button would cover the mobile submit bar).
   return (
     <div className="flex h-dvh flex-col lg:h-auto lg:min-h-screen lg:bg-gray10">
       <div className="hidden lg:block">
@@ -86,13 +77,11 @@ const BookingContent = ({ variant }: BookingProps) => {
       <Breadcrumb items={[{ label: t("booking_title") }]} />
       <BookingForm variant={variant} />
       <Footer />
-      {/* Header search results open the product detail modal. */}
       <ProductDetailMobile />
     </div>
   );
 };
 
-// useSearchParams (shop_id) needs a Suspense boundary.
 const Booking = ({ variant }: BookingProps) => (
   <Suspense>
     <BookingContent variant={variant} />

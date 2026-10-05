@@ -148,10 +148,6 @@ const LocationModal = () => {
   if (isDesktop) {
     return (
       <>
-        {/* Dismissing (Escape / overlay) goes through handleClose like the
-            mobile X — a bare setLocationModal(false) left the screen and
-            editing id behind, so the next plain open landed on the map
-            and "Tasdiqlash" updated the previously edited address. */}
         <Dialog
           open={state.locationModal && !state.detailsModal}
           onOpenChange={(open) => !open && actions.handleClose()}
@@ -194,4 +190,3 @@ const LocationModal = () => {
 };
 
 export default LocationModal;
-

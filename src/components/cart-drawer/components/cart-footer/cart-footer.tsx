@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { IconTruckFilled } from "@tabler/icons-react";
 
-
 import Button from "@/components/ui/button";
 import { formatPrice } from "@/utils/format-price";
 import type { CartViewProps } from "@/types/cart";
@@ -13,10 +12,6 @@ type CartFooterProps = CartViewProps & {
   isPending: boolean;
 };
 
-// useCartFooter is now called by CartDrawer (always mounted) instead of
-// here — this component's own Sheet content unmounts when the drawer
-// closes, which would kill the hook's pendingCheckout-resume effect right
-// when handleContinue closes the drawer to show the login modal.
 const CartFooter = ({
   isMobile,
   total,
@@ -50,8 +45,6 @@ const CartFooter = ({
         variant="primary-solid"
         size="primaryWide"
         onClick={onContinue}
-        // Nothing active to order (every line inactive) — disabled rather than
-        // a button that silently does nothing.
         disabled={isPending || total <= 0}
       >
         {t("checkout")} · {formatPrice(total)} {t("sum")}

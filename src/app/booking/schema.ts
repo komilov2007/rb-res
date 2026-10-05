@@ -13,7 +13,6 @@ import {
   type WorkingTime,
 } from "./utils";
 
-// Passed via useForm({ context }) — the shop's schedule from general.
 export type BookingSchemaContext = { workingTime?: WorkingTime };
 
 const PHONE_LENGTH = 9;
@@ -21,11 +20,8 @@ const PHONE_LENGTH = 9;
 const isFullPhone = (value?: string) => value?.length === PHONE_LENGTH;
 
 export const bookingSchema = yup.object({
-  // Taken from the profile and read-only on the page — nothing for the
-  // user to fix, so not validated here.
   name: yup.string().default(""),
   phone: yup.string().default(""),
-  // Optional — only validated once something has been typed into it.
   extra_phone: yup
     .string()
     .default("")
@@ -34,8 +30,6 @@ export const bookingSchema = yup.object({
       () => translate("booking_errors_phone_invalid"),
       (value) => !value || isFullPhone(value),
     ),
-  // A hand-typed date that isn't a real day stays in the form as typed
-  // ("31.02.2026"), so it fails "valid" instead of silently clearing.
   date: yup
     .string()
     .default("")
@@ -45,7 +39,6 @@ export const bookingSchema = yup.object({
       () => translate("booking_errors_date_invalid"),
       (value) => !value || isIsoDate(value),
     )
-    // "YYYY-MM-DD" strings compare correctly as plain strings.
     .test(
       "not-past",
       () => translate("booking_errors_date_past"),
@@ -85,8 +78,6 @@ export const bookingSchema = yup.object({
         const { date } = this.parent as { date?: string };
         const { workingTime } = (this.options.context ?? {}) as BookingSchemaContext;
 
-        // Only judged once the date itself is a valid working day — a day
-        // off already shows its own error on the date field.
         if (!value || !isTime(value) || !date || !isIsoDate(date)) return true;
         if (isDayOff(workingTime, date)) return true;
 

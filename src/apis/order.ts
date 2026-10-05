@@ -37,8 +37,6 @@ export type CreateOrderAddress = {
 };
 
 export type CreateOrderPayload = {
-  // Only the flag is sent — the backend deducts the customer's own cashback
-  // balance itself.
   spend_cashback: boolean | null;
   near_branch: number | null;
   shop: string;
@@ -49,7 +47,6 @@ export type CreateOrderPayload = {
   payment_type: string;
   service_type: string;
   is_paid: false;
-  // Promo code id (not the code string); omitted when no promo is applied.
   promo_code?: number;
   items: number[];
   shipping_datetime: string | null;
@@ -60,17 +57,11 @@ export type CreateOrderResponse = {
   order: number;
   status: string;
   service_type: string;
-  // A real ROBO_CLICK response came back as
-  // `{ order_id, url: null, external_id: null }` when the shop hasn't
-  // enabled that payment provider — url/external_id are present but
-  // null, not simply absent, so both must stay nullable here.
   url?: {
     url: string | null;
     order_id: number;
     external_id?: string | null;
   };
-  // Cart item ids (matched against CartItemProps.id) — per the order-page
-  // spec; not yet observed in a live response.
   available_products?: number[] | null;
   unavailable_products?: number[] | null;
 };
@@ -128,7 +119,6 @@ export const getPromoCode = async (
     `webapp/promo-code/${shopId}/${customerId}`,
     {
       params: { promo_code: promoCode.toUpperCase() },
-      // The promo field shows this error itself — no global toast.
       skipErrorToast: true,
     },
   );
@@ -151,8 +141,6 @@ export const getPaymentToken = async (
 export type MyOrdersParams = {
   limit: number;
   offset: number;
-  // Omit entirely for the "all" tab — confirmed live behavior, sending
-  // is_active=false was never verified to work.
   is_active?: boolean;
 };
 

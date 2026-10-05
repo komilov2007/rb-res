@@ -20,20 +20,11 @@ const Card = ({ title, children }: { title: string; children: ReactNode }) => (
   </section>
 );
 
-// Variant "two": white + primary only, no blur. An atmosphere photo on top
-// (no text over it), white cards overlapping it, every field drawn as the
-// same tile (TwoField), and a footer with a live summary of the picks.
 const BookingTwo = () => {
   const t = useTranslations();
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-gray10 lg:flex-auto">
-      {/* Desktop: the window scrolls (no inner scroller) and, like the
-          order page, two full-bleed white panels with an 8px gray gap —
-          cards left (divided by lines instead of separate cards), sticky
-          photo + summary right. Each panel pads its outer side by
-          max(20px, 50% - 620px) so its content lines up with the header's
-          max-w-7xl container. */}
       <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto lg:flex lg:flex-auto lg:flex-col lg:overflow-visible">
         <div className="lg:flex lg:flex-1 lg:flex-row lg:gap-2 lg:py-2">
           <div className="lg:order-last lg:w-[calc(max(20px,50%-620px)+420px)] lg:shrink-0 lg:rounded-l-[30px] lg:bg-white lg:pl-6 lg:pr-[max(20px,calc(50%-620px))]">

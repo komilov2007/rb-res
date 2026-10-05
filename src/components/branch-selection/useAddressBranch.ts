@@ -8,13 +8,6 @@ import type { BranchProps } from "@/types/branch";
 
 import { findClosestBranch } from "./utils";
 
-// The branch that will actually serve a delivery to this address — the
-// backend's own nearest-branch answer (same key/fn as useBranchSelection and
-// the order page, so it's a shared cache hit), not a client-side distance
-// guess: branches can share identical coordinates, and the backend's own
-// distance can pick differently from haversine. Every place that shows an
-// address's branch uses this, so they always agree with the order. Falls
-// back to the closest branch only if that request fails.
 export const useAddressBranch = (
   shopid: string | null | undefined,
   branches: BranchProps[],

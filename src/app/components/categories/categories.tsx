@@ -181,10 +181,6 @@ const Categories = () => {
           )}
         </div>
       </section>
-      {/* Keeps the page's total height unchanged the instant the section
-          above leaves document flow for `fixed` — without it, everything
-          below snapped up by the bar's height for a frame on every
-          fixed/relative toggle (the reported jump/glitch). */}
       {isMobileFixed && (
         <div
           className="lg:hidden"
@@ -203,4 +199,3 @@ const Categories = () => {
 };
 
 export default Categories;
-

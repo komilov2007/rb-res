@@ -6,10 +6,6 @@ import { PRIMARY_COLORS } from "@/constants/theme";
 import { useThemeStore } from "@/stores/theme";
 import { useIsClick } from "@/hooks/useIsClick";
 
-// Desktop-only left-edge card to switch the site's primary colour: the
-// swatches and the collapse handle are one piece, so tucking it away leaves
-// just the handle. Hidden while any modal/drawer locks the page scroll;
-// mobile is untouched.
 const ThemeSwitcher = () => {
   const isClickApp = useIsClick();
   const primaryColor = useThemeStore((state) => state.primaryColor);
@@ -20,8 +16,6 @@ const ThemeSwitcher = () => {
     PRIMARY_COLORS.find((color) => color.id === primaryColor) ??
     PRIMARY_COLORS[0];
 
-  // Inside the Click superapp --primary is pinned to Click brand blue
-  // (ThemeSync), so offering a colour picker here would do nothing.
   if (isClickApp) return null;
 
   return (
@@ -59,7 +53,6 @@ const ThemeSwitcher = () => {
                 onClick={() => setPrimaryColor(color.id)}
                 style={{
                   backgroundColor: color.value,
-                  // White gap + a ring in the swatch's own colour
                   boxShadow: isActive
                     ? `0 0 0 2px #fff, 0 0 0 4px ${color.value}`
                     : undefined,

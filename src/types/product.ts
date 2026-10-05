@@ -71,10 +71,6 @@ export type CardProductProps = {
   product: ProductProps;
   variant?: "default" | "discountRight2";
   saleBadgeVariant?: "primary" | "green" | "red" | "orange";
-  // Not sold at the selected home branch — rendered muted and non-interactive.
   isUnavailable?: boolean;
-  // Always use the white card box (non-discount cards are light gray on
-  // mobile by default).
   whiteSurface?: boolean;
 };
-
