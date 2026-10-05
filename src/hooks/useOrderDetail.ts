@@ -5,6 +5,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getOrderDetail, proceedToPayment } from "@/apis/order";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { isClick } from "@/utils/click";
+import { openPaymentLink } from "@/utils/telegram";
 import { useCancelOrder } from "@/hooks/useCancelOrder";
 import { useAuthStore } from "@/stores/auth";
 
@@ -43,6 +45,14 @@ export const useOrderDetail = () => {
   const paymentMutation = useMutation({
     mutationFn: () => proceedToPayment(orderId),
     onSuccess: (response) => {
+      // Inside the Click superapp this has to replace the current view
+      // (openPaymentLink), not open beside it — see rb-shop, which passes
+      // target "_self" for the same retry-payment hand-off under Click.
+      if (isClick()) {
+        openPaymentLink(response.data.url);
+        return;
+      }
+
       window.open(response.data.url, "_blank", "noopener,noreferrer");
     },
     // The global request interceptor already toasts the backend's message

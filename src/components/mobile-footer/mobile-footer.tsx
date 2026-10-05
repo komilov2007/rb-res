@@ -10,10 +10,16 @@ import { ROUTER } from "@/constants/router";
 
 import { useCartStore } from "@/stores/cart";
 import { useActiveOrdersCount } from "@/hooks/useActiveOrdersCount";
+import { useIsClick } from "@/hooks/useIsClick";
 import { useShopId } from "@/hooks/useShopId";
 
 const MobileFooter = () => {
   const t = useTranslations();
+  // The Click superapp's webview keeps a system bar along the bottom edge,
+  // which would sit over this floating pill at its usual 16px offset — the
+  // same inset rb-shop compensates for with extra bottom padding on its own
+  // navigation bar under Click.
+  const isClickApp = useIsClick();
   const router = useRouter();
   const pathname = usePathname();
   const { shopid } = useShopId();
@@ -82,7 +88,11 @@ const MobileFooter = () => {
   };
 
   return (
-    <nav className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-24px)] max-w-md -translate-x-1/2 lg:hidden">
+    <nav
+      className={`fixed left-1/2 z-50 w-[calc(100%-24px)] max-w-md -translate-x-1/2 lg:hidden ${
+        isClickApp ? "bottom-9" : "bottom-4"
+      }`}
+    >
       {/* The frosted-glass look (translucent white + blur) and the actual
           content sit in separate layers on purpose: putting bg-white/75 +
           backdrop-blur directly on the container that also holds the cart

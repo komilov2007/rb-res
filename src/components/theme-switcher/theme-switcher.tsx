@@ -4,12 +4,14 @@ import { Check, ChevronLeft, Palette } from "lucide-react";
 
 import { PRIMARY_COLORS } from "@/constants/theme";
 import { useThemeStore } from "@/stores/theme";
+import { useIsClick } from "@/hooks/useIsClick";
 
 // Desktop-only left-edge card to switch the site's primary colour: the
 // swatches and the collapse handle are one piece, so tucking it away leaves
 // just the handle. Hidden while any modal/drawer locks the page scroll;
 // mobile is untouched.
 const ThemeSwitcher = () => {
+  const isClickApp = useIsClick();
   const primaryColor = useThemeStore((state) => state.primaryColor);
   const setPrimaryColor = useThemeStore((state) => state.setPrimaryColor);
   const panelOpen = useThemeStore((state) => state.panelOpen);
@@ -17,6 +19,10 @@ const ThemeSwitcher = () => {
   const selected =
     PRIMARY_COLORS.find((color) => color.id === primaryColor) ??
     PRIMARY_COLORS[0];
+
+  // Inside the Click superapp --primary is pinned to Click brand blue
+  // (ThemeSync), so offering a colour picker here would do nothing.
+  if (isClickApp) return null;
 
   return (
     <div

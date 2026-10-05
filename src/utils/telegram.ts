@@ -1,5 +1,7 @@
 import type { WebApp as TelegramWebApp } from "@twa-dev/types";
 
+import { isClick } from "@/utils/click";
+
 export type TelegramInvoiceStatus = "pending" | "failed" | "cancelled" | "paid";
 
 type CreateInvoiceLinkParams = {
@@ -52,7 +54,7 @@ const openLinkInBrowser = (url: string) => {
 // rather than loadWebApp's dynamic import) so window.open/the anchor click
 // below stay tied to the same tick as the caller's user gesture instead of
 // risking a popup-blocker after an await.
-export const openPaymentLink = (url: string) => {
+export const openExternalLink = (url: string) => {
   const telegram = getTelegramWebApp();
 
   if (telegram) {
@@ -66,6 +68,21 @@ export const openPaymentLink = (url: string) => {
   } else {
     window.open(url, "_blank");
   }
+};
+
+// Payment hand-offs only. Inside the Click superapp there is no browser
+// chrome to come back from, so the provider page has to replace the
+// current view instead of opening beside it — rb-shop passes target
+// "_self" for exactly these links under Click. Plain external links
+// (banners) keep using openExternalLink: those have no callback back into
+// the mini-app, so replacing the view would strand the user.
+export const openPaymentLink = (url: string) => {
+  if (isClick()) {
+    window.open(url, "_self");
+    return;
+  }
+
+  openExternalLink(url);
 };
 
 export const sendTelegramData = async (data: unknown): Promise<boolean> => {

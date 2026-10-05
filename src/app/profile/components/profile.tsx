@@ -8,6 +8,7 @@ import PageLayout from "@/components/page-layout";
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
 import { useOpenChat } from "@/hooks/useOpenChat";
+import { useIsClick } from "@/hooks/useIsClick";
 
 import { useProfileAccount } from "../useProfileAccount";
 import AccountCard from "./account-card";
@@ -22,6 +23,11 @@ import SocialLinks from "./social-links";
 const Profile = () => {
   const t = useTranslations();
   const openChat = useOpenChat();
+  // Inside the Click superapp the shell owns the language choice and the
+  // session (ClickProvider signs the user in from the web-session header),
+  // so neither the language row nor a logout button belongs here — the
+  // same two omissions rb-shop makes in its profile under Click.
+  const isClickApp = useIsClick();
   const {
     router,
     shopQuery,
@@ -95,7 +101,7 @@ const Profile = () => {
   // instead of a bare button floating between the menu groups and the
   // contact card. h-11 with no padding around it — same as a plain
   // ProfileItem row — so this card isn't taller than the menu group cards.
-  const logoutButton = (
+  const logoutButton = isClickApp && hasAccess ? null : (
     <div className="mt-2 overflow-hidden rounded-2xl border border-gray180 bg-white">
       <Button
         type="button"
@@ -117,7 +123,11 @@ const Profile = () => {
       {/* Mobile: single stacked card, own white bg via the section itself.
           Natural height (no h-full) — the cards keep their full size and
           the section scrolls on short screens instead of squeezing them. */}
-      <section className="fixed inset-0 overflow-y-auto bg-white px-4 pb-24 pt-7 lg:hidden">
+      <section
+        className={`fixed inset-0 overflow-y-auto bg-white px-4 pt-7 lg:hidden ${
+          isClickApp ? "pb-29" : "pb-24"
+        }`}
+      >
         <div className="flex w-full flex-col">
           {accountCard}
 
@@ -155,12 +165,14 @@ const Profile = () => {
                 router.push(`${ROUTER.PROFILE_NOTIFICATIONS}${shopQuery}`)
               }
             />
-            <ProfileItem
-              icon={Globe2}
-              label={t("profile_page_menu_language")}
-              value={languageLabel}
-              onClick={() => setLanguageOpen(true)}
-            />
+            {!isClickApp && (
+              <ProfileItem
+                icon={Globe2}
+                label={t("profile_page_menu_language")}
+                value={languageLabel}
+                onClick={() => setLanguageOpen(true)}
+              />
+            )}
             <ProfileItem
               icon={IconHelpCircleFilled}
               label={t("about_us")}

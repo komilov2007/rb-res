@@ -12,6 +12,7 @@ import { useTranslations } from "next-intl";
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
 import { useBoolean } from "@/hooks/useBoolean";
+import { useIsClick } from "@/hooks/useIsClick";
 import { useOpenBooking } from "@/hooks/useOpenBooking";
 import { useOpenChat } from "@/hooks/useOpenChat";
 import { useShopId } from "@/hooks/useShopId";
@@ -44,6 +45,10 @@ const actions = [
 const MobileAction = () => {
   const t = useTranslations();
   const action = useBoolean();
+  // The Click superapp's webview keeps a system bar along the bottom edge;
+  // everything anchored there moves up by the same amount (CLICK_BOTTOM_LIFT)
+  // so it stays reachable — the floating nav does this too.
+  const isClickApp = useIsClick();
   const router = useRouter();
   const pathname = usePathname();
   const { shopid } = useShopId();
@@ -108,9 +113,9 @@ const MobileAction = () => {
 
       <div
         data-mobile-action-widget
-        className={`pointer-events-none fixed bottom-[96px] right-4 z-[70] w-fit max-w-[calc(100vw-2rem)] lg:right-8 ${
-          hasCart ? "lg:bottom-32" : "lg:bottom-8"
-        }`}
+        className={`pointer-events-none fixed right-4 z-[70] w-fit max-w-[calc(100vw-2rem)] lg:right-8 ${
+          isClickApp ? "bottom-[116px]" : "bottom-[96px]"
+        } ${hasCart ? "lg:bottom-32" : "lg:bottom-8"}`}
       >
         <div className="flex flex-col items-end gap-2">
           <div

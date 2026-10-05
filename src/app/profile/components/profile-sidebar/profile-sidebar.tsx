@@ -6,6 +6,7 @@ import { Globe2, LogIn, Package } from "lucide-react";
 import { IconBellFilled, IconHelpCircleFilled, IconMapPinFilled, IconMessageCircleFilled, IconPencilFilled } from "@tabler/icons-react";
 
 import { ROUTER } from "@/constants/router";
+import { useIsClick } from "@/hooks/useIsClick";
 import { useOpenChat } from "@/hooks/useOpenChat";
 import { useUiStore } from "@/stores/ui";
 
@@ -27,6 +28,8 @@ const ProfileSidebar = () => {
   const t = useTranslations();
   const openChat = useOpenChat();
   const isChatModalOpen = useUiStore((state) => state.isChatModalOpen);
+  // See profile.tsx: no language row and no logout under Click.
+  const isClickApp = useIsClick();
   const {
     router,
     shopQuery,
@@ -102,15 +105,17 @@ const ProfileSidebar = () => {
             }
           />
           {/* Desktop opens its own page (mobile keeps the sheet). */}
-          <SidebarRow
-            icon={Globe2}
-            label={t("profile_page_menu_language")}
-            value={languageLabel}
-            active={pathname?.startsWith(ROUTER.PROFILE_LANGUAGE)}
-            onClick={() =>
-              router.push(`${ROUTER.PROFILE_LANGUAGE}${shopQuery}`)
-            }
-          />
+          {!isClickApp && (
+            <SidebarRow
+              icon={Globe2}
+              label={t("profile_page_menu_language")}
+              value={languageLabel}
+              active={pathname?.startsWith(ROUTER.PROFILE_LANGUAGE)}
+              onClick={() =>
+                router.push(`${ROUTER.PROFILE_LANGUAGE}${shopQuery}`)
+              }
+            />
+          )}
           <SidebarRow
             icon={IconHelpCircleFilled}
             label={t("about_us")}
@@ -129,20 +134,22 @@ const ProfileSidebar = () => {
 
         {/* Logout section — same padded group as the menus above, with
             its own tinted hover (red for logout, primary for login). */}
-        <div className={SIDEBAR_GROUP_CLASS_NAME}>
-          <button
-            type="button"
-            onClick={handleAccountAction}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium outline-none transition-colors duration-150 focus-visible:ring-2 ${
-              hasAccess
-                ? "text-red hover:bg-red/10 focus-visible:ring-red/40"
-                : "text-primary hover:bg-primary10 focus-visible:ring-primary/40"
-            }`}
-          >
-            {!hasAccess && <LogIn size={16} />}
-            {hasAccess ? t("logout") : t("login")}
-          </button>
-        </div>
+        {!(isClickApp && hasAccess) && (
+          <div className={SIDEBAR_GROUP_CLASS_NAME}>
+            <button
+              type="button"
+              onClick={handleAccountAction}
+              className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium outline-none transition-colors duration-150 focus-visible:ring-2 ${
+                hasAccess
+                  ? "text-red hover:bg-red/10 focus-visible:ring-red/40"
+                  : "text-primary hover:bg-primary10 focus-visible:ring-primary/40"
+              }`}
+            >
+              {!hasAccess && <LogIn size={16} />}
+              {hasAccess ? t("logout") : t("login")}
+            </button>
+          </div>
+        )}
 
         <SidebarContact businessPhone={businessPhone} socials={socials} />
       </div>

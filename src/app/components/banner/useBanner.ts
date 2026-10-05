@@ -4,7 +4,7 @@ import { getBanners } from "@/apis/banner";
 import { getProductDetail } from "@/apis/products";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
-import { openPaymentLink as openExternalLink } from "@/utils/telegram";
+import { openExternalLink } from "@/utils/telegram";
 import { useProductDetailStore } from "@/stores/product-detail";
 import type { BannerProps } from "@/types/banner";
 import { getBannerTarget } from "@/utils/banner";

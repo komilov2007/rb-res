@@ -39,7 +39,7 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
 
   return (
     <>
-      <HeaderTopbar phone={general?.data.business_phone} />
+      <HeaderTopbar />
       <header
         className={`relative left-0 top-0 z-50 hidden h-16 w-full rounded-b-[30px] bg-white lg:flex ${
           pinBottomRow
