@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-
 import { useCartStore } from "@/stores/cart";
 import { useShopId } from "@/hooks/useShopId";
 import { type CreateOrderResponse } from "@/apis/order";
@@ -12,12 +11,15 @@ import type { OrderFormValues } from "@/types/order";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getPlacedOrderUrl } from "@/utils/orders";
 import { openPaymentLink } from "@/utils/telegram";
-import {
-  ONLINE_PAYMENT_TYPES,
-  ONLINE_PAYMENT_TYPE_NAMES,
-  isValidPaymentUrl,
-  type UnavailableState,
-} from "./constants";
+import { ONLINE_PAYMENT_TYPES, ONLINE_PAYMENT_TYPE_NAMES, isValidPaymentUrl, type UnavailableState, defaultValues } from "./constants";
+import { useQueryClient } from "@tanstack/react-query";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { useForm, useWatch, type Resolver } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useGeneral } from "@/hooks/useGeneral";
+import { isProviderDelivery, isServiceDelivery } from "@/constants/delivery-type";
+import { orderSchema } from "./schema";
+import { getAvailableServices } from "@/app/order/components/delivery-type/delivery-type";
 
 type UseOrderResponseProps = {
   unavailableItemIds: number[];
@@ -94,4 +96,69 @@ export const useOrderResponse = ({
   };
 
   return { handleCreateOrderResponse };
+};
+
+export const useInvalidateOrderDomains = () => {
+  const queryClient = useQueryClient();
+
+  return () => {
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.CART_LIST] });
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.MY_ORDERS] });
+    queryClient.invalidateQueries({
+      queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT],
+    });
+    queryClient.invalidateQueries({ queryKey: [REACT_QUERY_KEYS.PROFILE] });
+  };
+};
+
+export const useOrderForm = (
+  services: NonNullable<ReturnType<typeof useGeneral>["data"]>["data"]["services"],
+) => {
+  const form = useForm<OrderFormValues>({
+    mode: "onChange",
+    resolver: yupResolver(orderSchema) as Resolver<OrderFormValues>,
+    defaultValues,
+  });
+
+  const deliveryType = useWatch({ control: form.control, name: "delivery_type" });
+  const branch = useWatch({ control: form.control, name: "branch" });
+  const addressValue = useWatch({ control: form.control, name: "address" });
+  const deliveryPrice = useWatch({
+    control: form.control,
+    name: "delivery_price",
+  });
+  const deliveryPriceType = useWatch({
+    control: form.control,
+    name: "delivery_price_type",
+  });
+  const spendCashback = useWatch({
+    control: form.control,
+    name: "spend_cashback",
+  });
+  const promoTotal = useWatch({ control: form.control, name: "total" });
+
+  const availableServices = getAvailableServices(services);
+  const selectedService = availableServices.find(
+    (service) => service.type === deliveryType,
+  );
+  const isDelivery = isServiceDelivery(deliveryType);
+  const isProvider = isProviderDelivery(deliveryType);
+
+  return {
+    form,
+    deliveryType,
+    addressValue,
+    availableServices,
+    selectedService,
+    isDelivery,
+    isProvider,
+    totalsInput: {
+      deliveryType,
+      branch,
+      deliveryPrice,
+      deliveryPriceType,
+      spendCashback,
+      promoTotal,
+    },
+  };
 };

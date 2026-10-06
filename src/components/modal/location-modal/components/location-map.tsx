@@ -4,11 +4,7 @@ import { IconNavigationFilled } from "@tabler/icons-react";
 import { Map, YMaps, type YMapsApi } from "react-yandex-maps";
 
 import { YANDEX_LANG } from "@/constants/yandex";
-import type {
-  BoundsChangeEvent,
-  Coordinates,
-  MapInstance,
-} from "@/types/yandex";
+import type { BoundsChangeEvent, Coordinates, MapInstance } from "@/types/yandex";
 
 type LocationMapProps = {
   yandexKey: string;

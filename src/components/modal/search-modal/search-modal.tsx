@@ -11,11 +11,7 @@ import { normalizeCategories } from "@/utils/product";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatPrice } from "@/utils/format-price";
-import {
-  IMAGE_PLACEHOLDER_SRC,
-  getImageSrc,
-  handleImageFallback,
-} from "@/utils/image";
+import { IMAGE_PLACEHOLDER_SRC, getImageSrc, handleImageFallback } from "@/utils/image";
 import { useProductDetailStore } from "@/stores/product-detail";
 import { ChevronRight, PackageSearch, SearchX } from "lucide-react";
 import { IconLayoutGridFilled, IconTagFilled } from "@tabler/icons-react";

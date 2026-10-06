@@ -9,18 +9,11 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useGeneral } from "@/hooks/useGeneral";
 import { getDateValue } from "@/utils/format-date";
 
-import type { BookingFormValues } from "@/app/booking/schema";
-import { useDayLabel } from "@/app/booking/useDayLabel";
-import {
-  getBookingDays,
-  isDayOff,
-  maskDate,
-  maskTime,
-  parseDisplayDate,
-  toDisplayDate,
-} from "@/app/booking/utils";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { useDayLabel } from "@/app/booking/utils";
+import { getBookingDays, isDayOff, maskDate, maskTime, parseDisplayDate, toDisplayDate } from "@/app/booking/utils";
 import TileCombo from "../tile-combo";
-import TwoField from "../two-field";
+import { TwoField } from "../two-footer";
 
 const TwoVisit = () => {
   const t = useTranslations();

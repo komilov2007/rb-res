@@ -1,1 +1,1 @@
-export { default } from "./cart-footer";
+export { default } from "./useCartFooter";

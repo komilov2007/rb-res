@@ -3,9 +3,9 @@
 import { useState, type ComponentType } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/radio-mark";
 
-import { TileError, TileIcon, TileLabel, tileClassName } from "../two-field";
+import { TileError, TileIcon, TileLabel, tileClassName } from "../two-footer";
 
 export type ComboOption = {
   value: string;

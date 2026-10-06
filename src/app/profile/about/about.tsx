@@ -7,20 +7,16 @@ import { useTranslations } from "next-intl";
 
 import BranchInfoSheet from "@/components/branch-info-sheet";
 import type { BranchProps } from "@/types/branch";
-import { getBranchLabel } from "@/components/branch-selection/utils";
+import { getBranchLabel } from "@/components/branch-selection/branch-selection-modal";
 import { WEEKDAYS } from "@/constants/weekdays";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useBranches } from "@/hooks/useBranches";
-import {
-  formatSocialName,
-  getSocialIcon,
-  getSocialStyle,
-} from "@/utils/socials";
+import { formatSocialName, getSocialIcon, getSocialStyle } from "@/utils/socials";
 
 import { formatTime, getDayIndex } from "@/utils/working-time";
 
 import ProfilePageShell from "../components/profile-page-shell";
-import AboutSection from "./components/about-section";
+import { AboutSection } from "./components/about-skeletons";
 import {
   BranchesSkeleton,
   ContactsSkeleton,

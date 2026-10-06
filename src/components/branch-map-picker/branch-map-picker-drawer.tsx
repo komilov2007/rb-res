@@ -5,14 +5,14 @@ import { Map, YMaps } from "react-yandex-maps";
 import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "@/components/ui/sheet";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { SectionLabel } from "@/components/branch-selection/selection-parts";
 import { YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
 import type { GeneralProps } from "@/types/general";
 
-import BranchRow from "./branch-row";
-import DrawerSchedule from "./drawer-schedule";
+import { BranchRow } from "./branch-cards-sheet";
+import { DrawerSchedule } from "./branch-map-picker";
 import type { BranchMapPickerController } from "./useBranchMapPicker";
 
 const MAP_OPTIONS = {

@@ -3,17 +3,15 @@
 import { useShopCategories } from "@/hooks/useShopCategories";
 import { getProducts } from "@/apis/products";
 import { useShopId } from "@/hooks/useShopId";
-import {
-  groupProductsByCategory,
-  normalizeCategories,
-  sortProductGroupsByCategories,
-} from "@/utils/product";
-import {
-  infiniteQueryOptions,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { groupProductsByCategory, normalizeCategories, sortProductGroupsByCategories, hasDiscount } from "@/utils/product";
+import { infiniteQueryOptions, useInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { ProductsSkeleton } from "@/components/ui/skeleton";
+import { useBranchSelection } from "@/components/branch-selection";
+import { CategoryProducts, DiscountProducts } from "@/app/components/products/components/index";
+import "swiper/css";
+import type { CardProductProps } from "@/types/product";
 
 const PRODUCTS_LIMIT = 10;
 
@@ -120,3 +118,59 @@ export const useProduct = () => {
     isFetchingNextPage,
   };
 };
+
+const Products = () => {
+  const { products, bottomRef, isLoading, productGroups, isFetchingNextPage } =
+    useProduct();
+  const { branchId } = useBranchSelection();
+
+  if (isLoading) return <ProductsSkeleton />;
+  if (products.length === 0) return null;
+
+  const discountProducts = products.filter(hasDiscount);
+
+  return (
+    <>
+      <section className="flex w-full items-center justify-center overflow-x-hidden px-4 pb-6 pt-0 lg:py-8">
+        <div className="flex w-full max-w-7xl flex-col gap-7 lg:gap-8">
+          <DiscountProducts
+            products={discountProducts}
+            variant="discountRight2"
+            saleBadgeVariant="red"
+            branchId={branchId}
+          />
+
+          {productGroups.map((group, index) => (
+            <CategoryProducts
+              key={group.id}
+              group={group}
+              branchId={branchId}
+              videoSrc={
+                index === 0
+                  ? "/banner.mp4"
+                  : index === 1
+                    ? "/banner2.mp4"
+                    : undefined
+              }
+            />
+          ))}
+
+          <div ref={bottomRef} className="h-px" />
+          {isFetchingNextPage && (
+            <div className="opacity-80">
+              <ProductsSkeleton />
+            </div>
+          )}
+        </div>
+      </section>
+    </>
+  );
+};
+
+export type ProductsVariant = NonNullable<CardProductProps["variant"]>;
+export type DiscountProductVariant = Exclude<ProductsVariant, "default">;
+export type SaleBadgeVariant = NonNullable<CardProductProps["saleBadgeVariant"]>;
+
+export { Products };
+
+export default Products;

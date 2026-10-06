@@ -1,25 +1,62 @@
 "use client";
 
+import type { ServiceTypeValue, OrderDetail } from "@/types/order";
+import type { ReactNode } from "react";
 import { Fragment, useState } from "react";
 import { ChevronRight, Footprints } from "lucide-react";
 import { IconMapPinFilled, IconToolsKitchen2Filled } from "@tabler/icons-react";
-
 import { useTranslations } from "next-intl";
-
 import { useGeneral } from "@/hooks/useGeneral";
 import { getShortAddress } from "@/utils/address";
 import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC, handleImageFallback } from "@/utils/image";
-import type { OrderDetail } from "@/types/order";
-
 import BranchInfoSheet from "@/components/branch-info-sheet";
 import DeliveryRouteSheet from "@/components/delivery-route-sheet";
 import StatusTimeline from "@/components/status-timeline";
 import { useBranches } from "@/hooks/useBranches";
-
-import { DELIVERY_TYPES } from "./constants";
-import { SectionLabel } from "./parts";
 import PaymentSection from "./payment-section";
+
+export const DELIVERY_TYPES: ServiceTypeValue[] = [
+  "DELIVERY",
+  "NOOR_DELIVERY",
+  "YANDEX_DELIVERY",
+];
+
+export const SERVICE_TYPE_LABELS: Record<ServiceTypeValue, string> = {
+  PICKUP: "orders_service_types_pickup",
+  BTS_PICKUP: "orders_service_types_pickup",
+  DELIVERY: "orders_service_types_delivery",
+  YANDEX_DELIVERY: "orders_service_types_yandex_delivery",
+  NOOR_DELIVERY: "orders_service_types_noor_delivery",
+};
+
+export const SectionLabel = ({
+  icon,
+  children,
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+}) => (
+  <div className="flex items-center gap-2 text-[11px] font-normal tracking-wide text-black/90 ">
+    {icon}
+    {children}
+  </div>
+);
+
+export const InfoRow = ({
+  label,
+  value,
+  valueClassName = "text-black",
+}: {
+  label: string;
+  value: ReactNode;
+  valueClassName?: string;
+}) => (
+  <div className="flex items-center justify-between text-sm">
+    <span className="font-medium text-gray220">{label}</span>
+    <span className={`font-medium ${valueClassName}`}>{value}</span>
+  </div>
+);
 
 type OrderDetailSectionsProps = {
   detail: OrderDetail;
@@ -176,5 +213,7 @@ const OrderDetailSections = ({ detail }: OrderDetailSectionsProps) => {
     </Fragment>
   );
 };
+
+export { OrderDetailSections };
 
 export default OrderDetailSections;

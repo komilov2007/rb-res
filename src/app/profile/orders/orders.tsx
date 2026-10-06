@@ -13,7 +13,7 @@ import { formatPhone, getLocalPhone } from "@/utils/format-number";
 import { getOrderDetailUrl } from "@/utils/orders";
 import LoginRequired from "@/components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
-import EmptyOrders from "./components/empty-orders";
+import { EmptyOrders } from "./components/order-card-skeleton";
 import OrderCardSkeleton from "./components/order-card-skeleton";
 import OrderDetailCard from "./components/order-detail-card";
 

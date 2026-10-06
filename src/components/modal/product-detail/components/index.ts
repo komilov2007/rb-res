@@ -1,4 +1,4 @@
-﻿export { default as ProductParameter } from './product-parameter';
-export { default as ProductDetailFooter } from './product-detail-footer';
+﻿export { ProductParameter } from "./product-parameter";
+export { ProductDetailFooter } from "./product-parameter";
 export { default as ProductDetailMedia } from "./product-detail-media";
 

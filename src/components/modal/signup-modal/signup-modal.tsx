@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Button from "@/components/ui/button";
-import XButton from "@/components/ui/x-button";
-import Input from "@/components/ui/input";
+import { XButton } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 

@@ -12,12 +12,9 @@ import {
   ProductDetailMedia,
   ProductParameter,
 } from "@/components/modal/product-detail/components";
-import {
-  getOldPrice,
-  stripHtml,
-} from "@/components/modal/product-detail/utils";
-import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/utils";
-import { getSaleLabel } from "./utils";
+import { getOldPrice, stripHtml } from "@/components/modal/product-detail/product-detail";
+import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/card-product";
+import { getSaleLabel } from "./cart-item";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 export const CartItemDetail = ({ item }: { item: CartItemProps }) => {

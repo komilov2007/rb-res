@@ -1,22 +1,90 @@
 "use client";
 
-import { memo } from "react";
+import { useCallback, useMemo, useRef, useState, memo } from "react";
+import type { BranchProps } from "@/types/branch";
+import type { BranchMapInstance, BranchYMapsApi } from "@/types/yandex";
+import { buildBranchPinHref } from "@/utils/branch-pin";
 import { ChevronLeft, MapPinned, Store, X } from "lucide-react";
 import { IconPhoneFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Map, YMaps } from "react-yandex-maps";
-
 import Button from "@/components/ui/button";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
-import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 import { openBranchDirections } from "@/utils/directions";
-
 import BranchSchedule from "@/components/branch-schedule";
-import { MAP_OPTIONS, useBranchInfoMap } from "./useBranchInfoMap";
+
+const PIN_SIZE = 44;
+
+export const MAP_OPTIONS = {
+  controls: ["zoomControl"],
+  suppressMapOpenBlock: true,
+  yandexMapDisablePoiInteractivity: true,
+  behaviors: ["drag", "dblClickZoom"],
+};
+
+export const useBranchInfoMap = (open: boolean, branch: BranchProps | null) => {
+  const mapRef = useRef<BranchMapInstance | null>(null);
+  const mapApiRef = useRef<BranchYMapsApi | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
+  const [prevOpen, setPrevOpen] = useState(open);
+
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) setIsMapReady(false);
+  }
+
+  const center = useMemo<[number, number]>(
+    () => [branch?.longitude ?? 0, branch?.latitude ?? 0],
+    [branch?.longitude, branch?.latitude],
+  );
+
+  const renderPlacemark = useCallback((currentBranch: BranchProps) => {
+    const mapInstance = mapRef.current;
+    const api = mapApiRef.current;
+
+    if (!mapInstance || !api) return;
+
+    const placemark = new api.Placemark(
+      [currentBranch.longitude, currentBranch.latitude],
+      {
+        balloonContentHeader: currentBranch.name,
+        balloonContentBody: currentBranch.address,
+      },
+      {
+        iconLayout: "default#image",
+        iconImageHref: buildBranchPinHref("store", PIN_SIZE),
+        iconImageSize: [PIN_SIZE, PIN_SIZE],
+        iconImageOffset: [-PIN_SIZE / 2, -PIN_SIZE],
+      },
+    );
+
+    mapInstance.geoObjects.removeAll();
+    mapInstance.geoObjects.add(placemark);
+  }, []);
+
+  const handleMapLoad = useCallback(
+    (api: unknown) => {
+      mapApiRef.current = api as BranchYMapsApi;
+      setIsMapReady(true);
+      if (branch) renderPlacemark(branch);
+    },
+    [branch, renderPlacemark],
+  );
+
+  const handleMapInstance = useCallback(
+    (instance: unknown) => {
+      mapRef.current = (instance as BranchMapInstance | null) ?? null;
+      if (branch) renderPlacemark(branch);
+    },
+    [branch, renderPlacemark],
+  );
+
+  return { isMapReady, center, handleMapLoad, handleMapInstance };
+};
 
 type BranchInfoSheetProps = {
   open: boolean;
@@ -155,4 +223,8 @@ const BranchInfoSheet = ({
   );
 };
 
-export default memo(BranchInfoSheet);
+const BranchInfoSheetDefault = memo(BranchInfoSheet);
+
+export { BranchInfoSheetDefault };
+
+export default BranchInfoSheetDefault;

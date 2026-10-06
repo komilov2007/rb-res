@@ -1,9 +1,9 @@
 import { Plus, SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import type { AddressProps } from "@/apis/address";
+import type { AddressProps } from "@/types/address";
 import Button from "@/components/ui/button";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "@/components/ui/sheet";
 
 const getShortAddress = (address: string) => {
   const parts = address.split(",").map((part) => part.trim()).filter(Boolean);

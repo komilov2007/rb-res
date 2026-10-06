@@ -1,18 +1,52 @@
 "use client";
 
+import type { GeneralProps } from "@/types/general";
+import type { DeliveryType, OrderFormValues } from "@/types/order";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
-
 import { isPickupType } from "@/constants/delivery-type";
 import type { BranchProps } from "@/types/branch";
-import type { GeneralProps } from "@/types/general";
-import type { OrderFormValues } from "@/types/order";
-import RadioMark, { getOptionClassName } from "@/components/ui/radio-mark";
+import { RadioMark, getOptionClassName } from "@/components/ui/radio-mark";
+import Branches from "@/app/order/components/branches/index";
 
-import Branches from "../branches";
-import { getOrderOption } from "./constants";
+type OrderOptionProps = {
+  label: string;
+  desc: string;
+};
 
-type DeliveryTypeProps = {
+export const ORDER_OPTIONS: Record<Lowercase<DeliveryType>, OrderOptionProps> = {
+  pickup: {
+    label: "order_page_delivery_type_options_pickup_label",
+    desc: "order_page_delivery_type_options_pickup_desc",
+  },
+  delivery: {
+    label: "order_page_delivery_type_options_delivery_label",
+    desc: "order_page_delivery_type_options_delivery_desc",
+  },
+  bts_pickup: {
+    label: "order_page_delivery_type_options_bts_pickup_label",
+    desc: "order_page_delivery_type_options_bts_pickup_desc",
+  },
+  yandex_delivery: {
+    label: "order_page_delivery_type_options_yandex_delivery_label",
+    desc: "order_page_delivery_type_options_yandex_delivery_desc",
+  },
+  noor_delivery: {
+    label: "order_page_delivery_type_options_noor_delivery_label",
+    desc: "order_page_delivery_type_options_noor_delivery_desc",
+  },
+};
+
+export const getOrderOption = (type: DeliveryType) =>
+  ORDER_OPTIONS[type.toLowerCase() as Lowercase<DeliveryType>];
+
+export const getAvailableServices = (services: GeneralProps["services"]) =>
+  services?.filter(
+    (service) =>
+      service.is_active && service.type.toLowerCase() in ORDER_OPTIONS,
+  ) ?? [];
+
+type DeliveryTypeDeliveryTypeProps = {
   services: NonNullable<GeneralProps["services"]>;
   branches?: BranchProps[];
   isBranchesLoading: boolean;
@@ -21,14 +55,14 @@ type DeliveryTypeProps = {
   workingTime?: GeneralProps["working_time"];
 };
 
-const DeliveryType = ({
+const DeliveryTypeDeliveryType = ({
   services,
   branches,
   isBranchesLoading,
   isBranchesError,
   isServicesLoading,
   workingTime,
-}: DeliveryTypeProps) => {
+}: DeliveryTypeDeliveryTypeProps) => {
   const t = useTranslations();
   const {
     control,
@@ -107,4 +141,6 @@ const DeliveryType = ({
   );
 };
 
-export default DeliveryType;
+export { DeliveryTypeDeliveryType };
+
+export default DeliveryTypeDeliveryType;

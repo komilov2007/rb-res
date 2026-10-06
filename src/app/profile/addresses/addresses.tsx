@@ -7,7 +7,8 @@ import { Plus } from "lucide-react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { deleteAddress, type AddressProps } from "@/apis/address";
+import { deleteAddress } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
 import Button from "@/components/ui/button";
 import { useAuthStore } from "@/stores/auth";
 import { useLocationStore } from "@/stores/location";
@@ -16,7 +17,7 @@ import { useAddresses } from "@/hooks/useAddresses";
 
 import LoginRequired from "@/components/login-required";
 import ProfilePageShell from "../components/profile-page-shell";
-import AddressRow from "./components/address-row";
+import { AddressRow } from "./components/delete-address-dialog";
 import DeleteAddressDialog from "./components/delete-address-dialog";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 

@@ -1,1 +1,1 @@
-export { OrdersFloatingExtras } from "./orders-preview-extra";
+export { OrdersFloatingExtras } from "./edge-order-card";

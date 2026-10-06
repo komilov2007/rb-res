@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
@@ -12,6 +11,11 @@ import { updateCartStatus } from "@/apis/cart";
 import { ROUTER } from "@/constants/router";
 import { useBranchSelection } from "@/components/branch-selection";
 import { showProductUnavailable } from "@/utils/branch-availability";
+import { useTranslations } from "next-intl";
+import { IconTruckFilled } from "@tabler/icons-react";
+import Button from "@/components/ui/button";
+import { formatPrice } from "@/utils/format-price";
+import type { CartViewProps } from "@/types/cart";
 
 const isShopBusiness = false;
 
@@ -133,3 +137,55 @@ export const useCartFooter = (total: number) => {
     isPending: statusMutation.isPending,
   };
 };
+
+type CartFooterProps = CartViewProps & {
+  total: number;
+  deliveryPrice: number;
+  onContinue: () => void;
+  isPending: boolean;
+};
+
+const CartFooter = ({
+  isMobile,
+  total,
+  deliveryPrice,
+  onContinue,
+  isPending,
+}: CartFooterProps) => {
+  const t = useTranslations();
+
+  return (
+    <div
+      className={
+        isMobile
+          ? "shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-4"
+          : "shrink-0 border-t border-gray180 bg-white px-6 pb-6 pt-5"
+      }
+    >
+      {deliveryPrice > 0 && (
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <span className="info-label flex items-center gap-2">
+            <IconTruckFilled size={16} className="text-gray220" />
+            {t("cart_drawer_delivery_price")}
+          </span>
+          <span className="text-sm font-medium text-black">
+            {formatPrice(deliveryPrice)} {t("sum")}
+          </span>
+        </div>
+      )}
+
+      <Button
+        variant="primary-solid"
+        size="primaryWide"
+        onClick={onContinue}
+        disabled={isPending || total <= 0}
+      >
+        {t("checkout")} · {formatPrice(total)} {t("sum")}
+      </Button>
+    </div>
+  );
+};
+
+export { CartFooter };
+
+export default CartFooter;

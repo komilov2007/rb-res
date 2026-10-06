@@ -1,34 +1,33 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider } from "react-hook-form";
 import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-
 import Button from "@/components/ui/button";
 import Breadcrumb from "@/components/breadcrumb";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { useBranchSelection } from "@/components/branch-selection";
-import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
+import { BranchSelectionModal } from "@/components/branch-selection/branch-selection-modal";
 import { ROUTER } from "@/constants/router";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
-
-import { usePage } from "../usePage";
-import { useOrderStatus } from "../useOrderStatus";
-import PaymentWaiting from "./payment-waiting";
-import UnavailableModal from "./unavailable-modal";
-import DeliveryType from "./delivery-type";
-import Address from "./address";
-import ShippingTime from "./shipping-time";
-import BonusPoint from "./bonus-point";
-import PaymentMethod from "./payment-method";
-import PromoCode from "./promo-code";
-import YourOrder from "./your-order";
-import PlaceOrder from "./place-order";
+import { usePage } from "@/app/order/usePage";
+import { useOrderStatus } from "@/app/order/useOrderStatus";
+import PaymentWaiting from "@/app/order/components/payment-waiting/index";
+import UnavailableModal from "@/app/order/components/unavailable-modal/index";
+import DeliveryType from "@/app/order/components/delivery-type/index";
+import Address from "@/app/order/components/address/index";
+import { ShippingTime } from "@/app/order/components/unavailable-modal";
+import BonusPoint from "@/app/order/components/bonus-point/index";
+import PaymentMethod from "@/app/order/components/payment-method/index";
+import PromoCode from "@/app/order/components/promo-code/index";
+import YourOrder from "@/app/order/components/your-order/index";
+import { PlaceOrder } from "@/app/order/components/bonus-point";
+import type { UnavailableState } from "@/app/order/constants";
 
 const subscribeNoop = () => () => {};
 
@@ -203,5 +202,22 @@ const Order = () => {
     </div>
   );
 };
+
+export const useUnavailableItems = () => {
+  const [unavailable, setUnavailable] = useState<UnavailableState | null>(
+    null,
+  );
+  const [isUnavailableModalOpen, setIsUnavailableModalOpen] = useState(false);
+
+  return {
+    unavailable,
+    setUnavailable,
+    isUnavailableModalOpen,
+    openUnavailableModal: () => setIsUnavailableModalOpen(true),
+    closeUnavailableModal: () => setIsUnavailableModalOpen(false),
+  };
+};
+
+export { Order };
 
 export default Order;

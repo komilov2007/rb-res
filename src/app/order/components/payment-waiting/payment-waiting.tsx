@@ -12,10 +12,7 @@ import { useShopId } from "@/hooks/useShopId";
 import { openPaymentLink } from "@/utils/telegram";
 import type { PaymentTypeProps } from "@/types/order";
 
-import {
-  PAYMENT_CARD_CONFIG,
-  getPaymentIcon,
-} from "@/constants/payment-types";
+import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "@/constants/payment-types";
 
 const SHELL_CLASS_NAME =
   "flex flex-1 flex-col items-center justify-center gap-6 bg-gray10 px-4 py-10 text-center lg:my-2 lg:rounded-[30px] lg:bg-white";

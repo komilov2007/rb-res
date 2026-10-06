@@ -1,17 +1,99 @@
 "use client";
 
+import { useFormContext } from "react-hook-form";
+import { useBoolean } from "@/hooks/useBoolean";
+import { useShopId } from "@/hooks/useShopId";
+import { useBranchSelectionStore } from "@/stores/branch-selection";
+import { useCartStore } from "@/stores/cart";
+import { useLocationStore } from "@/stores/location";
+import type { BranchProps } from "@/types/branch";
+import type { CartItemProps } from "@/types/cart";
+import type { OrderFormValues } from "@/types/order";
+import { getDistanceKm } from "@/utils/distance";
 import { ChevronRight } from "lucide-react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-
 import BranchInfoSheet from "@/components/branch-info-sheet";
 import Button from "@/components/ui/button";
-import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 import { getShortAddress } from "@/utils/address";
-
 import BranchPickerSheet from "./branch-picker-sheet";
-import { useBranches } from "./useBranches";
+
+export type BranchOptionProps = {
+  branch: BranchProps;
+  km: number | null;
+  missingNames: string[];
+  isAvailable: boolean;
+};
+
+const isMissingAt = (item: CartItemProps, branchId: number) => {
+  const branches = item.product.branches;
+
+  return Array.isArray(branches) && branches.length > 0
+    ? !branches.includes(branchId)
+    : false;
+};
+
+type UseBranchesProps = {
+  branches?: BranchProps[];
+  value: number | null;
+};
+
+export const useBranches = ({ branches, value }: UseBranchesProps) => {
+  const { setValue } = useFormContext<OrderFormValues>();
+  const { shopid } = useShopId();
+  const setPickup = useBranchSelectionStore((state) => state.setPickup);
+  const carts = useCartStore((state) => state.carts);
+  const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
+  const picker = useBoolean();
+  const infoSheet = useBoolean();
+
+  const orderedItems = carts.filter((item) => item.is_active !== false);
+  const origin =
+    latitude !== null && longitude !== null ? { latitude, longitude } : null;
+
+  const options: BranchOptionProps[] = (branches ?? [])
+    .filter((branch) => branch.is_active)
+    .map((branch) => {
+      const missingNames = orderedItems
+        .filter((item) => isMissingAt(item, branch.id))
+        .map((item) => item.product.name);
+
+      return {
+        branch,
+        km: origin ? getDistanceKm(origin, branch) : null,
+        missingNames,
+        isAvailable: missingNames.length === 0,
+      };
+    })
+    .sort((a, b) => {
+      if (a.isAvailable !== b.isAvailable) return a.isAvailable ? -1 : 1;
+
+      return (a.km ?? 0) - (b.km ?? 0);
+    });
+
+  const selectedBranch =
+    branches?.find((branch) => branch.id === value) ?? null;
+  const availableCount = options.filter((option) => option.isAvailable).length;
+
+  const handleSelect = (branchId: number) => {
+    setValue("branch", branchId, { shouldValidate: true });
+
+    if (shopid) setPickup(shopid, branchId);
+
+    picker.setFalse();
+  };
+
+  return {
+    options,
+    selectedBranch,
+    availableCount,
+    picker,
+    infoSheet,
+    handleSelect,
+  };
+};
 
 type BranchesProps = {
   branches?: BranchProps[];
@@ -135,5 +217,7 @@ const Branches = ({
     </section>
   );
 };
+
+export { Branches };
 
 export default Branches;

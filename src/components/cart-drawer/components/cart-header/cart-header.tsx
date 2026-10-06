@@ -2,12 +2,8 @@
 import { ChevronLeft } from "lucide-react";
 import { IconTrashFilled } from "@tabler/icons-react";
 
-import XButton from "@/components/ui/x-button";
-import {
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { XButton } from "@/components/ui/sheet";
+import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 import { useCartStore } from "@/stores/cart";
 import type { CartItemProps, CartViewProps } from "@/types/cart";

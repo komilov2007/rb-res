@@ -9,8 +9,8 @@ import { PAYMENT_CARD_CONFIG, getPaymentIcon } from "@/constants/payment-types";
 import type { OrderDetail, PaymentTypeProps } from "@/types/order";
 import { formatPrice } from "@/utils/format-price";
 
-import { SERVICE_TYPE_LABELS } from "./constants";
-import { InfoRow, SectionLabel } from "./parts";
+import { SERVICE_TYPE_LABELS } from "./order-detail-sections";
+import { InfoRow, SectionLabel } from "./order-detail-sections";
 
 type PaymentSectionProps = {
   detail: OrderDetail;

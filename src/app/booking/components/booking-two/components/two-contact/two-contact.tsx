@@ -5,12 +5,13 @@ import { Plus, X } from "lucide-react";
 import { IconPhoneCallFilled, IconPhoneFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-
-import PhoneInput from "@/components/ui/phone-input";
+import { PhoneInput } from "@/components/ui/input";
 import { formatPhone } from "@/utils/format-number";
-
-import type { BookingFormValues } from "@/app/booking/schema";
-import TwoField from "../two-field";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { TwoField } from "../two-footer";
+import { useTranslations as useTranslationsTwoComment } from "next-intl";
+import { Controller as ControllerTwoComment, useFormContext as useFormContextTwoComment } from "react-hook-form";
+import type { BookingFormValues as BookingFormValuesTwoComment } from "@/app/booking/booking";
 
 const TwoContact = () => {
   const t = useTranslations();
@@ -85,3 +86,30 @@ const TwoContact = () => {
 };
 
 export default TwoContact;
+
+const TwoComment = () => {
+  const t = useTranslationsTwoComment();
+  const { control } = useFormContextTwoComment<BookingFormValuesTwoComment>();
+
+  return (
+    <div className="rounded-xl border border-gray180/60 bg-white px-3 py-2.5 transition-colors focus-within:border-primary">
+      <ControllerTwoComment
+        control={control}
+        name="comment"
+        render={({ field }) => (
+          <textarea
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            rows={2}
+            placeholder={t("booking_comment_placeholder")}
+            aria-label={t("booking_leave_comment")}
+            className="w-full resize-none bg-transparent text-base text-black outline-none placeholder:text-gray220"
+          />
+        )}
+      />
+    </div>
+  );
+};
+
+export { TwoComment };

@@ -8,11 +8,7 @@ import { IconClockFilled, IconPhoneFilled } from "@tabler/icons-react";
 
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
-import {
-  formatSocialName,
-  getSocialIcon,
-  getSocialStyle,
-} from "@/utils/socials";
+import { formatSocialName, getSocialIcon, getSocialStyle } from "@/utils/socials";
 import { normalizeCategories } from "@/utils/product";
 import { formatTime, getDayIndex } from "@/utils/working-time";
 import { useTranslations } from "next-intl";

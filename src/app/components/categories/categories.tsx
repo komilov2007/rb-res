@@ -6,10 +6,10 @@ import type { CategoriesProps } from "@/types/categories";
 import { ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import { A11y, FreeMode } from "swiper/modules";
 import { createCategoryRenderers } from "./category-renderers";
 import { useCategories } from "./useCategories";
+import "swiper/css";
 
 const Categories = () => {
   const t = useTranslations();
@@ -197,5 +197,32 @@ const Categories = () => {
     </>
   );
 };
+
+export type MobileCardVariant =
+  | "text"
+  | "chip"
+  | "rectChip"
+  | "imageTop"
+  | "circleImageTop"
+  | "imageOverlay"
+  | "image4Over";
+
+export type MobileSizeVariant = "mini" | "sm" | "md" | "lg" | "xl" | "big";
+export type MobileLayoutVariant = "default" | "full" | "scroll";
+export type DesktopCategoriesVariant =
+  | "default"
+  | "pill"
+  | "notpill"
+  | "bigcategory"
+  | "compact";
+
+export const getMobileLayoutVariant = (): MobileLayoutVariant => "scroll";
+export const getMobileCardVariant = (): MobileCardVariant => "image4Over";
+export const getMobileSizeVariant = (): MobileSizeVariant => "lg";
+export const getMobileGap = () => "sm";
+export const getDesktopVariant = (isFixed: boolean): DesktopCategoriesVariant =>
+  isFixed ? "compact" : "pill";
+
+export { Categories };
 
 export default Categories;

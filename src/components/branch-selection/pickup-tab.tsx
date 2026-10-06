@@ -6,9 +6,9 @@ import { useTranslations } from "next-intl";
 
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import type { BranchProps } from "@/types/branch";
-import RadioMark from "@/components/ui/radio-mark";
+import { RadioMark } from "@/components/ui/radio-mark";
 
-import { getBranchLabel } from "./utils";
+import { getBranchLabel } from "./branch-selection-modal";
 import {
   COLLAPSED_COUNT,
   getRowClassName,

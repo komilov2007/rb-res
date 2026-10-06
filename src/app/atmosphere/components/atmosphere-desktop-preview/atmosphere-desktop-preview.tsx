@@ -1,14 +1,36 @@
 "use client";
 
+import { create } from "zustand";
 import { ChevronDown, LayoutGrid } from "lucide-react";
+import AtmosphereDesktop from "@/app/atmosphere/components/atmosphere-desktop/index";
+import type { AtmosphereVariantProps } from "@/app/atmosphere/atmosphere";
+import { Maximize2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { ATMOSPHERE_VIDEO_SRC } from "@/app/atmosphere/atmosphere";
 
-import AtmosphereDesktop from "../atmosphere-desktop";
-import {
-  ATMOSPHERE_PREVIEW_VARIANTS,
-  useAtmospherePreviewStore,
-} from "./store";
+export const ATMOSPHERE_PREVIEW_VARIANTS = [
+  { id: 0, label: "Hammasi" },
+  { id: 1, label: "1 ta rasm" },
+  { id: 2, label: "2 ta rasm" },
+  { id: 3, label: "3 ta rasm" },
+  { id: 4, label: "4 ta rasm" },
+] as const;
 
-import type { AtmosphereVariantProps } from "../../constants";
+type AtmospherePreviewState = {
+  variant: number;
+  panelOpen: boolean;
+  setVariant: (variant: number) => void;
+  togglePanel: () => void;
+};
+
+export const useAtmospherePreviewStore = create<AtmospherePreviewState>(
+  (set) => ({
+    variant: 0,
+    panelOpen: true,
+    setVariant: (variant) => set({ variant }),
+    togglePanel: () => set((state) => ({ panelOpen: !state.panelOpen })),
+  }),
+);
 
 type AtmosphereDesktopPreviewProps = AtmosphereVariantProps & {
   onBook: () => void;
@@ -74,4 +96,43 @@ const AtmosphereDesktopPreview = (props: AtmosphereDesktopPreviewProps) => {
   );
 };
 
+export { AtmosphereDesktopPreview };
+
 export default AtmosphereDesktopPreview;
+
+type AtmosphereHeroProps = {
+  onOpen: () => void;
+};
+
+const AtmosphereHero = ({ onOpen }: AtmosphereHeroProps) => {
+  const t = useTranslations();
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={t("atmosphere_title")}
+      className="relative block h-[62dvh] min-h-[380px] w-full overflow-hidden bg-black text-left"
+    >
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        className="h-full w-full object-cover"
+      >
+        <source src={ATMOSPHERE_VIDEO_SRC} type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/5 to-black/80" />
+
+      <span className="absolute right-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md">
+        <Maximize2 size={18} />
+      </span>
+
+    </button>
+  );
+};
+
+export { AtmosphereHero };

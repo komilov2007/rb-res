@@ -7,12 +7,12 @@ import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
-import PhoneInput from "@/components/ui/phone-input";
+import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/input";
 import { formatPhone } from "@/utils/format-number";
 
-import type { BookingFormValues } from "../../schema";
-import SectionTitle from "../section-title";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { SectionTitle } from "../booking-two";
 
 const inputWrapper = (hasError: boolean) =>
   `!h-12 !rounded-xl ${hasError ? "!border-red" : ""}`;

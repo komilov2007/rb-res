@@ -1,7 +1,7 @@
 "use client";
 
 import { IconTagFilled } from "@tabler/icons-react";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "@/components/ui/sheet";
 import { formatPrice } from "@/utils/format-price";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { ProductDetailSkeleton } from "@/components/ui/skeleton";

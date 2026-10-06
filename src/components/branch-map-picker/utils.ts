@@ -1,10 +1,6 @@
 import { DEFAULT_CENTER } from "@/constants/yandex";
 import type { BranchProps } from "@/types/branch";
-import type {
-  BranchMapInstance,
-  BranchYMapsApi,
-  Coordinates,
-} from "@/types/yandex";
+import type { BranchMapInstance, BranchYMapsApi, Coordinates } from "@/types/yandex";
 import { getBranchLabel } from "@/utils/address";
 import { buildBranchPinHref } from "@/utils/branch-pin";
 

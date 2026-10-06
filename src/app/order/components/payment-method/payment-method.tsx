@@ -1,18 +1,47 @@
 "use client";
 
-import { Suspense } from "react";
+import { Component, type ReactNode, Suspense } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
-
 import Button from "@/components/ui/button";
 import { useShopId } from "@/hooks/useShopId";
 import type { OrderFormValues } from "@/types/order";
+import PromoCode from "@/app/order/components/promo-code/index";
+import { PaymentMethodQuery } from "./payment-grid";
+import { PaymentMethodSkeleton } from "./payment-grid";
 
-import PromoCode from "../promo-code";
-import PaymentMethodErrorBoundary from "./error-boundary";
-import PaymentMethodQuery from "./payment-method-query";
-import PaymentMethodSkeleton from "./skeleton";
+type PaymentMethodErrorBoundaryProps = {
+  fallback: (retry: () => void) => ReactNode;
+  onReset?: () => void;
+  children: ReactNode;
+};
+
+type PaymentMethodErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class PaymentMethodErrorBoundary extends Component<
+  PaymentMethodErrorBoundaryProps,
+  PaymentMethodErrorBoundaryState
+> {
+  state: PaymentMethodErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  retry = () => {
+    this.props.onReset?.();
+    this.setState({ hasError: false });
+  };
+
+  render() {
+    if (this.state.hasError) return this.props.fallback(this.retry);
+
+    return this.props.children;
+  }
+}
 
 type PaymentMethodProps = {
   showPromoCode: boolean;
@@ -72,5 +101,7 @@ const PaymentMethod = ({ showPromoCode }: PaymentMethodProps) => {
     </section>
   );
 };
+
+export { PaymentMethod };
 
 export default PaymentMethod;

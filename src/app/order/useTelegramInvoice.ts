@@ -5,21 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { useShopId } from "@/hooks/useShopId";
-import {
-  cancelOrder,
-  type createOrder,
-  type CreateOrderPayload,
-  type CreateOrderResponse,
-  getPaymentToken,
-} from "@/apis/order";
+import { cancelOrder, type createOrder, type CreateOrderPayload, type CreateOrderResponse, getPaymentToken } from "@/apis/order";
 import type { OrderFormValues } from "@/types/order";
 import { getApiErrorMessage } from "@/utils/api-error";
-import {
-  createTelegramInvoiceLink,
-  openTelegramInvoice,
-} from "@/utils/telegram";
+import { createTelegramInvoiceLink, openTelegramInvoice } from "@/utils/telegram";
 import type { TelegramInvoicePaymentType } from "./constants";
-import { useInvalidateOrderDomains } from "./useInvalidateOrderDomains";
+import { useInvalidateOrderDomains } from "./useOrderResponse";
 
 type UseTelegramInvoiceProps = {
   createOrderSafely: (

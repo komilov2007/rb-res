@@ -1,26 +1,56 @@
 "use client";
 
-import { memo } from "react";
+import type { BranchProps } from "@/types/branch";
+import type { BranchMapInstance, BranchYMapsApi, Coordinates } from "@/types/yandex";
+import { memo, useMemo, useState } from "react";
 import { ChevronLeft, MapPinned, Store } from "lucide-react";
 import { IconHomeFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { Map, YMaps } from "react-yandex-maps";
-
 import Button from "@/components/ui/button";
 import ModalScreen from "@/components/modal/screen-modal";
 import { YANDEX_KEYS, YANDEX_LANG } from "@/constants/yandex";
 import { getBranchLabel, getShortAddress } from "@/utils/address";
-import type { BranchProps } from "@/types/branch";
-
 import { getYandexRouteUrl } from "@/utils/directions";
-
-import {
-  CHIP_DURATION_MS,
-  MAP_OPTIONS,
-  PIN_SIZE,
-  branchPoint,
-} from "./constants";
 import { useDeliveryRouteMap } from "./useDeliveryRouteMap";
+import { useQuery } from "@tanstack/react-query";
+import { requestYandexGeocode } from "@/utils/yandex";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+
+export const PIN_SIZE = 44;
+
+export type DeliveryMapApi = BranchYMapsApi & {
+  templateLayoutFactory: {
+    createClass: (template: string) => unknown;
+  };
+};
+
+export type DeliveryMapInstance = BranchMapInstance & {
+  geoObjects: BranchMapInstance["geoObjects"] & {
+    remove: (object: unknown) => void;
+  };
+  setBounds: (
+    bounds: [Coordinates, Coordinates],
+    options?: { checkZoomRange?: boolean; zoomMargin?: number | number[] },
+  ) => void;
+};
+
+export const BOUNDS_MARGIN = [PIN_SIZE + 56, 40, 40, 40];
+
+export const CHIP_DURATION_MS = 4000;
+
+export const MAP_OPTIONS = {
+  controls: ["zoomControl"],
+  suppressMapOpenBlock: true,
+  yandexMapDisablePoiInteractivity: true,
+  behaviors: ["drag", "dblClickZoom"],
+};
+
+export const branchPoint = (branch: BranchProps): Coordinates => [
+  branch.longitude,
+  branch.latitude,
+];
+
 type DeliveryRouteSheetProps = {
   open: boolean;
   onClose: () => void;
@@ -201,4 +231,52 @@ const DeliveryRouteSheet = ({
   );
 };
 
-export default memo(DeliveryRouteSheet);
+const DeliveryRouteSheetDefault = memo(DeliveryRouteSheet);
+
+export const useCustomerPoint = (
+  open: boolean,
+  address: string | null,
+  branch: BranchProps | null,
+) => {
+  const [yandexKeyIndex, setYandexKeyIndex] = useState(0);
+
+  const geocodeQuery = useQuery({
+    enabled: open && Boolean(address) && Boolean(branch),
+    queryKey: [
+      REACT_QUERY_KEYS.ORDER_DETAIL_ADDRESS_GEOCODE,
+      address,
+      branch?.longitude,
+      branch?.latitude,
+    ],
+    queryFn: () =>
+      requestYandexGeocode({
+        params: {
+          format: "json",
+          lang: YANDEX_LANG,
+          geocode: address as string,
+          ll: `${branch?.longitude},${branch?.latitude}`,
+          spn: "0.5,0.5",
+          rspn: "1",
+        },
+        keyIndex: yandexKeyIndex,
+        setKeyIndex: setYandexKeyIndex,
+      }),
+    staleTime: Infinity,
+    retry: false,
+  });
+
+  const customerPoint = useMemo<Coordinates | null>(() => {
+    const pos = geocodeQuery.data?.response?.GeoObjectCollection
+      ?.featureMember?.[0]?.GeoObject?.Point?.pos
+      ?.split(" ")
+      .map(Number);
+
+    return pos && pos.length >= 2 ? [pos[0], pos[1]] : null;
+  }, [geocodeQuery.data]);
+
+  return customerPoint;
+};
+
+export { DeliveryRouteSheetDefault };
+
+export default DeliveryRouteSheetDefault;

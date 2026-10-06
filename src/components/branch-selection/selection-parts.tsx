@@ -5,13 +5,13 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import { type AddressProps } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
 import type { BranchProps } from "@/types/branch";
 import type { GeneralProps } from "@/types/general";
 
 import { type BranchSelectionState } from "./useBranchSelection";
-import { useAddressBranch } from "./useAddressBranch";
-import { getBranchLabel } from "./utils";
+import { useAddressBranch } from "./useBranchSelection";
+import { getBranchLabel } from "./branch-selection-modal";
 import { getOptionClassName } from "@/components/ui/radio-mark";
 
 export const COLLAPSED_COUNT = 3;

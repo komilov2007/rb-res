@@ -1,8 +1,12 @@
 import * as yup from "yup";
-
 import { isPickupType, isServiceDelivery } from "@/constants/delivery-type";
 import type { DeliveryType } from "@/types/order";
 import { translate } from "@/utils/translate";
+import { useQuery } from "@tanstack/react-query";
+import { checkDeliveryAddress } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
+import { useShopId } from "@/hooks/useShopId";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const DELIVERY_TYPES: DeliveryType[] = [
   "DELIVERY",
@@ -84,3 +88,34 @@ export const orderSchema = yup.object().shape(
   },
   [["shipping_date", "shipping_time"]],
 );
+
+export const ADDRESS_NOT_DELIVERABLE_MESSAGE = "order_page_address_not_deliverable";
+
+export const useAddressDeliverable = (
+  deliveryType: DeliveryType | null | undefined,
+  address: AddressProps | null,
+) => {
+  const { shopid } = useShopId();
+  const latitude = address?.latitude;
+  const longitude = address?.longitude;
+
+  const query = useQuery({
+    enabled:
+      deliveryType === "DELIVERY" &&
+      Boolean(shopid) &&
+      typeof latitude === "number" &&
+      typeof longitude === "number",
+    queryKey: [REACT_QUERY_KEYS.CHECK_DELIVERY, shopid, latitude, longitude],
+    queryFn: () =>
+      checkDeliveryAddress(shopid as string, {
+        lat: latitude as number,
+        long: longitude as number,
+      }),
+  });
+
+  return {
+    isAllowed:
+      deliveryType !== "DELIVERY" || (query.data?.data.is_allow ?? true),
+    isChecking: query.isFetching,
+  };
+};

@@ -1,13 +1,12 @@
-import { IconTrashFilled } from "@tabler/icons-react";
+import { formatPrice } from "@/utils/format-price";
+import type { CartItemProps, CartViewProps } from "@/types/cart";
+import { IconTrashFilled, IconShoppingCartFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
 import Button from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart";
-import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC, handleImageFallback } from "@/utils/image";
 import { hasDiscount } from "@/utils/product";
-import type { CartItemProps } from "@/types/cart";
 import { updateCartItem } from "@/apis/cart";
 import { getProductDetail } from "@/apis/products";
 import { useAuthStore } from "@/stores/auth";
@@ -15,11 +14,23 @@ import { getCartBranchId } from "@/utils/cart";
 import { useRefreshCart } from "@/hooks/useRefreshCart";
 import { useBranchSelection } from "@/components/branch-selection";
 import { getCartLineKey } from "@/utils/cart-items";
-import { getOldPrice } from "@/components/modal/product-detail/utils";
-import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/utils";
-import { getSelectedParameterNames, getSaleLabel } from "./utils";
-import { CartCounter } from "./cart-counter";
+import { getOldPrice } from "@/components/modal/product-detail/product-detail";
+import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/card-product";
+import { CartCounter } from "./cart-body";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+
+export const getSelectedParameterNames = (item: CartItemProps): string[] =>
+  [item.parameter, ...(item.ad_parameter ?? [])]
+    .map((value) => value?.name)
+    .filter((name): name is string => Boolean(name));
+
+export const getSaleLabel = (
+  product: CartItemProps["product"],
+  sumLabel: string,
+) =>
+  product.sale_type === "PERCENT"
+    ? `-${product.sale_amount}%`
+    : `-${formatPrice(product.sale_amount ?? 0)} ${sumLabel}`;
 
 export const CartItem = ({
   item,
@@ -199,5 +210,54 @@ export const CartItem = ({
         </div>
       </div>
     </li>
+  );
+};
+
+export const EmptyCart = ({ isMobile }: CartViewProps) => {
+  const t = useTranslations();
+  const closeCartModal = useCartStore((state) => state.closeCartModal);
+
+  return (
+    <div
+      className={
+        isMobile
+          ? "flex min-h-[340px] flex-col items-center justify-center px-6 text-center"
+          : "flex h-full min-h-[400px] flex-col items-center justify-center px-6 text-center"
+      }
+    >
+      <div
+        className={
+          isMobile
+            ? "flex h-16 w-16 items-center justify-center rounded-full bg-gray10 text-gray220"
+            : "flex h-20 w-20 items-center justify-center rounded-full bg-gray10 text-gray220"
+        }
+      >
+        <IconShoppingCartFilled size={isMobile ? 28 : 32} />
+      </div>
+
+      <h3
+        className={
+          isMobile
+            ? "mt-4 text-base font-medium text-black"
+            : "mt-5 text-lg font-medium text-black"
+        }
+      >
+        {t("empty_cart")}
+      </h3>
+
+      <p className="mt-2 max-w-[280px] text-sm leading-6 text-gray220">
+        {t("add_products_hint")}
+      </p>
+
+      <Button
+        type="button"
+        variant="primary-solid"
+        size="primaryFit"
+        onClick={closeCartModal}
+        className="mt-5"
+      >
+        {t("continue_shopping")}
+      </Button>
+    </div>
   );
 };

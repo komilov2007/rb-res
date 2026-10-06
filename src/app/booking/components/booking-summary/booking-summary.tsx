@@ -19,9 +19,9 @@ import { useShopId } from "@/hooks/useShopId";
 import { getDateValue } from "@/utils/format-date";
 import { formatTime, getDayIndex } from "@/utils/working-time";
 
-import type { BookingFormValues } from "../../schema";
-import { useDayLabel } from "../../useDayLabel";
-import { getBookingDays } from "../../utils";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { useDayLabel } from "@/app/booking/utils";
+import { getBookingDays } from "@/app/booking/utils";
 
 type IconType = ComponentType<{ size?: number; className?: string }>;
 

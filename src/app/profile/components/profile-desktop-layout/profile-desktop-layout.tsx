@@ -2,11 +2,12 @@
 
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
-
 import Breadcrumb, { type BreadcrumbItem } from "@/components/breadcrumb";
 import { ROUTER } from "@/constants/router";
-
 import ProfileSidebar from "../profile-sidebar";
+import { useTranslations as useTranslationsPoweredBy } from "next-intl";
+import type { ComponentType, ReactNode as ReactNodeProfileItem } from "react";
+import { ChevronRight } from "lucide-react";
 
 type ProfileDesktopLayoutProps = {
   title: string;
@@ -54,3 +55,77 @@ const ProfileDesktopLayout = ({
 };
 
 export default ProfileDesktopLayout;
+
+const PoweredBy = ({ className }: { className: string }) => {
+  const t = useTranslationsPoweredBy();
+
+  return (
+    <p className={className}>
+      {t.rich("profile_page_powered_by", {
+        link: (chunks) => (
+          <a
+            href="https://robosell.uz/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="!text-robosell"
+          >
+            {chunks}
+          </a>
+        ),
+      })}
+    </p>
+  );
+};
+
+export const ProfileGroup = ({
+  children,
+  className = "",
+}: {
+  children: ReactNodeProfileItem;
+  className?: string;
+}) => {
+  return (
+    <div
+      className={`mt-2 overflow-hidden rounded-2xl border border-gray180 bg-white ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+type ProfileItemProps = {
+  icon: ComponentType<{ size?: number; className?: string }>;
+  label: string;
+  value?: string;
+  onClick?: () => void;
+};
+
+export const ProfileItem = ({
+  icon: Icon,
+  label,
+  value,
+  onClick,
+}: ProfileItemProps) => {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-11 w-full items-center gap-3 border-b border-gray180/60 px-2 text-left last:border-b-0"
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gray10 text-gray220">
+        <Icon size={16} />
+      </span>
+      <span className="info-label min-w-0 flex-1 truncate">
+        {label}
+      </span>
+      {value && (
+        <span className="max-w-[110px] truncate text-[13px] font-medium text-gray220/70">
+          {value}
+        </span>
+      )}
+      <ChevronRight size={17} className="text-gray180" />
+    </button>
+  );
+};
+
+export { PoweredBy };

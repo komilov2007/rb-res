@@ -17,10 +17,10 @@ import {
 import { BOOKING_TIMES } from "@/constants/booking";
 import { getDateValue } from "@/utils/format-date";
 
-import type { BookingFormValues } from "../../schema";
-import { useDayLabel } from "../../useDayLabel";
-import { getBookingDays, isPastSlot } from "../../utils";
-import SectionTitle from "../section-title";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { useDayLabel } from "@/app/booking/utils";
+import { getBookingDays, isPastSlot } from "@/app/booking/utils";
+import { SectionTitle } from "../booking-two";
 
 const triggerClassName = (hasError: boolean) =>
   `h-12 w-full rounded-xl border bg-[#F6F7F9] px-4 text-black data-[placeholder]:text-gray220 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left ${

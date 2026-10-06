@@ -2,8 +2,10 @@
 
 import { IconPencilFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-
 import Button from "@/components/ui/button";
+import { RadioMark, getOptionClassName } from "@/components/ui/radio-mark";
+import { useLanguage } from "@/components/language/language";
+import { languages } from "@/constants/language";
 
 const CLASSES = {
   mobile: {
@@ -90,3 +92,38 @@ const AccountCard = ({
 };
 
 export default AccountCard;
+
+type LanguageOptionsProps = {
+  onSelect?: () => void;
+};
+
+const LanguageOptions = ({ onSelect }: LanguageOptionsProps) => {
+  const { safeValue, availableLanguages, handleChangeLanguage } = useLanguage();
+
+  return availableLanguages.map((key) => {
+    const language = languages[key];
+    const Icon = language.Icon;
+    const checked = key === safeValue;
+
+    return (
+      <button
+        key={key}
+        type="button"
+        data-language={key}
+        onClick={() => {
+          handleChangeLanguage(key);
+          onSelect?.();
+        }}
+        className={`flex h-12 items-center gap-3 rounded-2xl px-3 text-left ${getOptionClassName(checked)}`}
+      >
+        <Icon />
+        <span className="flex-1 text-sm font-normal text-black">
+          {language.label}
+        </span>
+        <RadioMark checked={checked} />
+      </button>
+    );
+  });
+};
+
+export { LanguageOptions };

@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useEffect } from "react";
 import NotFound from "@/components/404";
-import { Loader } from "@/components/ui/loader";
+import { Loader } from "@/components/ui/input";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";

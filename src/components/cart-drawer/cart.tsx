@@ -10,7 +10,7 @@ import CartBody from "./components/cart-body";
 import CartFooter from "./components/cart-footer";
 import CartHeader from "./components/cart-header";
 import RemoveCartDialog from "./components/trash-dialog";
-import { useCartFooter } from "./components/cart-footer/useCartFooter";
+import { useCartFooter } from "@/components/cart-drawer/components/cart-footer/useCartFooter";
 import { getCartList } from "@/apis/cart";
 import { getDeliveryCalculation } from "@/apis/order";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";

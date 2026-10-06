@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import Button from "@/components/ui/button";
-import Input from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { signUp } from "@/apis/auth";
 import { ROUTER } from "@/constants/router";
 import { getUser, setUser } from "@/utils/user";

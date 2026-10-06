@@ -1,10 +1,10 @@
 "use client";
 
+import { galleryImages, menuImages } from "@/constants/atmosphere";
 import { Suspense, useState } from "react";
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ImageViewer from "@/components/image-viewer";
@@ -12,15 +12,28 @@ import ProductDetailMobile from "@/components/modal/product-detail";
 import Button from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useOpenBooking } from "@/hooks/useOpenBooking";
-
 import Breadcrumb from "@/components/breadcrumb";
+import AtmosphereDesktopPreview from "@/app/atmosphere/components/atmosphere-desktop-preview/index";
+import AtmosphereFour from "@/app/atmosphere/components/atmosphere-four/index";
+import { AtmosphereOne } from "@/app/atmosphere/components/atmosphere-two";
+import AtmosphereThree from "@/app/atmosphere/components/atmosphere-three/index";
+import AtmosphereTwo from "@/app/atmosphere/components/atmosphere-two/index";
 
-import AtmosphereDesktopPreview from "./components/atmosphere-desktop-preview";
-import AtmosphereFour from "./components/atmosphere-four";
-import AtmosphereOne from "./components/atmosphere-one";
-import AtmosphereThree from "./components/atmosphere-three";
-import AtmosphereTwo from "./components/atmosphere-two";
-import { ATMOSPHERE_MEDIA, type AtmosphereVariant } from "./constants";
+export const ATMOSPHERE_VIDEO_SRC = "/atmosfera.mp4";
+
+export const ATMOSPHERE_MEDIA = [
+  ATMOSPHERE_VIDEO_SRC,
+  ...galleryImages.map((image) => image.src),
+  ...menuImages.map((image) => image.src),
+];
+
+export const MENU_MEDIA_OFFSET = 1 + galleryImages.length;
+
+export type AtmosphereVariant = "one" | "two" | "three" | "four";
+
+export type AtmosphereVariantProps = {
+  onOpen: (index: number) => void;
+};
 
 const MOBILE_VARIANTS = {
   one: AtmosphereOne,
@@ -121,5 +134,9 @@ const Atmosphere = ({ variant }: AtmosphereProps) => (
     <AtmosphereContent variant={variant} />
   </Suspense>
 );
+
+export const pad = (value: number) => String(value).padStart(2, "0");
+
+export { Atmosphere };
 
 export default Atmosphere;

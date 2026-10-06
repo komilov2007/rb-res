@@ -1,18 +1,41 @@
+import type { CardProductProps } from "@/types/product";
 import { IconFlameFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-
-import type { CardProductProps } from "@/types/product";
 import { useProductDetailStore } from "@/stores/product-detail";
 import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
-
 import CartAction from "./cart-action";
 import { useCardProduct } from "./useCardProduct";
-import {
-  CARD_HEIGHT_CLASS,
-  SALE_VARIANT_CLASS_NAMES,
-  shouldUseDiscountCard,
-} from "./utils";
+
+export type ProductVariant = NonNullable<CardProductProps["variant"]>;
+export type SaleBadgeVariant = NonNullable<CardProductProps["saleBadgeVariant"]>;
+
+export const CARD_HEIGHT_CLASS = "h-[306px] lg:h-[392px]";
+
+export const SALE_VARIANT_CLASS_NAMES: Record<
+  SaleBadgeVariant,
+  { badge: string }
+> = {
+  primary: {
+    badge: "bg-primary",
+  },
+  green: {
+    badge: "bg-green-500",
+  },
+  red: {
+    badge: "bg-red-500",
+  },
+  orange: {
+    badge: "bg-orange-500",
+  },
+};
+
+export const shouldUseDiscountCard = (
+  variant: ProductVariant,
+  isDiscount: boolean,
+) => {
+  return isDiscount && variant !== "default" ? true : isDiscount;
+};
 
 const CardProduct = ({
   product,
@@ -179,5 +202,7 @@ const CardProduct = ({
     </article>
   );
 };
+
+export { CardProduct };
 
 export default CardProduct;

@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-
 import { getChatList, sendChatFile } from "@/apis/chat";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { useChatStore } from "@/stores/chat";
-
 import { useChatSocket } from "./useChatSocket";
+import ChatHeader from "@/components/chat-panel/components/chat-header/index";
+import ChatInput from "@/components/chat-panel/components/chat-input/index";
+import MessageList from "@/components/chat-panel/components/message-list/index";
 
 const PAGE_SIZE = 20;
 
@@ -177,3 +178,56 @@ export const useChat = () => {
     handleSend,
   };
 };
+
+type ChatPanelProps = {
+  onBack: () => void;
+  backIcon?: "back" | "close";
+  className?: string;
+};
+
+const ChatPanel = ({ onBack, backIcon, className = "" }: ChatPanelProps) => {
+  const {
+    messages,
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
+    messageText,
+    setMessageText,
+    selectedFile,
+    previewUrl,
+    setSelectedFile,
+    clearSelectedFile,
+    canSend,
+    isSendingFile,
+    handleSend,
+  } = useChat();
+
+  return (
+    <div className={`flex flex-col bg-gray10 ${className}`}>
+      <ChatHeader onBack={onBack} backIcon={backIcon} />
+      <MessageList
+        messages={messages}
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
+      />
+      <ChatInput
+        value={messageText}
+        onChange={setMessageText}
+        selectedFile={selectedFile}
+        previewUrl={previewUrl}
+        onSelectFile={setSelectedFile}
+        onClearFile={clearSelectedFile}
+        canSend={canSend}
+        isSending={isSendingFile}
+        onSend={handleSend}
+      />
+    </div>
+  );
+};
+
+export { ChatPanel };
+
+export default ChatPanel;

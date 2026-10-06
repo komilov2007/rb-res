@@ -13,10 +13,7 @@ import type { OrderFormValues } from "@/types/order";
 import { useAddresses } from "@/hooks/useAddresses";
 import { useBoolean } from "@/hooks/useBoolean";
 
-import {
-  ADDRESS_NOT_DELIVERABLE_MESSAGE,
-  useAddressDeliverable,
-} from "../../useAddressDeliverable";
+import { ADDRESS_NOT_DELIVERABLE_MESSAGE, useAddressDeliverable } from "@/app/order/schema";
 
 const DETAIL_FIELDS = [
   { name: "entrance", label: "order_page_address_entrance" },

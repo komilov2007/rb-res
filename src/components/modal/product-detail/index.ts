@@ -1,1 +1,1 @@
-﻿export { default } from './product-detail';
+﻿export { default } from "./product-detail";

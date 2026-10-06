@@ -2,19 +2,9 @@
 
 import { useMemo, useRef, useState } from "react";
 
-import {
-  DEFAULT_CENTER,
-  YANDEX_ADDRESS_LANG,
-  YANDEX_KEYS,
-} from "@/constants/yandex";
+import { DEFAULT_CENTER, YANDEX_ADDRESS_LANG, YANDEX_KEYS } from "@/constants/yandex";
 import { requestYandexGeocode } from "@/utils/yandex";
-import type {
-  BoundsChangeEvent,
-  Coordinates,
-  MapInstance,
-  SearchAddress,
-  YandexGeocoderResponse,
-} from "@/types/yandex";
+import type { BoundsChangeEvent, Coordinates, MapInstance, SearchAddress, YandexGeocoderResponse } from "@/types/yandex";
 
 export const useLocationMap = (address: string) => {
   const mapInstanceRef = useRef<MapInstance | null>(null);

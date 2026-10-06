@@ -3,13 +3,19 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-
 import StatusBadge from "@/components/order-status-badge";
 import StatusTimeline from "@/components/status-timeline";
 import type { MyOrderListItem } from "@/types/order";
 import { formatOrderDate } from "@/utils/format-date";
 import { formatPrice } from "@/utils/format-price";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
+import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
+import { getMyOrders } from "@/apis/order";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { ROUTER } from "@/constants/router";
+import { useAuthStore } from "@/stores/auth";
+import { EdgeTab } from "./orders-preview";
 
 const OrderItemRow = ({ item }: { item: MyOrderListItem["items"][number] }) => {
   const t = useTranslations();
@@ -157,4 +163,47 @@ export const EdgeOrderCard = ({
       </div>
     </div>
   );
+};
+
+const LIST_LIMIT = 5;
+
+export const useActiveOrders = () => {
+  const customerId = useAuthStore((state) => state.auth?.customer);
+
+  const { data } = useQuery({
+    enabled: Boolean(customerId),
+    queryKey: [REACT_QUERY_KEYS.ACTIVE_ORDERS_COUNT, customerId, LIST_LIMIT],
+    queryFn: () =>
+      getMyOrders(customerId as number, {
+        limit: LIST_LIMIT,
+        offset: 0,
+        is_active: true,
+      }),
+    refetchInterval: 30000,
+  });
+
+  return {
+    count: data?.data.count ?? 0,
+    orders: data?.data.results ?? [],
+  };
+};
+
+export const useIsOnOrdersPage = () => {
+  const pathname = usePathname();
+
+  return (
+    pathname.startsWith(ROUTER.PROFILE_ORDERS) ||
+    pathname.startsWith(ROUTER.MY_ORDERS)
+  );
+};
+
+export const OrdersFloatingExtras = () => {
+  const { count, orders } = useActiveOrders();
+  const isOnOrdersPage = useIsOnOrdersPage();
+
+  if (isOnOrdersPage) return null;
+
+  if (orders.length === 0) return null;
+
+  return <EdgeTab count={count} orders={orders} />;
 };

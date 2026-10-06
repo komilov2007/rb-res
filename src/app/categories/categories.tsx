@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import MobileFooter from "@/components/mobile-footer";
 
-import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
+import { BranchSelectionModal } from "@/components/branch-selection/branch-selection-modal";
 import Breadcrumb from "@/components/breadcrumb";
 import Footer from "@/components/footer";
 import Header from "@/components/header";

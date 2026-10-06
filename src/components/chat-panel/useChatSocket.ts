@@ -2,13 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import type {
-  ChatFileProps,
-  ChatSocketFilePayload,
-  ChatSocketIncoming,
-  ChatSocketTextPayload,
-  MessageProps,
-} from "@/types/chat";
+import type { ChatFileProps, ChatSocketFilePayload, ChatSocketIncoming, ChatSocketTextPayload, MessageProps } from "@/types/chat";
 
 const SOCKET_BASE_URL = process.env.NEXT_PUBLIC_SOCKET_BASE_URL;
 

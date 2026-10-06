@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import LanguageOptions from "../components/language-options";
+import { LanguageOptions } from "../components/account-card";
 import ProfilePageShell from "../components/profile-page-shell";
 
 const Language = () => {

@@ -1,1 +1,1 @@
-export { default } from "./chat-panel";
+export { default } from "./useChat";

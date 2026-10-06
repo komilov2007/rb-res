@@ -4,16 +4,12 @@ import { type ChangeEvent, useRef } from "react";
 import { SearchIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import Input from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import SearchModal from "@/components/modal/search-modal";
 import { useProductDetailStore } from "@/stores/product-detail";
 import type { useBoolean } from "@/hooks/useBoolean";
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/radio-mark";
 
 type HeaderSearchProps = {
   modal: ReturnType<typeof useBoolean>;

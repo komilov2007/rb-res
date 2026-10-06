@@ -1,10 +1,6 @@
 import "swiper/css";
-import type { MobileCardVariant, MobileSizeVariant } from "./types";
-import {
-  getMobileCardVariant,
-  getMobileLayoutVariant,
-  getMobileSizeVariant,
-} from "./variants";
+import type { MobileCardVariant, MobileSizeVariant } from "./categories";
+import { getMobileCardVariant, getMobileLayoutVariant, getMobileSizeVariant } from "./categories";
 
 type MobileClassNamesContext = {
   isMobileFixed: boolean;

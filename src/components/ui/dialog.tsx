@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "./sheet";
 
 function Dialog({
   ...props

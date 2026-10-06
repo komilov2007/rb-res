@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import BranchSelectionModal from "@/components/branch-selection/branch-selection-modal";
+import { BranchSelectionModal } from "@/components/branch-selection/branch-selection-modal";
 import FloatingCart from "@/components/floating-cart";
 import Footer from "@/components/footer";
 import Header from "@/components/header";

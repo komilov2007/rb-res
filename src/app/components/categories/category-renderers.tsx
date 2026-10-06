@@ -2,8 +2,8 @@
 
 import type { CategoriesProps } from "@/types/categories";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
-import type { MobileCardVariant } from "./types";
-import { getMobileCardVariant } from "./variants";
+import type { MobileCardVariant } from "./categories";
+import { getMobileCardVariant } from "./categories";
 import { createMobileClassNames } from "./category-class-names";
 
 type CategoryRenderersContext = {

@@ -8,9 +8,9 @@ import { Controller, useFormContext } from "react-hook-form";
 import Button from "@/components/ui/button";
 import { getDigits } from "@/utils/format-number";
 
-import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "../../constants";
-import type { BookingFormValues } from "../../schema";
-import SectionTitle from "../section-title";
+import { BOOKING_MAX_GUESTS, BOOKING_MIN_GUESTS } from "@/app/booking/booking";
+import type { BookingFormValues } from "@/app/booking/booking";
+import { SectionTitle } from "../booking-two";
 
 const GuestsComment = () => {
   const t = useTranslations();

@@ -4,12 +4,8 @@ import { useEffect, useState } from "react";
 import { Maximize2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import {
-  ATMOSPHERE_MEDIA,
-  ATMOSPHERE_VIDEO_SRC,
-  type AtmosphereVariantProps,
-} from "../../constants";
-import { pad } from "../../utils";
+import { ATMOSPHERE_MEDIA, ATMOSPHERE_VIDEO_SRC, type AtmosphereVariantProps } from "@/app/atmosphere/atmosphere";
+import { pad } from "@/app/atmosphere/atmosphere";
 
 const PHOTO_DURATION = 6000;
 const VIDEO_DURATION = 9000;

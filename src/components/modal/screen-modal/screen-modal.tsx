@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "@/components/ui/sheet";
 
 type ModalScreenProps = {
   title?: string;

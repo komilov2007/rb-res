@@ -7,11 +7,7 @@ import { normalizeCategories } from "@/utils/product";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperClass } from "swiper";
-import {
-  getDesktopVariant,
-  getMobileGap,
-  getMobileLayoutVariant,
-} from "./variants";
+import { getDesktopVariant, getMobileGap, getMobileLayoutVariant } from "./categories";
 
 export const useCategories = () => {
   const router = useRouter();

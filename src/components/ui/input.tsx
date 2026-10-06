@@ -1,6 +1,10 @@
-import type { ComponentType, InputHTMLAttributes, ReactNode } from "react";
+"use client";
+
+import type { ComponentType, InputHTMLAttributes, ReactNode, ChangeEvent } from "react";
 import { X } from "lucide-react";
 import Button from "./button";
+import { IconFlagUzbek } from "@/assets/icons/flag-uzbek";
+import { formatPhone, getDigits } from "@/utils/format-number";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   IconStart?: ComponentType<{ size?: number; className?: string }>;
@@ -47,5 +51,53 @@ const Input = ({
     </div>
   );
 };
+
+export const Loader = () => {
+  return (
+    <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-gray180 border-t-primary" />
+  );
+};
+
+type PhoneInputProps = {
+  value: string;
+  onChange: (value: string) => void;
+  autoFocus?: boolean;
+  wrapperClassName?: string;
+};
+
+const PhoneInput = ({
+  value,
+  onChange,
+  autoFocus,
+  wrapperClassName = "max-h-12",
+}: PhoneInputProps) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const digits = getDigits(event.target.value, 9);
+
+    onChange(digits);
+  };
+
+  return (
+    <Input
+      autoFocus={autoFocus}
+      value={formatPhone(value)}
+      onChange={handleChange}
+      inputMode="numeric"
+      autoComplete="tel"
+      wrapperClassName={`${wrapperClassName} px-4`}
+      className="font-normal text-black"
+      startContent={
+        <>
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden">
+            <IconFlagUzbek />
+          </span>
+          <span className="shrink-0 text-sm font-medium text-black">+998</span>
+        </>
+      }
+    />
+  );
+};
+
+export { PhoneInput, Input };
 
 export default Input;

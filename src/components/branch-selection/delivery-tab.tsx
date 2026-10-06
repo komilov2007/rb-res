@@ -4,14 +4,15 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import { updateAddressStatus, type AddressProps } from "@/apis/address";
+import { updateAddressStatus } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useLocationStore } from "@/stores/location";
 import { useAddresses } from "@/hooks/useAddresses";
-import RadioMark from "@/components/ui/radio-mark";
+import { RadioMark } from "@/components/ui/radio-mark";
 
-import { getShortAddress } from "./utils";
+import { getShortAddress } from "./branch-selection-modal";
 import {
   COLLAPSED_COUNT,
   getRowClassName,

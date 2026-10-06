@@ -2,15 +2,17 @@
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import XButton from "@/components/ui/x-button";
+import { XButton } from "@/components/ui/sheet";
 import { formatPrice } from "@/utils/format-price";
-import { ProductDetailFooter } from "./components";
+import { ProductDetailFooter } from "@/components/modal/product-detail/components/index";
 import { useProductDetailBase } from "./useProductDetailBase";
 import { getProductDetailView } from "./productDetailView";
 import { createSheetActions } from "./createSheetActions";
 import { createCartActions } from "./createCartActions";
 import { renderDetailContent } from "./renderDetailContent";
 import { renderDrawerContent } from "./renderDrawerContent";
+import type { ProductSkuProps } from "@/types/product";
+import { translate } from "@/utils/translate";
 
 const ProductDetailMobile = () => {
   const base = useProductDetailBase();
@@ -168,5 +170,39 @@ const ProductDetailMobile = () => {
     </Sheet>
   );
 };
+
+export const stripHtml = (value?: string | null) => {
+  return value?.replace(/<[^>]*>/g, "").trim() ?? "";
+};
+
+export const getOldPrice = ({
+  price,
+  discountPrice,
+  saleAmount,
+  saleType,
+}: {
+  price: number;
+  discountPrice?: number | null;
+  saleAmount?: number | null;
+  saleType?: string | null;
+}) => {
+  if (discountPrice && price > discountPrice) return price;
+
+  if (saleType === "PERCENT" && saleAmount && saleAmount < 100) {
+    return Math.round(price / (1 - saleAmount / 100));
+  }
+
+  return null;
+};
+
+export const getSkuMeta = (sku: ProductSkuProps) => {
+  const unit = sku.unit?.unit || sku.unit?.name;
+
+  if (sku.amount > 0 && unit) return `${sku.amount} ${unit}`;
+  if (sku.status === "UNLIMITED") return translate("product_in_stock");
+  return null;
+};
+
+export { ProductDetailMobile };
 
 export default ProductDetailMobile;

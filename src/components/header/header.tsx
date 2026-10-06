@@ -1,15 +1,83 @@
 "use client";
 
+import { type ChangeEvent, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCartStore } from "@/stores/cart";
+import { useBoolean } from "@/hooks/useBoolean";
+import { useGeneral } from "@/hooks/useGeneral";
+import { useShopId } from "@/hooks/useShopId";
+import { getSearchUrl } from "@/utils/search";
 import { IconShoppingCartFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-
 import Logo from "@/components/logo";
 import Button from "@/components/ui/button";
 import Location from "@/components/location";
-import { HeaderSearch, HeaderTopbar } from "./components";
+import { HeaderSearch, HeaderTopbar } from "@/components/header/components/index";
 import ThemeSwitcher from "@/components/theme-switcher";
-import { OrdersFloatingExtras } from "./components/orders-preview";
-import { useHeader } from "./useHeader";
+import { OrdersFloatingExtras } from "@/components/header/components/orders-preview/index";
+
+export const useHeader = (pinBottomRow: boolean) => {
+  const [isPinned, setIsPinned] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { data: general } = useGeneral();
+  const { shopid } = useShopId();
+  const modal = useBoolean();
+  const search = searchParams.get("search");
+  const [value, setValue] = useState(search ?? "");
+  const cartCount = useCartStore((state) => state.cartCount);
+  const openCartModal = useCartStore((state) => state.openCartModal);
+
+  useEffect(() => {
+    if (!pinBottomRow) return;
+
+    const handleScroll = () => setIsPinned(window.scrollY > 4);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [pinBottomRow]);
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+
+    setValue(newValue);
+
+    router.push(
+      getSearchUrl({
+        pathname,
+        search: newValue,
+        searchParams,
+      }),
+    );
+  };
+
+  const handleClearSearch = () => {
+    setValue("");
+    router.push(
+      getSearchUrl({
+        pathname,
+        search: "",
+        searchParams,
+      }),
+    );
+  };
+
+  return {
+    isPinned,
+    router,
+    general,
+    shopid,
+    modal,
+    value,
+    cartCount,
+    openCartModal,
+    handleSearch,
+    handleClearSearch,
+  };
+};
 
 type HeaderProps = {
   pinBottomRow?: boolean;
@@ -103,5 +171,7 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
     </>
   );
 };
+
+export { Header };
 
 export default Header;

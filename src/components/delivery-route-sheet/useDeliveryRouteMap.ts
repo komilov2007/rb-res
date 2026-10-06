@@ -8,15 +8,8 @@ import type { BranchProps } from "@/types/branch";
 import type { Coordinates } from "@/types/yandex";
 import { buildBranchPinHref } from "@/utils/branch-pin";
 
-import {
-  BOUNDS_MARGIN,
-  CHIP_DURATION_MS,
-  PIN_SIZE,
-  branchPoint,
-  type DeliveryMapApi,
-  type DeliveryMapInstance,
-} from "./constants";
-import { useCustomerPoint } from "./useCustomerPoint";
+import { BOUNDS_MARGIN, CHIP_DURATION_MS, PIN_SIZE, branchPoint, type DeliveryMapApi, type DeliveryMapInstance } from "./delivery-route-sheet";
+import { useCustomerPoint } from "./delivery-route-sheet";
 
 export const useDeliveryRouteMap = (
   open: boolean,

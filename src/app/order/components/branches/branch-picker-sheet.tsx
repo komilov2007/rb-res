@@ -5,18 +5,13 @@ import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import { BranchMapPicker } from "@/components/branch-map-picker";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useBoolean } from "@/hooks/useBoolean";
 import type { GeneralProps } from "@/types/general";
 import { getBranchLabel, getShortAddress } from "@/utils/address";
-import RadioMark, { getOptionClassName } from "@/components/ui/radio-mark";
+import { RadioMark, getOptionClassName } from "@/components/ui/radio-mark";
 
-import type { BranchOptionProps } from "./useBranches";
+import type { BranchOptionProps } from "./branches";
 
 type BranchPickerSheetProps = {
   open: boolean;

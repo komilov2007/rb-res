@@ -3,7 +3,7 @@
 import { getCartBranchId } from "@/utils/cart";
 import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
-import { getOldPrice, stripHtml } from "./utils";
+import { getOldPrice, stripHtml } from "./product-detail";
 import type { useProductDetailBase } from "./useProductDetailBase";
 
 export type ProductDetailBaseContext = Omit<ReturnType<typeof useProductDetailBase>, "product"> & {

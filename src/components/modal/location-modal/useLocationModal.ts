@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-import { type AddressProps } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
 import { useLocationStore } from "@/stores/location";
 import { useAuthStore } from "@/stores/auth";
 import { DEFAULT_CENTER } from "@/constants/yandex";
 import { useAddresses } from "@/hooks/useAddresses";
 
-import { useAddressForm } from "./useAddressForm";
+import { useAddressForm } from "./location-modal";
 import { useAddressMutations } from "./useAddressMutations";
 import { useLocationMap } from "./useLocationMap";
 

@@ -1,6 +1,15 @@
+"use client";
+
 import { getDateValue } from "@/utils/format-date";
 import type { GeneralProps } from "@/types/general";
 import { formatTime, getDayIndex } from "@/utils/working-time";
+import { useTranslations } from "next-intl";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useGeneral } from "@/hooks/useGeneral";
+import { useAuthStore } from "@/stores/auth";
+import { getLocalPhone } from "@/utils/format-number";
+import { bookingSchema, type BookingFormValues, type BookingSchemaContext } from "./booking";
 
 export type WorkingTime = GeneralProps["working_time"];
 
@@ -107,4 +116,42 @@ export const isWithinWorkingHours = (
   const minutes = toMinutes(time);
 
   return windows.some(({ start, end }) => minutes >= start && minutes < end);
+};
+
+export const useDayLabel = () => {
+  const t = useTranslations();
+
+  return (day: Date, index: number) => {
+    const weekday =
+      index === 0
+        ? t("common_today").replace(/^./, (char) => char.toUpperCase())
+        : t(`weekdays_${((day.getDay() + 6) % 7) + 1}`);
+    const date = `${String(day.getDate()).padStart(2, "0")}.${String(
+      day.getMonth() + 1,
+    ).padStart(2, "0")}`;
+
+    return `${weekday}, ${date}`;
+  };
+};
+
+export const usePage = () => {
+  const auth = useAuthStore((state) => state.auth);
+  const { data: general } = useGeneral();
+
+  const form = useForm<BookingFormValues, BookingSchemaContext>({
+    mode: "onChange",
+    resolver: yupResolver(bookingSchema),
+    context: { workingTime: general?.data?.working_time },
+    defaultValues: bookingSchema.cast(
+      {
+        name: auth?.firstname ?? "",
+        phone: getLocalPhone(auth?.phone),
+      },
+      { assert: false },
+    ),
+  });
+
+  const onSubmit: SubmitHandler<BookingFormValues> = () => {};
+
+  return { form, onSubmit };
 };

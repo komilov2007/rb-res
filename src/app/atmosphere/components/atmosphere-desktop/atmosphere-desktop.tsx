@@ -7,11 +7,7 @@ import { useTranslations } from "next-intl";
 import Button from "@/components/ui/button";
 import { galleryImages, menuImages } from "@/constants/atmosphere";
 
-import {
-  ATMOSPHERE_VIDEO_SRC,
-  MENU_MEDIA_OFFSET,
-  type AtmosphereVariantProps,
-} from "../../constants";
+import { ATMOSPHERE_VIDEO_SRC, MENU_MEDIA_OFFSET, type AtmosphereVariantProps } from "@/app/atmosphere/atmosphere";
 
 const MAX_TILES = 4;
 

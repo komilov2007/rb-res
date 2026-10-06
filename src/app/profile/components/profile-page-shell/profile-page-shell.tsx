@@ -4,13 +4,13 @@ import type { ReactNode } from "react";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-
 import PageLayout from "@/components/page-layout";
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
-
 import ProfileDesktopLayout from "../profile-desktop-layout";
+import type { GeneralProps } from "@/types/general";
+import { formatSocialName, getSocialIcon, getSocialStyle } from "@/utils/socials";
 
 type ProfilePageShellProps = {
   title: string;
@@ -64,3 +64,37 @@ const ProfilePageShell = ({
 };
 
 export default ProfilePageShell;
+
+type SocialLinksProps = {
+  socials: NonNullable<GeneralProps["socials"]>;
+  itemClassName: string;
+};
+
+const SocialLinks = ({ socials, itemClassName }: SocialLinksProps) => (
+  <div className="mt-2 flex flex-wrap gap-2">
+    {socials.map((social) => {
+      const Icon = getSocialIcon(social.type);
+      const style = getSocialStyle(social.type);
+
+      return (
+        <a
+          key={social.id}
+          href={social.url}
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            color: style.color,
+            borderColor: style.borderColor,
+            backgroundColor: style.backgroundColor,
+          }}
+          className={itemClassName}
+          aria-label={formatSocialName(social.type)}
+        >
+          <Icon size={22} />
+        </a>
+      );
+    })}
+  </div>
+);
+
+export { SocialLinks };

@@ -5,18 +5,12 @@ import type { AxiosResponse } from "axios";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-import {
-  createAddress,
-  deleteAddress,
-  getAddresses,
-  updateAddress,
-  updateAddressStatus,
-  type AddressProps,
-} from "@/apis/address";
+import { createAddress, deleteAddress, getAddresses, updateAddress, updateAddressStatus } from "@/apis/address";
+import { type AddressProps } from "@/types/address";
 import { useLocationStore } from "@/stores/location";
 import { useAuthStore } from "@/stores/auth";
 
-import type { useAddressForm } from "./useAddressForm";
+import type { useAddressForm } from "./location-modal";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const MAX_SAVED_ADDRESSES = 10;

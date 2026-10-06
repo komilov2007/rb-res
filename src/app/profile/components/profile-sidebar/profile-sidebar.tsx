@@ -10,11 +10,11 @@ import { useIsClick } from "@/hooks/useIsClick";
 import { useOpenChat } from "@/hooks/useOpenChat";
 import { useUiStore } from "@/stores/ui";
 
-import { useProfileAccount } from "../../useProfileAccount";
+import { useProfileAccount } from "@/app/profile/components/profile";
 import AccountCard from "../account-card";
 import LogoutDialog from "../logout-dialog";
-import SidebarContact from "./sidebar-contact";
-import SidebarRow, { SIDEBAR_GROUP_CLASS_NAME } from "./sidebar-row";
+import { SidebarContact } from "./sidebar-contact";
+import { SidebarRow, SIDEBAR_GROUP_CLASS_NAME } from "./sidebar-contact";
 
 const ProfileSidebar = () => {
   const pathname = usePathname();

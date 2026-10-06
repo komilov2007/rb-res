@@ -1,14 +1,18 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-
 import Breadcrumb from "@/components/breadcrumb";
 import CardProduct from "@/components/card-product";
 import { ProductCardSkeleton } from "@/components/ui/skeleton";
 import { ROUTER } from "@/constants/router";
-
-import type { useCategory } from "../../useCategory";
-import EmptyCategory from "../empty-category";
+import type { useCategory } from "@/app/category/[id]/category";
+import { EmptyCategoryEmptyCategory as EmptyCategory } from "./desktop-view";
+import Link from "next/link";
+import { IconLayoutGrid, IconToolsKitchen2Off } from "@tabler/icons-react";
+import { useTranslations as useTranslationsEmptyCategory } from "next-intl";
+import Button from "@/components/ui/button";
+import { ROUTER as ROUTEREmptyCategory } from "@/constants/router";
+import { useShopId } from "@/hooks/useShopId";
 
 const GRID_CLASS_NAME = "grid grid-cols-4 gap-5 xl:grid-cols-5";
 
@@ -64,3 +68,35 @@ const DesktopView = ({
 };
 
 export default DesktopView;
+
+const EmptyCategoryEmptyCategory = () => {
+  const t = useTranslationsEmptyCategory();
+  const { shopid } = useShopId();
+
+  return (
+    <div className="flex flex-col items-center px-6 py-12 text-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary10">
+        <IconToolsKitchen2Off size={36} className="text-primary" />
+      </div>
+
+      <p className="mt-4 text-base font-medium text-black">
+        {t("catalog_empty_category")}
+      </p>
+      <p className="mt-1 max-w-xs text-sm font-normal text-gray220">
+        {t("catalog_empty_category_hint")}
+      </p>
+
+      <Button asChild variant="primary-solid" size="primaryFit" className="mt-5 gap-2">
+        <Link
+          href={`${ROUTEREmptyCategory.CATEGORIES}${shopid ? `?shop_id=${shopid}` : ""}`}
+          className="text-white!"
+        >
+          <IconLayoutGrid size={18} />
+          {t("catalog_all_categories")}
+        </Link>
+      </Button>
+    </div>
+  );
+};
+
+export { EmptyCategoryEmptyCategory };

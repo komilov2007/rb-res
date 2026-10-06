@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
+import { useMemo, useEffect, useRef, useState } from "react";
+import { useDeviceLocation } from "@/hooks/useDeviceLocation";
+import { useLocationStore } from "@/stores/location";
+import type { BranchProps } from "@/types/branch";
+import { getDistanceKm } from "@/utils/distance";
 import { BranchMapPicker } from "@/components/branch-map-picker";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -10,12 +13,37 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useAuthStore } from "@/stores/auth";
 import { useBranchSelectionStore } from "@/stores/branch-selection";
 import { useCartStore } from "@/stores/cart";
-import { useLocationStore } from "@/stores/location";
 import { useShopStatusStore } from "@/stores/shop-status";
-
 import { useBranchSelection } from "./useBranchSelection";
-import { useNearestBranches } from "./useNearestBranches";
 import { SelectionContent } from "./selection-content";
+import { getBranchLabel, getShortAddress } from "@/utils/address";
+
+export const useNearestBranches = (branches: BranchProps[]) => {
+  const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
+  const hasAddressCoords = latitude !== null && longitude !== null;
+  const deviceCoords = useDeviceLocation(!hasAddressCoords);
+  const origin =
+    latitude !== null && longitude !== null
+      ? { latitude, longitude }
+      : deviceCoords;
+
+  const sorted = useMemo(
+    () =>
+      branches
+        .map((branch) => ({
+          branch,
+          km: origin ? getDistanceKm(origin, branch) : null,
+        }))
+        .sort((a, b) => (a.km ?? 0) - (b.km ?? 0)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [branches, origin?.latitude, origin?.longitude],
+  );
+
+  const list = useMemo(() => sorted.map((item) => item.branch), [sorted]);
+
+  return { sorted, list };
+};
 
 const BranchSelectionModal = () => {
   const selection = useBranchSelection();
@@ -181,5 +209,21 @@ const BranchSelectionModal = () => {
     </>
   );
 };
+
+export const findClosestBranch = (
+  branches: BranchProps[],
+  coordinates: { latitude: number; longitude: number },
+) =>
+  branches.reduce<{ branch: BranchProps; km: number } | null>(
+    (closest, branch) => {
+      const km = getDistanceKm(coordinates, branch);
+      return !closest || km < closest.km ? { branch, km } : closest;
+    },
+    null,
+  )?.branch ?? null;
+
+export { BranchSelectionModal };
+
+export { getBranchLabel, getShortAddress };
 
 export default BranchSelectionModal;

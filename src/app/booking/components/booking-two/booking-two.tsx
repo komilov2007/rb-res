@@ -2,13 +2,13 @@
 
 import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
-
-import TwoComment from "./components/two-comment";
+import { TwoComment } from "./components/two-contact";
 import TwoContact from "./components/two-contact";
 import TwoFooter from "./components/two-footer";
 import TwoGuests from "./components/two-guests";
-import TwoHero from "./components/two-hero";
+import { TwoHero } from "./components/two-guests";
 import TwoVisit from "./components/two-visit";
+import type { ComponentType } from "react";
 
 const Card = ({ title, children }: { title: string; children: ReactNode }) => (
   <section className="rounded-xl bg-white p-3">
@@ -57,3 +57,25 @@ const BookingTwo = () => {
 };
 
 export default BookingTwo;
+
+type SectionTitleProps = {
+  Icon: ComponentType<{ size?: number; className?: string }>;
+  title: string;
+  hint?: string;
+};
+
+const SectionTitle = ({ Icon, title, hint }: SectionTitleProps) => {
+  return (
+    <div>
+      <h2 className="flex items-center gap-2 text-sm font-medium text-black">
+        <Icon size={18} className="text-gray220" />
+        {title}
+      </h2>
+      {hint && (
+        <p className="mt-0.5 text-xs font-normal text-gray220">{hint}</p>
+      )}
+    </div>
+  );
+};
+
+export { SectionTitle };
