@@ -101,6 +101,10 @@ const PHONE_LENGTH = 9;
 const isFullPhone = (value?: string) => value?.length === PHONE_LENGTH;
 
 export const bookingSchema = yup.object({
+  branch: yup
+    .number()
+    .default(0)
+    .min(1, () => translate("order_page_errors_branch_required")),
   name: yup.string().default(""),
   phone: yup.string().default(""),
   extra_phone: yup

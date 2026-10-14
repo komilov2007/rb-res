@@ -1,9 +1,11 @@
 ﻿"use client";
 
-import { CalendarCheck, Hand, X } from "lucide-react";
+import { X } from "lucide-react";
 import {
-  IconMessageCircleFilled,
-  IconSparklesFilled,
+  IconAppsFilled,
+  IconCalendarEventFilled,
+  IconMessagesFilled,
+  IconSparkles2Filled,
 } from "@tabler/icons-react";
 
 import { usePathname, useRouter } from "next/navigation";
@@ -27,17 +29,17 @@ const actions = [
   {
     key: "chat",
     label: "home_mobile_action_chat",
-    Icon: IconMessageCircleFilled,
+    Icon: IconMessagesFilled,
   },
   {
     key: "booking",
     label: "booking_title",
-    Icon: CalendarCheck,
+    Icon: IconCalendarEventFilled,
   },
   {
     key: "atmosphere",
     label: "atmosphere_title",
-    Icon: IconSparklesFilled,
+    Icon: IconSparkles2Filled,
   },
 ];
 
@@ -64,7 +66,7 @@ const MobileAction = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const openChat = useOpenChat();
   const openBooking = useOpenBooking();
-  const MainIcon = action.value ? X : Hand;
+  const MainIcon = action.value ? X : IconAppsFilled;
   const hasCart = cartCount > 0;
   const isCartPage = pathname.includes("/cart");
 
@@ -139,7 +141,7 @@ const MobileAction = () => {
                 }}
               >
                 <span>{t(label)}</span>
-                <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white text-black">
+                <span className="relative flex h-10 w-10 items-center justify-center rounded-full bg-primary10 text-primary">
                   <Icon size={20} />
                 </span>
               </Button>

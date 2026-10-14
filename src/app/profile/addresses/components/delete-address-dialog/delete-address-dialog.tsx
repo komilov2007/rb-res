@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { IconMapPinFilled, IconPencilFilled, IconTrashFilled } from "@tabler/icons-react";
+import { IconEditFilled, IconMapPinFilled, IconTrashFilled } from "@tabler/icons-react";
 import { useTranslations as useTranslationsAddressRow } from "next-intl";
 import type { AddressProps as AddressPropsAddressRow } from "@/types/address";
 import { useAddressBranch } from "@/components/branch-selection/useBranchSelection";
@@ -91,14 +91,14 @@ const AddressRow = ({ item, branches, onEdit, onDelete }: AddressRowProps) => {
   return (
     <div
       data-address-row={item.id}
-      className="flex items-center gap-3 rounded-2xl border border-gray180 bg-white p-3"
+      className="flex items-center gap-3 rounded-2xl border border-gray180 bg-white p-4"
     >
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gray10 text-gray220">
-        <IconMapPinFilled size={17} />
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary10 text-primary">
+        <IconMapPinFilled size={20} />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="info-label line-clamp-1 min-w-0">
+          <span className="line-clamp-1 min-w-0 text-base font-normal text-black">
             {item.name || getShortAddressAddressRow(item.address)}
           </span>
           {branch && (
@@ -115,17 +115,17 @@ const AddressRow = ({ item, branches, onEdit, onDelete }: AddressRowProps) => {
         type="button"
         onClick={onEdit}
         aria-label={t("profile_page_addresses_edit_aria")}
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gray10 text-gray220"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gray10 text-gray220"
       >
-        <IconPencilFilled size={15} />
+        <IconEditFilled size={17} />
       </button>
       <button
         type="button"
         onClick={onDelete}
         aria-label={t("profile_page_addresses_delete_aria")}
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-red/10 text-red"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-red/10 text-red"
       >
-        <IconTrashFilled size={15} />
+        <IconTrashFilled size={17} />
       </button>
     </div>
   );

@@ -3,7 +3,7 @@
 import { ArrowRight, CalendarDays, Users } from "lucide-react";
 import { IconClockHour3Filled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch, useFormState } from "react-hook-form";
 import Button from "@/components/ui/button";
 import type { BookingFormValues } from "@/app/booking/booking";
 import type { ComponentType, ReactNode } from "react";
@@ -19,8 +19,8 @@ const TwoFooter = ({ className = "" }: TwoFooterProps) => {
   const t = useTranslations();
   const {
     control,
-    formState: { isSubmitting },
   } = useFormContext<BookingFormValues>();
+  const { isSubmitting } = useFormState<BookingFormValues>();
   const [date, time, guests] = useWatch({
     control,
     name: ["date", "time", "guests"],

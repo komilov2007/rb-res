@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Globe2, LogIn, Package } from "lucide-react";
+import { CalendarClock, Globe2, LogIn, Package } from "lucide-react";
 import { IconBellFilled, IconHelpCircleFilled, IconMapPinFilled, IconMessageCircleFilled, IconPencilFilled } from "@tabler/icons-react";
 
 import { ROUTER } from "@/constants/router";
@@ -70,6 +70,14 @@ const ProfileSidebar = () => {
             label={t("order")}
             active={pathname?.startsWith(ROUTER.PROFILE_ORDERS)}
             onClick={() => router.push(`${ROUTER.PROFILE_ORDERS}${shopQuery}`)}
+          />
+          <SidebarRow
+            icon={CalendarClock}
+            label={t("profile_page_menu_reservations")}
+            active={pathname?.startsWith(ROUTER.PROFILE_RESERVATIONS)}
+            onClick={() =>
+              router.push(`${ROUTER.PROFILE_RESERVATIONS}${shopQuery}`)
+            }
           />
           <SidebarRow
             icon={IconMapPinFilled}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { IconPhoneCallFilled, IconPhoneFilled, IconUserFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext, useWatch, useFormState } from "react-hook-form";
 import { PhoneInput } from "@/components/ui/input";
 import { formatPhone } from "@/utils/format-number";
 import type { BookingFormValues } from "@/app/booking/booking";
@@ -18,8 +18,8 @@ const TwoContact = () => {
   const {
     control,
     setValue,
-    formState: { errors },
   } = useFormContext<BookingFormValues>();
+  const { errors } = useFormState<BookingFormValues>();
   const [name, phone] = useWatch({ control, name: ["name", "phone"] });
   const [showExtraPhone, setShowExtraPhone] = useState(false);
 

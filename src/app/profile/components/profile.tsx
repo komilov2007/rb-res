@@ -9,7 +9,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { clearUser } from "@/utils/user";
-import { Globe2, LogIn, LogOut, Package } from "lucide-react";
+import { CalendarClock, Globe2, LogIn, LogOut, Package } from "lucide-react";
 import { IconBellFilled, IconHelpCircleFilled, IconMapPinFilled, IconMessageCircleFilled, IconPencilFilled, IconPhoneFilled } from "@tabler/icons-react";
 import PageLayout from "@/components/page-layout";
 import Button from "@/components/ui/button";
@@ -215,6 +215,13 @@ const Profile = () => {
               icon={Package}
               label={t("order")}
               onClick={() => router.push(`${ROUTER.MY_ORDERS}${shopQuery}`)}
+            />
+            <ProfileItem
+              icon={CalendarClock}
+              label={t("profile_page_menu_reservations")}
+              onClick={() =>
+                router.push(`${ROUTER.PROFILE_RESERVATIONS}${shopQuery}`)
+              }
             />
             <ProfileItem
               icon={IconMapPinFilled}

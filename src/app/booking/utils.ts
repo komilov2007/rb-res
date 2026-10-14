@@ -3,10 +3,22 @@
 import { getDateValue } from "@/utils/format-date";
 import type { GeneralProps } from "@/types/general";
 import { formatTime, getDayIndex } from "@/utils/working-time";
+import { BOOKING_TIMES } from "@/constants/booking";
 import { useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  createReservation,
+  getReservationDetail,
+  updateReservation,
+} from "@/apis/reservation";
+import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { ROUTER } from "@/constants/router";
 import { useGeneral } from "@/hooks/useGeneral";
+import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
 import { getLocalPhone } from "@/utils/format-number";
 import { bookingSchema, type BookingFormValues, type BookingSchemaContext } from "./booking";
@@ -104,6 +116,38 @@ const getWindows = (workingTime: WorkingTime, date: string) => {
   });
 };
 
+const BOOKING_SLOT_MINUTES = 30;
+
+const toTime = (minutes: number) =>
+  `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+
+export const getBookingTimes = (workingTime: WorkingTime, date: string) => {
+  if (!workingTime) return BOOKING_TIMES;
+
+  const day =
+    date ||
+    getBookingDays()
+      .map(getDateValue)
+      .find((value) => !isDayOff(workingTime, value));
+  const windows = day ? getWindows(workingTime, day) : null;
+
+  if (!windows) {
+    return day && !isDayOff(workingTime, day) ? BOOKING_TIMES : [];
+  }
+
+  const slots = new Set<number>();
+
+  windows.forEach(({ start, end }) => {
+    const first = Math.ceil(start / BOOKING_SLOT_MINUTES) * BOOKING_SLOT_MINUTES;
+
+    for (let minutes = first; minutes < end; minutes += BOOKING_SLOT_MINUTES) {
+      slots.add(minutes);
+    }
+  });
+
+  return [...slots].sort((a, b) => a - b).map(toTime);
+};
+
 export const isWithinWorkingHours = (
   workingTime: WorkingTime,
   date: string,
@@ -135,8 +179,20 @@ export const useDayLabel = () => {
 };
 
 export const usePage = () => {
+  const t = useTranslations();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { shopid } = useShopId();
+  const reservationId = useSearchParams().get("reservation");
   const auth = useAuthStore((state) => state.auth);
   const { data: general } = useGeneral();
+
+  const { data: detail } = useQuery({
+    enabled: Boolean(reservationId),
+    queryKey: [REACT_QUERY_KEYS.RESERVATION_DETAIL, reservationId],
+    queryFn: () => getReservationDetail(reservationId as string),
+  });
+  const reservation = detail?.data;
 
   const form = useForm<BookingFormValues, BookingSchemaContext>({
     mode: "onChange",
@@ -149,9 +205,63 @@ export const usePage = () => {
       },
       { assert: false },
     ),
+    values: reservation
+      ? {
+          branch: reservation.branch.id,
+          name: reservation.name,
+          phone: getLocalPhone(reservation.phone),
+          extra_phone: getLocalPhone(reservation.extra_phone),
+          date: reservation.date,
+          time: formatTime(reservation.time),
+          guests: reservation.guests,
+          comment: reservation.comment ?? "",
+        }
+      : undefined,
   });
 
-  const onSubmit: SubmitHandler<BookingFormValues> = () => {};
+  const { mutateAsync } = useMutation({
+    mutationFn: (values: BookingFormValues) => {
+      const payload = {
+        branch: values.branch,
+        date: values.date,
+        time: values.time,
+        guests: values.guests,
+        ...(values.name && { name: values.name }),
+        ...(values.extra_phone && { extra_phone: `998${values.extra_phone}` }),
+        ...(values.comment.trim() && { comment: values.comment.trim() }),
+      };
+
+      return reservationId
+        ? updateReservation(reservationId, payload)
+        : createReservation(payload);
+    },
+    onSuccess: () => {
+      if (reservationId) {
+        toast.success(t("booking_updated"));
+      } else {
+        toast.success(t("booking_success"), {
+          description: t("booking_success_hint"),
+          duration: 6000,
+        });
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.RESERVATIONS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [REACT_QUERY_KEYS.RESERVATION_DETAIL],
+      });
+      router.replace(
+        `${ROUTER.PROFILE_RESERVATIONS}${shopid ? `?shop_id=${shopid}` : ""}`,
+      );
+    },
+  });
+
+  const onSubmit: SubmitHandler<BookingFormValues> = async (values) => {
+    try {
+      await mutateAsync(values);
+    } catch {}
+  };
 
   return { form, onSubmit };
 };

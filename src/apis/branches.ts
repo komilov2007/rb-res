@@ -1,8 +1,15 @@
 import { request } from "@/configs/requests";
 import type { BranchProps } from "@/types/branch";
 
-export const getBranches = async (shopid: string) => {
-  return await request<BranchProps[]>(`webapp/branch/list/${shopid}`);
+export type BranchesParams = {
+  service?: "RESERVATION";
+  is_active?: boolean;
+};
+
+export const getBranches = async (shopid: string, params?: BranchesParams) => {
+  return await request<BranchProps[]>(`webapp/branch/list/${shopid}`, {
+    params,
+  });
 };
 
 export const getNearestBranch = async ({

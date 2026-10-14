@@ -11,6 +11,7 @@ export const ROUTER = {
   PROFILE_EDIT: "/profile/edit",
   PROFILE_ORDERS: "/profile/orders",
   PROFILE_ADDRESSES: "/profile/addresses",
+  PROFILE_RESERVATIONS: "/profile/reservations",
   PROFILE_NOTIFICATIONS: "/profile/notifications",
   PROFILE_ABOUT: "/profile/about",
   PROFILE_LANGUAGE: "/profile/language",

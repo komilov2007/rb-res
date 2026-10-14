@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch, useFormState } from "react-hook-form";
 
 import Button from "@/components/ui/button";
 import { galleryImages } from "@/constants/atmosphere";
@@ -81,8 +81,8 @@ const BookingSummary = () => {
   const [days] = useState(getBookingDays);
   const {
     control,
-    formState: { isSubmitting },
   } = useFormContext<BookingFormValues>();
+  const { isSubmitting } = useFormState<BookingFormValues>();
   const [date, time, guests] = useWatch({
     control,
     name: ["date", "time", "guests"],

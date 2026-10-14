@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useFormContext } from "react-hook-form";
+import { useFormState } from "react-hook-form";
 import Button from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { BookingFormValues } from "@/app/booking/booking";
@@ -21,9 +21,7 @@ import { galleryImages } from "@/constants/atmosphere";
 
 const BookingOne = () => {
   const t = useTranslations();
-  const {
-    formState: { isSubmitting },
-  } = useFormContext<BookingFormValues>();
+  const { isSubmitting } = useFormState<BookingFormValues>();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   if (isDesktop) return <BookingDesktop />;

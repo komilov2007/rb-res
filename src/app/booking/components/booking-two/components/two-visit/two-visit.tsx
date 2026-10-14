@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { IconClockHour3Filled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch, useFormState } from "react-hook-form";
 
 import { useGeneral } from "@/hooks/useGeneral";
 import { getDateValue } from "@/utils/format-date";
@@ -12,8 +12,12 @@ import { getDateValue } from "@/utils/format-date";
 import type { BookingFormValues } from "@/app/booking/booking";
 import { useDayLabel } from "@/app/booking/utils";
 import { getBookingDays, isDayOff, maskDate, maskTime, parseDisplayDate, toDisplayDate } from "@/app/booking/utils";
+import BookingBranch from "../../../booking-branch";
 import TileCombo from "../tile-combo";
 import { TwoField } from "../two-footer";
+
+const branchTriggerClassName = () =>
+  "h-5 w-full rounded-none bg-transparent px-0 text-base font-normal leading-5 text-black data-[placeholder]:text-gray220/70 [&>span]:flex-1 [&>span]:truncate [&>span]:text-left";
 
 const TwoVisit = () => {
   const t = useTranslations();
@@ -26,8 +30,8 @@ const TwoVisit = () => {
     setValue,
     clearErrors,
     trigger,
-    formState: { errors },
   } = useFormContext<BookingFormValues>();
+  const { errors } = useFormState<BookingFormValues>();
   const selectedDate = useWatch({ control, name: "date" });
   const [days] = useState(getBookingDays);
   const [dateText, setDateText] = useState(() => toDisplayDate(getValues("date")));
@@ -80,6 +84,14 @@ const TwoVisit = () => {
 
   return (
     <div className="flex flex-col gap-2">
+      <TwoField Icon={MapPin} label={t("common_branch")} error={errors.branch?.message}>
+        <BookingBranch
+          triggerClassName={branchTriggerClassName}
+          showIcon={false}
+          showError={false}
+        />
+      </TwoField>
+
       <TileCombo
         Icon={CalendarDays}
         label={t("booking_date")}

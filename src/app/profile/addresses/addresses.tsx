@@ -22,8 +22,8 @@ import DeleteAddressDialog from "./components/delete-address-dialog";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
 const AddressRowSkeleton = () => (
-  <div className="flex items-center gap-3 rounded-2xl border border-transparent bg-white p-3">
-    <div className="skeleton h-9 w-9 shrink-0 rounded-full" />
+  <div className="flex items-center gap-3 rounded-2xl border border-transparent bg-white p-4">
+    <div className="skeleton h-11 w-11 shrink-0 rounded-full" />
     <div className="min-w-0 flex-1 space-y-2">
       <div className="skeleton h-4 w-28 rounded-full" />
       <div className="skeleton h-3 w-full rounded-full" />
