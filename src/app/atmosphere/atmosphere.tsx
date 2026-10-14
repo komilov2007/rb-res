@@ -1,10 +1,10 @@
 "use client";
 
-import { galleryImages, menuImages } from "@/constants/atmosphere";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import Breadcrumb from "@/components/breadcrumb";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ImageViewer from "@/components/image-viewer";
@@ -12,74 +12,51 @@ import ProductDetailMobile from "@/components/modal/product-detail";
 import Button from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useOpenBooking } from "@/hooks/useOpenBooking";
-import Breadcrumb from "@/components/breadcrumb";
-import AtmosphereDesktopPreview from "@/app/atmosphere/components/atmosphere-desktop-preview/index";
-import AtmosphereFour from "@/app/atmosphere/components/atmosphere-four/index";
-import { AtmosphereOne } from "@/app/atmosphere/components/atmosphere-two";
-import AtmosphereThree from "@/app/atmosphere/components/atmosphere-three/index";
-import AtmosphereTwo from "@/app/atmosphere/components/atmosphere-two/index";
+import AtmosphereDesktop from "@/app/atmosphere/components/atmosphere-desktop";
+import AtmosphereMobile from "@/app/atmosphere/components/atmosphere-mobile";
+import AtmosphereState from "@/app/atmosphere/components/atmosphere-state";
+import { usePage } from "@/app/atmosphere/usePage";
 
-export const ATMOSPHERE_VIDEO_SRC = "/atmosfera.mp4";
-
-export const ATMOSPHERE_MEDIA = [
-  ATMOSPHERE_VIDEO_SRC,
-  ...galleryImages.map((image) => image.src),
-  ...menuImages.map((image) => image.src),
-];
-
-export const MENU_MEDIA_OFFSET = 1 + galleryImages.length;
-
-export type AtmosphereVariant = "one" | "two" | "three" | "four";
-
-export type AtmosphereVariantProps = {
-  onOpen: (index: number) => void;
-};
-
-const MOBILE_VARIANTS = {
-  one: AtmosphereOne,
-  two: AtmosphereTwo,
-  three: AtmosphereThree,
-  four: AtmosphereFour,
-} satisfies Record<AtmosphereVariant, unknown>;
-
-const FOOTER_CLASS_NAMES = {
-  bar: "shrink-0 border-t border-gray180 bg-white pb-[max(16px,env(safe-area-inset-bottom))] pt-3",
-  fade: "absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent pb-[max(16px,env(safe-area-inset-bottom))] pt-10",
-  glass:
-    "absolute inset-x-0 bottom-0 z-20 bg-white/10 pb-[max(16px,env(safe-area-inset-bottom))] pt-3 backdrop-blur-3xl backdrop-saturate-150",
-};
-
-const FOOTER_STYLES = {
-  one: "bar",
-  two: "fade",
-  three: "fade",
-  four: "glass",
-} satisfies Record<AtmosphereVariant, keyof typeof FOOTER_CLASS_NAMES>;
-
-type AtmosphereProps = {
-  variant?: AtmosphereVariant;
-};
-
-const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
-  const MobileVariant = MOBILE_VARIANTS[variant];
+const AtmosphereContent = () => {
   const t = useTranslations();
   const router = useRouter();
   const goToBooking = useOpenBooking();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  const {
+    atmosphere,
+    content,
+    isLoading,
+    isError,
+    refetch,
+    viewerIndex,
+    openViewer,
+    closeViewer,
+  } = usePage();
 
-  const bookingButton = (
-    <Button
-      type="button"
-      variant="primary-solid"
-      size="primaryWide"
-      onClick={goToBooking}
-      className="h-12 w-full rounded-xl text-base lg:w-auto lg:px-8"
-    >
-      {t("booking_submit")}
-      <ArrowRight size={18} />
-    </Button>
-  );
+  const renderBody = () => {
+    if (isLoading) return <AtmosphereState status="loading" />;
+    if (isError || !atmosphere || !content)
+      return <AtmosphereState status="error" onRetry={() => refetch()} />;
+
+    const title = atmosphere.title || t("atmosphere_title");
+
+    return isDesktop ? (
+      <AtmosphereDesktop
+        title={title}
+        desc={atmosphere.desc}
+        content={content}
+        onOpen={openViewer}
+        onBook={goToBooking}
+      />
+    ) : (
+      <AtmosphereMobile
+        title={title}
+        desc={atmosphere.desc}
+        content={content}
+        onOpen={openViewer}
+      />
+    );
+  };
 
   return (
     <div className="relative flex h-dvh flex-col bg-gray10 lg:h-auto lg:min-h-screen">
@@ -97,30 +74,32 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
       <div className="hidden lg:block">
         <Header />
       </div>
-      <Breadcrumb items={[{ label: t("atmosphere_title") }]} />
+      <Breadcrumb items={[{ label: atmosphere?.title || t("atmosphere_title") }]} />
 
-      <div className="scroll-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-white lg:flex lg:flex-auto lg:flex-col lg:overflow-visible lg:bg-gray10">
-        {isDesktop ? (
-          <section className="my-2 flex flex-1 flex-col overflow-clip rounded-[30px] bg-white">
-            <AtmosphereDesktopPreview
-              onOpen={setViewerIndex}
-              onBook={goToBooking}
-            />
-          </section>
-        ) : (
-          <MobileVariant onOpen={setViewerIndex} />
-        )}
+      <div className="scroll-hidden flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white lg:flex-auto lg:overflow-visible lg:bg-gray10">
+        <section className="flex flex-1 flex-col lg:my-2 lg:overflow-clip lg:rounded-[30px] lg:bg-white">
+          {renderBody()}
+        </section>
         <ImageViewer
-          images={ATMOSPHERE_MEDIA}
+          images={content?.media ?? []}
           openIndex={viewerIndex}
-          onClose={() => setViewerIndex(null)}
+          onClose={closeViewer}
         />
       </div>
 
-      <div
-        className={`${FOOTER_CLASS_NAMES[FOOTER_STYLES[variant]]} lg:hidden`}
-      >
-        <div className="mx-auto w-full max-w-xl px-4">{bookingButton}</div>
+      <div className="shrink-0 border-t border-gray180 bg-white pb-[max(16px,env(safe-area-inset-bottom))] pt-3 lg:hidden">
+        <div className="mx-auto w-full max-w-xl px-4">
+          <Button
+            type="button"
+            variant="primary-solid"
+            size="primaryWide"
+            onClick={goToBooking}
+            className="h-12 w-full rounded-xl text-base"
+          >
+            {t("booking_submit")}
+            <ArrowRight size={18} />
+          </Button>
+        </div>
       </div>
 
       <Footer />
@@ -129,13 +108,11 @@ const AtmosphereContent = ({ variant = "one" }: AtmosphereProps) => {
   );
 };
 
-const Atmosphere = ({ variant }: AtmosphereProps) => (
+const Atmosphere = () => (
   <Suspense>
-    <AtmosphereContent variant={variant} />
+    <AtmosphereContent />
   </Suspense>
 );
-
-export const pad = (value: number) => String(value).padStart(2, "0");
 
 export { Atmosphere };
 

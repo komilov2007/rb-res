@@ -16,6 +16,7 @@ const publicEndpoints = [
   "webapp/product/",
   "webapp/branch/list/",
   "webapp/branch/",
+  "webapp/atmosphere/",
 ];
 
 const isPublicEndpoint = (url?: string) => {

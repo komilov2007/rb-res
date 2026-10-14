@@ -13,6 +13,9 @@ import { useTranslations as useTranslationsTwoHero } from "next-intl";
 import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { galleryImages } from "@/constants/atmosphere";
+import { useAtmosphere } from "@/hooks/useAtmosphere";
+import { getAtmosphereCover } from "@/utils/atmosphere";
+import { handleImageFallback } from "@/utils/image";
 
 const TwoGuests = () => {
   const t = useTranslations();
@@ -79,6 +82,10 @@ const TwoHero = () => {
   const t = useTranslationsTwoHero();
   const router = useRouter();
   const { shopid } = useShopId();
+  const { atmosphere, isLoading, isAvailable } = useAtmosphere();
+  const cover = isLoading
+    ? null
+    : (getAtmosphereCover(atmosphere) ?? galleryImages[1].src);
 
   const openAtmosphere = () =>
     router.push(`${ROUTER.ATMOSPHERE}${shopid ? `?shop_id=${shopid}` : ""}`);
@@ -87,15 +94,19 @@ const TwoHero = () => {
     <div className="relative h-64 overflow-hidden rounded-b-2xl bg-gray10 lg:h-80 lg:rounded-2xl">
       <button
         type="button"
+        disabled={!isAvailable}
         onClick={openAtmosphere}
         aria-label={t("atmosphere_title")}
         className="block h-full w-full"
       >
-        <img
-          src={galleryImages[1].src}
-          alt=""
-          className="h-full w-full object-cover"
-        />
+        {cover && (
+          <img
+            src={cover}
+            onError={handleImageFallback}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        )}
       </button>
 
       <button
@@ -106,15 +117,17 @@ const TwoHero = () => {
       >
         <ChevronLeft size={22} />
       </button>
-      <button
-        type="button"
-        onClick={openAtmosphere}
-        aria-label={t("atmosphere_title")}
-        className="absolute right-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 items-center gap-1.5 rounded-full bg-black/30 pl-3 pr-4 text-sm font-medium text-white backdrop-blur-md"
-      >
-        <Images size={16} />
-        {t("atmosphere_title")}
-      </button>
+      {isAvailable && (
+        <button
+          type="button"
+          onClick={openAtmosphere}
+          aria-label={t("atmosphere_title")}
+          className="absolute right-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 items-center gap-1.5 rounded-full bg-black/30 pl-3 pr-4 text-sm font-medium text-white backdrop-blur-md"
+        >
+          <Images size={16} />
+          {t("atmosphere_title")}
+        </button>
+      )}
     </div>
   );
 };

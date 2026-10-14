@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 
 import Button from "@/components/ui/button";
 import { ROUTER } from "@/constants/router";
+import { useAtmosphere } from "@/hooks/useAtmosphere";
 import { useBoolean } from "@/hooks/useBoolean";
 import { useIsClick } from "@/hooks/useIsClick";
 import { useOpenBooking } from "@/hooks/useOpenBooking";
@@ -66,6 +67,10 @@ const MobileAction = () => {
   const hasAccess = useAuthStore((state) => state.hasAccess);
   const openChat = useOpenChat();
   const openBooking = useOpenBooking();
+  const { isAvailable: isAtmosphereAvailable } = useAtmosphere();
+  const visibleActions = actions.filter(
+    ({ key }) => key !== "atmosphere" || isAtmosphereAvailable,
+  );
   const MainIcon = action.value ? X : IconAppsFilled;
   const hasCart = cartCount > 0;
   const isCartPage = pathname.includes("/cart");
@@ -122,7 +127,7 @@ const MobileAction = () => {
                 : "pointer-events-none max-h-0"
             }`}
           >
-            {actions.map(({ key, label, Icon }, index) => (
+            {visibleActions.map(({ key, label, Icon }, index) => (
               <Button
                 key={key}
                 type="button"
@@ -137,7 +142,7 @@ const MobileAction = () => {
                 style={{
                   transitionDelay: action.value
                     ? `${index * 70}ms`
-                    : `${(actions.length - index - 1) * 45}ms`,
+                    : `${(visibleActions.length - index - 1) * 45}ms`,
                 }}
               >
                 <span>{t(label)}</span>

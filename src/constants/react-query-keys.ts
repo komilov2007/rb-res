@@ -24,4 +24,5 @@ export const REACT_QUERY_KEYS = {
   ORDER_DETAIL_ADDRESS_GEOCODE: "order-detail-address-geocode",
   ACTIVE_ORDERS_COUNT: "active-orders-count",
   CLICK_LOGIN: "click-login",
+  ATMOSPHERE: "atmosphere",
 } as const;

@@ -17,6 +17,18 @@ const toMinutes = (time: string) => {
 
 export const getDayIndex = (date: Date = new Date()) => date.getDay() || 7;
 
+export const getTodayHours = (
+  workingTime: GeneralProps["working_time"] | undefined,
+) => {
+  const entry = workingTime?.[String(getDayIndex())];
+
+  if (!entry || entry.is_closed || entry.hours.length === 0) return null;
+
+  return entry.hours
+    .map((hour) => `${formatTime(hour.open)} - ${formatTime(hour.close)}`)
+    .join(", ");
+};
+
 export const getNextOpening = (
   workingTime: GeneralProps["working_time"] | undefined,
   now: Date = new Date(),

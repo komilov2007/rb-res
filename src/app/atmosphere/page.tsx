@@ -1,5 +1,5 @@
 import Atmosphere from ".";
 
-const Page = () => <Atmosphere variant="one" />;
+const Page = () => <Atmosphere />;
 
 export default Page;
