@@ -2,19 +2,24 @@
 
 import { useEffect } from "react";
 
-import { CLICK_PRIMARY_COLOR, getPrimaryColorValue } from "@/constants/theme";
-import { useThemeStore } from "@/stores/theme";
+import { CLICK_PRIMARY_COLOR } from "@/constants/theme";
+import { useGeneral } from "@/hooks/useGeneral";
 import { isClick } from "@/utils/click";
 
+const isValidColor = (value?: string | null): value is string =>
+  Boolean(value) && CSS.supports("color", value as string);
+
 export const ThemeSync = () => {
-  const primaryColor = useThemeStore((state) => state.primaryColor);
+  const { data } = useGeneral();
+  const websiteColor = data?.data.website_color;
 
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--primary",
-      isClick() ? CLICK_PRIMARY_COLOR : getPrimaryColorValue(primaryColor),
-    );
-  }, [primaryColor]);
+    const root = document.documentElement.style;
+    const color = isClick() ? CLICK_PRIMARY_COLOR : websiteColor;
+
+    if (isValidColor(color)) root.setProperty("--primary", color);
+    else root.removeProperty("--primary");
+  }, [websiteColor]);
 
   return null;
 };

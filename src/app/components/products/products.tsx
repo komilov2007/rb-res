@@ -15,15 +15,17 @@ import "swiper/css";
 import type { CardProductProps } from "@/types/product";
 
 const PRODUCTS_LIMIT = 10;
+const CATEGORY_PRODUCTS_LIMIT = 50;
 
-export const productsQueryOptions = (shopid?: string) =>
+export const productsQueryOptions = (shopid?: string, category?: number) =>
   infiniteQueryOptions({
     enabled: Boolean(shopid),
-    queryKey: [REACT_QUERY_KEYS.PRODUCTS, shopid],
+    queryKey: [REACT_QUERY_KEYS.PRODUCTS, shopid, category],
     queryFn: ({ pageParam }) =>
       getProducts(shopid as string, {
         limit: PRODUCTS_LIMIT,
         offset: pageParam,
+        category,
       }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages) => {
@@ -36,15 +38,53 @@ export const productsQueryOptions = (shopid?: string) =>
     },
   });
 
+type CategoryPageParam = { index: number; offset: number };
+
+export const categoriesProductsQueryOptions = (
+  shopid: string | undefined,
+  categoryIds: number[],
+) =>
+  infiniteQueryOptions({
+    enabled: Boolean(shopid) && categoryIds.length > 0,
+    queryKey: [REACT_QUERY_KEYS.PRODUCTS, shopid, categoryIds],
+    queryFn: ({ pageParam }) =>
+      getProducts(shopid as string, {
+        limit: CATEGORY_PRODUCTS_LIMIT,
+        offset: pageParam.offset,
+        category: categoryIds[pageParam.index],
+      }),
+    initialPageParam: { index: 0, offset: 0 } as CategoryPageParam,
+    getNextPageParam: (lastPage, _pages, lastPageParam) => {
+      const loadedItems = lastPageParam.offset + lastPage.data.results.length;
+
+      if (lastPage.data.results.length > 0 && loadedItems < lastPage.data.count)
+        return { index: lastPageParam.index, offset: loadedItems };
+
+      return lastPageParam.index + 1 < categoryIds.length
+        ? { index: lastPageParam.index + 1, offset: 0 }
+        : undefined;
+    },
+  });
+
 export const Products = () => {
   const { shopid } = useShopId();
   const { branchId } = useBranchSelection();
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const { data: categories } = useShopCategories();
+  const { data: categories, isLoading: isCategoriesLoading } =
+    useShopCategories();
   const { getCategoryBanner } = useCategoryBanners();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery(productsQueryOptions(shopid));
+  const categoryIds = normalizeCategories(categories?.data).map(
+    (category) => category.id,
+  );
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isProductsLoading,
+  } = useInfiniteQuery(categoriesProductsQueryOptions(shopid, categoryIds));
+  const isLoading = isCategoriesLoading || isProductsLoading;
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -59,7 +99,7 @@ export const Products = () => {
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
     observerRef.current = new IntersectionObserver(handleObserver, {
-      rootMargin: "600px 0px",
+      rootMargin: "1500px 0px",
     });
     if (bottomRef.current) observerRef.current.observe(bottomRef.current);
 

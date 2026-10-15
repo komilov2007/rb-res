@@ -19,7 +19,7 @@ export const useCategories = () => {
   const [isDesktopFixed, setIsDesktopFixed] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const desktopFixedTopRef = useRef<number | null>(null);
+  const anchorRef = useRef<HTMLDivElement | null>(null);
   const [mobileFixedHeight, setMobileFixedHeight] = useState<number | null>(
     null,
   );
@@ -58,10 +58,6 @@ export const useCategories = () => {
     const handleScroll = () => {
       const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
-      if (isDesktop && sectionRef.current && !isDesktopFixed) {
-        desktopFixedTopRef.current = sectionRef.current.offsetTop;
-      }
-
       if (
         !isDesktop &&
         sectionRef.current &&
@@ -72,7 +68,8 @@ export const useCategories = () => {
 
       setIsMobileFixed(!isDesktop && window.scrollY > 220);
       setIsDesktopFixed(
-        isDesktop && window.scrollY >= (desktopFixedTopRef.current ?? 220),
+        isDesktop &&
+          (anchorRef.current?.getBoundingClientRect().top ?? 1) <= 0,
       );
 
       const sections = Array.from(
@@ -92,7 +89,7 @@ export const useCategories = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isDesktopFixed]);
+  }, []);
 
   useEffect(() => {
     if (!activeCategoryId || (!isMobileFixed && !isDesktopFixed)) return;
@@ -134,6 +131,7 @@ export const useCategories = () => {
     isDesktopFixed,
     activeCategoryId,
     sectionRef,
+    anchorRef,
     mobileFixedHeight,
     mobileListRef,
     desktopListRef,

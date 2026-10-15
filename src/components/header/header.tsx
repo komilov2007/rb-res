@@ -13,7 +13,6 @@ import Logo from "@/components/logo";
 import Button from "@/components/ui/button";
 import Location from "@/components/location";
 import { HeaderSearch, HeaderTopbar } from "@/components/header/components/index";
-import ThemeSwitcher from "@/components/theme-switcher";
 import { OrdersFloatingExtras } from "@/components/header/components/orders-preview/index";
 
 export const useHeader = (pinBottomRow: boolean) => {
@@ -167,7 +166,6 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
         </div>
       </header>
       <OrdersFloatingExtras />
-      <ThemeSwitcher />
     </>
   );
 };

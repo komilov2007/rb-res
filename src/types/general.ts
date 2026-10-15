@@ -29,6 +29,8 @@ export type GeneralProps = {
   };
   cashback_enabled?: boolean;
   cashback_amount?: number | null;
+  website_color?: string | null;
+  orders_button_placement?: "RIGHT" | "BOTTOM" | null;
   currency?: {
     id: number;
     name: string;

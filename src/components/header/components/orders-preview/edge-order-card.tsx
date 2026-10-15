@@ -14,8 +14,9 @@ import { usePathname } from "next/navigation";
 import { getMyOrders } from "@/apis/order";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { ROUTER } from "@/constants/router";
+import { useGeneral } from "@/hooks/useGeneral";
 import { useAuthStore } from "@/stores/auth";
-import { EdgeTab } from "./orders-preview";
+import { EdgeTab, Island } from "./orders-preview";
 
 const OrderItemRow = ({ item }: { item: MyOrderListItem["items"][number] }) => {
   const t = useTranslations();
@@ -200,10 +201,14 @@ export const useIsOnOrdersPage = () => {
 export const OrdersFloatingExtras = () => {
   const { count, orders } = useActiveOrders();
   const isOnOrdersPage = useIsOnOrdersPage();
+  const { data } = useGeneral();
+  const placement = data?.data.orders_button_placement;
 
   if (isOnOrdersPage) return null;
 
   if (orders.length === 0) return null;
+
+  if (placement === "BOTTOM") return <Island count={count} order={orders[0]} />;
 
   return <EdgeTab count={count} orders={orders} />;
 };

@@ -39,7 +39,7 @@ export const useCategory = () => {
     fetchNextPage,
     isLoading,
     isError,
-  } = useInfiniteQuery(productsQueryOptions(shopid));
+  } = useInfiniteQuery(productsQueryOptions(shopid, categoryId));
   const { data: categories } = useShopCategories();
   const { getCategoryBanner } = useCategoryBanners();
 
@@ -47,10 +47,7 @@ export const useCategory = () => {
     if (hasNextPage && !isFetchingNextPage && !isError) void fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, isError, fetchNextPage]);
 
-  const products =
-    data?.pages
-      .flatMap((page) => page.data.results)
-      .filter((product) => product.category?.id === categoryId) ?? [];
+  const products = data?.pages.flatMap((page) => page.data.results) ?? [];
   const allCategories = normalizeCategories(categories?.data);
   const category = allCategories.find((item) => item.id === categoryId);
   const isUnavailable = (product: ProductProps) =>

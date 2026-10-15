@@ -24,6 +24,7 @@ const Categories = () => {
     isDesktopFixed,
     activeCategoryId,
     sectionRef,
+    anchorRef,
     mobileFixedHeight,
     mobileListRef,
     desktopListRef,
@@ -59,6 +60,7 @@ const Categories = () => {
 
   return (
     <>
+      <div ref={anchorRef} aria-hidden className="h-0" />
       <section
         ref={sectionRef}
         id="categories"
