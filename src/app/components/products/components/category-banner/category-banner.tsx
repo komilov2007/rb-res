@@ -5,7 +5,6 @@ import { getImageSrc as getImageSrcCategoryBanner2, handleImageFallback as handl
 type CategoryBannerProps = {
   title: string;
   imageSrc?: string;
-  videoSrc?: string;
   variant?: "default" | "discount";
   sizeVariant?: "mini" | "sm" | "md" | "lg" | "xl" | "big";
 };
@@ -13,7 +12,6 @@ type CategoryBannerProps = {
 const CategoryBanner = ({
   title,
   imageSrc,
-  videoSrc,
   variant = "default",
   sizeVariant = "md",
 }: CategoryBannerProps) => {
@@ -38,25 +36,13 @@ const CategoryBanner = ({
             : `lg:h-auto lg:aspect-[1280/400] ${heightClassName}`
         }`}
       >
-        {videoSrc ? (
-          <video
-            className="h-full w-full border border-b-white object-cover"
-            src={videoSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        ) : (
-          <img
-            className="h-full w-full border border-b-white object-cover"
-            src={bannerImage}
-            onError={handleImageFallback}
-            alt={title}
-            loading="lazy"
-          />
-        )}
+        <img
+          className="h-full w-full border border-b-white object-cover"
+          src={bannerImage}
+          onError={handleImageFallback}
+          alt={title}
+          loading="lazy"
+        />
       </div>
 
       <h2 className="title50 absolute left-5 top-5 z-10 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)] lg:left-8 lg:top-7 lg:text-2xl">
@@ -84,33 +70,21 @@ export default CategoryBanner;
 type CategoryBanner2Props = {
   title: string;
   imageSrc?: string;
-  videoSrc?: string;
   href?: string;
 };
 
 const CategoryBanner2 = ({
   title,
   imageSrc,
-  videoSrc,
   href,
 }: CategoryBanner2Props) => {
   const bannerImage = getImageSrcCategoryBanner2(imageSrc);
 
   return (
     <div className=" lg:flex lg:flex-col">
-      <div className="surface-banner-shadow relative -mx-4 w-screen overflow-hidden rounded-[28px] bg-white pb-0 ring-1 ring-black/5 lg:mb-5 lg:mx-0 lg:w-full lg:rounded-[24px]">
-        <div className="block max-h-[300px] w-full overflow-hidden bg-gray20 lg:h-auto lg:aspect-[1280/400]">
-          {videoSrc ? (
-            <video
-              className="h-full w-full border border-b-white object-cover"
-              src={videoSrc}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-          ) : (
+      {imageSrc && (
+        <div className="surface-banner-shadow relative -mx-4 w-screen overflow-hidden rounded-[28px] bg-white pb-0 ring-1 ring-black/5 lg:mb-5 lg:mx-0 lg:w-full lg:rounded-[24px]">
+          <div className="block max-h-[300px] w-full overflow-hidden bg-gray20 lg:h-auto lg:aspect-[1280/400]">
             <img
               className="h-full w-full border border-b-white object-cover"
               src={bannerImage}
@@ -118,9 +92,9 @@ const CategoryBanner2 = ({
               alt={title}
               loading="lazy"
             />
-          )}
+          </div>
         </div>
-      </div>
+      )}
       <h2 className="title50 mb-4 text-black lg:text-2xl">
         {href ? (
           <Link

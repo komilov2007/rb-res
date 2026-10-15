@@ -6,17 +6,21 @@ export type BannerTarget =
   | { type: "url"; url: string };
 
 export const getBannerTarget = (banner: BannerProps): BannerTarget | null => {
-  if (typeof banner.category === "number") {
-    return { type: "category", id: banner.category };
-  }
+  if (!banner.have_url) return null;
 
-  if (typeof banner.product === "number") {
-    return { type: "product", id: banner.product };
+  if (banner.have_internal_url) {
+    if (typeof banner.category === "number") {
+      return { type: "category", id: banner.category };
+    }
+
+    if (typeof banner.product === "number") {
+      return { type: "product", id: banner.product };
+    }
+
+    return null;
   }
 
   const url = banner.url?.trim();
 
-  if (banner.have_url && url) return { type: "url", url };
-
-  return null;
+  return url ? { type: "url", url } : null;
 };

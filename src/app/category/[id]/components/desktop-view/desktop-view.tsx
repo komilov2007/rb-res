@@ -20,6 +20,7 @@ type DesktopViewProps = ReturnType<typeof useCategory>;
 
 const DesktopView = ({
   categoryName,
+  banner,
   products,
   isUnavailable,
   isLoading,
@@ -37,6 +38,14 @@ const DesktopView = ({
 
       <section className="my-2 flex flex-1 flex-col rounded-[30px] bg-white">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-5 py-6">
+          {banner && (
+            <img
+              className="aspect-1000/400 max-h-100 w-full rounded-3xl object-cover"
+              src={banner.mobile_photo}
+              alt={banner.category_name ?? categoryName}
+            />
+          )}
+
           <h1 className="truncate text-xl font-medium text-black">
             {categoryName}
           </h1>

@@ -17,46 +17,45 @@ export const normalizeCategories = (
   return categories.results ?? [];
 };
 
-export const groupProductsByCategory = (products: ProductProps[]) => {
-  const groups = new Map<
-    string,
-    { id: string; name: string; products: ProductProps[]; total: number }
-  >();
-
-  products.forEach((product) => {
-    if (!product.category) return;
-
-    const id = String(product.category.id);
-    const group = groups.get(id);
-    if (group) {
-      group.products.push(product);
-      group.total = group.products.length;
-      return;
-    }
-
-    groups.set(id, {
-      id,
-      name: product.category.name,
-      products: [product],
-      total: 1,
-    });
-  });
-
-  return Array.from(groups.values());
+export type ProductGroupProps = {
+  key: string;
+  id: string;
+  name: string;
+  products: ProductProps[];
 };
 
-export const sortProductGroupsByCategories = (
-  groups: ReturnType<typeof groupProductsByCategory>,
+export const groupProductPagesByCategory = (
+  pages: ProductProps[][],
   categories: CategoriesProps[],
 ) => {
   const order = new Map(
     categories.map((category, index) => [category.id, index]),
   );
+  const getOrder = (product: ProductProps) =>
+    order.get(product.category.id) ?? Number.MAX_SAFE_INTEGER;
+  const groups: ProductGroupProps[] = [];
 
-  return [...groups].sort((first, second) => {
-    const firstOrder = order.get(Number(first.id)) ?? Number.MAX_SAFE_INTEGER;
-    const secondOrder = order.get(Number(second.id)) ?? Number.MAX_SAFE_INTEGER;
+  pages.forEach((page) => {
+    [...page]
+      .filter((product) => product.category)
+      .sort((first, second) => getOrder(first) - getOrder(second))
+      .forEach((product) => {
+        const id = String(product.category.id);
+        const lastGroup = groups.at(-1);
 
-    return firstOrder - secondOrder;
+        if (lastGroup?.id === id) {
+          lastGroup.products.push(product);
+          return;
+        }
+
+        groups.push({
+          key: `${id}-${groups.length}`,
+          id,
+          name: product.category.name,
+          products: [product],
+        });
+      });
   });
+
+  return groups;
 };

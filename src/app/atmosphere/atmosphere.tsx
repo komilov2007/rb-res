@@ -15,6 +15,7 @@ import { useOpenBooking } from "@/hooks/useOpenBooking";
 import AtmosphereDesktop from "@/app/atmosphere/components/atmosphere-desktop";
 import AtmosphereMobile from "@/app/atmosphere/components/atmosphere-mobile";
 import AtmosphereState from "@/app/atmosphere/components/atmosphere-state";
+import AtmosphereTabs from "@/app/atmosphere/components/atmosphere-tabs";
 import { usePage } from "@/app/atmosphere/usePage";
 
 const AtmosphereContent = () => {
@@ -25,6 +26,9 @@ const AtmosphereContent = () => {
   const {
     atmosphere,
     content,
+    tabs,
+    activeTab,
+    setActiveTab,
     isLoading,
     isError,
     refetch,
@@ -38,11 +42,18 @@ const AtmosphereContent = () => {
     if (isError || !atmosphere || !content)
       return <AtmosphereState status="error" onRetry={() => refetch()} />;
 
-    const title = atmosphere.title || t("atmosphere_title");
+    const tabsNode = tabs.length > 0 && (
+      <AtmosphereTabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        className={isDesktop ? "mx-auto w-fit max-w-full" : ""}
+      />
+    );
 
     return isDesktop ? (
       <AtmosphereDesktop
-        title={title}
+        tabs={tabsNode}
         desc={atmosphere.desc}
         content={content}
         onOpen={openViewer}
@@ -50,7 +61,7 @@ const AtmosphereContent = () => {
       />
     ) : (
       <AtmosphereMobile
-        title={title}
+        tabs={tabsNode}
         desc={atmosphere.desc}
         content={content}
         onOpen={openViewer}
@@ -74,7 +85,7 @@ const AtmosphereContent = () => {
       <div className="hidden lg:block">
         <Header />
       </div>
-      <Breadcrumb items={[{ label: atmosphere?.title || t("atmosphere_title") }]} />
+      <Breadcrumb items={[{ label: t("atmosphere_title") }]} />
 
       <div className="scroll-hidden flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white lg:flex-auto lg:overflow-visible lg:bg-gray10">
         <section className="flex flex-1 flex-col lg:my-2 lg:overflow-clip lg:rounded-[30px] lg:bg-white">

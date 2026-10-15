@@ -65,3 +65,10 @@ export const getAtmosphereCover = (atmosphere?: AtmosphereProps) => {
 };
 
 export type AtmosphereMedia = ReturnType<typeof getAtmosphereMedia>;
+
+export type AtmosphereTab = { key: string; title: string };
+
+export const getAtmosphereTabs = (sections: AtmosphereSection[]) =>
+  sections.flatMap((section) =>
+    section.title ? [{ key: section.key, title: section.title }] : [],
+  );

@@ -16,19 +16,20 @@ type CategoryProductsProps = {
     name: string;
     products: ProductProps[];
   };
-  videoSrc?: string;
+  imageSrc?: string;
   mobileBannerSizeVariant?: "mini" | "sm" | "md" | "lg" | "xl" | "big";
   branchId?: number | null;
 };
 
 const CategoryProducts = ({
   group,
-  videoSrc,
+  imageSrc,
   mobileBannerSizeVariant = "sm",
   branchId = null,
 }: CategoryProductsProps) => {
   const { shopid } = useShopId();
   const categoryHref = `${ROUTER.CATEGORY}/${group.id}${shopid ? `?shop_id=${shopid}` : ""}`;
+  const hasBanner = Boolean(imageSrc);
 
   return (
     <div
@@ -39,7 +40,7 @@ const CategoryProducts = ({
       <div className="hidden lg:block">
         <CategoryBanner2
           title={group.name}
-          videoSrc={videoSrc}
+          imageSrc={imageSrc}
           href={categoryHref}
         />
       </div>
@@ -51,13 +52,19 @@ const CategoryProducts = ({
         />
       </div>
       <div className="lg:hidden">
-        <CategoryBanner
-          title={group.name}
-          videoSrc={videoSrc}
-          sizeVariant={mobileBannerSizeVariant}
-        />
+        {hasBanner ? (
+          <CategoryBanner
+            title={group.name}
+            imageSrc={imageSrc}
+            sizeVariant={mobileBannerSizeVariant}
+          />
+        ) : (
+          <h2 className="title50 mb-4 text-black">{group.name}</h2>
+        )}
       </div>
-      <div className="relative z-10 -mt-[62px] lg:hidden">
+      <div
+        className={`relative z-10 lg:hidden ${hasBanner ? "-mt-[62px]" : ""}`}
+      >
         <ProductGrid products={group.products} branchId={branchId} />
       </div>
     </div>

@@ -2,12 +2,12 @@
 
 import CardProduct from "@/components/card-product";
 import type { ProductProps } from "@/types/product";
-import type { DiscountProductVariant, SaleBadgeVariant } from "@/app/components/products/useProduct";
+import type { DiscountProductVariant, SaleBadgeVariant } from "@/app/components/products/products";
 import { CategoryMoreCard } from "../category-products";
 import { useTranslations } from "next-intl";
 import { BadgePercent } from "lucide-react";
 import type { ProductProps as ProductPropsDiscountProducts } from "@/types/product";
-import type { DiscountProductVariant as DiscountProductVariantDiscountProducts, SaleBadgeVariant as SaleBadgeVariantDiscountProducts } from "@/app/components/products/useProduct";
+import type { DiscountProductVariant as DiscountProductVariantDiscountProducts, SaleBadgeVariant as SaleBadgeVariantDiscountProducts } from "@/app/components/products/products";
 import ProductGridDiscountProducts from "@/app/components/products/components/product-grid";
 
 const DESKTOP_MAX_CARDS = 10;

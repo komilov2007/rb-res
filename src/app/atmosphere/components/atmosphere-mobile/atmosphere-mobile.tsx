@@ -1,7 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Maximize2 } from "lucide-react";
-import { IconPhotoFilled, IconPhotoOff } from "@tabler/icons-react";
+import { IconPhotoOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
 import type { AtmosphereMedia, AtmosphereSection } from "@/utils/atmosphere";
@@ -10,7 +11,7 @@ import { getImageSrc, handleImageFallback } from "@/utils/image";
 const TILE_HEIGHTS = ["h-52", "h-36", "h-40", "h-56", "h-44", "h-36"];
 
 type AtmosphereMobileProps = {
-  title: string;
+  tabs: ReactNode;
   desc: string | null;
   content: AtmosphereMedia;
   onOpen: (index: number) => void;
@@ -68,27 +69,6 @@ const AtmospherePhotos = ({ section, onOpen }: AtmospherePhotosProps) => {
 
   return (
     <div>
-      {section.title && (
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex min-w-0 items-center gap-2 text-sm font-medium text-black">
-            {section.cover ? (
-              <img
-                src={section.cover}
-                onError={handleImageFallback}
-                alt=""
-                className="h-6 w-6 shrink-0 rounded-full object-cover"
-              />
-            ) : (
-              <IconPhotoFilled size={18} className="shrink-0 text-gray220" />
-            )}
-            <span className="truncate">{section.title}</span>
-          </h2>
-          <span className="text-xs font-normal text-gray220">
-            {section.photos.length}
-          </span>
-        </div>
-      )}
-
       <div className="columns-2 gap-2">
         {section.photos.map((src, index) => (
           <button
@@ -112,7 +92,7 @@ const AtmospherePhotos = ({ section, onOpen }: AtmospherePhotosProps) => {
 };
 
 const AtmosphereMobile = ({
-  title,
+  tabs,
   desc,
   content,
   onOpen,
@@ -138,15 +118,19 @@ const AtmosphereMobile = ({
           <span className="mx-auto mb-4 block h-1 w-10 rounded-full bg-gray180" />
         )}
 
-        <h1 className="text-lg font-medium text-black">{title}</h1>
+        <h1 className="text-lg font-medium text-black">
+          {t("atmosphere_title")}
+        </h1>
         {desc && (
           <p className="mt-2 whitespace-pre-line text-sm font-normal leading-6 text-gray220">
             {desc}
           </p>
         )}
 
+        {tabs && <div className="-mx-4 mt-5 px-4">{tabs}</div>}
+
         {sections.length > 0 && (
-          <div className="mt-6 flex flex-col gap-6">
+          <div className="mt-4 flex flex-col gap-6">
             {sections.map((section) => (
               <AtmospherePhotos
                 key={section.key}

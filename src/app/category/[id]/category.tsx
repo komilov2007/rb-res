@@ -5,8 +5,9 @@ import { useEffect, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useBranchSelection } from "@/components/branch-selection";
-import { productsQueryOptions } from "@/app/components/products/useProduct";
+import { productsQueryOptions } from "@/app/components/products/products";
 import { useShopId } from "@/hooks/useShopId";
+import { useCategoryBanners } from "@/hooks/useCategoryBanners";
 import type { ProductProps } from "@/types/product";
 import { normalizeCategories } from "@/utils/product";
 import { ChevronLeft } from "lucide-react";
@@ -40,6 +41,7 @@ export const useCategory = () => {
     isError,
   } = useInfiniteQuery(productsQueryOptions(shopid));
   const { data: categories } = useShopCategories();
+  const { getCategoryBanner } = useCategoryBanners();
 
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage && !isError) void fetchNextPage();
@@ -59,6 +61,7 @@ export const useCategory = () => {
     categoryId,
     categoryName: category?.name ?? products[0]?.category.name ?? "",
     categories: allCategories,
+    banner: getCategoryBanner(categoryId),
     products,
     isUnavailable,
     isLoading: isLoading || (!isError && Boolean(hasNextPage)),
@@ -77,7 +80,8 @@ const CategoryContent = () => {
   const t = useTranslations();
   const router = useRouter();
   const category = useCategory();
-  const { shopid, categoryName, products, isUnavailable, isLoading } = category;
+  const { shopid, categoryName, banner, products, isUnavailable, isLoading } =
+    category;
 
   const handleBack = () => {
     router.push(`${ROUTER.HOME}${shopid ? `?shop_id=${shopid}` : ""}`);
@@ -106,6 +110,13 @@ const CategoryContent = () => {
       </div>
 
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-4 pt-4 lg:hidden">
+        {banner && (
+          <img
+            className="mb-4 aspect-1000/400 w-full rounded-2xl object-cover"
+            src={banner.mobile_photo}
+            alt={banner.category_name ?? categoryName}
+          />
+        )}
         {isLoading ? (
           <CategorySkeleton />
         ) : products.length === 0 ? (

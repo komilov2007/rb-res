@@ -2,6 +2,7 @@ export const REACT_QUERY_KEYS = {
   GENERAL: "general",
   PROFILE: "profile",
   BANNERS: "banners",
+  CATEGORY_BANNERS: "category-banners",
   CATEGORIES: "categories",
   PRODUCTS: "products",
   PRODUCT_DETAIL: "product-detail",

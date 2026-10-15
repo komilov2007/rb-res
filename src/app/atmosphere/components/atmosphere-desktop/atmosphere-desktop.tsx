@@ -1,11 +1,11 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { ArrowRight, Expand } from "lucide-react";
 import {
   IconCalendarEventFilled,
   IconClockHour3Filled,
   IconPhoneFilled,
-  IconPhotoFilled,
   IconPhotoOff,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -136,7 +136,7 @@ const Ornament = () => (
 );
 
 type AtmosphereDesktopProps = {
-  title: string;
+  tabs: ReactNode;
   desc: string | null;
   content: AtmosphereMedia;
   onOpen: (index: number) => void;
@@ -144,7 +144,7 @@ type AtmosphereDesktopProps = {
 };
 
 const AtmosphereDesktop = ({
-  title,
+  tabs,
   desc,
   content,
   onOpen,
@@ -162,13 +162,14 @@ const AtmosphereDesktop = ({
       <section className="flex flex-col items-center text-center">
         <Ornament />
         <h1 className="mt-6 text-5xl font-medium leading-tight text-black">
-          {title}
+          {t("atmosphere_title")}
         </h1>
         {desc && (
           <p className="mt-4 max-w-2xl whitespace-pre-line text-lg font-normal leading-[1.6] text-gray220">
             {desc}
           </p>
         )}
+        {tabs && <div className="mt-8 w-full">{tabs}</div>}
       </section>
 
       {media.length > 0 ? (
@@ -197,28 +198,6 @@ const AtmosphereDesktop = ({
 
           {sections.map((section) => (
             <section key={section.key} className="flex flex-col gap-6">
-              {section.title && (
-                <div className="flex items-center justify-between gap-4">
-                  <h2 className="flex min-w-0 items-center gap-3 text-3xl font-medium text-black">
-                    {section.cover ? (
-                      <img
-                        src={section.cover}
-                        onError={handleImageFallback}
-                        alt=""
-                        className="h-11 w-11 shrink-0 rounded-full object-cover"
-                      />
-                    ) : (
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary10 text-primary">
-                        <IconPhotoFilled size={22} />
-                      </span>
-                    )}
-                    <span className="truncate">{section.title}</span>
-                  </h2>
-                  <span className="rounded-full bg-gray10 px-3 py-1 text-sm font-normal text-gray220">
-                    {section.photos.length}
-                  </span>
-                </div>
-              )}
               <BentoGrid
                 photos={section.photos}
                 offset={section.offset}
