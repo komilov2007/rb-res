@@ -47,7 +47,7 @@ const AtmosphereContent = () => {
         tabs={tabs}
         activeTab={activeTab}
         onChange={setActiveTab}
-        className={isDesktop ? "mx-auto w-fit max-w-full" : ""}
+        className={isDesktop ? "mx-auto w-fit max-w-full" : "px-4 scroll-px-4"}
       />
     );
 

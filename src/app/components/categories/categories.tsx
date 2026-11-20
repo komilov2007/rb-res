@@ -66,7 +66,7 @@ const Categories = () => {
         id="categories"
         className={`z-40 w-full overflow-x-hidden rounded-b-[20px] bg-white px-4 pb-4 pt-1 transition-shadow duration-300 lg:mt-0 lg:flex lg:items-center lg:justify-center lg:overflow-visible lg:rounded-b-[22px] lg:pt-3 ${
           isMobileFixed
-            ? "fixed left-0 top-16 bg-white/95 shadow-[0_12px_28px_rgba(17,24,39,0.08)] backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300 ease-out"
+            ? "fixed left-0 top-16 bg-white shadow-[0_12px_28px_rgba(17,24,39,0.08)] animate-in fade-in slide-in-from-top-4 duration-300 ease-out"
             : "relative shadow-none"
         } ${
           isDesktopFixed

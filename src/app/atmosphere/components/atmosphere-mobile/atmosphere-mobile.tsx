@@ -8,7 +8,14 @@ import { useTranslations } from "next-intl";
 import type { AtmosphereMedia, AtmosphereSection } from "@/utils/atmosphere";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
 
-const TILE_HEIGHTS = ["h-52", "h-36", "h-40", "h-56", "h-44", "h-36"];
+// Rhythm: one wide tile, then two rows of square pairs. A tile left alone
+// at the end of a pair row stretches to full width so no gaps remain.
+const isWideTile = (index: number, total: number) => {
+  const position = index % 5;
+  if (position === 0) return true;
+  const startsPair = position === 1 || position === 3;
+  return startsPair && index === total - 1;
+};
 
 type AtmosphereMobileProps = {
   tabs: ReactNode;
@@ -61,31 +68,47 @@ const AtmosphereHero = ({ video, cover, onOpen }: AtmosphereHeroProps) => {
 
 type AtmospherePhotosProps = {
   section: AtmosphereSection;
+  showTitle: boolean;
   onOpen: (index: number) => void;
 };
 
-const AtmospherePhotos = ({ section, onOpen }: AtmospherePhotosProps) => {
+const AtmospherePhotos = ({
+  section,
+  showTitle,
+  onOpen,
+}: AtmospherePhotosProps) => {
   const t = useTranslations();
 
   return (
     <div>
-      <div className="columns-2 gap-2">
-        {section.photos.map((src, index) => (
-          <button
-            key={`${src}-${index}`}
-            type="button"
-            onClick={() => onOpen(section.offset + index)}
-            className={`${TILE_HEIGHTS[index % TILE_HEIGHTS.length]} mb-2 block w-full break-inside-avoid overflow-hidden rounded-xl bg-gray10`}
-          >
-            <img
-              src={getImageSrc(src)}
-              onError={handleImageFallback}
-              alt={t("booking_gallery_image_alt")}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 active:scale-[1.03]"
-            />
-          </button>
-        ))}
+      {showTitle && section.title && (
+        <h2 className="mb-3 text-base font-medium text-black">
+          {section.title}
+        </h2>
+      )}
+      <div className="grid grid-cols-2 gap-2">
+        {section.photos.map((src, index) => {
+          const wide = isWideTile(index, section.photos.length);
+
+          return (
+            <button
+              key={`${src}-${index}`}
+              type="button"
+              onClick={() => onOpen(section.offset + index)}
+              className={`block w-full overflow-hidden rounded-2xl bg-gray10 ${
+                wide ? "col-span-2 aspect-[16/10]" : "aspect-square"
+              }`}
+            >
+              <img
+                src={getImageSrc(src)}
+                onError={handleImageFallback}
+                alt={t("booking_gallery_image_alt")}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-300 active:scale-[1.03]"
+              />
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -127,14 +150,15 @@ const AtmosphereMobile = ({
           </p>
         )}
 
-        {tabs && <div className="-mx-4 mt-5 px-4">{tabs}</div>}
+        {tabs && <div className="-mx-4 mt-5 min-w-0">{tabs}</div>}
 
         {sections.length > 0 && (
-          <div className="mt-4 flex flex-col gap-6">
+          <div className="mt-4 flex flex-col gap-7">
             {sections.map((section) => (
               <AtmospherePhotos
                 key={section.key}
                 section={section}
+                showTitle={sections.length > 1}
                 onOpen={onOpen}
               />
             ))}
