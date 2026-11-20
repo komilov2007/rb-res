@@ -5,17 +5,8 @@ import { Maximize2 } from "lucide-react";
 import { IconPhotoOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-import type { AtmosphereMedia, AtmosphereSection } from "@/utils/atmosphere";
+import type { AtmosphereMedia } from "@/utils/atmosphere";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
-
-// Rhythm: one wide tile, then two rows of square pairs. A tile left alone
-// at the end of a pair row stretches to full width so no gaps remain.
-const isWideTile = (index: number, total: number) => {
-  const position = index % 5;
-  if (position === 0) return true;
-  const startsPair = position === 1 || position === 3;
-  return startsPair && index === total - 1;
-};
 
 type AtmosphereMobileProps = {
   tabs: ReactNode;
@@ -66,50 +57,36 @@ const AtmosphereHero = ({ video, cover, onOpen }: AtmosphereHeroProps) => {
   );
 };
 
+type AtmospherePhoto = { src: string; index: number };
+
 type AtmospherePhotosProps = {
-  section: AtmosphereSection;
-  showTitle: boolean;
+  photos: AtmospherePhoto[];
   onOpen: (index: number) => void;
 };
 
-const AtmospherePhotos = ({
-  section,
-  showTitle,
-  onOpen,
-}: AtmospherePhotosProps) => {
+// One continuous masonry flow: every photo keeps its natural aspect ratio
+// (no cropping), and sections are merged so there are no gaps between them.
+const AtmospherePhotos = ({ photos, onOpen }: AtmospherePhotosProps) => {
   const t = useTranslations();
 
   return (
-    <div>
-      {showTitle && section.title && (
-        <h2 className="mb-3 text-base font-medium text-black">
-          {section.title}
-        </h2>
-      )}
-      <div className="grid grid-cols-2 gap-2">
-        {section.photos.map((src, index) => {
-          const wide = isWideTile(index, section.photos.length);
-
-          return (
-            <button
-              key={`${src}-${index}`}
-              type="button"
-              onClick={() => onOpen(section.offset + index)}
-              className={`block w-full overflow-hidden rounded-2xl bg-gray10 ${
-                wide ? "col-span-2 aspect-[16/10]" : "aspect-square"
-              }`}
-            >
-              <img
-                src={getImageSrc(src)}
-                onError={handleImageFallback}
-                alt={t("booking_gallery_image_alt")}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-300 active:scale-[1.03]"
-              />
-            </button>
-          );
-        })}
-      </div>
+    <div className="columns-2 gap-2">
+      {photos.map(({ src, index }) => (
+        <button
+          key={`${src}-${index}`}
+          type="button"
+          onClick={() => onOpen(index)}
+          className="mb-2 block w-full break-inside-avoid overflow-hidden rounded-2xl bg-gray10"
+        >
+          <img
+            src={getImageSrc(src)}
+            onError={handleImageFallback}
+            alt={t("booking_gallery_image_alt")}
+            loading="lazy"
+            className="block h-auto w-full transition-transform duration-300 active:scale-[1.03]"
+          />
+        </button>
+      ))}
     </div>
   );
 };
@@ -123,6 +100,9 @@ const AtmosphereMobile = ({
   const t = useTranslations();
   const { video, cover, sections } = content;
   const hasHero = Boolean(video || cover);
+  const photos = sections.flatMap((section) =>
+    section.photos.map((src, i) => ({ src, index: section.offset + i })),
+  );
 
   return (
     <>
@@ -152,16 +132,9 @@ const AtmosphereMobile = ({
 
         {tabs && <div className="-mx-4 mt-5 min-w-0">{tabs}</div>}
 
-        {sections.length > 0 && (
-          <div className="mt-4 flex flex-col gap-7">
-            {sections.map((section) => (
-              <AtmospherePhotos
-                key={section.key}
-                section={section}
-                showTitle={sections.length > 1}
-                onOpen={onOpen}
-              />
-            ))}
+        {photos.length > 0 && (
+          <div className="mt-4">
+            <AtmospherePhotos photos={photos} onOpen={onOpen} />
           </div>
         )}
 
