@@ -18,7 +18,7 @@ const ChatHeader = ({ onBack, backIcon = "back" }: ChatHeaderProps) => {
   const phone = general?.data.business_phone;
 
   return (
-    <div className="sticky top-0 z-30 shrink-0 border-b border-gray180 bg-white pt-[env(safe-area-inset-top)]">
+    <div className="sticky top-0 z-30 shrink-0 border-b border-gray180 bg-white pt-[var(--safe-top)]">
       <div className="mx-auto flex w-full max-w-xl items-center lg:max-w-none gap-3 px-4 py-3">
         <Button
           type="button"

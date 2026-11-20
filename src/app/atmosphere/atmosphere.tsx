@@ -77,7 +77,7 @@ const AtmosphereContent = () => {
         size="none"
         onClick={() => router.back()}
         aria-label={t("common_back")}
-        className="absolute left-4 top-[calc(env(safe-area-inset-top)+12px)] z-30 h-10 w-10 rounded-full bg-black/35 text-white backdrop-blur-md lg:hidden"
+        className="absolute left-4 top-[calc(var(--safe-top)+12px)] z-30 h-10 w-10 rounded-full bg-black/35 text-white backdrop-blur-md lg:hidden"
       >
         <ChevronLeft size={22} />
       </Button>

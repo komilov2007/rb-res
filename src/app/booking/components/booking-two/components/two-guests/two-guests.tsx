@@ -113,7 +113,7 @@ const TwoHero = () => {
         type="button"
         onClick={() => router.back()}
         aria-label={t("common_back")}
-        className="absolute left-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-md lg:hidden"
+        className="absolute left-4 top-[calc(var(--safe-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-md lg:hidden"
       >
         <ChevronLeft size={22} />
       </button>
@@ -122,7 +122,7 @@ const TwoHero = () => {
           type="button"
           onClick={openAtmosphere}
           aria-label={t("atmosphere_title")}
-          className="absolute right-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 items-center gap-1.5 rounded-full bg-black/30 pl-3 pr-4 text-sm font-medium text-white backdrop-blur-md"
+          className="absolute right-4 top-[calc(var(--safe-top)+12px)] flex h-10 items-center gap-1.5 rounded-full bg-black/30 pl-3 pr-4 text-sm font-medium text-white backdrop-blur-md"
         >
           <Images size={16} />
           {t("atmosphere_title")}

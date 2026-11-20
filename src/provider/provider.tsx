@@ -11,6 +11,7 @@ import { AuthProvider } from "@/provider/auth";
 import { ProfileProvider } from "@/provider/profile";
 import { CartProvider } from "@/provider/cart";
 import { ThemeSync } from "@/provider/theme";
+import TelegramInit from "@/provider/telegram-init";
 import LoginModal from "@/components/modal/login-modal";
 import SignupModal from "@/components/modal/signup-modal";
 import LocationModal from "@/components/modal/location-modal";
@@ -48,6 +49,7 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
                       <div>
                         {children}
                         <ThemeSync />
+                        <TelegramInit />
                         <CartDrawer />
                         <LoginModal />
                         <SignupModal />

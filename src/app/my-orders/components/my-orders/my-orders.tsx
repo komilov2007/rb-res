@@ -75,7 +75,7 @@ const MyOrders = () => {
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 pt-[calc(60px+env(safe-area-inset-top))] pb-6">
+      <div className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 pt-[calc(60px+var(--safe-top))] pb-6">
         <div className="flex gap-2 px-4 pt-3">
           {TABS.map((tab) => (
             <button

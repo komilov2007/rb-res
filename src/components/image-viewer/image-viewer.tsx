@@ -53,7 +53,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
           {t("shared_image_viewer")}
         </DialogTitle>
 
-        <div className="flex shrink-0 items-center justify-between px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 text-white">
+        <div className="flex shrink-0 items-center justify-between px-4 pt-[max(12px,var(--safe-top))] pb-3 text-white">
           <span className="text-sm font-medium">
             {index + 1}/{total}
           </span>

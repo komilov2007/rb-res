@@ -129,7 +129,7 @@ const Banner = () => {
           searchLabel={t("search_products")}
           onOpenSearch={searchModal.setTrue}
         />
-        <div className="h-16" />
+        <div className="h-[calc(4rem+var(--safe-top))]" />
 
         {(isLoading || hasBanners) && (
           <div

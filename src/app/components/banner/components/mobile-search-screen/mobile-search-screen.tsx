@@ -29,7 +29,7 @@ const MobileSearchScreen = ({
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden">
-      <div className="flex items-center gap-2 px-4 py-2.5">
+      <div className="flex items-center gap-2 px-4 pb-2.5 pt-[calc(0.625rem+var(--safe-top))]">
         <XButton size="lg" onClick={onClose} />
         <Input
           autoFocus
@@ -60,7 +60,7 @@ const MobileBannerHeader = ({
   onOpenSearch,
 }: MobileBannerHeaderProps) => {
   return (
-    <div className="fixed left-0 top-0 z-50 flex h-16 w-full items-start justify-between gap-2 overflow-hidden bg-white px-3 pt-3 lg:hidden">
+    <div className="fixed left-0 top-0 z-50 flex h-[calc(4rem+var(--safe-top))] w-full items-start justify-between gap-2 overflow-hidden bg-white px-3 pt-[calc(0.75rem+var(--safe-top))] lg:hidden">
       <div className="flex min-w-0 flex-1">
         <Location className="max-w-50" labelClassName="text-primary" />
       </div>

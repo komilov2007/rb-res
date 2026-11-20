@@ -50,7 +50,7 @@ const AtmosphereHero = ({ video, cover, onOpen }: AtmosphereHeroProps) => {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/5 to-black/80" />
 
-      <span className="absolute right-4 top-[calc(env(safe-area-inset-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md">
+      <span className="absolute right-4 top-[calc(var(--safe-top)+12px)] flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-md">
         <Maximize2 size={18} />
       </span>
     </button>
@@ -114,7 +114,7 @@ const AtmosphereMobile = ({
         className={`relative z-10 flex flex-1 flex-col bg-white px-4 pb-6 ${
           hasHero
             ? "-mt-6 rounded-t-[24px] pt-5"
-            : "pt-[calc(env(safe-area-inset-top)+72px)]"
+            : "pt-[calc(var(--safe-top)+72px)]"
         }`}
       >
         {hasHero && (

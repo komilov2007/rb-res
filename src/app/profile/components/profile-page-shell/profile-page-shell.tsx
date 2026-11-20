@@ -32,7 +32,7 @@ const ProfilePageShell = ({
   return (
     <PageLayout>
       <div className="flex flex-col bg-gray10">
-        <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[env(safe-area-inset-top)] lg:hidden">
+        <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[var(--safe-top)] lg:hidden">
           <div className="flex w-full items-center gap-3 px-4 py-4">
             <Button
               type="button"

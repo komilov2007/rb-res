@@ -47,7 +47,7 @@ const AtmosphereState = (props: AtmosphereStateProps) => {
   if (props.status === "loading") return <AtmosphereSkeleton />;
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center px-6 pb-10 pt-[calc(env(safe-area-inset-top)+72px)] text-center lg:min-h-[480px] lg:py-16">
+    <div className="flex flex-1 flex-col items-center justify-center px-6 pb-10 pt-[calc(var(--safe-top)+72px)] text-center lg:min-h-[480px] lg:py-16">
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gray10 text-gray220">
         <IconPhotoOff size={28} />
       </span>

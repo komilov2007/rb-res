@@ -29,7 +29,7 @@ const RowSkeleton = ({ label, value }: { label: string; value: string }) => (
 );
 
 const OrderDetailSkeleton = () => (
-  <div className="mx-auto flex w-full max-w-xl flex-1 flex-col pt-[calc(68px+env(safe-area-inset-top))] pb-6">
+  <div className="mx-auto flex w-full max-w-xl flex-1 flex-col pt-[calc(68px+var(--safe-top))] pb-6">
     <div className="flex flex-col divide-y divide-gray180 px-4">
       <section className="py-5">
         <div className="flex items-start">
@@ -169,19 +169,19 @@ const OrderDetailView = ({
       </div>
 
       {mustLogin ? (
-        <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+env(safe-area-inset-top))]">
+        <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+var(--safe-top))]">
           <LoginRequired message={t("orders_login_required")} />
         </div>
       ) : isLoading ? (
         <OrderDetailSkeleton />
       ) : isError || !detail ? (
-        <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+env(safe-area-inset-top))]">
+        <div className="mx-auto w-full max-w-xl px-4 pt-[calc(68px+var(--safe-top))]">
           <p className="text-sm font-medium text-gray220">
             {t("orders_not_found")}
           </p>
         </div>
       ) : (
-        <div className="mx-auto flex w-full max-w-xl flex-1 flex-col pt-[calc(68px+env(safe-area-inset-top))] pb-6">
+        <div className="mx-auto flex w-full max-w-xl flex-1 flex-col pt-[calc(68px+var(--safe-top))] pb-6">
           <OrderDetailSections detail={detail} />
 
           <div className="mt-4 flex flex-col gap-2.5 px-4">
