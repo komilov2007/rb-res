@@ -110,8 +110,8 @@ const CategoryContent = () => {
         {banner && (
           <img
             className="mb-4 aspect-1000/400 w-full rounded-2xl object-cover"
-            src={banner.mobile_photo}
-            alt={banner.category_name ?? categoryName}
+            src={banner}
+            alt={categoryName}
           />
         )}
         {isLoading ? (

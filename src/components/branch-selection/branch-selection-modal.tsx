@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect, useRef, useState } from "react";
+import { type CSSProperties, useMemo, useEffect, useRef, useState } from "react";
 import { useDeviceLocation } from "@/hooks/useDeviceLocation";
 import { useLocationStore } from "@/stores/location";
 import type { BranchProps } from "@/types/branch";
@@ -45,6 +45,22 @@ export const useNearestBranches = (branches: BranchProps[]) => {
   return { sorted, list };
 };
 
+export const BRANCH_CHIP_ANCHOR = "data-branch-chip-anchor";
+
+type ChipAnchor = { top: number; left: number };
+
+const getChipAnchor = (): ChipAnchor | null => {
+  if (typeof document === "undefined") return null;
+
+  const chip = document.querySelector<HTMLElement>(`[${BRANCH_CHIP_ANCHOR}]`);
+  const rect = chip?.getBoundingClientRect();
+
+  if (!rect || rect.width === 0 || rect.bottom <= 0) return null;
+  if (rect.top >= window.innerHeight) return null;
+
+  return { top: rect.bottom + 8, left: rect.left };
+};
+
 const BranchSelectionModal = () => {
   const selection = useBranchSelection();
   const { shopid } = selection;
@@ -82,6 +98,26 @@ const BranchSelectionModal = () => {
     !loginModal &&
     !signupModal &&
     !closedModalOpen;
+  // Desktop: header chip ekranda ko'rinsa, modal chip ostidan ochiladi.
+  // Anchor faqat ochilish paytida o'lchanadi va yopilish animatsiyasi
+  // tugaguncha saqlanadi — aks holda yopilayotgan modal markazga sakraydi.
+  const [anchorState, setAnchorState] = useState<{
+    visible: boolean;
+    anchor: ChipAnchor | null;
+  }>({ visible: false, anchor: null });
+
+  if (anchorState.visible !== isVisible) {
+    setAnchorState({
+      visible: isVisible,
+      anchor: isVisible
+        ? isDesktop
+          ? getChipAnchor()
+          : null
+        : anchorState.anchor,
+    });
+  }
+
+  const anchor = isDesktop ? anchorState.anchor : null;
 
   const activeServices =
     general?.data?.services
@@ -184,7 +220,28 @@ const BranchSelectionModal = () => {
     return (
       <>
         <Dialog open={isVisible} onOpenChange={handleOpenChange}>
-          <DialogContent className="max-w-[460px] gap-0 overflow-hidden rounded-3xl border border-gray180 bg-white p-0">
+          <DialogContent
+            className={`max-w-[440px] gap-0 overflow-hidden border border-gray180 bg-white p-0 ${
+              anchor
+                ? "origin-top-left rounded-2xl shadow-[0_20px_48px_-12px_rgba(17,24,39,0.22)] duration-200 ease-out data-open:slide-in-from-top-2 data-closed:slide-out-to-top-2 [&>div:first-child]:max-h-(--anchor-max-h)"
+                : "rounded-3xl duration-200"
+            }`}
+            overlayClassName={
+              anchor
+                ? "bg-transparent duration-200 supports-backdrop-filter:backdrop-blur-none"
+                : "duration-200"
+            }
+            style={
+              anchor
+                ? ({
+                    top: anchor.top,
+                    left: anchor.left,
+                    translate: "none",
+                    "--anchor-max-h": `calc(100dvh - ${anchor.top + 16}px)`,
+                  } as CSSProperties)
+                : undefined
+            }
+          >
             {content}
           </DialogContent>
         </Dialog>

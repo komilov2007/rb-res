@@ -17,6 +17,8 @@ import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useAuthStore } from "@/stores/auth";
 import { useGeneral } from "@/hooks/useGeneral";
 import { useShopId } from "@/hooks/useShopId";
+import { useAddresses } from "@/hooks/useAddresses";
+import { useBranchSelection } from "@/components/branch-selection";
 import { getCartTotal, normalizeCartItems } from "@/utils/cart";
 
 const CartDrawer = () => {
@@ -30,6 +32,17 @@ const CartDrawer = () => {
   const longitude = useLocationStore((state) => state.longitude);
   const { shopid, hasShopId } = useShopId();
   const { data: general } = useGeneral();
+  const hasAccess = useAuthStore((state) => state.hasAccess);
+  const { serviceType } = useBranchSelection();
+  const { data: addresses } = useAddresses(
+    customerId,
+    hasAccess && Boolean(customerId),
+  );
+  // Backend yetkazish narxini faqat mijozda joriy manzil bo'lsa hisoblaydi;
+  // olib ketishda esa yetkazish narxi umuman kerak emas.
+  const canCalculateDelivery =
+    serviceType === "DELIVERY" &&
+    Boolean(addresses?.data.some((item) => item.is_current));
 
   const isMobile = cartVariant === "mobile";
   const total = getCartTotal(carts);
@@ -72,6 +85,7 @@ const CartDrawer = () => {
       isCartOpen &&
       hasShopId &&
       Boolean(customerId) &&
+      canCalculateDelivery &&
       calculationTotal !== null &&
       (!usesProviderDelivery || (Boolean(latitude) && Boolean(longitude))),
     queryKey: [
@@ -93,7 +107,10 @@ const CartDrawer = () => {
               longitude: longitude ?? undefined,
             }
           : {}),
-      }),
+        },
+        // Savatdagi narx faqat taxminiy — xato bo'lsa toast chiqarmaymiz
+        { skipErrorToast: true },
+      ),
   });
   const deliveryPrice = Number(deliveryCalculation?.data.delivery ?? 0);
 

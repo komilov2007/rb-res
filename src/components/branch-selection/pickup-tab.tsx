@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { IconMapPinFilled } from "@tabler/icons-react";
+import { Store } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { useBranchSelectionStore } from "@/stores/branch-selection";
@@ -13,6 +14,7 @@ import {
   COLLAPSED_COUNT,
   getRowClassName,
   SectionLabel,
+  RowIcon,
   RowText,
   ShowMoreToggle,
   TabProps,
@@ -82,6 +84,7 @@ export const PickupTab = ({
             }}
             className={getRowClassName(checked)}
           >
+            <RowIcon tone={checked ? "primary" : "gray"} icon={Store} />
             <RowText
               title={getBranchLabel(branch.name)}
               description={branch.address}

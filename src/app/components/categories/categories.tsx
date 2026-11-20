@@ -25,7 +25,7 @@ const Categories = () => {
     activeCategoryId,
     sectionRef,
     anchorRef,
-    mobileFixedHeight,
+    fixedHeight,
     mobileListRef,
     desktopListRef,
     isLoading,
@@ -64,13 +64,13 @@ const Categories = () => {
       <section
         ref={sectionRef}
         id="categories"
-        className={`z-40 w-full overflow-x-hidden rounded-b-[20px] bg-white px-4 pb-4 pt-1 transition-all duration-300 lg:mt-0 lg:flex lg:items-center lg:justify-center lg:overflow-visible lg:rounded-b-[22px] lg:pt-3 ${
+        className={`z-40 w-full overflow-x-hidden rounded-b-[20px] bg-white px-4 pb-4 pt-1 transition-shadow duration-300 lg:mt-0 lg:flex lg:items-center lg:justify-center lg:overflow-visible lg:rounded-b-[22px] lg:pt-3 ${
           isMobileFixed
-            ? "fixed left-0 top-16 shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+            ? "fixed left-0 top-16 bg-white/95 shadow-[0_12px_28px_rgba(17,24,39,0.08)] backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300 ease-out"
             : "relative shadow-none"
         } ${
           isDesktopFixed
-            ? "lg:fixed lg:left-0 lg:top-0 lg:z-50 lg:shadow-[0_12px_28px_rgba(17,24,39,0.08)]"
+            ? "lg:fixed lg:left-0 lg:top-0 lg:z-50 lg:bg-white/95 lg:pb-3 lg:shadow-[0_12px_28px_rgba(17,24,39,0.08)] lg:backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300 ease-out"
             : "lg:relative lg:shadow-none"
         }`}
       >
@@ -183,17 +183,11 @@ const Categories = () => {
           )}
         </div>
       </section>
-      {isMobileFixed && (
+      {(isMobileFixed || isDesktopFixed) && (
         <div
-          className="lg:hidden"
-          style={{ height: mobileFixedHeight ?? 0 }}
-        />
-      )}
-      {isDesktopFixed && (
-        <div
-          className={`hidden lg:block ${
-            isDefaultDesktopVariant ? "h-[142px]" : "h-[60px]"
-          }`}
+          aria-hidden
+          className={isMobileFixed ? "lg:hidden" : "hidden lg:block"}
+          style={{ height: fixedHeight ?? 0 }}
         />
       )}
     </>

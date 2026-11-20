@@ -21,10 +21,11 @@ export const getDeliveryCalculation = async (
   customerId: number,
   shopId: string,
   params: DeliveryCalculationParams,
+  options?: { skipErrorToast?: boolean },
 ) => {
   return await request<DeliveryCalculationResponse>(
     `webapp/calculate/delivery/${customerId}/${shopId}`,
-    { params },
+    { params, skipErrorToast: options?.skipErrorToast },
   );
 };
 

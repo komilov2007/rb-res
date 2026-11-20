@@ -119,7 +119,7 @@ const Header = ({ pinBottomRow = false }: HeaderProps = {}) => {
           )}
 
           <div className="flex min-w-0 items-center gap-4">
-            <Location className="max-w-52 shrink-0" />
+            <Location variant="header" className="max-w-64 shrink-0" />
           </div>
 
           <div className="ml-auto flex shrink-0 items-center">

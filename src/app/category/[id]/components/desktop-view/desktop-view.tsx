@@ -41,8 +41,8 @@ const DesktopView = ({
           {banner && (
             <img
               className="aspect-1000/400 max-h-100 w-full rounded-3xl object-cover"
-              src={banner.mobile_photo}
-              alt={banner.category_name ?? categoryName}
+              src={banner}
+              alt={categoryName}
             />
           )}
 

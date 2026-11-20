@@ -20,7 +20,7 @@ export const useCategories = () => {
   const [activeCategoryId, setActiveCategoryId] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const anchorRef = useRef<HTMLDivElement | null>(null);
-  const [mobileFixedHeight, setMobileFixedHeight] = useState<number | null>(
+  const [fixedHeight, setFixedHeight] = useState<number | null>(
     null,
   );
   const mobileListRef = useRef<HTMLDivElement | null>(null);
@@ -59,11 +59,10 @@ export const useCategories = () => {
       const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
       if (
-        !isDesktop &&
         sectionRef.current &&
         getComputedStyle(sectionRef.current).position !== "fixed"
       ) {
-        setMobileFixedHeight(sectionRef.current.offsetHeight);
+        setFixedHeight(sectionRef.current.offsetHeight);
       }
 
       setIsMobileFixed(!isDesktop && window.scrollY > 220);
@@ -132,7 +131,7 @@ export const useCategories = () => {
     activeCategoryId,
     sectionRef,
     anchorRef,
-    mobileFixedHeight,
+    fixedHeight,
     mobileListRef,
     desktopListRef,
     isLoading,

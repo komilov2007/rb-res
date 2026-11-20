@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ComponentType, type ReactNode } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -25,13 +25,19 @@ export const SectionLabel = ({ children }: { children: ReactNode }) => (
   </p>
 );
 
-export const RowIcon = ({ tone = "primary" }: { tone?: "primary" | "gray" }) => (
+export const RowIcon = ({
+  tone = "primary",
+  icon: Icon = IconMapPinFilled,
+}: {
+  tone?: "primary" | "gray";
+  icon?: ComponentType<{ size?: number }>;
+}) => (
   <span
     className={`grid h-9 w-9 shrink-0 place-items-center rounded-full ${
       tone === "primary" ? "bg-primary10 text-primary" : "bg-white text-gray220"
     }`}
   >
-    <IconMapPinFilled size={17} />
+    <Icon size={17} />
   </span>
 );
 

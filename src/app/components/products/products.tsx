@@ -132,7 +132,7 @@ export const Products = () => {
             key={group.key}
             group={group}
             branchId={branchId}
-            imageSrc={getCategoryBanner(group.id)?.mobile_photo}
+            imageSrc={getCategoryBanner(group.id)}
           />
         ))}
 

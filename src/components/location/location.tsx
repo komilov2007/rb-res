@@ -8,9 +8,10 @@ import { useAddresses } from "@/hooks/useAddresses";
 type LocationProps = {
   className?: string;
   labelClassName?: string;
+  variant?: "plain" | "header";
 };
 
-const Location = ({ className, labelClassName }: LocationProps) => {
+const Location = ({ className, labelClassName, variant }: LocationProps) => {
   const address = useLocationStore((state) => state.address);
   const setAddress = useLocationStore((state) => state.setAddress);
   const auth = useAuthStore((state) => state.auth);
@@ -30,7 +31,11 @@ const Location = ({ className, labelClassName }: LocationProps) => {
   }, [address, currentAddress, setAddress]);
 
   return (
-    <BranchSelectionChip className={className} labelClassName={labelClassName} />
+    <BranchSelectionChip
+      className={className}
+      labelClassName={labelClassName}
+      variant={variant}
+    />
   );
 };
 

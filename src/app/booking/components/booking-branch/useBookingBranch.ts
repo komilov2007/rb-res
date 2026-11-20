@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormContext, useWatch, useFormState } from "react-hook-form";
 
-import { getBranches } from "@/apis/branches";
+import { getReservationBranches } from "@/apis/reservation";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 import { useShopId } from "@/hooks/useShopId";
 
@@ -23,7 +23,7 @@ export const useBookingBranch = () => {
     enabled: hasShopId,
     queryKey: [REACT_QUERY_KEYS.RESERVATION_BRANCHES, shopid],
     queryFn: () =>
-      getBranches(shopid as string, { service: "RESERVATION", is_active: true }),
+      getReservationBranches(shopid as string),
   });
   const branches = data?.data;
 
