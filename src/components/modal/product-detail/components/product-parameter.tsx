@@ -191,15 +191,15 @@ const ProductDetailFooter = ({
 }: ProductDetailFooterProps) => {
   const t = useTranslations();
   return (
-    <div className="absolute bottom-0 left-0 right-0 border-t border-gray180 bg-white px-5 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 lg:px-6 lg:pb-5 lg:pt-4">
-      <div className="flex items-center gap-3 lg:gap-4">
-        <div className="h-12 w-[122px] shrink-0 lg:h-13 lg:w-[138px]">
+    <div className="absolute bottom-0 left-0 right-0 border-t border-gray180 bg-white px-4 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 lg:px-6 lg:pb-5 lg:pt-4">
+      <div className="flex items-center gap-2 lg:gap-4">
+        <div className="h-12 w-[116px] shrink-0 lg:h-13 lg:w-[138px]">
           <div className="flex h-full items-center justify-between rounded-2xl border border-gray180 bg-white p-1 text-black">
             <button
               type="button"
               onClick={onDecrement}
               disabled={isLoading || !hasCart}
-              className="grid h-10 w-10 place-items-center rounded-xl bg-gray10 text-black disabled:opacity-50"
+              className="grid h-10 w-9 place-items-center rounded-xl bg-gray10 lg:w-10 text-black disabled:opacity-50"
             >
               <Minus size={16} strokeWidth={2.5} />
             </button>
@@ -221,7 +221,7 @@ const ProductDetailFooter = ({
               type="button"
               onClick={onAdd}
               disabled={isLoading || (quantity || 1) >= 999}
-              className="grid h-10 w-10 place-items-center rounded-xl bg-gray10 text-black disabled:opacity-50"
+              className="grid h-10 w-9 place-items-center rounded-xl bg-gray10 lg:w-10 text-black disabled:opacity-50"
             >
               <Plus size={16} strokeWidth={2.5} />
             </button>
@@ -232,13 +232,16 @@ const ProductDetailFooter = ({
           type="button"
           onClick={onAddAndClose}
           disabled={isLoading}
-          className="flex h-12 min-w-0 flex-1 items-center justify-between gap-3 rounded-2xl bg-primary px-5 text-white shadow-[0_10px_24px_rgba(107,83,230,0.28)] disabled:opacity-70 lg:h-13 lg:px-6"
+          className="flex h-12 min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl bg-primary px-4 text-white shadow-[0_10px_24px_rgba(107,83,230,0.28)] disabled:opacity-70 lg:h-13 lg:gap-3 lg:px-6"
         >
-          <span className="flex items-center gap-2 text-sm font-medium">
-            <IconShoppingCartFilled size={18} />
+          <span className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-medium">
+            <IconShoppingCartFilled
+              size={18}
+              className="hidden shrink-0 min-[400px]:block"
+            />
             {t("add_to_cart")}
           </span>
-          <span className="text-sm font-medium">
+          <span className="min-w-0 truncate whitespace-nowrap text-sm font-semibold tabular-nums">
             {totalPrice} {sumLabel}
           </span>
         </button>
