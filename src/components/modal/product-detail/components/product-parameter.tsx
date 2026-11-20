@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import { formatPrice } from "@/utils/format-price";
 import type { ProductParameterProps } from "@/types/product";
 import { getSkuMeta } from "@/components/modal/product-detail/product-detail";
-import { IconShoppingCartFilled } from "@tabler/icons-react";
 
 type ProductParameterPropsType = {
   parameter: ProductParameterProps;
@@ -234,11 +233,7 @@ const ProductDetailFooter = ({
           disabled={isLoading}
           className="flex h-12 min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl bg-primary px-4 text-white shadow-[0_10px_24px_rgba(107,83,230,0.28)] disabled:opacity-70 lg:h-13 lg:gap-3 lg:px-6"
         >
-          <span className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-medium">
-            <IconShoppingCartFilled
-              size={18}
-              className="hidden shrink-0 min-[400px]:block"
-            />
+          <span className="shrink-0 whitespace-nowrap text-sm font-medium">
             {t("add_to_cart")}
           </span>
           <span className="min-w-0 truncate whitespace-nowrap text-sm font-semibold tabular-nums">
