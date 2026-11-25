@@ -58,7 +58,7 @@ const BookingOne = () => {
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-gray180 bg-white pb-[max(16px,env(safe-area-inset-bottom))] pt-3 lg:hidden">
+      <div className="shrink-0 border-t border-gray180 bg-white pb-[max(16px,var(--safe-bottom))] pt-3 lg:hidden">
         <div className="mx-auto w-full max-w-xl px-4">
           <Button
             type="submit"

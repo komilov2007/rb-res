@@ -91,7 +91,7 @@ const DeliveryRouteSheet = ({
 
   return (
     <ModalScreen onClose={onClose} placement="screen" className="gap-0 !p-0">
-      <div className="flex h-dvh w-full flex-col overflow-hidden bg-white">
+      <div className="flex h-full w-full flex-col overflow-hidden bg-white lg:h-dvh">
         <div className="z-10 flex shrink-0 items-center gap-3 border-b border-gray180 bg-white px-4 py-4">
           <Button
             type="button"
@@ -214,7 +214,7 @@ const DeliveryRouteSheet = ({
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-3">
+        <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,var(--safe-bottom))] pt-3">
           <button
             type="button"
             onClick={openInMaps}

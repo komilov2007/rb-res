@@ -140,8 +140,8 @@ const LocationModal = () => {
           )}
         </div>
       </div>
-      {map("h-dvh min-h-dvh w-full", "bottom-24")}
-      {continueButton("absolute bottom-4 left-4 right-4 z-[100000001] w-auto")}
+      {map("h-full w-full", "bottom-[calc(6rem+var(--safe-bottom))]")}
+      {continueButton("absolute bottom-[calc(1rem+var(--safe-bottom))] left-4 right-4 z-[100000001] w-auto")}
     </div>
   );
 

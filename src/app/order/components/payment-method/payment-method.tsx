@@ -56,8 +56,8 @@ const PaymentMethod = ({ showPromoCode }: PaymentMethodProps) => {
   const isReady = hasShopId && Boolean(deliveryType);
 
   return (
-    <section className="rounded-xl bg-white p-3">
-      <h2 className="text-sm font-medium text-black">
+    <section className="rounded-2xl bg-white p-4">
+      <h2 className="text-base font-medium text-black">
         {t("order_page_payment_title")}
       </h2>
 

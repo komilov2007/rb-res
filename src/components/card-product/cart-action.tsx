@@ -11,6 +11,8 @@ type CartActionProps = {
   onDecrement: () => void;
   onChangeQuantity: (quantity: number) => void;
   isLoading?: boolean;
+  maxQuantity?: number;
+  disabled?: boolean;
 };
 
 const CartAction = ({
@@ -21,6 +23,8 @@ const CartAction = ({
   onDecrement,
   onChangeQuantity,
   isLoading = false,
+  maxQuantity = Infinity,
+  disabled = false,
 }: CartActionProps) => {
   const t = useTranslations();
   const [draft, setDraft] = useState({
@@ -41,7 +45,13 @@ const CartAction = ({
       return;
     }
 
-    onChangeQuantity(quantityValue);
+    const nextQuantity = Math.min(quantityValue, maxQuantity);
+
+    setDraft({
+      quantity,
+      value: String(nextQuantity),
+    });
+    onChangeQuantity(nextQuantity);
   };
 
   const handleChangeQuantity = (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,8 +69,8 @@ const CartAction = ({
     return (
       <button
         onClick={onAdd}
-        disabled={isLoading}
-        className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-medium text-white lg:ml-auto lg:w-full lg:translate-x-0 lg:px-4"
+        disabled={isLoading || disabled}
+        className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-xs font-medium text-white lg:ml-auto lg:w-full lg:translate-x-0 lg:px-4 disabled:opacity-60"
       >
         <IconShoppingCartFilled size={16} />
         <span className="whitespace-nowrap">{t("add_to_cart")}</span>
@@ -94,7 +104,7 @@ const CartAction = ({
       )}
       <button
         onClick={onIncrement}
-        disabled={isLoading}
+        disabled={isLoading || disabled || quantity >= maxQuantity}
         className="grid h-8 w-8 place-items-center rounded-lg bg-white text-primary disabled:opacity-50"
       >
         <Plus size={16} strokeWidth={2.5} />

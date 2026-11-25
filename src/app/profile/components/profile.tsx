@@ -194,8 +194,10 @@ const Profile = () => {
   return (
     <PageLayout>
       <section
-        className={`fixed inset-0 overflow-y-auto bg-white px-4 pt-7 lg:hidden ${
-          isClickApp ? "pb-29" : "pb-24"
+        className={`fixed inset-0 overflow-y-auto bg-white px-4 pt-[calc(var(--safe-top)+1.75rem)] lg:hidden ${
+          isClickApp
+            ? "pb-[calc(8.5rem+var(--safe-bottom))]"
+            : "pb-[calc(7rem+var(--safe-bottom))]"
         }`}
       >
         <div className="flex w-full flex-col">

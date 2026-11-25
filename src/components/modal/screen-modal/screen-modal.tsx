@@ -26,7 +26,7 @@ const ModalScreen = ({
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-black/30 ${
+      className={`fixed inset-0 z-[100] bg-black/30 animate-in fade-in duration-200 ${
         isBottom
           ? "flex items-end lg:items-center lg:justify-center"
           : "lg:flex lg:items-center lg:justify-center"
@@ -35,8 +35,8 @@ const ModalScreen = ({
       <div
         className={`flex w-full flex-col gap-4 bg-white p-4 ${
           isBottom
-            ? "max-h-[85dvh] rounded-t-3xl lg:max-w-[440px] lg:rounded-3xl"
-            : "h-dvh lg:h-auto lg:max-h-[720px] lg:max-w-[440px] lg:rounded-3xl"
+            ? "max-h-[85dvh] rounded-t-3xl pb-[calc(2rem+var(--safe-bottom))] lg:pb-4 animate-in slide-in-from-bottom duration-300 ease-out lg:max-w-[440px] lg:rounded-3xl lg:slide-in-from-bottom-4"
+            : "h-dvh border-t-(length:--safe-top) border-t-white lg:h-auto lg:border-t-0 lg:max-h-[720px] lg:max-w-[440px] lg:rounded-3xl"
         } ${className}`}
       >
         {title && (

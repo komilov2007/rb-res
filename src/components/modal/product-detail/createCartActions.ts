@@ -13,7 +13,7 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     carts,
     setCarts,
     customerId,
-    setLoginModal,
+    product,
     refreshCart,
     setSkuState,
     setParameterErrorState,
@@ -22,10 +22,13 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
     stockMutation,
     detail,
     selectedParameterSkuId,
+    selectedParameterSku,
     hasRequiredParameter,
     selectedAdditionalSkus,
     cartItem,
     quantity,
+    maxQuantity,
+    isSoldOut,
     branchId,
     isUnavailableInBranch,
     closeDetail,
@@ -34,7 +37,24 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
   const refreshCartList = refreshCart;
 
   const syncParameterCart = async (nextQuantity: number) => {
-    if (!customerId) return;
+    // Mehmon: savat qatori qurilmada (persist qilingan store) yangilanadi
+    if (!customerId) {
+      const others = cartItem
+        ? carts.filter((item) => item !== cartItem)
+        : carts;
+      const line = cartItem ?? {
+        product,
+        parameter: selectedParameterSku ?? null,
+        ad_parameter: selectedAdditionalSkus,
+      };
+
+      setCarts(
+        nextQuantity > 0
+          ? [...others, { ...line, quantity: nextQuantity }]
+          : others,
+      );
+      return;
+    }
 
     await stockMutation.mutateAsync({
       customerId,
@@ -51,7 +71,10 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
   };
 
   const handleChangeQuantity = async (value: string) => {
-    const quantityValue = Number(value.replace(/\D/g, "").slice(0, 3));
+    const quantityValue = Math.min(
+      Number(value.replace(/\D/g, "").slice(0, 3)),
+      maxQuantity,
+    );
 
     if (!quantityValue || quantityValue < 1) return;
     if (isUnavailableInBranch) {
@@ -119,12 +142,6 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
   };
 
   const handleAdd = async () => {
-    if (!customerId) {
-      closeDetail();
-      setLoginModal(true);
-      return false;
-    }
-
     if (isUnavailableInBranch) {
       showProductUnavailable();
       return false;
@@ -132,7 +149,10 @@ export const createCartActions = (ctx: ProductDetailActionContext) => {
 
     if (!validateRequiredParameter()) return false;
 
+    if (isSoldOut || maxQuantity < 1) return false;
+
     const nextQuantity = cartItem ? quantity + 1 : 1;
+    if (nextQuantity > maxQuantity) return true;
     await syncParameterCart(nextQuantity);
 
     return true;

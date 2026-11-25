@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useProductDetailStore } from "@/stores/product-detail";
 import { formatPrice } from "@/utils/format-price";
 import { handleImageFallback, IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
+import { getMaxQuantity, isOutOfStock } from "@/utils/product-stock";
 import CartAction from "./cart-action";
 import { useCardProduct } from "./useCardProduct";
 
@@ -41,10 +42,12 @@ const CardProduct = ({
   product,
   variant = "default",
   saleBadgeVariant = "red",
-  isUnavailable = false,
+  isUnavailable: isUnavailableInBranch = false,
   whiteSurface = false,
 }: CardProductProps) => {
   const t = useTranslations();
+  const isSoldOut = isOutOfStock(product);
+  const isUnavailable = isUnavailableInBranch || isSoldOut;
   const {
     price,
     quantity,
@@ -108,7 +111,9 @@ const CardProduct = ({
 
           {isUnavailable && (
             <span className="absolute left-2 top-2 z-20 rounded-full bg-black/70 px-2 py-1 text-[10px] font-medium leading-none text-white">
-              {t("product_not_in_this_branch")}
+              {isUnavailableInBranch
+                ? t("product_not_in_this_branch")
+                : t("product_out_of_stock")}
             </span>
           )}
 
@@ -193,6 +198,8 @@ const CardProduct = ({
                 onDecrement={handleDecrement}
                 onChangeQuantity={handleChangeQuantity}
                 isLoading={isStockLoading}
+                maxQuantity={getMaxQuantity(product)}
+                disabled={isUnavailable}
               />
             </div>
           </div>

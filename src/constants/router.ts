@@ -18,4 +18,5 @@ export const ROUTER = {
   CHAT: "/chat",
   BOOKING: "/booking",
   ATMOSPHERE: "/atmosphere",
+  OFERTA: "/oferta",
 };

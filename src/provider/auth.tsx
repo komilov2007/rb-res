@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { getUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useAuthStore } from "@/stores/auth";
+import GuestAddressSync from "@/provider/guest-address-sync";
+import FirebaseProvider from "@/provider/firebase";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { shopid } = useShopId();
@@ -19,5 +21,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAuth(getUser(shopid)?.auth);
   }, [setAuth, shopid]);
 
-  return children;
+  return (
+    <>
+      {children}
+      <GuestAddressSync />
+      <FirebaseProvider />
+    </>
+  );
 };

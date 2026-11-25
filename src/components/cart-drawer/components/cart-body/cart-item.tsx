@@ -18,6 +18,10 @@ import { getOldPrice } from "@/components/modal/product-detail/product-detail";
 import { SALE_VARIANT_CLASS_NAMES } from "@/components/card-product/card-product";
 import { CartCounter } from "./cart-body";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import {
+  getMaxAvailableFromError,
+  getMaxQuantity,
+} from "@/utils/product-stock";
 
 export const getSelectedParameterNames = (item: CartItemProps): string[] =>
   [item.parameter, ...(item.ad_parameter ?? [])]
@@ -82,6 +86,20 @@ export const CartItem = ({
       })
     : null;
 
+  const selectedSkus = productDetail
+    ? [
+        productDetail.parameter?.skus.find(
+          (sku) => sku.name === item.parameter?.name,
+        ),
+        ...productDetail.additional_parameter.flatMap((parameter) =>
+          parameter.skus.filter((sku) =>
+            item.ad_parameter?.some((selected) => selected.name === sku.name),
+          ),
+        ),
+      ]
+    : [];
+  const maxQuantity = getMaxQuantity(productDetail, ...selectedSkus);
+
   const syncStockQuantity = async (nextQuantity: number) => {
     if (!customerId || !item.id) {
       setCartQuantity(getCartLineKey(item), nextQuantity);
@@ -100,7 +118,13 @@ export const CartItem = ({
       setCartQuantity(getCartLineKey(item), response.data.quantity);
 
       await refreshCart();
-    } catch {
+    } catch (error) {
+      const maxAvailable = getMaxAvailableFromError(error);
+
+      if (maxAvailable !== null) {
+        setCartQuantity(getCartLineKey(item), maxAvailable);
+        await refreshCart().catch(() => {});
+      }
     }
   };
 
@@ -193,6 +217,7 @@ export const CartItem = ({
               isLoading={stockMutation.isPending}
               onMinus={() => syncStockQuantity(Math.max(item.quantity - 1, 0))}
               onPlus={() => syncStockQuantity(item.quantity + 1)}
+              isPlusDisabled={item.quantity >= maxQuantity}
             />
 
             <Button

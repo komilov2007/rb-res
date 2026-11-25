@@ -99,7 +99,7 @@ const LanguageSheet = ({ open, onClose }: LanguageSheetProps) => {
           <SheetTitle>{t("profile_page_language_sheet_title")}</SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col gap-2 px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
+        <div className="flex flex-col gap-2 px-4 pb-[max(16px,var(--safe-bottom))]">
           <LanguageOptions onSelect={onClose} />
         </div>
       </SheetContent>

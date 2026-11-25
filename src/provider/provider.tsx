@@ -12,9 +12,12 @@ import { ProfileProvider } from "@/provider/profile";
 import { CartProvider } from "@/provider/cart";
 import { ThemeSync } from "@/provider/theme";
 import TelegramInit from "@/provider/telegram-init";
+import SafeTopBar from "@/components/safe-top-bar";
 import LoginModal from "@/components/modal/login-modal";
 import SignupModal from "@/components/modal/signup-modal";
+import OfertaModal from "@/components/modal/oferta-modal";
 import LocationModal from "@/components/modal/location-modal";
+import AddressDistanceModal from "@/components/modal/address-distance-modal";
 import ShopClosedModal from "@/components/modal/shop-closed-modal";
 import ChatModal from "@/components/chat-modal";
 
@@ -50,11 +53,14 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
                         {children}
                         <ThemeSync />
                         <TelegramInit />
+                        <SafeTopBar />
                         <CartDrawer />
                         <LoginModal />
                         <SignupModal />
+                        <OfertaModal />
                         <Suspense fallback={null}>
                           <LocationModal />
+                          <AddressDistanceModal />
                         </Suspense>
                         <ShopClosedModal />
                         <Suspense fallback={null}>
@@ -65,6 +71,13 @@ export const Provider = async ({ locale, children }: ProviderProps) => {
                           closeButton
                           richColors
                           offset="20px"
+                          // Telegram fullscreen'da status bar va Close/menu
+                          // tugmalari ostidan chiqsin
+                          mobileOffset={{
+                            top: "calc(var(--safe-top) + 8px)",
+                            left: "12px",
+                            right: "12px",
+                          }}
                         />
                       </div>
                     </ProfileProvider>

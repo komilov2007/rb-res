@@ -39,8 +39,11 @@ export const useOrderDelivery = ({
   availableServices,
   selectedService,
 }: UseOrderDeliveryProps) => {
-  const { branchId: homeBranchId, serviceType: homeServiceType } =
-    useBranchSelection();
+  const {
+    branchId: homeBranchId,
+    serviceType: homeServiceType,
+    branches: activeBranches,
+  } = useBranchSelection();
   const { shopid, hasShopId } = useShopId();
   const addressId = useLocationStore((state) => state.addressId);
   const storeAddress = useLocationStore((state) => state.address);
@@ -166,14 +169,18 @@ export const useOrderDelivery = ({
     form,
   ]);
 
-  const homePickupBranchId =
-    homeServiceType === "PICKUP" ? homeBranchId : null;
+  // Old webapp parity: home-selected pickup branch, otherwise the first
+  // (or the only) active branch.
+  const defaultPickupBranchId =
+    (homeServiceType === "PICKUP" ? homeBranchId : null) ??
+    activeBranches[0]?.id ??
+    null;
 
   useEffect(() => {
     if (!isPickupType(deliveryType)) return;
 
-    form.setValue("branch", homePickupBranchId, { shouldValidate: true });
-  }, [deliveryType, homePickupBranchId, form]);
+    form.setValue("branch", defaultPickupBranchId, { shouldValidate: true });
+  }, [deliveryType, defaultPickupBranchId, form]);
 
   useEffect(() => {
     const data = deliveryCalculationQuery.data?.data;

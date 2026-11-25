@@ -12,10 +12,31 @@ import { ROUTER } from "@/constants/router";
 import { useBranchSelection } from "@/components/branch-selection";
 import { showProductUnavailable } from "@/utils/branch-availability";
 import { useTranslations } from "next-intl";
-import { IconTruckFilled } from "@tabler/icons-react";
+import { IconBuildingStore, IconTruckFilled } from "@tabler/icons-react";
 import Button from "@/components/ui/button";
 import { formatPrice } from "@/utils/format-price";
 import type { CartViewProps } from "@/types/cart";
+import { getServiceMinPrice, isOnlyPickup } from "@/utils/delivery-rules";
+import { MinOrderNotice, useDeliveryInfoLabel } from "@/components/delivery-info";
+
+// Minimal order sum for the service chosen on the home screen
+// (DELIVERY by default — same as rb-webapp when nothing is chosen yet).
+export const useCartMinOrder = (total: number) => {
+  const { data: general } = useGeneral();
+  const { serviceType } = useBranchSelection();
+  const onlyPickup = isOnlyPickup(general?.data);
+  const minPrice = getServiceMinPrice(
+    general?.data,
+    serviceType ?? (onlyPickup ? "PICKUP" : "DELIVERY"),
+  );
+
+  return {
+    minPrice,
+    onlyPickup,
+    isPickup: onlyPickup || serviceType === "PICKUP",
+    isBelowMin: minPrice !== null && total < minPrice,
+  };
+};
 
 const isShopBusiness = false;
 
@@ -40,6 +61,7 @@ export const useCartFooter = (total: number) => {
   );
   const { data: general, refetch: refetchGeneral } = useGeneral();
   const openClosedModal = useShopStatusStore((state) => state.openClosedModal);
+  const { isBelowMin } = useCartMinOrder(total);
 
   const statusMutation = useMutation({
     mutationFn: (items: number[]) =>
@@ -99,7 +121,7 @@ export const useCartFooter = (total: number) => {
       return;
     }
 
-    if (total <= 0) return;
+    if (total <= 0 || isBelowMin) return;
 
     if (!isShopBusiness) {
       goToOrder();
@@ -153,32 +175,49 @@ const CartFooter = ({
   isPending,
 }: CartFooterProps) => {
   const t = useTranslations();
+  const { minPrice, onlyPickup, isPickup, isBelowMin } =
+    useCartMinOrder(total);
+  const deliveryLabel = useDeliveryInfoLabel();
 
   return (
     <div
       className={
         isMobile
-          ? "shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-4"
+          ? "shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,var(--safe-bottom))] pt-4"
           : "shrink-0 border-t border-gray180 bg-white px-6 pb-6 pt-5"
       }
     >
-      {deliveryPrice > 0 && (
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <span className="info-label flex items-center gap-2">
-            <IconTruckFilled size={16} className="text-gray220" />
-            {t("cart_drawer_delivery_price")}
-          </span>
-          <span className="text-sm font-medium text-black">
-            {formatPrice(deliveryPrice)} {t("sum")}
-          </span>
+      {onlyPickup ? (
+        <div className="mb-3 flex items-center gap-2">
+          <IconBuildingStore size={16} className="text-gray220" />
+          <span className="info-label">{t("delivery_only_pickup")}</span>
         </div>
+      ) : (
+        !isPickup &&
+        (deliveryPrice > 0 || deliveryLabel) && (
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <span className="info-label flex shrink-0 items-center gap-2">
+              <IconTruckFilled size={16} className="text-gray220" />
+              {t("cart_drawer_delivery_price")}
+            </span>
+            <span className="text-right text-sm font-medium text-black">
+              {deliveryPrice > 0
+                ? `${formatPrice(deliveryPrice)} ${t("sum")}`
+                : deliveryLabel}
+            </span>
+          </div>
+        )
+      )}
+
+      {isBelowMin && minPrice !== null && (
+        <MinOrderNotice minPrice={minPrice} total={total} className="mb-3" />
       )}
 
       <Button
         variant="primary-solid"
         size="primaryWide"
         onClick={onContinue}
-        disabled={isPending || total <= 0}
+        disabled={isPending || total <= 0 || isBelowMin}
       >
         {t("checkout")} · {formatPrice(total)} {t("sum")}
       </Button>

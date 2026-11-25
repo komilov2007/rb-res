@@ -119,7 +119,7 @@ const Order = () => {
       {isDesktop && <Header />}
       <Breadcrumb items={[{ label: t("order_page_title") }]} />
 
-      <div className="fixed inset-x-0 top-0 z-10 rounded-b-xl border-b border-gray180 bg-white lg:hidden">
+      <div className="sticky top-0 z-30 rounded-b-xl border-b border-gray180 bg-white pt-(--safe-top) lg:hidden">
         <div className="mx-auto flex w-full max-w-xl items-center gap-2 px-4 py-4">
           <Button
             type="button"
@@ -139,7 +139,7 @@ const Order = () => {
       <FormProvider {...form}>
         <form
           onSubmit={onSubmit}
-          className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 pt-[calc(60px+var(--safe-top))] pb-[calc(72px+env(safe-area-inset-bottom))] lg:max-w-none lg:flex-row lg:gap-2 lg:py-2"
+          className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-3 pt-3 pb-[calc(72px+var(--safe-bottom))] lg:max-w-none lg:flex-row lg:gap-2 lg:py-2"
         >
           <div className="contents lg:flex lg:min-w-0 lg:flex-1 lg:flex-col lg:rounded-r-[30px] lg:bg-white lg:py-2 lg:pl-[max(20px,calc(50%-620px))] lg:pr-6 lg:[&_section]:rounded-none lg:[&_section]:border-b lg:[&_section]:border-gray180 lg:[&_section]:px-0 lg:[&_section]:py-7 lg:[&_section:last-of-type]:border-b-0">
             <DeliveryType

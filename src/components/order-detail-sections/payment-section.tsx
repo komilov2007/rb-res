@@ -21,6 +21,12 @@ const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
   const t = useTranslations();
   const amount = Number(detail.amount);
   const deliveryPrice = Number(detail.delivery_price) || 0;
+  const deliveryText =
+    typeof detail.delivery === "string" &&
+    detail.delivery.trim() &&
+    Number.isNaN(Number(detail.delivery))
+      ? detail.delivery.trim()
+      : null;
   const paymentType = detail.payment_type as PaymentTypeProps;
   const paymentLabel =
     PAYMENT_CARD_CONFIG[paymentType]?.label ?? detail.payment_type;
@@ -76,7 +82,7 @@ const PaymentSection = ({ detail, isDelivery }: PaymentSectionProps) => {
         {isDelivery && (
           <InfoRow
             label={t("order_page_summary_delivery_price")}
-            value={`${formatPrice(deliveryPrice)} ${t("sum")}`}
+            value={deliveryText ?? `${formatPrice(deliveryPrice)} ${t("sum")}`}
           />
         )}
         <InfoRow

@@ -47,7 +47,7 @@ const ChatInput = ({
   };
 
   return (
-    <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3">
+    <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(12px,var(--safe-bottom))] pt-3">
       {selectedFile && (
         <div className="mb-2 flex items-center gap-2 rounded-xl bg-gray10 px-3 py-2">
           {previewUrl ? (

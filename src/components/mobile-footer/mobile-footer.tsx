@@ -84,7 +84,9 @@ const MobileFooter = () => {
   return (
     <nav
       className={`fixed left-1/2 z-50 w-[calc(100%-24px)] max-w-md -translate-x-1/2 lg:hidden ${
-        isClickApp ? "bottom-9" : "bottom-4"
+        isClickApp
+          ? "bottom-9"
+          : "bottom-[max(1rem,calc(var(--safe-bottom)*0.6))]"
       }`}
     >
       <div className="relative rounded-[20px] shadow-[0_10px_40px_rgba(15,23,42,0.16)]">

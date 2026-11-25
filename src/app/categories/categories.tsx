@@ -1,8 +1,8 @@
 "use client";
 
 import { useShopCategories } from "@/hooks/useShopCategories";
-import { Suspense } from "react";
-import { ChevronLeft } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import { ChevronLeft, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,10 @@ import { ROUTER } from "@/constants/router";
 import { useShopId } from "@/hooks/useShopId";
 import { getImageSrc, handleImageFallback } from "@/utils/image";
 import { normalizeCategories } from "@/utils/product";
+import { useBoolean } from "@/hooks/useBoolean";
+import { useUiStore } from "@/stores/ui";
+import AllProducts from "./components/all-products";
+import { MobileSearchScreen } from "@/app/components/banner/components";
 
 const GRID_CLASS_NAME =
   "grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6 lg:gap-5";
@@ -31,8 +35,25 @@ const CategoriesContent = () => {
   const categories = normalizeCategories(data?.data);
   const shopQuery = shopid ? `?shop_id=${shopid}` : "";
 
+  const searchModal = useBoolean();
+  const [searchValue, setSearchValue] = useState("");
+  const setMobileHeaderDrawerOpen = useUiStore(
+    (state) => state.setMobileHeaderDrawerOpen,
+  );
+
+  useEffect(() => {
+    setMobileHeaderDrawerOpen(searchModal.value);
+
+    return () => setMobileHeaderDrawerOpen(false);
+  }, [searchModal.value, setMobileHeaderDrawerOpen]);
+
+  const handleCloseSearch = () => {
+    searchModal.setFalse();
+    setSearchValue("");
+  };
+
   return (
-    <div className="flex min-h-screen flex-col bg-gray10 pb-[74px] lg:pb-0">
+    <div className="flex min-h-screen flex-col bg-gray10 pb-[calc(74px+var(--safe-bottom))] lg:pb-0">
       <Header pinBottomRow />
 
       <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[var(--safe-top)] lg:hidden">
@@ -47,16 +68,30 @@ const CategoriesContent = () => {
           >
             <ChevronLeft size={22} />
           </Button>
-          <h1 className="min-w-0 truncate text-base font-medium text-black">
+          <h1 className="min-w-0 flex-1 truncate text-base font-medium text-black">
             {t("search_categories")}
           </h1>
+          <Button
+            type="button"
+            variant="icon-solid"
+            size="icon-lg"
+            onClick={searchModal.setTrue}
+            aria-label={t("search_products")}
+            className="-my-1.5 shrink-0 bg-gray10 text-gray220"
+          >
+            <SearchIcon size={20} />
+          </Button>
         </div>
       </div>
 
       <Breadcrumb items={[{ label: t("catalog_all_categories") }]} />
 
-      <div className="flex w-full flex-1 flex-col bg-gray10 lg:my-2 lg:rounded-[30px] lg:bg-white">
-        <div className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-4 pt-4 lg:max-w-7xl lg:px-5 lg:py-6">
+      <div
+        className={`flex w-full flex-col bg-gray10 lg:mt-2 lg:rounded-[30px] lg:bg-white ${
+          categories.length > 0 ? "" : "flex-1"
+        }`}
+      >
+        <div className="mx-auto flex w-full max-w-xl flex-col px-4 pb-4 pt-4 lg:max-w-7xl lg:px-5 lg:py-6">
           <h2 className="mb-6 hidden text-xl font-medium text-black lg:block">
             {t("catalog_all_categories")}
           </h2>
@@ -94,6 +129,21 @@ const CategoriesContent = () => {
           )}
         </div>
       </div>
+
+      {categories.length > 0 && (
+        <div className="flex-1 lg:pb-6">
+          <AllProducts categoryIds={categories.map((category) => category.id)} />
+        </div>
+      )}
+
+      <MobileSearchScreen
+        open={searchModal.value}
+        value={searchValue}
+        placeholder={t("search_food_or_category")}
+        onClose={handleCloseSearch}
+        onClear={() => setSearchValue("")}
+        onChange={(event) => setSearchValue(event.target.value)}
+      />
 
       <Footer />
       <MobileFooter />

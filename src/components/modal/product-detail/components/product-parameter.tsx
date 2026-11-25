@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { formatPrice } from "@/utils/format-price";
 import type { ProductParameterProps } from "@/types/product";
 import { getSkuMeta } from "@/components/modal/product-detail/product-detail";
+import { isOutOfStock } from "@/utils/product-stock";
 
 type ProductParameterPropsType = {
   parameter: ProductParameterProps;
@@ -37,13 +38,15 @@ const ProductParameter = ({
         <div className="grid grid-cols-2 gap-2.5">
           {parameter.skus.map((sku) => {
             const isSelected = selectedSkuIds.includes(sku.id);
+            const isDisabled = isOutOfStock(sku);
 
             return (
               <button
                 key={sku.id}
                 type="button"
+                disabled={isDisabled}
                 onClick={() => onSelect(sku.id)}
-                className={`min-h-[58px] min-w-0 rounded-xl border px-3 py-2 text-left shadow-sm transition-colors ${
+                className={`min-h-[58px] min-w-0 rounded-xl border px-3 py-2 text-left shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   isSelected
                     ? "border-green-500 bg-green-50 shadow-green-500/10"
                     : error
@@ -104,13 +107,15 @@ const ProductParameter = ({
         {parameter.skus.map((sku) => {
           const meta = getSkuMeta(sku);
           const isSelected = selectedSkuIds.includes(sku.id);
+          const isDisabled = isOutOfStock(sku);
 
           return (
             <button
               key={sku.id}
               type="button"
+              disabled={isDisabled}
               onClick={() => onSelect(sku.id)}
-              className={`flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border px-2 py-1.5 text-left transition-colors ${
+              className={`flex min-h-10 w-full items-center justify-between gap-3 rounded-xl border px-2 py-1.5 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 error && !isSelected
                   ? "required-option-error border-red-400 hover:border-red-500"
                   : "border-transparent hover:border-gray180"
@@ -171,6 +176,8 @@ type ProductDetailFooterProps = {
   sumLabel: string;
   hasCart: boolean;
   isLoading: boolean;
+  maxQuantity: number;
+  isSoldOut: boolean;
   onAdd: () => void;
   onAddAndClose: () => void;
   onDecrement: () => void;
@@ -183,6 +190,8 @@ const ProductDetailFooter = ({
   sumLabel,
   hasCart,
   isLoading,
+  maxQuantity,
+  isSoldOut,
   onAdd,
   onAddAndClose,
   onDecrement,
@@ -190,7 +199,7 @@ const ProductDetailFooter = ({
 }: ProductDetailFooterProps) => {
   const t = useTranslations();
   return (
-    <div className="absolute bottom-0 left-0 right-0 border-t border-gray180 bg-white px-4 pb-[max(14px,env(safe-area-inset-bottom))] pt-3 lg:px-6 lg:pb-5 lg:pt-4">
+    <div className="absolute bottom-0 left-0 right-0 border-t border-gray180 bg-white px-4 pb-[max(14px,var(--safe-bottom))] pt-3 lg:px-6 lg:pb-5 lg:pt-4">
       <div className="flex items-center gap-2 lg:gap-4">
         <div className="h-12 w-[116px] shrink-0 lg:h-13 lg:w-[138px]">
           <div className="flex h-full items-center justify-between rounded-2xl border border-gray180 bg-white p-1 text-black">
@@ -219,7 +228,7 @@ const ProductDetailFooter = ({
             <button
               type="button"
               onClick={onAdd}
-              disabled={isLoading || (quantity || 1) >= 999}
+              disabled={isLoading || isSoldOut || (quantity || 1) >= maxQuantity}
               className="grid h-10 w-9 place-items-center rounded-xl bg-gray10 lg:w-10 text-black disabled:opacity-50"
             >
               <Plus size={16} strokeWidth={2.5} />
@@ -230,11 +239,11 @@ const ProductDetailFooter = ({
         <button
           type="button"
           onClick={onAddAndClose}
-          disabled={isLoading}
+          disabled={isLoading || isSoldOut}
           className="flex h-12 min-w-0 flex-1 items-center justify-between gap-2 rounded-2xl bg-primary px-4 text-white shadow-[0_10px_24px_rgba(107,83,230,0.28)] disabled:opacity-70 lg:h-13 lg:gap-3 lg:px-6"
         >
           <span className="shrink-0 whitespace-nowrap text-sm font-medium">
-            {t("add_to_cart")}
+            {isSoldOut ? t("product_out_of_stock") : t("add_to_cart")}
           </span>
           <span className="min-w-0 truncate whitespace-nowrap text-sm font-semibold tabular-nums">
             {totalPrice} {sumLabel}

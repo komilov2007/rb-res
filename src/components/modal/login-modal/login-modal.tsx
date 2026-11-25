@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Button from "@/components/ui/button";
 import { XButton } from "@/components/ui/sheet";
-import { PhoneInput } from "@/components/ui/input";
+import InternationalPhoneInput from "@/components/ui/international-phone-input";
 import ModalScreen from "@/components/modal/screen-modal";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
@@ -15,10 +15,13 @@ import { loginUser } from "@/apis/auth";
 import { setUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useDelayedFocus } from "@/hooks/useDelayedFocus";
 import { useCartStore } from "@/stores/cart";
 import { getCartList, postCartProductList } from "@/apis/cart";
 import { normalizeCartItems } from "@/utils/cart";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+
+import { UserPolicy } from "./user-policy";
 
 const LoginModal = () => {
   const t = useTranslations();
@@ -26,9 +29,15 @@ const LoginModal = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const queryClient = useQueryClient();
   const [phone, setPhone] = useState("");
+  // O'zbekiston: +998 + 9 raqam; boshqa davlatlar: rb-webapp kabi kamida 7 raqam
+  const phoneDigits = phone.replace(/D/g, "");
+  const isPhoneValid = phoneDigits.startsWith("998")
+    ? phoneDigits.length === 12
+    : phoneDigits.length >= 7 + 1;
   const loginModal = useAuthStore((state) => state.loginModal);
   const setAuth = useAuthStore((state) => state.setAuth);
   const setLoginModal = useAuthStore((state) => state.setLoginModal);
+  const focusRef = useDelayedFocus<HTMLLabelElement>(loginModal && !isDesktop);
   const setSignupModal = useAuthStore((state) => state.setSignupModal);
   const carts = useCartStore((state) => state.carts);
   const setCarts = useCartStore((state) => state.setCarts);
@@ -41,7 +50,8 @@ const LoginModal = () => {
   const login = useMutation({
     mutationFn: () =>
       loginUser({
-        phone: `+998${phone}`,
+        // rb-webapp phoneFormat: faqat raqamlar va "+"
+        phone: phone.replace(/[^0-9+]/g, ""),
         platform: "WEBSITE",
         shop: shopid as string,
       }),
@@ -92,7 +102,7 @@ const LoginModal = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!shopid || phone.length !== 9 || login.isPending) return;
+    if (!shopid || !isPhoneValid || login.isPending) return;
 
     login.mutate();
   };
@@ -110,21 +120,27 @@ const LoginModal = () => {
         <XButton size="sm" onClick={handleClose} />
       </div>
 
-      <label className="flex flex-col gap-2">
+      <label ref={focusRef} className="flex flex-col gap-2">
         <span className="text-sm font-medium text-black">
           {t("phone_number")}
         </span>
-        <PhoneInput autoFocus value={phone} onChange={setPhone} />
+        <InternationalPhoneInput
+          autoFocus={isDesktop}
+          value={phone}
+          onChange={setPhone}
+        />
       </label>
 
       <Button
         type="submit"
         variant="primary-solid"
         size="primaryWide"
-        disabled={!shopid || phone.length !== 9 || login.isPending}
+        disabled={!shopid || !isPhoneValid || login.isPending}
       >
         {t("enter")}
       </Button>
+
+      <UserPolicy buttonLabel={t("enter")} />
     </form>
   );
 

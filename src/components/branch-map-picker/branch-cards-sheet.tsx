@@ -31,7 +31,7 @@ const BranchCardsSheet = ({
   } = controller;
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-10 flex max-h-[85dvh] flex-col overflow-hidden rounded-t-3xl bg-gray10 pb-[max(44px,calc(env(safe-area-inset-bottom)+28px))]">
+    <div className="absolute inset-x-0 bottom-0 z-10 flex max-h-[85dvh] flex-col overflow-hidden rounded-t-3xl bg-gray10 pb-[max(44px,calc(var(--safe-bottom)+28px))]">
       <button
         type="button"
         onClick={closeList}

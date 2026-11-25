@@ -73,8 +73,8 @@ const DeliveryTypeDeliveryType = ({
 
   return (
     <>
-      <section className="rounded-xl bg-white p-3">
-        <h2 className="pb-2 text-sm font-medium text-black">
+      <section className="rounded-2xl bg-white p-4">
+        <h2 className="pb-3 text-base font-medium text-black">
           {t("order_page_delivery_type_title")}
         </h2>
         {isServicesLoading ? (
@@ -102,10 +102,10 @@ const DeliveryTypeDeliveryType = ({
                       key={service.id}
                       type="button"
                       onClick={() => field.onChange(service.type)}
-                      className={`flex min-h-16 w-full items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-left ${getOptionClassName(checked, false, "outlined")}`}
+                      className={`flex min-h-14 w-full items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left ${getOptionClassName(checked)}`}
                     >
                       <span className="min-w-0">
-                        <span className="info-label block">
+                        <span className="block text-[15px] font-normal text-black">
                           {t(option.label)}
                         </span>
                         <span className="info-value block">

@@ -81,7 +81,18 @@ export const orderSchema = yup.object().shape(
         then: (schema) =>
           schema
             .required(() => translate("order_page_errors_time_required"))
-            .nonNullable(() => translate("order_page_errors_time_required")),
+            .nonNullable(() => translate("order_page_errors_time_required"))
+            // rb-webapp: disablePast — bugungi o'tib ketgan vaqt qabul qilinmaydi
+            .test(
+              "not-in-past",
+              () => translate("order_page_errors_time_past"),
+              function (time) {
+                const date = this.parent.shipping_date as string | null;
+                if (!date || !time) return true;
+                const selected = new Date(`${date}T${time}`);
+                return Number.isNaN(selected.getTime()) || selected > new Date();
+              },
+            ),
       }),
     delivery_price: yup.number().nullable().default(null),
     delivery_price_type: yup.string().nullable().default(null),

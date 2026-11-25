@@ -127,7 +127,7 @@ const OrderDetailView = ({
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
-      <div className="fixed inset-x-0 top-0 z-10 border-b border-gray180 bg-white">
+      <div className="fixed inset-x-0 top-0 z-10 border-b border-gray180 bg-white pt-(--safe-top)">
         <div className="mx-auto flex w-full max-w-xl items-center gap-3 px-4 py-3">
           <Button
             type="button"

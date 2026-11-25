@@ -1,12 +1,13 @@
 "use client";
 
-import type { ComponentType, InputHTMLAttributes, ReactNode, ChangeEvent } from "react";
+import type { ComponentType, InputHTMLAttributes, ReactNode, ChangeEvent, Ref } from "react";
 import { X } from "lucide-react";
 import Button from "./button";
 import { IconFlagUzbek } from "@/assets/icons/flag-uzbek";
 import { formatPhone, getDigits } from "@/utils/format-number";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  ref?: Ref<HTMLInputElement>;
   IconStart?: ComponentType<{ size?: number; className?: string }>;
   IconEnd?: ComponentType;
   startContent?: ReactNode;

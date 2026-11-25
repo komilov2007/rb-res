@@ -26,11 +26,18 @@ export type GeneralProps = {
     min_price: number | null;
     price: number | null;
     text: string | null;
-  };
+    inital_km?: string | null;
+    inital_km_price?: string | null;
+    every_km_price?: string | null;
+  } | null;
+  yandex_delivery_min_price?: number | null;
+  noor_delivery_min_price?: number | null;
   cashback_enabled?: boolean;
   cashback_amount?: number | null;
   website_color?: string | null;
   orders_button_placement?: "RIGHT" | "BOTTOM" | null;
+  // e.g. "bitomarket" — selects the privacy-policy PDF set
+  login_type?: string | null;
   currency?: {
     id: number;
     name: string;

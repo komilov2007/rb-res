@@ -4,6 +4,8 @@ export type AuthProps = {
   access: string;
   refresh: string;
   firstname: string;
+  // true until the user accepts the public offer (POST click/update/oferta)
+  is_new?: boolean;
 };
 
 export type LoginPayloadProps = {
@@ -20,3 +22,10 @@ export type SignupPayloadProps = {
 export type UpdateFirstnameResponse = {
   firstname: string;
 };
+
+// GET privacy-policy?login_type=… — live response only carries uz/ru keys.
+type PolicyLocale = "uz" | "ru" | "en" | "tr";
+
+export type PrivacyPolicyProps = Partial<
+  Record<`user_policy_${"website" | "telegram"}_${PolicyLocale}`, string>
+>;

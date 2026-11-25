@@ -66,7 +66,7 @@ const ShopClosedModal = () => {
         desktopModal
         showCloseButton={false}
         aria-describedby={undefined}
-        className="items-center gap-0 rounded-t-3xl border-gray180 px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-3 text-center"
+        className="items-center gap-0 rounded-t-3xl border-gray180 px-5 pb-[max(20px,var(--safe-bottom))] pt-3 text-center"
       >
         <span className="mx-auto h-1 w-10 shrink-0 rounded-full bg-gray180 lg:hidden" />
 

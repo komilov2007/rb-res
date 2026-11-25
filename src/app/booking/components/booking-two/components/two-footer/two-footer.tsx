@@ -28,7 +28,7 @@ const TwoFooter = ({ className = "" }: TwoFooterProps) => {
 
   return (
     <div
-      className={`shrink-0 bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-3 lg:p-0 ${className}`}
+      className={`shrink-0 bg-white px-4 pb-[max(16px,var(--safe-bottom))] pt-3 lg:p-0 ${className}`}
     >
       <div className="mx-auto w-full max-w-xl">
         <div className="mb-3 flex items-center justify-center gap-4 text-sm font-normal text-black">

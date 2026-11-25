@@ -16,6 +16,7 @@ import { signUp } from "@/apis/auth";
 import { getUser, setUser } from "@/utils/user";
 import { useShopId } from "@/hooks/useShopId";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useDelayedFocus } from "@/hooks/useDelayedFocus";
 import { getLocalPhone } from "@/utils/format-number";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
 
@@ -29,6 +30,7 @@ const SignupModal = () => {
   const setAuth = useAuthStore((state) => state.setAuth);
   const signupModal = useAuthStore((state) => state.signupModal);
   const setSignupModal = useAuthStore((state) => state.setSignupModal);
+  const focusRef = useDelayedFocus<HTMLLabelElement>(signupModal && !isDesktop);
   const setPendingCheckout = useCartStore((state) => state.setPendingCheckout);
 
   const closeModal = () => {
@@ -89,12 +91,12 @@ const SignupModal = () => {
         <XButton size="sm" onClick={handleDismiss} />
       </div>
 
-      <label className="flex flex-col gap-2">
+      <label ref={focusRef} className="flex flex-col gap-2">
         <span className="text-sm font-medium text-black">
           {t("first_name")}
         </span>
         <Input
-          autoFocus
+          autoFocus={isDesktop}
           value={firstname}
           onChange={(event) => setFirstname(event.target.value)}
           className="font-normal text-black"

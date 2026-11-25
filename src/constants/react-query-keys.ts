@@ -25,4 +25,6 @@ export const REACT_QUERY_KEYS = {
   ACTIVE_ORDERS_COUNT: "active-orders-count",
   CLICK_LOGIN: "click-login",
   ATMOSPHERE: "atmosphere",
+  OFERTA: "oferta",
+  PRIVACY_POLICY: "privacy-policy",
 } as const;

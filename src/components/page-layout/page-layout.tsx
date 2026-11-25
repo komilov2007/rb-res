@@ -15,7 +15,7 @@ type PageLayoutProps = {
 
 const PageLayout = ({ children }: PageLayoutProps) => {
   return (
-    <div className="min-h-screen bg-gray10 pb-[74px] lg:pb-0">
+    <div className="min-h-screen bg-gray10 pb-[calc(58px+max(1rem,calc(var(--safe-bottom)*0.6)))] lg:pb-0">
       <Header />
       <main className="bg-gray10">{children}</main>
       <div className="h-2 bg-gray10" />

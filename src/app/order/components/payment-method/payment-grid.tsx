@@ -1,6 +1,8 @@
 "use client";
 
-import { Controller, useFormContext } from "react-hook-form";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import type { OrderFormValues, PaymentTypeProps } from "@/types/order";
 import { RadioMark } from "@/components/ui/radio-mark";
@@ -39,7 +41,13 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
             const caption = t("order_page_payment_caption", { label: config.label });
 
             const handleSelect = () => {
-              if (isDisabled) return;
+              // rb-webapp kabi: o'chirilgan to'lov turi tushunarli xabar bilan
+              if (isDisabled) {
+                toast.error(
+                  t("order_page_errors_provider_disabled", { name: config.label }),
+                );
+                return;
+              }
 
               field.onChange(type);
             };
@@ -49,15 +57,15 @@ const PaymentGrid = ({ visiblePaymentTypes, getIsDisabled }: PaymentGridProps) =
                 key={type}
                 type="button"
                 onClick={handleSelect}
-                disabled={isDisabled}
-                className={`flex flex-col gap-2 rounded-2xl border p-3 text-left transition-colors duration-200 ${
-                  isDisabled ? "pointer-events-none opacity-50" : ""
+                aria-disabled={isDisabled}
+                className={`flex min-h-21 flex-col justify-between gap-2 rounded-2xl border p-3 text-left transition-colors duration-200 ${
+                  isDisabled ? "cursor-not-allowed opacity-50" : ""
                 } ${
                   checked
                     ? "border-green-500 bg-green-500/10"
                     : hasError
-                      ? "border-red bg-white"
-                      : "border-gray180 bg-white"
+                      ? "border-red bg-gray10/50"
+                      : "border-gray180/70 bg-gray10/50"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -128,6 +136,18 @@ const PaymentMethodQuery = ({ shopid, deliveryType }: PaymentMethodQueryProps) =
 
   const paymentList = data?.data ?? [];
   const visiblePaymentTypes = getVisiblePaymentTypes(paymentList);
+  const { control, setValue } = useFormContext<OrderFormValues>();
+  const selected = useWatch({ control, name: "payment_type" });
+  const isSelectedInvalid =
+    selected !== null &&
+    (!visiblePaymentTypes.includes(selected) ||
+      isPaymentTypeDisabled(selected, paymentList));
+
+  // Yetkazish turi o'zgarib, tanlangan to'lov turi bu xizmatda o'chirilgan yoki
+  // yo'q bo'lsa — tanlov tozalanadi, o'chirilgan to'lov bilan buyurtma ketmasin.
+  useEffect(() => {
+    if (isSelectedInvalid) setValue("payment_type", null, { shouldValidate: true });
+  }, [isSelectedInvalid, setValue]);
 
   return (
     <PaymentGrid

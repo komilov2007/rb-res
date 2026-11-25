@@ -122,7 +122,17 @@ export const useOrderTotals = ({
       ? unavailable.ids
       : [];
 
-  const cartTotal = getCartTotal(carts);
+  // Backend "mavjud emas" deb qaytargan savat qatorlari narxga qo'shilmaydi
+  // (rb-webapp: ular alohida ko'rsatilib, summadan va items'dan chiqariladi).
+  const cartTotal = getCartTotal(
+    unavailableItemIds.length > 0
+      ? carts.filter(
+          (item) =>
+            typeof item.id !== "number" ||
+            !unavailableItemIds.includes(item.id),
+        )
+      : carts,
+  );
   const orderDeliveryPrice =
     isDelivery &&
     typeof deliveryPrice === "number" &&

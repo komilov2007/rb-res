@@ -12,6 +12,7 @@ import { useAuthStore } from "@/stores/auth";
 import { getCartBranchId } from "@/utils/cart";
 import { useRefreshCart } from "@/hooks/useRefreshCart";
 import { useBranchSelection } from "@/components/branch-selection";
+import { getMaxQuantity, isOutOfStock } from "@/utils/product-stock";
 
 export const useCardProduct = ({
   product,
@@ -28,7 +29,6 @@ export const useCardProduct = ({
     (state) => state.openProductDetail,
   );
   const customerId = useAuthStore((state) => state.auth?.customer);
-  const setLoginModal = useAuthStore((state) => state.setLoginModal);
   const [displayQuantity, setDisplayQuantity] = useState<number | null>(null);
   const [isCartSyncing, setIsCartSyncing] = useState(false);
   const stockMutation = useMutation({
@@ -59,6 +59,7 @@ export const useCardProduct = ({
   const branchData = { branch_id: branchId ? String(branchId) : undefined };
 
   const refreshCart = useRefreshCart();
+  const maxQuantity = getMaxQuantity(product);
 
   const syncStockQuantity = async (
     nextQuantity: number,
@@ -114,15 +115,16 @@ export const useCardProduct = ({
   };
 
   const addOne = async (isFirstAdd: boolean) => {
-    if (!customerId) {
-      setLoginModal(true);
-      return;
-    }
+    if (isOutOfStock(product)) return;
 
+    // Mehmon ham savatga qo'sha oladi: savat qurilmada saqlanadi va login
+    // paytida serverga yuboriladi (login-modal). Login faqat checkout'da so'raladi.
     if (product.have_parameter) {
       openProductDetail(product, saleBadgeVariant, "default");
       return;
     }
+
+    if (quantity + 1 > maxQuantity) return;
 
     const syncedQuantity = await syncStockQuantity(quantity + 1);
 
@@ -167,11 +169,8 @@ export const useCardProduct = ({
     openCounter();
   };
 
-  const handleChangeQuantity = async (quantity: number) => {
-    if (!customerId) {
-      setLoginModal(true);
-      return;
-    }
+  const handleChangeQuantity = async (nextQuantity: number) => {
+    const quantity = Math.min(nextQuantity, maxQuantity);
 
     if (product.have_parameter) {
       await changeParameterQuantity(quantity);

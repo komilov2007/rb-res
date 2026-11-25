@@ -17,6 +17,8 @@ import type { OrderFormValues } from "@/types/order";
 import { getActiveCartCount } from "@/utils/cart";
 import { getApiErrorMessage } from "@/utils/api-error";
 import { useBranches } from "@/hooks/useBranches";
+import { getServiceMinPrice } from "@/utils/delivery-rules";
+import { formatPrice } from "@/utils/format-price";
 import { isTelegramInvoicePaymentType } from "./constants";
 import { buildOrderPayload, getOrderItems } from "./constants";
 import { useInvalidateOrderDomains } from "./useOrderResponse";
@@ -133,10 +135,27 @@ export const usePage = () => {
 
     if (isDeliveryOrder && !isAddressDeliverable) return;
 
-    const orderItems = getOrderItems(carts);
+    const orderItems = getOrderItems(carts).filter(
+      (id) => !unavailableItemIds.includes(id),
+    );
 
     if (orderItems.length === 0) {
       toast.error(t("order_page_errors_cart_empty"));
+      return;
+    }
+
+    const minPrice = getServiceMinPrice(
+      freshGeneral?.data ?? general?.data,
+      values.delivery_type,
+    );
+
+    if (minPrice !== null && totals.cartTotal < minPrice) {
+      toast.error(
+        t("order_min_order_error", {
+          amount: formatPrice(minPrice),
+          currency: t("sum"),
+        }),
+      );
       return;
     }
 

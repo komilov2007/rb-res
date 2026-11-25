@@ -19,10 +19,10 @@ const BonusPoint = () => {
   const cashbackBall = profile?.data.cashback_ball ?? 0;
 
   return (
-    <section className="rounded-xl bg-white p-3">
+    <section className="rounded-2xl bg-white p-4">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h2 className="text-sm font-medium text-black">
+          <h2 className="text-base font-medium text-black">
             {t("order_page_bonus_title")}
           </h2>
           <p className="mt-0.5 text-xs font-normal text-gray220">
@@ -71,7 +71,7 @@ const PlaceOrder = ({ displayTotal, isSubmitting }: PlaceOrderProps) => {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-10 rounded-t-xl border-t border-gray180 bg-white lg:static lg:rounded-none lg:border-t-0 lg:bg-transparent">
-      <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-2 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))] lg:max-w-none lg:p-0">
+      <div className="mx-auto flex w-full max-w-xl items-center justify-between gap-2 px-4 py-3 pb-[max(12px,var(--safe-bottom))] lg:max-w-none lg:p-0">
         <div className="lg:hidden">
           <p className="info-label">
             {t("order_page_payment_amount")}

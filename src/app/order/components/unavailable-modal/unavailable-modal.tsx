@@ -92,8 +92,8 @@ const ShippingTime = () => {
   const [today] = useState(() => new Date().toLocaleDateString("en-CA"));
 
   return (
-    <section className="rounded-xl bg-white p-3">
-      <h2 className="flex items-center gap-2 text-sm font-medium text-black">
+    <section className="rounded-2xl bg-white p-4">
+      <h2 className="flex items-center gap-2 text-base font-medium text-black">
         <CalendarClock size={18} className="text-gray220" />
         {t("order_page_shipping_title")}
       </h2>

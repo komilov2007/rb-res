@@ -48,12 +48,14 @@ export const CartCounter = ({
   onMinus,
   onPlus,
   isLoading,
+  isPlusDisabled = false,
 }: {
   isMobile: boolean;
   quantity: number;
   onMinus: () => void;
   onPlus: () => void;
   isLoading?: boolean;
+  isPlusDisabled?: boolean;
 }) => {
   return (
     <Button
@@ -100,7 +102,7 @@ export const CartCounter = ({
             event.stopPropagation();
             onPlus();
           }}
-          disabled={isLoading}
+          disabled={isLoading || isPlusDisabled}
         >
           <Plus size={isMobile ? 14 : 16} strokeWidth={2.2} />
         </Button>

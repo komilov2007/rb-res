@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconMapPinFilled } from "@tabler/icons-react";
 import { Store } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -39,6 +39,19 @@ export const PickupTab = ({
   const visibleBranches = expanded
     ? branches
     : branches.slice(0, COLLAPSED_COUNT);
+  const singleBranchId =
+    selection.isReady && branches.length === 1 ? branches[0].id : null;
+  const isSingleSelected =
+    selection.serviceType === "PICKUP" &&
+    selection.branchId === singleBranchId;
+
+  // Yagona filial bo'lsa, olib ketish tanlanganda u avtomatik tanlanadi.
+  useEffect(() => {
+    if (!selection.shopid || singleBranchId === null || isSingleSelected)
+      return;
+
+    setPickup(selection.shopid, singleBranchId);
+  }, [selection.shopid, singleBranchId, isSingleSelected, setPickup]);
 
   return (
     <div className="flex flex-col gap-2">

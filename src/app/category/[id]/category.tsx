@@ -85,7 +85,7 @@ const CategoryContent = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray10 pb-[74px] lg:pb-0">
+    <div className="flex min-h-screen flex-col bg-gray10 pb-[calc(74px+var(--safe-bottom))] lg:pb-0">
       <Header pinBottomRow />
 
       <div className="sticky top-0 z-30 rounded-b-2xl border-b border-gray180 bg-white pt-[var(--safe-top)] lg:hidden">

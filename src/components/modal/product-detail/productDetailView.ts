@@ -3,6 +3,7 @@
 import { getCartBranchId } from "@/utils/cart";
 import { formatPrice } from "@/utils/format-price";
 import { IMAGE_PLACEHOLDER_SRC } from "@/utils/image";
+import { getMaxQuantity, isOutOfStock } from "@/utils/product-stock";
 import { getOldPrice, stripHtml } from "./product-detail";
 import type { useProductDetailBase } from "./useProductDetailBase";
 
@@ -78,6 +79,12 @@ export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
   );
   const quantity = cartItem?.quantity ?? 0;
   const totalPrice = totalItemPrice * (quantity || 1);
+  const maxQuantity = getMaxQuantity(
+    detail,
+    selectedParameterSku,
+    ...selectedAdditionalSkus,
+  );
+  const isSoldOut = isOutOfStock(detail);
   const branchId = getCartBranchId(detail.branches, selectedBranchId);
   const isStockLoading = stockMutation.isPending;
   const showParameterError =
@@ -120,6 +127,8 @@ export const getProductDetailView = (ctx: ProductDetailBaseContext) => {
     cartItem,
     quantity,
     totalPrice,
+    maxQuantity,
+    isSoldOut,
     branchId,
     isStockLoading,
     showParameterError,

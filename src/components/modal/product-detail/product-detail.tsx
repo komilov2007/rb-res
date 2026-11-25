@@ -13,6 +13,7 @@ import { renderDetailContent } from "./renderDetailContent";
 import { renderDrawerContent } from "./renderDrawerContent";
 import type { ProductSkuProps } from "@/types/product";
 import { translate } from "@/utils/translate";
+import { isOutOfStock } from "@/utils/product-stock";
 
 const ProductDetailMobile = () => {
   const base = useProductDetailBase();
@@ -41,6 +42,8 @@ const ProductDetailMobile = () => {
     cartItem,
     quantity,
     totalPrice,
+    maxQuantity,
+    isSoldOut,
     isStockLoading,
     closeDetail,
     handleOpenChange,
@@ -72,6 +75,8 @@ const ProductDetailMobile = () => {
       sumLabel={t("sum")}
       hasCart={Boolean(cartItem)}
       isLoading={isStockLoading}
+      maxQuantity={maxQuantity}
+      isSoldOut={isSoldOut || maxQuantity < 1}
       onAdd={handleAdd}
       onAddAndClose={handleAddAndClose}
       onDecrement={handleDecrementDetail}
@@ -125,7 +130,7 @@ const ProductDetailMobile = () => {
           isDesktop
             ? "rounded-none"
             : isExpanded
-              ? "h-dvh max-h-dvh rounded-none"
+              ? "h-dvh max-h-dvh rounded-none border-t-(length:--safe-top) border-t-white"
               : "max-h-[80dvh] rounded-t-[28px]"
         }`}
       >
@@ -197,6 +202,8 @@ export const getOldPrice = ({
 
 export const getSkuMeta = (sku: ProductSkuProps) => {
   const unit = sku.unit?.unit || sku.unit?.name;
+
+  if (isOutOfStock(sku)) return translate("product_out_of_stock");
 
   if (sku.amount > 0 && unit) return `${sku.amount} ${unit}`;
   if (sku.status === "UNLIMITED") return translate("product_in_stock");

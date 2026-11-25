@@ -6,6 +6,8 @@ import Breadcrumb, { type BreadcrumbItem } from "@/components/breadcrumb";
 import { ROUTER } from "@/constants/router";
 import ProfileSidebar from "../profile-sidebar";
 import { useTranslations as useTranslationsPoweredBy } from "next-intl";
+import { useGeneral } from "@/hooks/useGeneral";
+import { getPoweredBy } from "@/constants/login-type";
 import type { ComponentType, ReactNode as ReactNodeProfileItem } from "react";
 import { ChevronRight } from "lucide-react";
 
@@ -58,13 +60,16 @@ export default ProfileDesktopLayout;
 
 const PoweredBy = ({ className }: { className: string }) => {
   const t = useTranslationsPoweredBy();
+  const { data: general } = useGeneral();
+  const brand = getPoweredBy(general?.data?.login_type);
 
   return (
     <p className={className}>
       {t.rich("profile_page_powered_by", {
+        brand: brand.value,
         link: (chunks) => (
           <a
-            href="https://robosell.uz/"
+            href={brand.url}
             target="_blank"
             rel="noopener noreferrer"
             className="!text-robosell"

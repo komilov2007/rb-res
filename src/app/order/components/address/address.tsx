@@ -57,8 +57,8 @@ const Address = () => {
       : null;
 
   return (
-    <section className="rounded-xl bg-white p-3">
-      <h2 className="text-sm font-medium text-black">
+    <section className="rounded-2xl bg-white p-4">
+      <h2 className="text-base font-medium text-black">
         {t("location_delivery_address_title")}
       </h2>
 

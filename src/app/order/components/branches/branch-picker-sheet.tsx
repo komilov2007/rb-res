@@ -58,7 +58,7 @@ const BranchPickerSheet = ({
           <SheetTitle>{t("order_page_branches_picker_title")}</SheetTitle>
         </SheetHeader>
 
-        <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 pb-[max(20px,env(safe-area-inset-bottom))]">
+        <div className="scroll-hidden flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-4 pb-[max(20px,var(--safe-bottom))]">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[11px] font-normal tracking-wider text-gray220">
               {t("home_branch_selection_available_branches")}
@@ -106,7 +106,7 @@ const BranchPickerSheet = ({
                     className={`flex w-full items-start gap-3 rounded-2xl p-3 text-left ${
                       !isAvailable
                         ? "cursor-not-allowed border border-gray180 bg-white opacity-70"
-                        : getOptionClassName(checked, false, "outlined")
+                        : getOptionClassName(checked)
                     }`}
                   >
                     <span

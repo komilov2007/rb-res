@@ -108,3 +108,23 @@ export const createTelegramInvoiceLink = async (
 
   return response.json();
 };
+
+// Inside Telegram: tell the bot the session failed and close the mini app
+// (old webapp /error parity). Returns false outside Telegram.
+export const closeTelegramWithError = async (): Promise<boolean> => {
+  if (!getTelegramWebApp()?.initData) return false;
+
+  const WebApp = await loadWebApp();
+
+  if (!WebApp) return false;
+
+  try {
+    WebApp.sendData(JSON.stringify({ error: true }));
+  } catch {
+    // sendData is only allowed for keyboard-button launches.
+  }
+
+  WebApp.close();
+
+  return true;
+};

@@ -60,7 +60,7 @@ export const SelectionContent = ({
         </DialogTitle>
       </div>
 
-      <div className="scroll-panel flex min-h-0 flex-col gap-4 overflow-y-auto p-5 pt-3">
+      <div className="scroll-panel flex min-h-0 flex-col gap-4 overflow-y-auto p-5 pt-3 pb-[calc(1.75rem+var(--safe-bottom))] lg:pb-5">
         {tabs.length > 1 && (
           <div className="relative grid grid-cols-2 rounded-xl bg-gray10 p-1">
             {/* Sirpanuvchi faol tab foni */}

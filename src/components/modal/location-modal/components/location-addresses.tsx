@@ -33,7 +33,7 @@ const LocationAddresses = ({
 }: LocationAddressesProps) => {
   const t = useTranslations();
   return (
-    <div className="flex max-h-[70dvh] w-full flex-col bg-white px-5 pb-[max(20px,env(safe-area-inset-bottom))] pt-4">
+    <div className="flex max-h-[70dvh] w-full flex-col bg-white px-5 pb-[max(20px,var(--safe-bottom))] pt-4">
       <div className="shrink-0 border-b border-gray180 pb-3 flex items-center justify-between gap-4">
         <h2 className="text-[22px] font-medium leading-7 text-black">
           {t("location_my_addresses")}

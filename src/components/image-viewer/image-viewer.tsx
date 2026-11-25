@@ -130,7 +130,7 @@ const ImageViewer = ({ images, openIndex, onClose }: ImageViewerProps) => {
           </div>
 
           {hasMany && (
-            <div className="scroll-hidden flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 pb-[max(16px,env(safe-area-inset-bottom))] lg:w-28 lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pl-0 lg:pr-5 lg:pt-0 lg:pb-6">
+            <div className="scroll-hidden flex shrink-0 gap-2 overflow-x-auto px-4 pt-3 pb-[max(16px,var(--safe-bottom))] lg:w-28 lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pl-0 lg:pr-5 lg:pt-0 lg:pb-6">
               {images.map((image, imageIndex) => (
                 <button
                   key={`${image}-${imageIndex}`}

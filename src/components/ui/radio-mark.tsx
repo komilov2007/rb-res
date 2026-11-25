@@ -14,20 +14,13 @@ type RadioMarkProps = {
 export const getOptionClassName = (
   checked: boolean,
   hasError = false,
-  appearance: "soft" | "outlined" = "soft",
 ) => {
-  const isOutlined = appearance === "outlined";
-
   return `border transition-colors duration-200 ${
     checked
       ? "border-green-500 bg-green-500/10"
       : hasError
-        ? isOutlined
-          ? "border-red bg-white"
-          : "border-red bg-gray10/70"
-        : isOutlined
-          ? "border-gray180 bg-white"
-          : "border-transparent bg-gray10/70 hover:bg-gray10"
+        ? "border-red bg-gray10/50"
+        : "border-gray180/70 bg-gray10/50 hover:bg-gray10"
   }`;
 };
 
@@ -55,10 +48,10 @@ const RadioMark = ({
 
   return (
     <span
-      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border-2 ${
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${
         checked
-          ? "border-green-500 bg-green-500 text-white"
-          : "border-gray180 bg-white"
+          ? "border-2 border-green-500 bg-green-500 text-white"
+          : "border-[1.5px] border-gray220/35 bg-white"
       }`}
     >
       {checked && <Check size={14} strokeWidth={3} />}

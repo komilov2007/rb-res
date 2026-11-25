@@ -12,6 +12,7 @@ import { useAuthStore } from "@/stores/auth";
 
 import type { useAddressForm } from "./location-modal";
 import { REACT_QUERY_KEYS } from "@/constants/react-query-keys";
+import { saveGuestAddress } from "@/utils/guest-address";
 
 const MAX_SAVED_ADDRESSES = 10;
 
@@ -163,6 +164,8 @@ export const useAddressMutations = ({
     const payload = getAddressPayload();
 
     if (!auth?.customer) {
+      // Mehmon: manzil qurilmada saqlanadi, login bo'lganda API'ga yuboriladi
+      saveGuestAddress(payload);
       setAddress(payload.address, {
         id: null,
         latitude: payload.latitude,

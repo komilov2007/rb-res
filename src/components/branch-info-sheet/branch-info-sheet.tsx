@@ -111,7 +111,7 @@ const BranchInfoSheet = ({
 
   const panel = (
     <div
-      className={`flex ${isDrawer ? "h-full" : "h-dvh"} w-full flex-col overflow-hidden bg-white`}
+      className={`flex ${isDrawer ? "h-full" : "h-full lg:h-dvh"} w-full flex-col overflow-hidden bg-white`}
     >
       <div className="z-10 flex shrink-0 items-center gap-3 border-b border-gray180 bg-white px-4 py-4">
         <Button
@@ -183,7 +183,7 @@ const BranchInfoSheet = ({
         </div>
       </div>
 
-      <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-3">
+      <div className="shrink-0 border-t border-gray180 bg-white px-4 pb-[max(16px,var(--safe-bottom))] pt-3">
         <button
           type="button"
           onClick={() => openBranchDirections(branch)}

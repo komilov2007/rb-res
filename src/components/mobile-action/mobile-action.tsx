@@ -116,7 +116,9 @@ const MobileAction = () => {
       <div
         data-mobile-action-widget
         className={`pointer-events-none fixed right-4 z-[70] w-fit max-w-[calc(100vw-2rem)] lg:right-8 ${
-          isClickApp ? "bottom-[116px]" : "bottom-[96px]"
+          isClickApp
+            ? "bottom-[116px]"
+            : "bottom-[calc(80px+max(1rem,calc(var(--safe-bottom)*0.6)))]"
         } ${hasCart ? "lg:bottom-32" : "lg:bottom-8"}`}
       >
         <div className="flex flex-col items-end gap-2">

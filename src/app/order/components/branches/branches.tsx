@@ -123,7 +123,7 @@ const Branches = ({
   } = useBranches({ branches, value });
 
   return (
-    <section className="rounded-xl bg-white p-3">
+    <section className="rounded-2xl bg-white p-4">
       {isLoading ? (
         <>
           <div className="h-4 w-28 skeleton rounded-full" />
@@ -132,7 +132,7 @@ const Branches = ({
         </>
       ) : (
         <>
-          <h2 className="text-sm font-medium text-black">
+          <h2 className="text-base font-medium text-black">
             {t("order_page_branches_title")}
           </h2>
 

@@ -78,7 +78,7 @@ const BranchMapPicker = ({
 
   return (
     <ModalScreen onClose={onClose} placement="screen" className="gap-0 !p-0">
-      <div className="relative flex h-dvh w-full flex-col overflow-hidden">
+      <div className="relative flex h-full w-full flex-col overflow-hidden lg:h-dvh">
         <div className="z-10 flex items-center gap-3 border-b border-gray180 bg-white px-4 py-4">
           <Button
             type="button"

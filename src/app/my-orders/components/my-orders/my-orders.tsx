@@ -57,8 +57,8 @@ const MyOrders = () => {
   } = useMyOrders();
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray10 pb-[74px] lg:pb-0">
-      <div className="fixed inset-x-0 top-0 z-10 rounded-b-2xl border-b border-gray180 bg-white">
+    <div className="flex min-h-screen flex-col bg-gray10 pb-[calc(74px+var(--safe-bottom))] lg:pb-0">
+      <div className="fixed inset-x-0 top-0 z-10 rounded-b-2xl border-b border-gray180 bg-white pt-(--safe-top)">
         <div className="mx-auto flex w-full max-w-xl items-center gap-3 px-4 py-4">
           <Button
             type="button"

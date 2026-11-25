@@ -1,6 +1,7 @@
 import { request } from "@/configs/requests";
 import type {
   AuthProps,
+  PrivacyPolicyProps,
   LoginPayloadProps,
   SignupPayloadProps,
   UpdateFirstnameResponse,
@@ -22,4 +23,10 @@ export const signUp = async (data: SignupPayloadProps, shopId: string) => {
     `webapp/user/auth/update/firstname/${shopId}`,
     data,
   );
+};
+
+export const getPrivacyPolicy = async (loginType: string) => {
+  return await request<PrivacyPolicyProps>("privacy-policy", {
+    params: { login_type: loginType },
+  });
 };
